@@ -1,0 +1,21 @@
+# Dotdigitalgroup_Email Connector Modman Configuration File
+code/Dotdigitalgroup/Email                              app/code/community/Dotdigitalgroup/Email
+design/frontend/base/default/layout/connector.xml       app/design/frontend/base/default/layout/connector.xml
+design/frontend/base/default/template/connector/        app/design/frontend/base/default/template/connector/
+design/frontend/base/default/template/page/blank.phtml  app/design/frontend/base/default/template/page/blank.phtml
+design/adminhtml/default/default/layout/connector/      app/design/adminhtml/default/default/layout/connector/
+design/adminhtml/default/default/template/connector/    app/design/adminhtml/default/default/template/connector/
+modules/Dotdigitalgroup_Email.xml                       app/etc/modules/Dotdigitalgroup_Email.xml
+skin/adminhtml/default/default/connector/                skin/adminhtml/default/default/connector/
+shell/connector.php                                     shell/connector.php
+locale/en_US/Dotdigitalgroup_Email.csv                  app/locale/en_US/Dotdigitalgroup_Email.csv
+lib/Raygun4php/                                         /lib/Raygun4php/
+lib/connector/                                          /lib/connector/
+js/connector/                                           /js/connector/
+
+code/Dotdigitalgroup/Mailcheck                          app/code/community/Dotdigitalgroup/Mailcheck
+design/frontend/base/default/layout/mailcheck.xml       app/design/frontend/base/default/layout/mailcheck.xml
+design/frontend/base/default/template/mailcheck/        app/design/frontend/base/default/template/mailcheck/
+js/mailcheck/                                            js/mailcheck/
+modules/Dotdigitalgroup_Mailcheck.xml                   app/etc/modules/Dotdigitalgroup_Mailcheck.xml
+skin/frontend/base/default/js/mailcheck/                 skin/frontend/base/default/js/mailcheck/

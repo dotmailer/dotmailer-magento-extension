@@ -1,0 +1,44 @@
+<?php
+$apiClient = Mage::getModel('email_connector/apiconnector_client');
+$apiCalls = $apiClient->apiCalls;
+?>
+
+<div class="content-header">
+	<h3 class="icon-head head-newsletter-report">API Calls Sinse  : <?php echo  $this->formatDateString($this->getTimeTrigger());  ?></h3>
+</div>
+<div class="connector-dashboard-block">
+	<div class="grid">
+		<table class="data" cellspacing="0">
+			<thead>
+			<tr class="headings">
+				<th class="no-link"><span class="nobr"><?php echo $this->__("Path") ?></span></th>
+				<th class="no-link"><span class="nobr"><?php echo $this->__("Description") ?></span></th>
+				<th class="no-link"><span class="nobr"><?php echo $this->__("Scope") ?></span></th>
+				<th class="no-link"><span class="nobr"><?php echo $this->__("API Calls") ?></span></th>
+				<th class="no-link last"><span class="nobr"><?php echo $this->__(" Last API Time") ?></span></th>
+			</tr>
+			</thead>
+			<tbody>
+			<?php foreach($this->getConfigData() as $config):?>
+				<?php if ($config['path'] != Dotdigitalgroup_Email_Helper_Config::CONNECTOR_EMAIL_CONFIG_HOUR_TRIGGER) : ?>
+				<tr class="even">
+					<td>
+						<?php $apiKey = array_search($config['path'], $apiCalls);
+						$description = $this->getDocDocument($apiKey);
+						echo $this->__($apiKey); ?>
+					</td>
+					<td class="a-left "><?php echo $this->__($description); ?></td>
+					<td class="a-right "><?php echo $this->__($config['scope']); ?></td>
+					<td class="a-center">
+						<span style="font-size:18px;color:#EA7601;"><?php echo $this->__($config['value']); ?></span>
+					</td>
+					<td class="a-center last">
+						<span><?php echo $this->__($config['updated_at']); ?></span>
+					</td>
+				</tr>
+					<?php endif;?>
+			<?php endforeach; ?>
+			</tbody>
+		</table>
+	</div>
+</div>

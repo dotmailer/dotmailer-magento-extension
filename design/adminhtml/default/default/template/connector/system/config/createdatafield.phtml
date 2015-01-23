@@ -1,0 +1,17 @@
+
+<form action="<?php echo $this->getFormUrl(); ?>" id="connector_create_datafield" method="post">
+    <?php // echo $this->getBlockHtml('formkey')?>
+    <?php echo $this->getButtonHtml(); ?>
+</form>
+
+
+<form action="<?php echo $this->getPreviewUrl() ?>" method="post" id="emv_template_preview_form" target="_blank" >
+    <?php echo $this->getBlockHtml('formkey')?>
+    <div class="no-display">
+        <input type="hidden" id="preview_mage_template_id" name="mage_template_id" value="" />
+        <input type="hidden" id="preview_emv_send_mail_mode_id" name="emv_send_mail_mode_id" value="" />
+        <input type="hidden" id="preview_emv_template_id" name="emv_template_id" value="" />
+        <input type="hidden" id="preview_emv_account_id" name="emv_account_id" value="" />
+        <div id="preview-attribute-value"></div>
+    </div>
+</form>

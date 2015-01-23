@@ -1,0 +1,42 @@
+<?php
+$label = array(
+	Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Rfm::FREQUENCY => "Frequency (orders)",
+	Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Rfm::RECENCY => "Recency (days)",
+	Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Rfm::MONETARY => "Monetary (value)"
+);
+?>
+<div style="border: 1px solid #eee2be; padding: 5px;">
+	<h4 style="text-align: center">
+		<?php echo $this->__($this->getTitle()) ?>
+	</h4>
+	<div class="entry-edit">
+		<div class="entry-edit-head"><h4><?php echo $this->__("RFM Matrix") ?></h4></div>
+		<fieldset class="np"><div class="grid np">
+				<table cellspacing="0" style="border:0;">
+					<colgroup><col>
+						<col width="167">
+						<col width="167">
+						<col width="168">
+					</colgroup><thead>
+					<tr class="headings">
+						<th class=" no-link"><span class="nobr"><?php echo $this->__("Type") ?></span></th>
+						<th class=" no-link"><span class="nobr"><?php echo $this->__("Low") ?></span></th>
+						<th class=" no-link"><span class="nobr"><?php echo $this->__("Medium") ?></span></th>
+						<th class=" no-link last"><span class="nobr"><?php echo $this->__("High") ?></span></th>
+					</tr>
+					</thead>
+					<tbody>
+					<?php foreach($this->getRfm() as $key => $level):?>
+						<tr class="even">
+							<td><?php echo $this->__($label[$key]) ?></td>
+							<td class=" a-right "><?php echo "0 - " . $level['Low'] ?></td>
+							<td class=" a-right "><?php echo $level['Low'] . " - " . $level['Medium'] ?></td>
+							<td class=" a-right last"><?php echo $level['Medium'] . " - " . $level['High'] . ' +' ?></td>
+						</tr>
+					<?php endforeach; ?>
+					</tbody>
+				</table>
+			</div>
+		</fieldset>
+	</div>
+</div>

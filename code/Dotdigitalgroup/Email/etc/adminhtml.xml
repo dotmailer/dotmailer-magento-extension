@@ -1,0 +1,178 @@
+<?xml version="1.0"?>
+<config>
+    <menu>
+        <email_connector translate="title">
+            <title>Marketing Automation</title>
+            <sort_order>70</sort_order>
+            <children>
+                <email_connector_dashboard translate="title">
+                    <title>Dashboard</title>
+                    <sort_order>10</sort_order>
+                    <action>adminhtml/email_dashboard</action>
+                </email_connector_dashboard>
+                <automation_studio translate="title">
+                    <title>Automation Studio</title>
+                    <sort_order>20</sort_order>
+                    <action>adminhtml/email_automation</action>
+                </automation_studio>
+                <reports translate="title">
+                    <title>Reports</title>
+                    <sort_order>30</sort_order>
+                    <children>
+                        <email_connector_order translate="title">
+                            <title>Orders Sync</title>
+                            <sort_order>20</sort_order>
+                            <action>adminhtml/email_order</action>
+                        </email_connector_order>
+                        <email_connector_campaign translate="title">
+                            <title>Email Send Status</title>
+                            <sort_order>35</sort_order>
+                            <action>adminhtml/email_campaign</action>
+                        </email_connector_campaign>
+                        <email_connector_contact translate="title">
+                            <title>Contact Sync</title>
+                            <sort_order>10</sort_order>
+                            <action>adminhtml/email_contact</action>
+                        </email_connector_contact>
+                        <email_connector_review translate="title">
+                            <title>Review Sync</title>
+                            <sort_order>25</sort_order>
+                            <action>adminhtml/email_review</action>
+                        </email_connector_review>
+                        <email_connector_wishlist translate="title">
+                            <title>Wishlist Sync</title>
+                            <sort_order>30</sort_order>
+                            <action>adminhtml/email_wishlist</action>
+                        </email_connector_wishlist>
+                        <email_connector_quote translate="title">
+                            <title>Quote Sync</title>
+                            <sort_order>22</sort_order>
+                            <action>adminhtml/email_quote</action>
+                        </email_connector_quote>
+                    </children>
+                </reports>
+                <email_configuration translate="title">
+                    <title>Configuration</title>
+                    <sort_order>40</sort_order>
+                    <children>
+                        <api_credentials translate="title">
+                            <title>Api Credentials</title>
+                            <sort_order>20</sort_order>
+                            <action>adminhtml/system_config/edit/section/connector_api_credentials</action>
+                        </api_credentials>
+                        <data_mapping translate="title">
+                            <title>Data Mapping</title>
+                            <sort_order>30</sort_order>
+                            <action>adminhtml/system_config/edit/section/connector_data_mapping</action>
+                        </data_mapping>
+                        <sync_settings translate="title">
+                            <title>Sync Settings</title>
+                            <sort_order>40</sort_order>
+                            <action>adminhtml/system_config/edit/section/connector_sync_settings</action>
+                        </sync_settings>
+                    </children>
+                </email_configuration>
+            </children>
+        </email_connector>
+    </menu>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <email_connector>
+                        <title>Email Connector</title>
+                        <children>
+                            <email_connector_dashboard translate="title">
+                                <title>Dashboard</title>
+                            </email_connector_dashboard>
+                            <automation_studio translate="title">
+                                <title>Automation Studio</title>
+                            </automation_studio>
+                            <reports>
+                                <title>Reports</title>
+                                <children>
+                                    <email_connector_order translate="title">
+                                        <title>Email Connector Orders</title>
+                                    </email_connector_order>
+                                    <email_connector_campaign translate="title">
+                                        <title>Email Connector Campaigns</title>
+                                    </email_connector_campaign>
+                                    <email_connector_contact translate="title">
+                                        <title>Email Connector Contacts</title>
+                                    </email_connector_contact>
+                                    <email_connector_review translate="title">
+                                        <title>Email Connector Reviews</title>
+                                    </email_connector_review>
+                                    <email_connector_wishlist translate="title">
+                                        <title>Email Connector Wishlist</title>
+                                    </email_connector_wishlist>
+                                    <email_connector_quote translate="title">
+                                        <title>Email Connector Quote</title>
+                                    </email_connector_quote>
+                                </children>
+                            </reports>
+                            <email_configuration translate="title">
+                                <title>Email Configuration</title>
+                                <children>
+                                    <api_credentials translate="title">
+                                        <title>Api Credentials</title>
+                                    </api_credentials>
+                                    <data_mapping translate="title">
+                                        <title>Data Mapping</title>
+                                    </data_mapping>
+                                    <sync_settings translate="title">
+                                        <title>Sync Settings</title>
+                                    </sync_settings>
+                                </children>
+                            </email_configuration>
+                        </children>
+                    </email_connector>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <connector_api_credentials translate="title">
+                                        <title><![CDATA[Email API Credentials]]></title>
+                                    </connector_api_credentials>
+                                    <connector_sync_settings translate="title">
+                                        <title><![CDATA[Email Sync Settings]]></title>
+                                    </connector_sync_settings>
+                                    <connector_data_mapping translate="title">
+                                        <title><![CDATA[Email Data Field Mapping]]></title>
+                                    </connector_data_mapping>
+                                    <connector_roi_tracking translate="title">
+                                        <title><![CDATA[Email ROI & Tracking]]></title>
+                                    </connector_roi_tracking>
+                                    <connector_lost_baskets translate="title">
+                                        <title><![CDATA[Abandoned Carts]]></title>
+                                    </connector_lost_baskets>
+                                    <connector_reviews translate="title">
+                                        <title><![CDATA[Reviews]]></title>
+                                    </connector_reviews>
+                                    <connector_sms translate="title">
+                                        <title><![CDATA[Email SMS Section]]></title>
+                                    </connector_sms>
+                                    <connector_dynamic_content translate="title">
+                                        <title><![CDATA[Email Dynamic Content]]></title>
+                                    </connector_dynamic_content>
+                                    <connector_transactional_emails translate="title">
+                                        <title><![CDATA[Email Transactional Email]]></title>
+                                    </connector_transactional_emails>
+                                    <connector_automation_studio translate="title">
+                                        <title><![CDATA[Automation Studio]]></title>
+                                    </connector_automation_studio>
+                                    <connector_configuration translate="title">
+                                        <title><![CDATA[Configuration]]></title>
+                                    </connector_configuration>
+                                    <connector_developer_settings translate="title">
+                                        <title><![CDATA[Developer]]></title>
+                                    </connector_developer_settings>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

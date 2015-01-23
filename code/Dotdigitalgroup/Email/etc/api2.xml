@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<config>
+    <api2>
+        <resource_groups>
+            <connector translate="title" module="api2">
+                <title>Email Connector</title>
+            </connector>
+        </resource_groups>
+        <resources>
+            <connector_create translate="title" module="api2">
+                <group>connector</group>
+                <model>email_connector/api2_subscriber</model>
+                <working_model>email_connector/api2_subscriber</working_model>
+                <title>Subscriber</title>
+                <sort_order>10</sort_order>
+                <privileges>
+                    <admin>
+                        <retrieve>1</retrieve>
+                        <create>1</create>
+                        <update>1</update>
+                    </admin>
+                </privileges>
+                <attributes>
+                    <customer_id>Customer Id</customer_id>
+                    <store_id>Store Id</store_id>
+                    <subscriber_email>Subscriber Email</subscriber_email>
+                    <subscriber_status>Subscriber Status</subscriber_status>
+                </attributes>
+                <routes>
+                    <route_entity>
+                        <route>/connector/subscriber/:email</route>
+                        <action_type>entity</action_type>
+                    </route_entity>
+                    <route_collection>
+                        <route>/connector/subscriber/</route>
+                        <action_type>collection</action_type>
+                    </route_collection>
+                </routes>
+                <versions>1</versions>
+            </connector_create>
+        </resources>
+    </api2>
+</config>

@@ -1,0 +1,79 @@
+<?php
+$order = $this->getOrder();
+$invoice = $order->getInvoiceCollection()->getLastItem();
+$billing = $order->getBillingAddress();
+$paymentBlock = Mage::helper('payment')->getInfoBlock($order->getPayment());
+?>
+<style>
+    <?php echo Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_STYLING);?>
+</style>
+<body style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:12px; margin:0; padding:0;">
+<div style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:12px; margin:0; padding:0;">
+    <table cellspacing="0" cellpadding="0" border="0" height="100%" width="100%">
+        <tr>
+            <td align="center" valign="top" style="padding:20px 0 20px 0">
+                <!-- [ header starts here] -->
+                <table bgcolor="#FFFFFF" cellspacing="0" cellpadding="10" border="0" width="650" style="border:1px solid #E0E0E0;">
+                    <!-- [ middle starts here] -->
+                    <tr>
+                        <td>
+                            <h2 style="font-size:18px; font-weight:normal; margin:0;">Your Invoice #<?php echo $invoice->getIncrementId();?> for Order #<?php echo $order->getIncrementId();?></h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table cellspacing="0" cellpadding="0" border="0" width="650">
+                                <thead>
+                                <tr>
+                                    <th align="left" width="325" bgcolor="#EAEAEA" style="font-size:13px; padding:5px 9px 6px 9px; line-height:1em;">Billing Information:</th>
+                                    <th width="10"></th>
+                                    <th align="left" width="325" bgcolor="#EAEAEA" style="font-size:13px; padding:5px 9px 6px 9px; line-height:1em;">Payment Method:</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td valign="top" style="font-size:12px; padding:7px 9px 9px 9px; border-left:1px solid #EAEAEA; border-bottom:1px solid #EAEAEA; border-right:1px solid #EAEAEA;">
+                                        <?php echo $billing->format('html');?>
+                                    </td>
+                                    <td>&nbsp;</td>
+                                    <td valign="top" style="font-size:12px; padding:7px 9px 9px 9px; border-left:1px solid #EAEAEA; border-bottom:1px solid #EAEAEA; border-right:1px solid #EAEAEA;">
+                                        <?php echo $paymentBlock->toHtml();?>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <br/>
+                            <?php if($order->getIsNotVirtual()):?>
+                            <table cellspacing="0" cellpadding="0" border="0" width="650">
+                                <thead>
+                                <tr>
+                                    <th align="left" width="650" bgcolor="#EAEAEA" style="font-size:13px; padding:5px 9px 6px 9px; line-height:1em;">Shipping Information:</th>
+                                    <th width="10"></th>
+                                    <th align="left" width="650" bgcolor="#EAEAEA" style="font-size:13px; padding:5px 9px 6px 9px; line-height:1em;">Shipping Method:</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td valign="top" style="font-size:12px; padding:7px 9px 9px 9px; border-left:1px solid #EAEAEA; border-bottom:1px solid #EAEAEA; border-right:1px solid #EAEAEA;">
+                                        <?php echo $order->getShippingAddress()->format('html');?>
+                                        &nbsp;
+                                    </td>
+                                    <td>&nbsp;</td>
+                                    <td valign="top" style="font-size:12px; padding:7px 9px 9px 9px; border-left:1px solid #EAEAEA; border-bottom:1px solid #EAEAEA; border-right:1px solid #EAEAEA;">
+                                        <?php echo $order->getShippingDescription();?>
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <br/>
+                            <?php endif;?>
+                            <?php echo $this->getChildHtml('connector_order_items');?>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>

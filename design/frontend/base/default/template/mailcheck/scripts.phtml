@@ -1,0 +1,6 @@
+
+<?php if($this->getData('show')): ?>
+    <script type="text/javascript" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS) ?>mailcheck/mailcheck.min.js"></script>
+    <script type="text/javascript" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS) ?>mailcheck/magentoMailcheck.js"></script>
+    <script type="text/javascript" src="<?php echo $this->getSkinUrl("js/mailcheck/init.js") ?>"></script>
+<?php endif;

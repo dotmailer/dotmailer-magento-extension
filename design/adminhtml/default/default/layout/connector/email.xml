@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<config>
+    <adminhtml_system_config_edit>
+        <reference name="head">
+            <action method="addCss"><name>connector/config.css</name></action>
+        </reference>
+    </adminhtml_system_config_edit>
+    <adminhtml_email_dashboard_index>
+        <reference name="head">
+            <action method="addCss"><name>connector/dashboard.css</name></action>
+        </reference>
+        <reference name="left">
+            <block type="email_connector/adminhtml_dashboard_switcher" name="store_switcher" as="store_switcher" />
+        </reference>
+    </adminhtml_email_dashboard_index>
+    <adminhtml_email_contact_index>
+        <reference name="menu">
+            <action method="setActive">
+                <menupath>email_contact/email_connector_contact</menupath>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="email_connector/adminhtml_contact" name="email_contact">
+                <block type="adminhtml/store_switcher" name="store_switcher" as="store_switcher">
+                    <action method="setUseConfirm"><params>0</params></action>
+                </block>
+            </block>
+        </reference>
+    </adminhtml_email_contact_index>
+    <adminhtml_email_contact_grid>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="email_connector/adminhtml_contact_grid" name="contact_grid"/>
+        </block>
+    </adminhtml_email_contact_grid>
+    <adminhtml_email_contact_edit>
+        <reference name="menu">
+            <action method="setActive">
+                <menupath>email_contact</menupath>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="email_connector/adminhtml_contact_edit" name="email_contact_edit">
+            </block>
+        </reference>
+    </adminhtml_email_contact_edit>
+    <adminhtml_email_campaign_index>
+        <reference name="menu">
+            <action method="setActive">
+                <menupath>email_contact/email_connector_campaign</menupath>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="email_connector/adminhtml_campaign" name="email_campaign">
+                <block type="adminhtml/store_switcher" name="store_switcher" as="store_switcher">
+                    <action method="setUseConfirm"><params>0</params></action>
+                </block>
+            </block>
+        </reference>
+    </adminhtml_email_campaign_index>
+    <adminhtml_email_campaign_grid>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="email_connector/adminhtml_campaign_grid" name="campaign_grid"/>
+        </block>
+    </adminhtml_email_campaign_grid>
+    <adminhtml_email_campaign_edit>
+        <reference name="menu">
+            <action method="setActive">
+                <menupath>email_contact/email_conector_campaign</menupath>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="email_connector/adminhtml_campaign_edit" name="email_campaign_edit">
+            </block>
+        </reference>
+    </adminhtml_email_campaign_edit>
+    <adminhtml_system_config_edit>
+        <reference name="head">
+            <action method="addJs">
+                <script>connector/selector.js</script>
+            </action>
+        </reference>
+    </adminhtml_system_config_edit>
+</config>

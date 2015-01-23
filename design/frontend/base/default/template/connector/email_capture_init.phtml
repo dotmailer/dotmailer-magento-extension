@@ -1,0 +1,9 @@
+<?php if(Mage::helper('connector')->getEasyEmailCapture()): ?>
+    <script type="text/javascript">
+        //<![CDATA[
+        document.observe("dom:loaded", function() {
+            window.emailcapture = new emailCapture();
+        });
+        //]]>
+    </script>
+<?php endif; ?>

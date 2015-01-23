@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <default>
+        <reference name="head">
+            <block type="core/template" name="checkout.tag" as="connector.tag" template="connector/tracking_code.phtml"/>
+            <block type="core/template" name="easy.email.capture.head" as="easy.email.capture.head" template="connector/email_capture.phtml"/>
+            <block type="core/template" name="easy.email.capture" as="easy.email.capture" template="connector/email_capture_init.phtml"/>
+        </reference>
+    </default>
+    <checkout_onepage_success>
+        <reference name="content">
+            <block type="checkout/onepage_success" name="checkout.roi" as="connector.roi" template="connector/roi_code.phtml"/>
+        </reference>
+    </checkout_onepage_success>
+    <!--Customer's Manage Subscription-->
+    <newsletter_manage_index>
+        <!--Datepicker-->
+        <reference name="head">
+            <action method="addItem">
+                <type>js_css</type>
+                <name>calendar/calendar-win2k-1.css</name>
+                <params/>
+            </action>
+            <action method="addItem">
+                <type>js</type>
+                <name>calendar/calendar.js</name>
+            </action>
+            <action method="addItem">
+                <type>js</type>
+                <name>calendar/calendar-setup.js</name>
+            </action>
+        </reference>
+        <!--Additional Books And Data Fields -->
+        <reference name="my.account.wrapper">
+            <block type="email_connector/customer_account_books" name="connector_additional_books" template="connector/additional-newsletter-pref.phtml">
+                <block type="core/html_calendar" name="html_calendar" as="html_calendar" template="page/js/calendar.phtml"/>
+            </block>
+            <!--Back button -->
+            <block type="customer/account_dashboard" name="customer.account.link.back" template="customer/account/link/back.phtml"/>
+        </reference>
+    </newsletter_manage_index>
+</layout>

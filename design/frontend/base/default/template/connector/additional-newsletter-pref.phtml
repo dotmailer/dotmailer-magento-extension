@@ -1,0 +1,63 @@
+<?php if($this->canShowAnything()): ?>
+    <?php
+        $additionalBooks = $this->getAdditionalBooksToShow();
+        $dataFields = $this->getDataFieldsToShow();
+    ?>
+    <form id="connector-newsletter-form-validate" method="post" action="<?php echo $this->getSaveUrl() ?>">
+        <div class="fieldset">
+            <?php echo $this->getBlockHtml('formkey')?>
+            <h2 class="legend"><?php echo $this->__('Newsletter Preferences') ?></h2>
+            <ul class="form-list">
+                <?php if(!empty($additionalBooks)): ?>
+                    <h4 style="margin-top: 10px;"><?php echo $this->__('Additional Newsletter Subscriptions') ?></h4>
+                    <?php foreach($additionalBooks as $books): ?>
+                        <li class="control">
+                            <input type="checkbox" name="additional_subscriptions[]" id ="<?php echo $books["name"] ?>" value="<?php echo $books["value"] ?>" title="<?php echo $books["name"] ?>"<?php if($books["subscribed"]): ?> checked="checked"<?php endif; ?> class="checkbox" />
+                            <label for="additional_subscription"><?php echo $books["name"] ?></label>
+                        </li>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+                <?php if(!empty($dataFields)): ?>
+                    <h4 style="margin-top: 25px;"><?php echo $this->__('Data Fields') ?></h4>
+                    <li class="fields">
+                        <div>
+                            <?php foreach($dataFields as $dataField): ?>
+                                <div class="field">
+                                    <label for="<?php echo $dataField['name'] ?>"><?php echo $dataField['name'] ?></label>
+                                    <div class="input-box">
+                                        <input type="text" class="input-text" title="<?php echo $dataField['name'] ?>" value="<?php echo $dataField['value'] ?>" name="data_fields[<?php echo $dataField['name'] ?>]" id="<?php echo $dataField['name'] ?>" />
+                                        <?php if($dataField['type'] == "Date"): ?>
+                                            <?php echo $this->getChildHtml('html_calendar'); ?>
+                                            <script type="text/javascript">
+                                                Calendar.setup({ inputField : "<?php echo $dataField['name'] ?>", button : 'date_from_trig', align : 'Bl', singleClick : true });
+                                            </script>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </li>
+                <?php endif; ?>
+                <input type="hidden" name="connector_customer_id" value="<?php echo $this->getConnectorContactId() ?>" />
+                <input type="hidden" name="connector_customer_email" value="<?php echo $this->getCustomer()->getEmail() ?>" />
+            </ul>
+        </div>
+        <div class="buttons-set">
+            <button type="submit" title="<?php echo $this->__('Save') ?>" class="button"><span><span><?php echo $this->__('Save') ?></span></span></button>
+        </div>
+    </form>
+    <script type="text/javascript">
+        //form
+        //<![CDATA[
+        var dataForm = new VarienForm('connector-newsletter-form-validate',true);
+        //]]>
+
+        //remove first back buttom from DOM
+        document.observe("dom:loaded", function() {
+            var backButtom = $$('p.back-link');
+            if(backButtom.length){
+                backButtom.first().remove();
+            }
+        });
+    </script>
+<?php endif; ?>

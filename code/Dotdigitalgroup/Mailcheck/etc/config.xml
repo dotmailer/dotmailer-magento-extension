@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Dotdigitalgroup_Mailcheck>
+            <version>1.0.0</version>
+        </Dotdigitalgroup_Mailcheck>
+    </modules>
+    <global>
+        <helpers>
+            <connector_mailcheck>
+                <class>Dotdigitalgroup_Mailcheck_Helper</class>
+            </connector_mailcheck>
+        </helpers>
+    </global>
+    <frontend>
+        <layout>
+            <updates>
+                <connector_mailcheck>
+                    <file>mailcheck.xml</file>
+                </connector_mailcheck>
+            </updates>
+        </layout>
+    </frontend>
+    <default>
+        <connector_advanced_settings>
+            <mailcheck>
+                <enabled>0</enabled>
+            </mailcheck>
+        </connector_advanced_settings>
+    </default>
+</config>

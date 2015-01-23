@@ -1,0 +1,15 @@
+.idea/
+DS_Store
+.swp
+.lock
+__MACOSX
+.idea
+/nbproject/*
+.project
+.buildpath
+.thumbs
+Thumbs.db
+build.properties
+.project
+.settings
+.buildpath

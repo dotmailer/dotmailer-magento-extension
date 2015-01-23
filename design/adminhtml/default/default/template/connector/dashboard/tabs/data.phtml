@@ -1,0 +1,26 @@
+<?php if( sizeof($this->getTotals()) > 0 ): ?>
+    <div style="border: 1px solid #eee2be; padding: 5px;">
+        <h4 style="text-align: center">
+            <?php echo $this->getTitle() ?>
+        </h4>
+        <?php foreach( $this->getTotals() as $_total ): ?>
+            <div class="entry-edit" style="width: <?php echo $this->getColumnWidth() ?>">
+                <div class="entry-edit-head"><h4><?php echo $_total['label'] ?></h4></div>
+                <fieldset class="a-center bold">
+                    <span class="nowrap" style="font-size:18px;color:#EA7601;">
+                        <?php
+                            if($_total['value'] == '')
+                                echo '0';
+                            else
+                                echo $_total['value'];
+                        ?>
+                        <span style="font-size:14px; color:#686868;">
+                            <?php echo $_total['decimals'] ?>
+                        </span>
+                    </span>
+                </fieldset>
+            </div>
+        <?php endforeach; ?>
+    </div>
+<?php endif;
+

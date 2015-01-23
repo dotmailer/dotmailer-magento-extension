@@ -1,0 +1,72 @@
+<div class="content-header">
+	<h3 class="icon-head head-newsletter-report"><?php echo $this->getTabTitle(); ?></h3>
+</div>
+<?php foreach ( $this->getCheckpoints() as $key =>  $_checkpoint ) :?>
+	<?php $method = $this->getFormatedMethodName($key);
+
+	if (is_callable(array($this, $method))) {
+		$data      = $this->$method();
+		$showHowTo = '';
+		$collapsable = '1';
+		if ( $data->getStyle() == 'connector_passed' ) {
+			$showHowTo = 'no_display';
+			$collapsable = '0';
+		}
+		if ($this->_getCollapseState($key) !== false)
+			$collapsable = $this->_getCollapseState($key);
+	}?>
+
+<div class="entry-edit connector-fieldset-entry">
+		<div class="entry-edit-head collapseable ">
+
+			<a id="<?php echo $key;?>-head" class="<?php echo $data->getStyle();?>"  href="#" onclick="Fieldset.toggleCollapse('<?php echo $key;?>', '<?php echo $this->getUrl('*/*/state') ;?>');return false;">
+					<?php echo Mage::helper('connector')->__($_checkpoint) ?> </a>
+
+		</div>
+		<input id="<?php echo $key;?>-state" name="config_state[<?php echo $key ;?>]" type="hidden" value="<?php echo $collapsable;?>">
+
+		<fieldset class="collapseable" id="<?php echo $key;?>">
+
+			<legend><?php echo Mage::helper('connector')->__($_checkpoint); ?></legend>
+			<span><?php echo $data->getTitle();?></span><span class="<?php echo $data->getStyle();?>"><?php echo $data->getMessage();?></span>
+			<div class="<?php echo $showHowTo?>">
+				<ul class="howto">
+					<?php if (is_array($data->getHowto())) : ?>
+						<?php foreach ( $data->getHowto() as $how ) :?>
+							<li><?php echo $how;?></li>
+						<?php endforeach;?>
+					<?php else:?>
+						<li><?php echo $data->getHowto();?></li>
+					<?php endif; ?>
+				</ul>
+			</div>
+			<?php
+			if ($tableData = $data->getTable()): ?>
+				<table class="form-list">
+					<thead>
+						<?php foreach ( $tableData[0] as $k => $v ):?>
+							<th><?php echo $this->__($k);?></th>
+						<?php endforeach;?>
+					</thead>
+					<tbody>
+					<?php foreach($tableData as $row): ?>
+						<tr>
+						<?php foreach ($row as $v) :?>
+							<td>
+								<?php echo $v;?>
+							</td>
+						<?php endforeach;?>
+						</tr>
+					<?php endforeach;?>
+					</tbody>
+				</table>
+			<?php endif;?>
+		</fieldset>
+	</div>
+	<script type="text/javascript">//<![CDATA[
+		Fieldset.applyCollapse('<?php echo $key;?>');
+		//]]></script>
+<?php endforeach;
+
+
+

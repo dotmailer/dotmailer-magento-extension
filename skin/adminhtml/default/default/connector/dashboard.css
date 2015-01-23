@@ -1,0 +1,101 @@
+.connector-box-left {
+    width: 100%;
+    height: 250px;
+    overflow: scroll;
+    padding-right: 6px;
+}
+.connector-box-left fieldset {
+
+    margin-bottom: 15px;
+}
+
+table.product_visibility_checkpoints tr {
+    padding-bottom: 3px;
+}
+
+table.product_visibility_checkpoints tr th {
+    padding-right:  10px;
+    text-align:     right;
+}
+
+.connector_warning {
+    background:     url(../images/warning_msg_icon.gif) no-repeat;
+    width:          auto;
+    padding-left: 20px;
+}
+
+.connector_howto {
+    padding-left:   15px;
+    font-style:     italic;
+}
+
+table.product_visibility_checkpoints tr td ul {
+    list-style:     disc none;
+    margin-left:    10px;
+    padding-left:   5px;
+}
+
+table.product_visibility_checkpoints tr td ul li ul {
+    list-style:     circle none;
+    margin-left:    10px;
+    padding-left:   5px;
+}
+
+.connector_details {
+    color:          #666;
+    padding-left:   20px;
+    font-style:     italic;
+}
+.no_dispaly {display: none;}
+
+
+div.connector-fieldset-entry{
+    font-size: 12px;
+}
+
+div.connector-fieldset-entry div{
+    font-size: 12px;
+    font-weight: bold;
+    padding: 10px;
+}
+
+div.connector-fieldset-entry table{
+    width:100%;
+    border: 1px solid #D6D6D6 !important;
+}
+
+div.connector-fieldset-entry table td{
+    border: 1px solid #D6D6D6;
+}
+
+
+div.connector-fieldset-entry table thead{
+    background-color:#cccccc;
+}
+
+div.connector-fieldset-entry table th,td{
+    padding:5px;
+}
+div.connector-fieldset-entry .entry-edit-head {
+    padding : 10px;
+}
+div.connector-fieldset-entry span {
+    font-weight: bold;
+}
+
+div.connector-dashboard-block{
+    float: left;
+    margin-right: 20px;
+    margin-top: 20px;
+}
+
+.connector-dashboard-block td {
+    padding: 10px;
+}
+
+div.connector-dashboard-block-last{
+    float: left;
+    margin-right: 20px;
+    margin-top: 20px;
+    clear:both;
+}
