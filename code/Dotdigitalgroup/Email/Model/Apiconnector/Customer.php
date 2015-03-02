@@ -7,6 +7,9 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     public $customerData;
     public $reviewCollection;
 
+	//enterprise reward
+	public $reward;
+
     public $rewardCustomer;
     public $rewardLastSpent = "";
     public $rewardLastEarned = "";
@@ -52,7 +55,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         $this->setReviewCollection();
         $website = $customer->getStore()->getWebsite();
 
-        if($website && Mage::helper('connector')->isSweetToothToGo($website))
+        if ($website && Mage::helper('ddg')->isSweetToothToGo($website))
             $this->setRewardCustomer($customer);
 
         foreach ($this->getMappingHash() as $key => $field) {
@@ -138,7 +141,8 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
             ->getExpiryDate($tbt_reward);
 
         // if there is an expiry (has a value) then assign the value to property
-        if($tbt_expiry) $this->rewardExpiry = $tbt_expiry;
+        if($tbt_expiry)
+            $this->rewardExpiry = $tbt_expiry;
     }
 
     /**
@@ -593,6 +597,14 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         return $this;
     }
 
+    public function getRewardReferralUrl()
+    {
+        if(Mage::helper('ddg')->isSweetToothToGo($this->customer->getStore()->getWebsite()))
+           return (string) Mage::helper('rewardsref/url')->getUrl($this->customer);
+
+        return '';
+    }
+
     public function getRewardPointBalance()
     {
         return $this->cleanString($this->rewardCustomer->getPointsSummary());
@@ -643,5 +655,247 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         $subscriber = Mage::getModel('newsletter/subscriber')->loadByCustomer($this->customer);
         if($subscriber->getCustomerId())
              return $this->subscriber_status[$subscriber->getSubscriberStatus()];
+    }
+
+	/**
+	 * Reward points balance.
+	 * @return int
+	 */
+	public function getRewardPoints() {
+		if (!$this->reward)
+			$this->_setReward();
+		$rewardPoints = $this->reward->getPointsBalance();
+
+		return $rewardPoints;
+	}
+
+	/**
+	 * Currency amount points.
+	 * @return mixed
+	 */
+	public function getRewardAmount() {
+		if (!$this->reward)
+			$this->_setReward();
+
+		return $this->reward->getCurrencyAmount();
+	}
+
+	/**
+	 * Expiration date to use the points.
+	 * @return string
+	 */
+	public function getExpirationDate()
+	{
+		//set reward for later use
+		if (!$this->reward)
+			$this->_setReward();
+
+
+		$expiredAt = $this->reward->getExpirationDate();
+
+		if ($expiredAt) {
+			$date = Mage::helper('core')->formatDate($expiredAt, 'short', true);
+		} else {
+			$date = '';
+		}
+
+		return $date;
+	}
+
+
+	private function _setReward() {
+		$collection = Mage::getModel('enterprise_reward/reward_history')->getCollection()
+			->addCustomerFilter($this->customer->getId())
+			->addWebsiteFilter($this->customer->getWebsiteId())
+			->setExpiryConfig(Mage::helper('enterprise_reward')->getExpiryConfig())
+			->addExpirationDate($this->customer->getWebsiteId())
+			->skipExpiredDuplicates()
+			->setDefaultOrder()
+			->getFirstItem()
+		;
+
+		$this->reward = $collection;
+	}
+
+
+	/**
+	 * Customer segments id.
+	 * @return string
+	 */
+	public function getCustomerSegments()
+	{
+		$contactModel = Mage::getModel('ddg_automation/contact')->getCollection()
+            ->addFieldToFilter('customer_id', $this->getCustomerId())
+            ->addFieldToFilter('website_id', $this->customer->getWebsiteId())
+			->getFirstItem();
+		if ($contactModel)
+			return $contactModel->getSegmentIds();
+
+		return '';
+	}
+
+
+
+	/**
+	 * Last used reward points.
+	 * @return mixed
+	 */
+	public function getLastUsedDate()
+	{
+		//last used from the reward history based on the points delta used
+		$lastUsed = Mage::getModel('enterprise_reward/reward_history')->getCollection()
+            ->addCustomerFilter($this->customer->getId())
+            ->addWebsiteFilter($this->customer->getWebsiteId())
+            ->addFieldToFilter('points_delta', array('lt'=> 0))
+            ->setDefaultOrder()
+            ->getFirstItem()
+            ->getCreatedAt()
+		;
+
+		//for any valid date
+		if ($lastUsed)
+			return $date = Mage::helper('core')->formatDate($lastUsed, 'short', true);
+
+		return '';
+	}
+
+
+
+	/**
+     * get most purchased category
+     *
+     * @return string
+     */
+    public function getMostPurCategory()
+    {
+        $id = $this->customer->getMostCategoryId();
+        if($id){
+            return Mage::getModel('catalog/category')
+                ->load($id)
+                ->setStoreId($this->customer->getStoreId())
+                ->getName();
+        }
+        return "";
+    }
+
+    /**
+     * get most purchased brand
+     *
+     * @return string
+     */
+    public function getMostPurBrand()
+    {
+        $brand = $this->customer->getMostBrand();
+        if($brand)
+            return $brand;
+        return "";
+    }
+
+    /**
+     * get most frequent day of purchase
+     *
+     * @return string
+     */
+    public function getMostFreqPurDay()
+    {
+        $day = $this->customer->getWeekDay();
+        if($day)
+            return $day;
+        return "";
+    }
+
+    /**
+     * get most frequent month of purchase
+     *
+     * @return string
+     */
+    public function getMostFreqPurMon()
+    {
+        $month = $this->customer->getMonthDay();
+        if($month)
+            return $month;
+        return "";
+    }
+
+    /**
+     * get first purchased category
+     *
+     * @return string
+     */
+    public function getFirstCategoryPur()
+    {
+        $id = $this->customer->getFirstCategoryId();
+        if($id){
+            return Mage::getModel('catalog/category')
+                ->load($id)
+                ->setStoreId($this->customer->getStoreId())
+                ->getName();
+        }
+        return "";
+    }
+
+    /**
+     * get last purchased category
+     *
+     * @return string
+     */
+    public function getLastCategoryPur()
+    {
+        $id = $this->customer->getLastCategoryId();
+        if($id){
+            return Mage::getModel('catalog/category')
+                ->setStoreId($this->customer->getStoreId())
+                ->load($id)
+                ->getName();
+        }
+        return "";
+    }
+
+    /**
+     * get first purchased brand
+     *
+     * @return string
+     */
+    public function getFirstBrandPur()
+    {
+        $id = $this->customer->getProductIdForFirstBrand();
+        if($id){
+            $brand = Mage::getModel('catalog/product')
+                ->setStoreId($this->customer->getStoreId())
+                ->load($id)
+                ->getAttributeText('manufacturer');
+            if($brand)
+                return $brand;
+        }
+        return "";
+    }
+
+    /**
+     * get last purchased brand
+     *
+     * @return string
+     */
+    public function getLastBrandPur()
+    {
+        $id = $this->customer->getProductIdForLastBrand();
+        if($id){
+            $brand = Mage::getModel('catalog/product')
+                ->setStoreId($this->customer->getStoreId())
+                ->load($id)
+                ->getAttributeText('manufacturer');
+            if($brand)
+                return $brand;
+        }
+        return "";
+    }
+
+    /**
+     * get last increment id
+     *
+     * @return mixed
+     */
+    public function getLastIncrementId()
+    {
+        return $this->customer->getLastIncrementId();
     }
 }

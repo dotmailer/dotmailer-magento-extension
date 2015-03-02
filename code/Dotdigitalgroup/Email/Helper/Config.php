@@ -11,8 +11,6 @@ class Dotdigitalgroup_Email_Helper_Config
     const XML_PATH_CONNECTOR_API_ENABLED                    = 'connector_api_credentials/api/enabled';
     const XML_PATH_CONNECTOR_API_USERNAME                   = 'connector_api_credentials/api/username';
     const XML_PATH_CONNECTOR_API_PASSWORD                   = 'connector_api_credentials/api/password';
-    const XML_PATH_CONNECTOR_CLIENT_ID                      = 'connector_api_credentials/oauth/client_id';
-    const XML_PATH_CONNECTOR_CLIENT_SECRET_ID               = 'connector_api_credentials/oauth/client_key';
 
     /**
      * SMS SECTION.
@@ -112,26 +110,41 @@ class Dotdigitalgroup_Email_Helper_Config
     const XML_PATH_CONNECTOR_CUSTOMER_LAST_ORDER_DATE       = 'connector_data_mapping/customer_data/last_order_date';
     const XML_PATH_CONNECTOR_CUSTOMER_LAST_ORDER_ID         = 'connector_data_mapping/customer_data/last_order_id';
     const XML_PATH_CONNECTOR_CUSTOMER_TOTAL_REFUND          = 'connector_data_mapping/customer_data/total_refund';
-    const XML_PATH_CONNECTOR_CUSTOMER_SUBSCRIBER_STATUS     = 'connector_data_mapping/customer_data/subscriber_status';
+    const XML_PATH_CONNECTOR_CUSTOMER_LAST_ORDER_INCREMENT_ID           = 'connector_data_mapping/customer_data/last_increment_id';
+    const XML_PATH_CONNECTOR_CUSTOMER_MOST_PURCHASED_CATEGORY           = 'connector_data_mapping/customer_data/most_pur_category';
+    const XML_PATH_CONNECTOR_CUSTOMER_MOST_PURCHASED_BRAND              = 'connector_data_mapping/customer_data/most_pur_brand';
+    const XML_PATH_CONNECTOR_CUSTOMER_MOST_FREQUENT_PURCHASE_DAY        = 'connector_data_mapping/customer_data/most_freq_pur_day';
+    const XML_PATH_CONNECTOR_CUSTOMER_MOST_FREQUENT_PURCHASE_MONTH      = 'connector_data_mapping/customer_data/most_freq_pur_mon';
+    const XML_PATH_CONNECTOR_CUSTOMER_FIRST_CATEGORY_PURCHASED          = 'connector_data_mapping/customer_data/first_category_pur';
+    const XML_PATH_CONNECTOR_CUSTOMER_LAST_CATEGORY_PURCHASED           = 'connector_data_mapping/customer_data/last_category_pur';
+    const XML_PATH_CONNECTOR_CUSTOMER_FIRST_BRAND_PURCHASED             = 'connector_data_mapping/customer_data/first_brand_pur';
+    const XML_PATH_CONNECTOR_CUSTOMER_LAST_BRAND_PURCHASED              = 'connector_data_mapping/customer_data/last_brand_pur';
+    const XML_PATH_CONNECTOR_CUSTOMER_SUBSCRIBER_STATUS                 = 'connector_data_mapping/customer_data/subscriber_status';
+
+	const XML_PATH_CONNECTOR_ENTERPRISE_CURRENT_BALANCE     = 'connector_data_mapping/enterprise_data/reward_points';
+	const XML_PATH_CONNECTOR_ENTERPRISE_REWARD_AMOUNT       = 'connector_data_mapping/enterprise_data/reward_amount';
+	const XML_PATH_CONNECTOR_ENTERPRISE_CREATED_DATE        = 'connector_data_mapping/enterprise_data/created_date';
+	const XML_PATH_CONNECTOR_ENTERPRISE_EXPIRATION_DATE     = 'connector_data_mapping/enterprise_data/expiration_date';
+	const XML_PATH_CONNECTOR_ENTERPIRSE_LAST_USED_DATE      = 'connector_data_mapping/enterprise_data/last_used_date';
+	const XML_PATH_CONNECTOR_ENTERPRISE_CUSTOMER_SEGMENTS   = 'connector_data_mapping/enterprise_data/customer_segment';
+
 
 	/**
-	 * Dynamic Content
-	 */
-    const XML_PATH_CONNECTOR_DYNAMIC_CONTENT_PASSCODE       = 'connector_dynamic_content/external_dynamic_content_urls/passcode';
-	const XML_PATH_CONNECTOR_DYNAMIC_CONTENT_NOSTO          = 'connector_dynamic_content/nosto_recommendation/api';
-    const XML_PATH_CONNECTOR_DYNAMIC_CONTENT_FEEFO_LOGON    = 'connector_dynamic_content/feefo_feedback_engine/logon';
-    const XML_PATH_CONNECTOR_DYNAMIC_CONTENT_FEEFO_REVIEWS  = 'connector_dynamic_content/feefo_feedback_engine/reviews_per_product';
-    const XML_PATH_CONNECTOR_DYNAMIC_CONTENT_FEEFO_TEMPLATE  = 'connector_dynamic_content/feefo_feedback_engine/template';
+     * Dynamic Content
+     */
+    const XML_PATH_CONNECTOR_DYNAMIC_CONTENT_PASSCODE           = 'connector_dynamic_content/external_dynamic_content_urls/passcode';
+    const XML_PATH_CONNECTOR_DYNAMIC_CONTENT_NOSTO              = 'connector_dynamic_content/nosto_recommendation/api';
+    const XML_PATH_CONNECTOR_DYNAMIC_CONTENT_WIHSLIST_DISPLAY   = 'connector_dynamic_content/products/wishlist_display_type';
 
-	/**
+    /**
      * CONFIGURATION SECTION.
      */
-	const XML_PATH_CONNECTOR_SYNC_ORDER_STATUS              = 'connector_configuration/transactional_data/order_statuses';
-	const XML_PATH_CONNECTOR_CUSTOM_ORDER_ATTRIBUTES        = 'connector_configuration/transactional_data/order_custom_attributes';
+    const XML_PATH_CONNECTOR_SYNC_ORDER_STATUS              = 'connector_configuration/transactional_data/order_statuses';
+    const XML_PATH_CONNECTOR_CUSTOM_ORDER_ATTRIBUTES        = 'connector_configuration/transactional_data/order_custom_attributes';
     const XML_PATH_CONNECTOR_CUSTOM_QUOTE_ATTRIBUTES        = 'connector_configuration/transactional_data/quote_custom_attributes';
-	const XML_PATH_CONNECTOR_EMAIL_CAPTURE                  = 'connector_configuration/abandoned_carts/email_capture';
-	const XML_PATH_CONNECTOR_ABANDONED_CART_LIMIT           = 'connector_configuration/abandoned_carts/limits';
-	const XML_PATH_CONNECTOR_DISABLE_NEWSLETTER_SUCCESS     = 'connector_configuration/admin/disable_newsletter_success';
+    const XML_PATH_CONNECTOR_EMAIL_CAPTURE                  = 'connector_configuration/abandoned_carts/email_capture';
+    const XML_PATH_CONNECTOR_ABANDONED_CART_LIMIT           = 'connector_configuration/abandoned_carts/limits';
+    const XML_PATH_CONNECTOR_DISABLE_NEWSLETTER_SUCCESS     = 'connector_configuration/admin/disable_newsletter_success';
     const XML_PATH_CONNECTOR_DISABLE_CUSTOMER_SUCCESS       = 'connector_configuration/admin/disable_customer_success';
     const XML_PATH_CONNECTOR_DYNAMIC_STYLING                = 'connector_configuration/dynamic_content_style/dynamic_syling';
     const XML_PATH_CONNECTOR_DYNAMIC_NAME_COLOR             = 'connector_configuration/dynamic_content_style/name_color';
@@ -145,28 +158,28 @@ class Dotdigitalgroup_Email_Helper_Config
     const XML_PATH_CONNECTOR_DYNAMIC_LINK_STYLE             = 'connector_configuration/dynamic_content_style/link_style';
     const XML_PATH_CONNECTOR_DYNAMIC_DOC_FONT               = 'connector_configuration/dynamic_content_style/font_picker';
     const XML_PATH_CONNECTOR_DYNAMIC_DOC_BG_COLOR           = 'connector_configuration/dynamic_content_style/doc_color';
-    const XML_PATH_CONNECTOR_DYNAMIC_OTHER_COLOR             = 'connector_configuration/dynamic_content_style/other_color';
-    const XML_PATH_CONNECTOR_DYNAMIC_OTHER_FONT_SIZE         = 'connector_configuration/dynamic_content_style/other_font_size';
-    const XML_PATH_CONNECTOR_DYNAMIC_OTHER_STYLE             = 'connector_configuration/dynamic_content_style/other_style';
-	const XML_PATH_CONNECTOR_RESOURCE_ALLOCATION            = 'connector_developer_settings/import_settings/memory_limit';
-	const XML_PATH_CONNECTOR_SYNC_LIMIT                     = 'connector_developer_settings/import_settings/batch_size';
-	const XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT  = 'connector_developer_settings/import_settings/orders';
-	const XML_PATH_CONNECTOR_ABANDONED_CART_SHELL           = 'connector_developer_settings/abandoned_cart/shell';
-	const XML_PATH_CONNECTOR_SETUP_DATAFIELDS               = 'connector_developer_settings/sync_settings/setup_data_fields';
-	const XML_PATH_CONNECTOR_ADVANCED_DEBUG_ENABLED         = 'connector_developer_settings/debug/debug_enabled';
-	const XML_PATH_CONNECTOR_DEBUG_API_CALLS                = 'connector_developer_settings/debug/debug_api_calls';
-	const XML_PATH_RAYGUN_APPLICATION_CODE                  = 'connector_developer_settings/debug/raygun_code';
-	const XML_PATH_CONNECTOR_FEED_ENABLED                   = 'connector_developer_settings/feed_configuration/feed_enabled';
-	const XML_PATH_CONNECTOR_FEED_URL                       = 'connector_developer_settings/feed_configuration/feed_url';
-	const XML_PATH_CONNECTOR_FEED_FREQUENCY                 = 'connector_developer_settings/feed_configuration/frequency';
-	const XML_PATH_CONNECTOR_FEED_USE_HTTPS                 = 'connector_developer_settings/feed_configuration/use_https';
+    const XML_PATH_CONNECTOR_DYNAMIC_OTHER_COLOR            = 'connector_configuration/dynamic_content_style/other_color';
+    const XML_PATH_CONNECTOR_DYNAMIC_OTHER_FONT_SIZE        = 'connector_configuration/dynamic_content_style/other_font_size';
+    const XML_PATH_CONNECTOR_DYNAMIC_OTHER_STYLE            = 'connector_configuration/dynamic_content_style/other_style';
+    const XML_PATH_CONNECTOR_RESOURCE_ALLOCATION            = 'connector_developer_settings/import_settings/memory_limit';
+    const XML_PATH_CONNECTOR_SYNC_LIMIT                     = 'connector_developer_settings/import_settings/batch_size';
+    const XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT  = 'connector_developer_settings/import_settings/orders';
+    const XML_PATH_CONNECTOR_ABANDONED_CART_SHELL           = 'connector_developer_settings/abandoned_cart/shell';
+    const XML_PATH_CONNECTOR_SETUP_DATAFIELDS               = 'connector_developer_settings/sync_settings/setup_data_fields';
+    const XML_PATH_CONNECTOR_ADVANCED_DEBUG_ENABLED         = 'connector_developer_settings/debug/debug_enabled';
+    const XML_PATH_CONNECTOR_DEBUG_API_CALLS                = 'connector_developer_settings/debug/debug_api_calls';
+    const XML_PATH_RAYGUN_APPLICATION_CODE                  = 'connector_developer_settings/debug/raygun_code';
+    const XML_PATH_CONNECTOR_FEED_ENABLED                   = 'connector_developer_settings/feed_configuration/feed_enabled';
+    const XML_PATH_CONNECTOR_FEED_URL                       = 'connector_developer_settings/feed_configuration/feed_url';
+    const XML_PATH_CONNECTOR_FEED_FREQUENCY                 = 'connector_developer_settings/feed_configuration/frequency';
+    const XML_PATH_CONNECTOR_FEED_USE_HTTPS                 = 'connector_developer_settings/feed_configuration/use_https';
 
 
     /**
      * Automation studio.
      */
-	const XML_PATH_CONNECTOR_AUTOMATION_STUDIO_CUSTOMER      = 'connector_automation_studio/automation/customer_automation';
-	const XML_PATH_CONNECTOR_AUTOMATION_STUDIO_SUBSCRIBER    = 'connector_automation_studio/automation/subscriber_automation';
+    const XML_PATH_CONNECTOR_AUTOMATION_STUDIO_CUSTOMER      = 'connector_automation_studio/automation/customer_automation';
+    const XML_PATH_CONNECTOR_AUTOMATION_STUDIO_SUBSCRIBER    = 'connector_automation_studio/automation/subscriber_automation';
     const XML_PATH_CONNECTOR_AUTOMATION_STUDIO_ORDER         = 'connector_automation_studio/automation/order_automation';
     const XML_PATH_CONNECTOR_AUTOMATION_STUDIO_GUEST_ORDER   = 'connector_automation_studio/automation/guest_order_automation';
     const XML_PATH_CONNECTOR_AUTOMATION_STUDIO_REVIEW        = 'connector_automation_studio/automation/review_automation';
@@ -182,9 +195,10 @@ class Dotdigitalgroup_Email_Helper_Config
     /**
      * OAUTH
      */
-    const API_CONNECTOR_URL_AUTHORISE                       = 'https://my.dotmailer.com/OAuth2/authorise.aspx?';
-    const API_CONNECTOR_URL_TOKEN                           = 'https://my.dotmailer.com/OAuth2/Tokens.ashx';
-    const API_CONNECTOR_URL_LOG_USER                        = 'https://my.dotmailer.com/?oauthtoken=';
+    const API_CONNECTOR_OAUTH_URL                           = 'https://my.dotmailer.com/';
+    const API_CONNECTOR_OAUTH_URL_AUTHORISE                 = 'OAuth2/authorise.aspx?';
+    const API_CONNECTOR_OAUTH_URL_TOKEN                     = 'OAuth2/Tokens.ashx';
+    const API_CONNECTOR_OAUTH_URL_LOG_USER                  = '?oauthtoken=';
 
     /**
      * Email Config.
@@ -193,22 +207,117 @@ class Dotdigitalgroup_Email_Helper_Config
     const CONNECTOR_EMAIL_CONFIG_HOUR_TRIGGER               = 'connector_api_hour_trigger';
     const CONNECTOR_FEED_LAST_CHECK_TIME                    = 'connector_feed_last_check_time';
 
-
     /**
-     * Transactional Emails.
-     */
-    const XML_PATH_TRANSACTIONAL_API_ENABLED                = 'connector_transactional_emails/credentials/enabled';
-
-    /**
-     * Reviews
+     * Reviews SECTION
      */
     const XML_PATH_REVIEWS_ENABLED                          = 'connector_reviews/settings/enabled';
+    const XML_PATH_REVIEWS_FEEFO_LOGON                      = 'connector_reviews/feefo_feedback_engine/logon';
+    const XML_PATH_REVIEWS_FEEFO_REVIEWS                    = 'connector_reviews/feefo_feedback_engine/reviews_per_product';
+    const XML_PATH_REVIEWS_FEEFO_TEMPLATE                   = 'connector_reviews/feefo_feedback_engine/template';
+
 
 	/**
-	 * Nosto
+	 * Developer SECTION.
 	 */
-	const API_ENDPOINT                                      = 'https://api.nosto.com';
-	const API_ENDPOINT_TEST                                 = 'https://test.api.nosto.com';
+	const XML_PATH_CONNECTOR_CLIENT_ID                      = 'connector_developer_settings/oauth/client_id';
+	const XML_PATH_CONNECTOR_CLIENT_SECRET_ID               = 'connector_developer_settings/oauth/client_key';
+	const XML_PATH_CONNECTOR_CUSTOM_DOMAIN                  = 'connector_developer_settings/oauth/custom_domain';
+	const XML_PATH_CONNECTOR_CUSTOM_AUTHORIZATION           = 'connector_developer_settings/oauth/custom_authorization';
 
+    /**
+     * Nosto
+     */
+    const API_ENDPOINT                                      = 'https://api.nosto.com';
+    const API_ENDPOINT_TEST                                 = 'https://test.api.nosto.com';
+
+	const RAYGUN_API_CODE_URL                               = 'https://dotmailerformagento.co.uk/magento/raygun.xml';
+
+
+    /**
+     * @param int $website
+     *
+     * @return bool
+     * @throws Mage_Core_Exception
+     */
+    public function getAuthorizeLinkFlag($website = 0)
+    {
+        $website = Mage::app()->getWebsite($website);
+
+        $customDomain = $website->getConfig(self::XML_PATH_CONNECTOR_CUSTOM_DOMAIN);
+
+        return (bool)$customDomain;
+    }
+
+    /**
+     * @param int $website
+     *
+     * @return string
+     * @throws Mage_Core_Exception
+     */
+    public function getAuthorizeLink($website = 0)
+    {
+        //base url, check for custom oauth domain
+        if ($this->getAuthorizeLinkFlag($website)){
+            $website = Mage::app()->getWebsite($website);
+
+            $baseUrl = $website->getConfig(self::XML_PATH_CONNECTOR_CUSTOM_DOMAIN) . self::API_CONNECTOR_OAUTH_URL_AUTHORISE;
+
+        } else {
+            $baseUrl = self::API_CONNECTOR_OAUTH_URL .  self::API_CONNECTOR_OAUTH_URL_AUTHORISE;
+        }
+
+        return $baseUrl;
+    }
+
+	/**
+	 * Callback authorization url.
+	 * @return mixed|string
+	 */
+	public function getCallbackUrl()
+	{
+		if ($callback = Mage::getStoreConfig(self::XML_PATH_CONNECTOR_CUSTOM_AUTHORIZATION)){
+			return $callback;
+		}
+
+		return $redirectUri = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB, true);
+	}
+
+    /**
+     * @param int $website
+     *
+     * @return string
+     */
+    public function getTokenUrl($website = 0)
+    {
+        if ($this->getAuthorizeLinkFlag($website)) {
+            $website = Mage::app()->getWebsite($website);
+
+            $tokenUrl = $website->getConfig(self::XML_PATH_CONNECTOR_CUSTOM_DOMAIN) . self::API_CONNECTOR_OAUTH_URL_TOKEN;
+        } else {
+
+            $tokenUrl = self::API_CONNECTOR_OAUTH_URL . self::API_CONNECTOR_OAUTH_URL_TOKEN;
+        }
+
+        return $tokenUrl;
+    }
+
+
+    /**
+     * @param int $website
+     *
+     * @return string
+     */
+    public function getLogUserUrl( $website = 0 )
+    {
+        if ($this->getAuthorizeLinkFlag($website)) {
+            $website = Mage::app()->getWebsite($website);
+
+            $logUserUrl = $website->getConfig(self::XML_PATH_CONNECTOR_CUSTOM_DOMAIN) . self::API_CONNECTOR_OAUTH_URL_LOG_USER;
+        } else {
+
+            $logUserUrl = self::API_CONNECTOR_OAUTH_URL . self::API_CONNECTOR_OAUTH_URL_LOG_USER;
+        }
+        return $logUserUrl;
+    }
 
 }

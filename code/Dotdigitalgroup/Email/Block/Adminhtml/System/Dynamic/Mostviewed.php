@@ -6,8 +6,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Mostviewed extends Ma
     protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element)
     {
 	    //base url for dynamic content
-	    $baseUrl = Mage::helper('connector')->generateDynamicUrl();
-        $passcode = Mage::helper('connector')->getPasscode();
+	    $baseUrl = Mage::helper('ddg')->generateDynamicUrl();
+        $passcode = Mage::helper('ddg')->getPasscode();
 
         if (!strlen($passcode))
 	        $passcode = '[PLEASE SET UP A PASSCODE]';

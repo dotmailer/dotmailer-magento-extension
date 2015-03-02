@@ -8,7 +8,8 @@ class Dotdigitalgroup_Email_QuoteproductsController extends Dotdigitalgroup_Emai
      */
     public function preDispatch()
     {
-        Mage::helper('connector')->auth($this->getRequest()->getParam('code'));
+        //authenticate
+        $this->authenticate();
         if ($this->getRequest()->getActionName() != 'push') {
             $quoteId = $this->getRequest()->getParam('quote_id', false);
             //check for quote id param
@@ -22,11 +23,11 @@ class Dotdigitalgroup_Email_QuoteproductsController extends Dotdigitalgroup_Emai
                     $appEmulation->startEnvironmentEmulation($storeId);
                 } else {
                     $message = 'Dynamic : Quote not found: ' . $quoteId;
-                    Mage::helper('connector')->log($message);
-                    Mage::helper('connector')->rayLog('100', $message);
+                    Mage::helper('ddg')->log($message);
+                    Mage::helper('ddg')->rayLog('100', $message);
                 }
             } else {
-                Mage::helper('connector')->log('Dynamic : order_id missing :' . $quoteId);
+                Mage::helper('ddg')->log('Dynamic : order_id missing :' . $quoteId);
             }
         }
 
@@ -39,7 +40,7 @@ class Dotdigitalgroup_Email_QuoteproductsController extends Dotdigitalgroup_Emai
     public function relatedAction()
     {
         $this->loadLayout();
-        $products = $this->getLayout()->createBlock('email_connector/recommended_quoteproducts', 'connector_recommended_quote_related', array(
+        $products = $this->getLayout()->createBlock('ddg_automation/recommended_quoteproducts', 'connector_recommended_quote_related', array(
             'template' => 'connector/product/list.phtml'
         ));
         //append related products
@@ -54,7 +55,7 @@ class Dotdigitalgroup_Email_QuoteproductsController extends Dotdigitalgroup_Emai
     public function crosssellAction()
     {
         $this->loadLayout();
-        $products = $this->getLayout()->createBlock('email_connector/recommended_quoteproducts', 'connector_recommended_quote_crosssell', array(
+        $products = $this->getLayout()->createBlock('ddg_automation/recommended_quoteproducts', 'connector_recommended_quote_crosssell', array(
             'template' => 'connector/product/list.phtml'
         ));
         //append crosssell products.
@@ -69,7 +70,7 @@ class Dotdigitalgroup_Email_QuoteproductsController extends Dotdigitalgroup_Emai
     public function upsellAction()
     {
         $this->loadLayout();
-        $products = $this->getLayout()->createBlock('email_connector/recommended_quoteproducts', 'connector_recommended_quote_upsell', array(
+        $products = $this->getLayout()->createBlock('ddg_automation/recommended_quoteproducts', 'connector_recommended_quote_upsell', array(
             'template' => 'connector/product/list.phtml'
         ));
         //append upsell products
@@ -84,7 +85,7 @@ class Dotdigitalgroup_Email_QuoteproductsController extends Dotdigitalgroup_Emai
     public function pushAction()
     {
         $this->loadLayout();
-        $products = $this->getLayout()->createBlock('email_connector/recommended_push', 'connector_product_push', array(
+        $products = $this->getLayout()->createBlock('ddg_automation/recommended_push', 'connector_product_push', array(
             'template' => 'connector/product/list.phtml'
         ));
         //append push products

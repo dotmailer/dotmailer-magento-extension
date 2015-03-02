@@ -18,7 +18,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Publicdatafields
 	 */
 	private function getDataFields()
 	{
-		$helper = Mage::helper('connector');
+		$helper = Mage::helper('ddg');
 		$website = $this->getWebsite();
 		$client = $helper->getWebsiteApiClient($website);
 
@@ -35,7 +35,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Publicdatafields
     public function toOptionArray()
     {
         $fields = array();
-        $helper = Mage::helper('connector');
+        $helper = Mage::helper('ddg');
 		$website = $this->getWebsite();
 
 	    //get datafields options
@@ -45,14 +45,14 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Publicdatafields
 		    //set the api error message for the first option
 		    if ( isset( $datafields->message ) ) {
 			    //message
-			    $fields[] = array( 'value' => 0, 'label' => Mage::helper( 'connector' )->__( $datafields->message ) );
+			    $fields[] = array( 'value' => 0, 'label' => Mage::helper( 'ddg' )->__( $datafields->message ) );
 		    } else {
 			    //loop for all datafields option
 			    foreach ( $datafields as $datafield ) {
 				    if ( isset( $datafield->name ) &&  $datafield->visibility == 'Public') {
 					    $fields[] = array(
 						    'value' => $datafield->name,
-						    'label' => Mage::helper( 'connector' )->__( $datafield->name )
+						    'label' => Mage::helper( 'ddg' )->__( $datafield->name )
 					    );
 				    }
 			    }

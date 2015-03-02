@@ -5,9 +5,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Basket_Related extend
     protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element)
     {
 	    //passcode to append for url
-        $passcode = Mage::helper('connector')->getPasscode();
+        $passcode = Mage::helper('ddg')->getPasscode();
         //last quote id for dynamic page
-        $lastQuoteId = Mage::helper('connector')->getLastQuoteId();
+        $lastQuoteId = Mage::helper('ddg')->getLastQuoteId();
 
         if (!strlen($passcode))
             $passcode = '[PLEASE SET UP A PASSCODE]';
@@ -16,7 +16,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Basket_Related extend
             $lastQuoteId = '[PLEASE MAP THE LAST QUOTE ID]';
 
 	    //generate the base url and display for default store id
-	    $baseUrl = Mage::helper('connector')->generateDynamicUrl();
+	    $baseUrl = Mage::helper('ddg')->generateDynamicUrl();
 
 	    //display the full url
         $text = sprintf('%sconnector/quoteproducts/related/code/%s/quote_id/@%s@', $baseUrl, $passcode, $lastQuoteId);

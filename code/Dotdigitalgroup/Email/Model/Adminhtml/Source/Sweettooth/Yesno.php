@@ -10,7 +10,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Sweettooth_Yesno
      */
     public function toOptionArray()
     {
-        $status = Mage::helper('connector')->isSweetToothEnabled();
+        $status = Mage::helper('ddg')->isSweetToothEnabled();
         if($status){
             return array(
                 array('value' => 1, 'label'=>Mage::helper('adminhtml')->__('Yes')),

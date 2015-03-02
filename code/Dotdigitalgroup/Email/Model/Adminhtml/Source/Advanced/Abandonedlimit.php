@@ -22,16 +22,16 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Advanced_Abandonedlimit
 
 
 			if ($i == 0)
-				$row = array('value' => $one, 'label' => Mage::helper('connector')->__('No Limit'));
+				$row = array('value' => $one, 'label' => Mage::helper('ddg')->__('No Limit'));
 			elseif ($i == 1) {
 				$row = array(
 					'value' => $one,
-					'label' => Mage::helper( 'connector' )->__( $one . ' Hour' )
+					'label' => Mage::helper( 'ddg' )->__( $one . ' Hour' )
 				);
 			} else {
 				$row = array(
 					'value' => $one,
-					'label' => Mage::helper( 'connector' )->__( $one . ' Hours' )
+					'label' => Mage::helper( 'ddg' )->__( $one . ' Hours' )
 				);
 			}
 			$result[] = $row;

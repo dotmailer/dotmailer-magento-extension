@@ -12,9 +12,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
 	private $_checkpoints = array(
 		'extention_installed' => 'Extension And CURL Installed',
 		'cron_running' => 'Cron running',
+		'conflict_check' => 'Conflict Check',
 		'address_book_mapped' => 'Address Book Mapping',
-		'roi_tracking_enabled' => 'ROI And Page Tracking',
-		'transactional_emails' => 'Transactional Emails',
 		'file_permission_setttings' => 'File Permission Settings',
 		'missing_files' => 'Missing Files',
 		'contact_sync_enabled' => 'Contact Sync Enabled',
@@ -32,14 +31,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
         'custom_quote_attributes' => 'Custom Quote Attributes',
         'quote_syncing' => 'Quote Syncing',
 		'last_abandoned_cart_sent_day' => 'Last Abandoned Cart Sent Day',
-        'review_enabled' => 'Review Sync Enabled',
-        'review_syncing' => 'Review Syncing',
-        'review_campaign_status' => 'Review Status',
-        'wishlist_enabled' => 'Wishlist Enabled',
-        'wishlist_syncing' => 'Wishlist Syncing',
         'easy_email_capture_enabled' => 'Easy Email Capture Enabled',
         'disable_newsletter_success_enabled' => 'Disable Newsletter Success Enabled',
-		'conflict_check' => 'Conflict Check',
 		'system_information' => 'System Information'
 
 	);
@@ -74,12 +67,12 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
 
 	public function getTabLabel()
 	{
-		return Mage::helper('connector')->__('Marketing Automation System Status');
+		return Mage::helper('ddg')->__('Marketing Automation System Status');
 	}
 
 	public function getTabTitle()
 	{
-		return Mage::helper('connector')->__('Marketing Automation System Status');
+		return Mage::helper('ddg')->__('Marketing Automation System Status');
 	}
 
 	/**
@@ -114,7 +107,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
 	 */
 	public function extentionInstalled()
 	{
-		$resultContent = Mage::getModel('email_connector/adminhtml_dashboard_content');
+		$resultContent = Mage::getModel('ddg_automation/adminhtml_dashboard_content');
 
 		$resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
 	          ->setTitle('Extension Status : ')
@@ -136,19 +129,19 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
 	 */
 	public function cronRunning()
 	{
-		$resultContent = Mage::getModel('email_connector/adminhtml_dashboard_content');
+		$resultContent = Mage::getModel('ddg_automation/adminhtml_dashboard_content');
 		$resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
 			->setTitle('Cron Status : ')
 			->setMessage('Cron is running.');
 		$message = 'No cronjob task found. Check if cron is configured correctly.';
 		$howToSetupCron = 'For more information <a href="http://www.magentocommerce.com/wiki/1_-_installation_and_configuration/how_to_setup_a_cron_job">how to setup the Magento cronjob.</a>';
-		$lastCustomerSync = Mage::getModel('email_connector/cron')->getLastCustomerSync();
+		$lastCustomerSync = Mage::getModel('ddg_automation/cron')->getLastCustomerSync();
 
 		if ($lastCustomerSync === false) {
 			$resultContent->setStyle(self::CONNECTOR_DASHBOARD_FAILED)
 				->setHowto($howToSetupCron);
 		} else {
-			$timespan = Mage::helper('connector')->dateDiff($lastCustomerSync);
+			$timespan = Mage::helper('ddg')->dateDiff($lastCustomerSync);
 			//last cron was less then 5min
 			if ($timespan <= 5 * 60) {
 				$resultContent->setTitle('Cronjob is working : ');
@@ -176,7 +169,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
 	 */
 	public function addressBookMapped()
 	{
-		$resultContent = Mage::getModel('email_connector/adminhtml_dashboard_content');
+		$resultContent = Mage::getModel('ddg_automation/adminhtml_dashboard_content');
 		$resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
 			->setTitle('Configuration For Address Book Status : ')
 			->setMessage('Looks Great.');
@@ -214,7 +207,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
 	 */
 		public function roiTrackingEnabled()
 	{
-		$resultContent = Mage::getModel('email_connector/adminhtml_dashboard_content');
+		$resultContent = Mage::getModel('ddg_automation/adminhtml_dashboard_content');
 		$resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
 			->setTitle('ROI Tracking Status : ')
 			->setMessage('Looks Great.');
@@ -251,47 +244,12 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
 	}
 
 	/**
-	 * Transactional Data.
-	 * @return Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Content
-	 */
-	public function transactionalEmails()
-	{
-		$resultContent = Mage::getModel('email_connector/adminhtml_dashboard_content');
-		$resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
-		   ->setTitle('Transactional Emails Status : ')
-			->setMessage('Enabled.')
-		;
-
-		$valid = true;
-		foreach ( Mage::app()->getWebsites() as $website ) {
-			$websiteName  = $website->getName();
-			$transactional = ($website->getConfig(Dotdigitalgroup_Email_Helper_Transactional::XML_PATH_TRANSACTIONAL_API_ENABLED))? true : 'Disabled! ';
-			if ($transactional !== true){
-				$url = Mage::helper('adminhtml')->getUrl('*/connector/enablewebsiteconfiguration', array('path' => 'XML_PATH_TRANSACTIONAL_API_ENABLED', 'website' => $website->getId()));
-				$resultContent->setStyle(self::CONNECTOR_DASHBOARD_FAILED)
-					->setMessage('')
-					->setTable(array(
-						'Website' => $websiteName,
-						'Status' => ($transactional)? $transactional . ' <a href="' . $url . '">enable</a>' : 'Enabled.'
-					));
-				$valid = false;
-			}
-		}
-		//validation failed
-		if (! $valid) {
-			$resultContent->setHowto(self::FAST_FIX_MESSAGE);
-		}
-
-		return $resultContent;
-	}
-
-	/**
 	 * File Permissions.
 	 * @return Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Content
 	 */
 	public function filePermissionSetttings()
 	{
-		$resultContent = Mage::getModel('email_connector/adminhtml_dashboard_content');
+		$resultContent = Mage::getModel('ddg_automation/adminhtml_dashboard_content');
 		$resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
 			->setTitle('Files/Folders Permission Settings : ')
 			->setMessage('Looks Great.');
@@ -302,8 +260,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
 		$emailDir   = Mage::getBaseDir('var') . DIRECTORY_SEPARATOR . 'export' .  DIRECTORY_SEPARATOR . 'email';
 		$archiveDir = Mage::getBaseDir('var') . DIRECTORY_SEPARATOR . 'export' .  DIRECTORY_SEPARATOR . 'email' . DIRECTORY_SEPARATOR . 'archive';
 
-		$checkEmail   = Mage::helper('connector/file')->getPathPermission($emailDir);
-		$checkArchive = Mage::helper('connector/file')->getPathPermission($archiveDir);
+		$checkEmail   = Mage::helper('ddg/file')->getPathPermission($emailDir);
+		$checkArchive = Mage::helper('ddg/file')->getPathPermission($archiveDir);
 
 		//file persmission failed
 		if ($checkEmail != 755 && $checkEmail != 777 || $checkArchive != 755 && $checkArchive != 777) {
@@ -326,7 +284,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
 	 */
 	public function missingFiles()
 	{
-		$resultContent = Mage::getModel('email_connector/adminhtml_dashboard_content');
+		$resultContent = Mage::getModel('ddg_automation/adminhtml_dashboard_content');
 
 		$resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
 			->setTitle('Missing Files : ')
@@ -393,7 +351,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
 	 */
 	public function contactSyncEnabled()
 	{
-		$resultContent = Mage::getModel('email_connector/adminhtml_dashboard_content');
+		$resultContent = Mage::getModel('ddg_automation/adminhtml_dashboard_content');
 		$resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
 		              ->setTitle('Contacts Sync Status : ')
 		              ->setMessage('Looks Great.');
@@ -431,17 +389,17 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
 	public function contactSyncing()
 	{
 		//content to render
-		$resultContent = Mage::getModel('email_connector/adminhtml_dashboard_content');
+		$resultContent = Mage::getModel('ddg_automation/adminhtml_dashboard_content');
 		$resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
 		              ->setTitle('Contacts Sync : ')
 		              ->setMessage('Looks Great.');
-		$contactModel = Mage::getModel('email_connector/contact');
+		$contactModel = Mage::getModel('ddg_automation/contact');
 
 		//global email duplicates
 		if (Mage::getResourceModel('customer/customer')->findEmailDuplicates()) {
 
 			//duplicate email customers
-			$customers = Mage::helper('connector')->getCustomersWithDuplicateEmails();
+			$customers = Mage::helper('ddg')->getCustomersWithDuplicateEmails();
 			$customerEmails = implode(',   ', $customers->getColumnValues('email'));
 			//render the email duplicates
 			$resultContent->setHowto('Found Duplicate Customers Emails :')
@@ -518,7 +476,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
 	 */
 	public function subscriberSyncEnabled()
 	{
-		$resultContent = Mage::getModel('email_connector/adminhtml_dashboard_content');
+		$resultContent = Mage::getModel('ddg_automation/adminhtml_dashboard_content');
 		$resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
 		              ->setTitle('Subscribers Sync Status : ')
 		              ->setMessage('Looks Great.');
@@ -554,11 +512,11 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
 	 */
 	public function subscribersSyncing()
 	{
-		$resultContent = Mage::getModel('email_connector/adminhtml_dashboard_content');
+		$resultContent = Mage::getModel('ddg_automation/adminhtml_dashboard_content');
 		$resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
 		              ->setTitle('Subscribers Sync : ')
 		              ->setMessage('Looks Great.');
-		$contactModel = Mage::getModel('email_connector/contact');
+		$contactModel = Mage::getModel('ddg_automation/contact');
 
 		foreach ( Mage::app()->getWebsites() as $website ) {
 			$websiteId = $website->getId();
@@ -607,7 +565,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
 	public function automationActive()
 	{
 		$disableCustomer = $disableSubscriber  = $disableOrder = $disableGuestOrder = $disableReviews  = $disableWishlist = '';
-		$resultContent = Mage::getModel('email_connector/adminhtml_dashboard_content');
+		$resultContent = Mage::getModel('ddg_automation/adminhtml_dashboard_content');
 		$resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
 			->setTitle('Automation Program Status :')
 			->setMessage('');
@@ -795,7 +753,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
 	 */
 	public function abandonedCartsEnabled()
 	{
-		$resultContent = Mage::getModel('email_connector/adminhtml_dashboard_content');
+		$resultContent = Mage::getModel('ddg_automation/adminhtml_dashboard_content');
 
 		$resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
 			->setTitle('Abandoned Carts Status : ')
@@ -850,7 +808,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
 	 */
 	public function dataFieldMapped()
 	{
-		$resultContent = Mage::getModel('email_connector/adminhtml_dashboard_content');
+		$resultContent = Mage::getModel('ddg_automation/adminhtml_dashboard_content');
 
 		$resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
 		              ->setTitle('Default Datafields Mapped Status : ')
@@ -1016,11 +974,11 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
 	 */
 	public function validApiCredentials()
 	{
-		$resultContent = Mage::getModel('email_connector/adminhtml_dashboard_content');
+		$resultContent = Mage::getModel('ddg_automation/adminhtml_dashboard_content');
 		$resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
 		              ->setTitle('API Credentials Status : ')
 		              ->setMessage('Valid.');
-		$helper = Mage::helper('connector');
+		$helper = Mage::helper('ddg');
 		foreach ( Mage::app()->getWebsites() as $website ) {
 			$websiteName  = $website->getName();
 			$websiteId = $website->getId();
@@ -1028,7 +986,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
 			$apiUsername = $helper->getApiUsername($websiteId);
 			$apiPassword = $helper->getApiPassword($websiteId);
 
-			$api = Mage::getModel('email_connector/apiconnector_test')->ajaxvalidate($apiUsername, $apiPassword);
+			$api = Mage::getModel('ddg_automation/apiconnector_test')->ajaxvalidate($apiUsername, $apiPassword);
 
 			if ($api != 'Credentials Valid.') {
 				$url = Mage::helper('adminhtml')->getUrl('*/system_config/edit/section/connector_api_credentials/website/' . $website->getCode());
@@ -1052,7 +1010,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
 	 */
 	public function orderEnabled()
 	{
-		$resultContent = Mage::getModel('email_connector/adminhtml_dashboard_content');
+		$resultContent = Mage::getModel('ddg_automation/adminhtml_dashboard_content');
 		$resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
 		              ->setTitle('Order Sync : ')
 		              ->setMessage('Enabled.');
@@ -1089,7 +1047,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
      */
     public function customOrderAttributes()
     {
-        $resultContent = Mage::getModel('email_connector/adminhtml_dashboard_content');
+        $resultContent = Mage::getModel('ddg_automation/adminhtml_dashboard_content');
         $resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
             ->setTitle('Custom Order Attributes : ')
             ->setMessage('Selected.');
@@ -1118,7 +1076,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
 	 */
 	public function orderSyncing()
 	{
-		$resultContent = Mage::getModel('email_connector/adminhtml_dashboard_content');
+		$resultContent = Mage::getModel('ddg_automation/adminhtml_dashboard_content');
 		$resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
 		              ->setTitle('Order Syncing : ')
 		              ->setMessage('Looks Great.');
@@ -1128,7 +1086,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
 			$storeIds = $website->getStoreIds();
 
 			//numbser of orders marked as imported
-			$numOrders = Mage::getModel('email_connector/order')->getCollection()
+			$numOrders = Mage::getModel('ddg_automation/order')->getCollection()
 				->addFieldToFilter('email_imported', 1)
 				->addFieldToFilter('store_id', array('in', $storeIds))->getSize();
 
@@ -1153,7 +1111,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
      */
     public function quoteEnabled()
     {
-        $resultContent = Mage::getModel('email_connector/adminhtml_dashboard_content');
+        $resultContent = Mage::getModel('ddg_automation/adminhtml_dashboard_content');
         $resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
             ->setTitle('Quote Sync : ')
             ->setMessage('Enabled.');
@@ -1190,7 +1148,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
      */
     public function customQuoteAttributes()
     {
-        $resultContent = Mage::getModel('email_connector/adminhtml_dashboard_content');
+        $resultContent = Mage::getModel('ddg_automation/adminhtml_dashboard_content');
         $resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
             ->setTitle('Custom Quote Attributes : ')
             ->setMessage('Selected.');
@@ -1219,7 +1177,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
      */
     public function quoteSyncing()
     {
-        $resultContent = Mage::getModel('email_connector/adminhtml_dashboard_content');
+        $resultContent = Mage::getModel('ddg_automation/adminhtml_dashboard_content');
         $resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
             ->setTitle('Quote Syncing : ')
             ->setMessage('Looks Great.');
@@ -1229,7 +1187,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
             $storeIds = $website->getStoreIds();
 
             //number of quote marked as imported
-            $numQuotes = Mage::getModel('email_connector/quote')->getCollection()
+            $numQuotes = Mage::getModel('ddg_automation/quote')->getCollection()
                 ->addFieldToFilter('imported', 1)
                 ->addFieldToFilter('store_id', array('in', $storeIds))->getSize();
 
@@ -1255,7 +1213,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
      */
     public function reviewEnabled()
     {
-        $resultContent = Mage::getModel('email_connector/adminhtml_dashboard_content');
+        $resultContent = Mage::getModel('ddg_automation/adminhtml_dashboard_content');
         $resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
             ->setTitle('Review Sync : ')
             ->setMessage('Enabled.');
@@ -1285,7 +1243,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
      */
     public function reviewSyncing()
     {
-        $resultContent = Mage::getModel('email_connector/adminhtml_dashboard_content');
+        $resultContent = Mage::getModel('ddg_automation/adminhtml_dashboard_content');
         $resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
             ->setTitle('Review Syncing : ')
             ->setMessage('Looks Great.');
@@ -1295,13 +1253,13 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
             $storeIds = $website->getStoreIds();
 
             //number of reviews marked as imported
-            $numReview = Mage::getModel('email_connector/review')->getCollection()
+            $numReview = Mage::getModel('ddg_automation/review')->getCollection()
                 ->addFieldToFilter('review_imported', 1)
                 ->addFieldToFilter('store_id', array('in', $storeIds))
                 ->getSize();
 
             //total reviews
-            $totalReview = Mage::getModel('email_connector/review')->getCollection()
+            $totalReview = Mage::getModel('ddg_automation/review')->getCollection()
                 ->addFieldToFilter('store_id', array('in', $storeIds))
                 ->getSize();
 
@@ -1330,7 +1288,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
      */
     public function reviewCampaignStatus()
     {
-        $resultContent = Mage::getModel('email_connector/adminhtml_dashboard_content');
+        $resultContent = Mage::getModel('ddg_automation/adminhtml_dashboard_content');
 
         $resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
             ->setTitle('Review Status : ')
@@ -1373,14 +1331,14 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
 	 */
 	public function lastAbandonedCartSentDay()
 	{
-		$resultContent = Mage::getModel('email_connector/adminhtml_dashboard_content');
+		$resultContent = Mage::getModel('ddg_automation/adminhtml_dashboard_content');
 		$resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
 		              ->setTitle('Last Abandoned Summary : ');
 
 		foreach ( Mage::app()->getWebsites() as $website ) {
 
 			$websiteName  = $website->getName();
-			$client = Mage::helper('connector')->getWebsiteApiClient($website);
+			$client = Mage::helper('ddg')->getWebsiteApiClient($website);
 
 			//customer carts
 			$customerCampaign1 = $website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CAMPAIGN_1);
@@ -1439,34 +1397,120 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
 	 */
 	public function conflictCheck()
 	{
-		/**
-		 * Check the API accounts for different websites and posible mapping conflicts.
-		 */
-		$resultContent = Mage::getModel('email_connector/adminhtml_dashboard_content');
+		$resultContent = Mage::getModel('ddg_automation/adminhtml_dashboard_content');
 		$resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
 		              ->setTitle('Conflict Status : ')
-			->setMessage('Looks Great.')
-		;
+			->setMessage('Looks Great.');
 
-		$lastApi = false;
-		foreach ( Mage::app()->getWebsites() as $website )
-		{
-			$apiUsername = $website->getConfig( Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_USERNAME );
-			if ($lastApi === false)
-				$lastApi = $apiUsername;
-			//check difference for the previous api usename
-		 	if ($lastApi != $apiUsername) {
-			    $resultContent->setStyle(self::CONNECTOR_DASHBOARD_FAILED)
-				    ->setMessage('Possible configuration conflict.')
-				    ->setTable( array(
-				        'Website'      => $website->getName(),
-				        'Multiple API Usernames' => $apiUsername
-			    ));
-			    $lastApi = $apiUsername;
-		    }
+		//check the module override and conflict
+		$rewrites = Mage::helper('ddg/dashboard')->getRewrites();
+
+
+		if ($rewrites === false) {
+			$resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
+			              ->setMessage('No Conflict Rewrites Found.');
+		} else {
+
+			$types = array('blocks', 'models', 'helpers');
+			foreach ($types as $t) {
+
+				if (!empty($rewrites[$t])) {
+
+					$resultContent->setStyle(self::CONNECTOR_DASHBOARD_FAILED)
+					              ->setMessage('Conflicting Rewrite Found : ');
+
+					foreach ($rewrites[$t] as $node => $rewriteInfo) {
+
+						$resultContent->setTable(array(
+							'Type' => $t,
+							'Class' => implode(', ', array_values($rewriteInfo['classes'])),
+							'Rewrites' => '',
+							'Loaded Class' => ''
+							));
+					}
+				}
+			}
+
+			$conflictCounter = 0;
+			$tableData = array();
+			foreach ($rewrites as $type => $data) {
+				if (count($data) > 0 && is_array($data)) {
+
+					foreach ($data as $class => $rewriteClass) {
+
+						if (count($rewriteClass) > 1) {
+							if ($this->_isInheritanceConflict($rewriteClass)) {
+
+								$resultContent->setTable(array(
+									'Type'         => $type,
+									'Class'        => $class,
+									'Rewrites'     => implode(', ', $rewriteClass['classes']),
+									'Loaded Class' => $this->_getLoadedClass($type, $class),
+								));
+
+								$conflictCounter++;
+							}
+						}
+					}
+				}
+			}
+			if (! empty($tableData))
+				$resultContent->setTable($tableData);
+
 		}
 
 		return $resultContent;
+	}
+
+	/**
+	 * Returns loaded class by type like models or blocks
+	 *
+	 * @param string $type
+	 * @param string $class
+	 * @return string
+	 */
+	protected function _getLoadedClass($type, $class)
+	{
+		switch ($type) {
+			case 'blocks':
+				return Mage::getConfig()->getBlockClassName($class);
+
+			case 'helpers':
+				return Mage::getConfig()->getHelperClassName($class);
+
+			default:
+			case 'models':
+				return Mage::getConfig()->getModelClassName($class);
+				break;
+		}
+	}
+
+	/**
+	 * Check if rewritten class has inherited the parent class.
+	 * If yes we have no conflict. The top class can extend every core class.
+	 * So we cannot check this.
+	 *
+	 * @var array $classes
+	 * @return bool
+	 */
+	protected function _isInheritanceConflict($classes)
+	{
+		$classes = array_reverse($classes);
+		for ($i = 0; $i < count($classes) - 1; $i++) {
+			try {
+				if (class_exists($classes[$i])
+				    && class_exists($classes[$i + 1])
+				) {
+					if (! is_a($classes[$i], $classes[$i + 1], true)) {
+						return true;
+					}
+				}
+			} catch (\Exception $e) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -1476,7 +1520,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
 	 */
 	public function systemInformation()
 	{
-		$resultContent = Mage::getModel('email_connector/adminhtml_dashboard_content');
+		$resultContent = Mage::getModel('ddg_automation/adminhtml_dashboard_content');
 		$resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED);
 
 		//compatibility with the old versions
@@ -1509,7 +1553,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
 			->setHowto('PHP Memory : ' . $mem)
 			->setHowto('PHP Max Execution Time : ' . ini_get('max_execution_time') . ' sec')
 			->setHowto($version)
-			->setHowto('Connector version : V' . Mage::helper('connector')->getConnectorVersion());
+			->setHowto('Connector version : V' . Mage::helper('ddg')->getConnectorVersion());
 
 		return $resultContent;
 	}
@@ -1537,7 +1581,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
 
 	 */
 	protected function _getWebisteProgram($program, $website) {
-		$client = Mage::helper('connector')->getWebsiteApiClient($website);
+		$client = Mage::helper('ddg')->getWebsiteApiClient($website);
 
 		if (! $client || !$program){
 			return false;
@@ -1560,7 +1604,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
 	 * @return bool|null
 	 */
 	protected function _getAddressBookContacts($addressBook, $webiste) {
-		$client = Mage::helper('connector')->getWebsiteApiClient($webiste);
+		$client = Mage::helper('ddg')->getWebsiteApiClient($webiste);
 
 		if (! $client && $addressBook)
 			return false;
@@ -1598,7 +1642,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
      */
     public function easyEmailCaptureEnabled()
     {
-        $resultContent = Mage::getModel('email_connector/adminhtml_dashboard_content');
+        $resultContent = Mage::getModel('ddg_automation/adminhtml_dashboard_content');
         $resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
             ->setTitle('Easy Email Capture : ')
             ->setMessage('Enabled.');
@@ -1628,7 +1672,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
      */
     public function disableNewsletterSuccessEnabled()
     {
-        $resultContent = Mage::getModel('email_connector/adminhtml_dashboard_content');
+        $resultContent = Mage::getModel('ddg_automation/adminhtml_dashboard_content');
         $resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
             ->setTitle('Disable Newsletter Success : ')
             ->setMessage('Enabled.');
@@ -1658,7 +1702,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
      */
     public function wishlistEnabled()
     {
-        $resultContent = Mage::getModel('email_connector/adminhtml_dashboard_content');
+        $resultContent = Mage::getModel('ddg_automation/adminhtml_dashboard_content');
         $resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
             ->setTitle('Wishlist Sync : ')
             ->setMessage('Enabled.');
@@ -1688,7 +1732,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
      */
     public function wishlistSyncing()
     {
-        $resultContent = Mage::getModel('email_connector/adminhtml_dashboard_content');
+        $resultContent = Mage::getModel('ddg_automation/adminhtml_dashboard_content');
         $resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
             ->setTitle('Wishlist Syncing : ')
             ->setMessage('Looks Great.');
@@ -1698,13 +1742,13 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
             $storeIds = $website->getStoreIds();
 
             //number of wishlist marked as imported
-            $numWishlist = Mage::getModel('email_connector/wishlist')->getCollection()
+            $numWishlist = Mage::getModel('ddg_automation/wishlist')->getCollection()
                 ->addFieldToFilter('wishlist_imported', 1)
                 ->addFieldToFilter('store_id', array('in', $storeIds))
                 ->getSize();
 
             //total wishlist
-            $totalWishlist = Mage::getModel('email_connector/wishlist')->getCollection()
+            $totalWishlist = Mage::getModel('ddg_automation/wishlist')->getCollection()
                 ->addFieldToFilter('store_id', array('in', $storeIds))
                 ->getSize();
 

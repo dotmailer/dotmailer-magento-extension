@@ -10,17 +10,17 @@ class Dotdigitalgroup_Email_ShippingController extends Dotdigitalgroup_Email_Dyn
     {
         $this->loadLayout();
 	    //set content template
-        $newOrder = $this->getLayout()->createBlock('email_connector/order_shipping', 'connector_shipping_new', array(
+        $newOrder = $this->getLayout()->createBlock('ddg_automation/order_shipping', 'connector_shipping_new', array(
             'template' => 'connector/shipping/new.phtml'
         ));
         $this->getLayout()->getBlock('content')->append($newOrder);
 	    //set content items
-        $items = $this->getLayout()->createBlock('email_connector/order', 'connector_shipping_items', array(
+        $items = $this->getLayout()->createBlock('ddg_automation/order', 'connector_shipping_items', array(
             'template' => 'connector/order/items.phtml'
         ));
         $this->getLayout()->getBlock('connector_shipping_new')->append($items);
 	    //rewrite the items to dislpay the shipped ones
-        $items = $this->getLayout()->createBlock('email_connector/order_shipping', 'connector_shipping_track', array(
+        $items = $this->getLayout()->createBlock('ddg_automation/order_shipping', 'connector_shipping_track', array(
             'template' => 'email/order/shipment/track.phtml'
         ));
         $this->getLayout()->getBlock('connector_shipping_new')->append($items);
@@ -35,18 +35,18 @@ class Dotdigitalgroup_Email_ShippingController extends Dotdigitalgroup_Email_Dyn
     {
         $this->loadLayout();
 	    //set content template
-        $newOrder = $this->getLayout()->createBlock('email_connector/order_shipping', 'connector_shipping_newguest', array(
+        $newOrder = $this->getLayout()->createBlock('ddg_automation/order_shipping', 'connector_shipping_newguest', array(
             'template' => 'connector/shipping/newguest.phtml'
         ));
         $this->getLayout()->getBlock('content')->append($newOrder);
 	    //set content items
-        $items = $this->getLayout()->createBlock('email_connector/order', 'connector_shipping_items', array(
+        $items = $this->getLayout()->createBlock('ddg_automation/order', 'connector_shipping_items', array(
             'template' => 'connector/order/items.phtml'
         ));
 	    //new guest shipping items
         $this->getLayout()->getBlock('connector_shipping_newguest')->append($items);
 	    //rewrite the items to dislpay the shipped ones
-        $items = $this->getLayout()->createBlock('email_connector/order_shipping', 'connector_shipping_track', array(
+        $items = $this->getLayout()->createBlock('ddg_automation/order_shipping', 'connector_shipping_track', array(
             'template' => 'email/order/shipment/track.phtml'
         ));
 	    //items that was shipped
@@ -62,7 +62,7 @@ class Dotdigitalgroup_Email_ShippingController extends Dotdigitalgroup_Email_Dyn
     {
         $this->loadLayout();
 	    //set the content template
-        $shippingUpdate = $this->getLayout()->createBlock('email_connector/order_shipping', 'connector_shipping_update', array(
+        $shippingUpdate = $this->getLayout()->createBlock('ddg_automation/order_shipping', 'connector_shipping_update', array(
             'template' => 'connector/shipping/update.phtml'
         ));
 	    //shipping update content
@@ -77,7 +77,7 @@ class Dotdigitalgroup_Email_ShippingController extends Dotdigitalgroup_Email_Dyn
 	public function updateguestAction()
     {
         $this->loadLayout();
-        $shippingGuest = $this->getLayout()->createBlock('email_connector/order_shipping', 'connector_shipping_updateguest', array(
+        $shippingGuest = $this->getLayout()->createBlock('ddg_automation/order_shipping', 'connector_shipping_updateguest', array(
             'template' => 'connector/shipping/updateguest.phtml'
         ));
 	    //set shipping content

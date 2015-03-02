@@ -26,7 +26,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Test extends Dotdigitalgroup_Emai
             $accountInfo = $this->getAccountInfo();
             if (isset($accountInfo->message)) {
                 Mage::getSingleton('adminhtml/session')->addError($accountInfo->message);
-                Mage::helper('connector')->log('VALIDATION ERROR :  ' . $accountInfo->message);
+                Mage::helper('ddg')->log('VALIDATION ERROR :  ' . $accountInfo->message);
                 return false;
             }
             return $accountInfo;
@@ -51,7 +51,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Test extends Dotdigitalgroup_Emai
             $response = $this->getAccountInfo();
             if (isset($response->message)) {
                 $message = 'API Username And Password Do Not Match!';
-                Mage::helper('connector')->log($message);
+                Mage::helper('ddg')->log($message);
             }
             return $message;
         }

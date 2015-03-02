@@ -29,7 +29,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Campaign_Edit_Form extends Mage_Admi
         );
 
         $fieldset = $form->addFieldset('base_fieldset', array(
-            'legend'    => Mage::helper('connector')->__('Campaign Information')
+            'legend'    => Mage::helper('ddg')->__('Campaign Information')
         ));
 
         if ($model->getId()) {
@@ -40,8 +40,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Campaign_Edit_Form extends Mage_Admi
 
         $fieldset->addField('name', 'text', array(
             'name'      => 'name',
-            'label'     => Mage::helper('connector')->__('Name'),
-            'title'     => Mage::helper('connector')->__('Name'),
+            'label'     => Mage::helper('ddg')->__('Name'),
+            'title'     => Mage::helper('ddg')->__('Name'),
             'required'  => true,
         ));
 

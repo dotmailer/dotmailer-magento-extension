@@ -11,7 +11,7 @@ class Dotdigitalgroup_Email_Model_Customer_Guest
 	public function sync()
     {
         /** @var Dotdigitalgroup_Email_Helper_Data $helper */
-        $helper = Mage::helper('connector');
+        $helper = Mage::helper('ddg');
         $this->_start = microtime(true);
         foreach(Mage::app()->getWebsites() as $website) {
 
@@ -34,11 +34,11 @@ class Dotdigitalgroup_Email_Model_Customer_Guest
 
     public function exportGuestPerWebsite(Mage_Core_Model_Website $website)
     {
-        $helper = Mage::helper('connector');
-        $fileHelper = Mage::helper('connector/file');
-        $guests = Mage::getModel('email_connector/contact')->getGuests($website);
+        $helper = Mage::helper('ddg');
+        $fileHelper = Mage::helper('ddg/file');
+        $guests = Mage::getModel('ddg_automation/contact')->getGuests($website);
         if ($guests->getSize()) {
-            $client = Mage::helper('connector')->getWebsiteApiClient($website);
+            $client = Mage::helper('ddg')->getWebsiteApiClient($website);
             $guestFilename = strtolower($website->getCode() . '_guest_' . date('d_m_Y_Hi') . '.csv');
             $helper->log('Guest file: ' . $guestFilename);
             $storeName = $helper->getMappedStoreName($website);

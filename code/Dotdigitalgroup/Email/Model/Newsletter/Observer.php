@@ -13,25 +13,28 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
 	 */
 	public function handleNewsletterSubscriberSave(Varien_Event_Observer $observer)
     {
-	    $helper = Mage::helper('connector');
+	    $helper = Mage::helper('ddg');
 	    $subscriber = $observer->getEvent()->getSubscriber();
 	    $storeId            = $subscriber->getStoreId();
 	    $email              = $subscriber->getEmail();
 	    $subscriberStatus   = $subscriber->getSubscriberStatus();
+		$store = Mage::app()->getStore($storeId);
+		$website = $store->getWebsite();
 
         $websiteId = Mage::app()->getStore($subscriber->getStoreId())->getWebsiteId();
-        $contactEmail = Mage::getModel('email_connector/contact')->loadByCustomerEmail($email, $websiteId);
+        $contactEmail = Mage::getModel('ddg_automation/contact')->loadByCustomerEmail($email, $websiteId);
 	    try{
 	        // send new subscriber to an automation
 	        if (! Mage::getModel('newsletter/subscriber')->loadByEmail($email)->getId()) {
-
+				//data fields
+				Mage::helper('ddg')->updateDataFields($email, $website, $store->getName());
 		        $this->_postSubscriberToAutomation($email, $websiteId);
 	        }
 
             // only for subsribers
             if ($subscriberStatus == Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED) {
 
-	            $client = Mage::helper('connector')->getWebsiteApiClient($websiteId);
+	            $client = Mage::helper('ddg')->getWebsiteApiClient($websiteId);
 
 	            //check for website client
 	            if ($client) {
@@ -55,7 +58,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
 	            if ($contactEmail->getSuppressed())
 		            return $this;
                 //update contact id for the subscriber
-                $client = Mage::helper('connector')->getWebsiteApiClient($websiteId);
+                $client = Mage::helper('ddg')->getWebsiteApiClient($websiteId);
 	            //check for website client
 	            if ($client) {
 		            $contactId = $contactEmail->getContactId();
@@ -88,7 +91,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
 
         }catch(Exception $e){
             Mage::logException($e);
-	        Mage::helper('connector')->getRaygunClient()->SendException($e, array(Mage::getBaseUrl('web')));
+	        Mage::helper('ddg')->getRaygunClient()->SendException($e, array(Mage::getBaseUrl('web')));
         }
         return $this;
     }
@@ -98,12 +101,12 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
 		/**
 		 * Automation Programm
 		 */
-		$subscriberAutoCamaignId = Mage::helper('connector')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_SUBSCRIBER, $websiteId);
-		$enabled = Mage::helper('connector')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED, $websiteId);
+		$subscriberAutoCamaignId = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_SUBSCRIBER, $websiteId);
+		$enabled = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED, $websiteId);
 		//enabled and mapped
 		if ($enabled && $subscriberAutoCamaignId) {
-            Mage::helper( 'connector' )->log( 'AS - subscriber automation Campaign id : ' . $subscriberAutoCamaignId );
-			$client = Mage::helper( 'connector' )->getWebsiteApiClient( $websiteId );
+            Mage::helper( 'ddg' )->log( 'AS - subscriber automation Campaign id : ' . $subscriberAutoCamaignId );
+			$client = Mage::helper( 'ddg' )->getWebsiteApiClient( $websiteId );
 			//create new contact
 			$apiContact = $client->postContacts($email);
 
@@ -115,7 +118,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
 			 * status
 			 * dateCreated
 			 */
-            Mage::helper( 'connector' )->log( 'AS - get subscriber Program id : ' . $program->id);
+            Mage::helper( 'ddg' )->log( 'AS - get subscriber Program id : ' . $program->id);
 			//check for active program with status "Active"
 			if (isset($program->status) && $program->status == 'Active') {
 

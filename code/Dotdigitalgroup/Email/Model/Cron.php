@@ -8,19 +8,19 @@ class Dotdigitalgroup_Email_Model_Cron
     public function contactSync()
     {
         // send customers
-        $result = Mage::getModel('email_connector/apiconnector_contact')->sync();
+        $result = Mage::getModel('ddg_automation/apiconnector_contact')->sync();
 	    return $result;
     }
 
     /**
-     * CRON FOR LOST BASKET
+     * CRON FOR ABANDONED CARTS
      */
-    public function lostBaskets()
+    public function abandonedCarts()
     {
 	    //don't execute if the cron is running from shell
 	    if (! Mage::getStoreConfigFlag(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_ABANDONED_CART_SHELL)) {
 		    // send lost basket
-		    Mage::getModel( 'email_connector/sales_quote' )->proccessLostBaskets();
+		    Mage::getModel( 'ddg_automation/sales_quote' )->proccessAbandonedCarts();
 	    }
     }
 
@@ -32,7 +32,7 @@ class Dotdigitalgroup_Email_Model_Cron
         //sync reviews
         $this->reviewSync();
         //sync wishlist
-        Mage::getModel('email_connector/wishlist')->sync();
+        Mage::getModel('ddg_automation/wishlist')->sync();
     }
 
     /**
@@ -41,9 +41,9 @@ class Dotdigitalgroup_Email_Model_Cron
     public function reviewSync()
     {
         //find orders to review and register campaign
-        Mage::getModel('email_connector/sales_order')->createReviewCampaigns();
+        Mage::getModel('ddg_automation/sales_order')->createReviewCampaigns();
         //sync reviews
-        $result = Mage::getModel('email_connector/review')->sync();
+        $result = Mage::getModel('ddg_automation/review')->sync();
         return $result;
     }
 
@@ -55,7 +55,7 @@ class Dotdigitalgroup_Email_Model_Cron
     public function orderSync()
     {
         // send order
-        $orderResult = Mage::getModel('email_connector/sales_order')->sync();
+        $orderResult = Mage::getModel('ddg_automation/sales_order')->sync();
         return $orderResult;
     }
 
@@ -67,7 +67,7 @@ class Dotdigitalgroup_Email_Model_Cron
     public function quoteSync()
     {
         //send quote
-        $quoteResult = Mage::getModel('email_connector/quote')->sync();
+        $quoteResult = Mage::getModel('ddg_automation/quote')->sync();
 
         return $quoteResult;
     }
@@ -75,7 +75,7 @@ class Dotdigitalgroup_Email_Model_Cron
     /**
      * CRON FOR ORDER & QUOTE TRANSACTIONAL DATA
      */
-    public function orderAndOrderSync()
+    public function orderAndQuoteSync()
     {
         // send order
         $orderResult = $this->orderSync();
@@ -92,23 +92,23 @@ class Dotdigitalgroup_Email_Model_Cron
     public function subscribersAndGuestSync()
     {
         //sync subscribers
-	    $subscriberModel = Mage::getModel('email_connector/newsletter_subscriber');
+	    $subscriberModel = Mage::getModel('ddg_automation/newsletter_subscriber');
         $result = $subscriberModel->sync();
 
 	    //unsubscribe suppressed contacts
 	    $subscriberModel->unsubscribe();
 
         //sync guests
-        Mage::getModel('email_connector/customer_guest')->sync();
+        Mage::getModel('ddg_automation/customer_guest')->sync();
 	    return $result;
     }
 
     /**
      * CRON FOR EMAILS SENDING
      */
-    public function sendMappedEmails()
+    public function sendEmails()
     {
-        Mage::getModel('email_connector/campaign')->sendCampaigns();
+        Mage::getModel('ddg_automation/campaign')->sendCampaigns();
 
         return $this;
     }
@@ -118,12 +118,12 @@ class Dotdigitalgroup_Email_Model_Cron
      */
     public function cleaning()
     {
-        $helper = Mage::helper('connector/file');
+        $helper = Mage::helper('ddg/file');
 	    $archivedFolder = $helper->getArchiveFolder();
 	    $result = $helper->deleteDir($archivedFolder);
 	    $message = 'Cleaning cronjob result : ' . $result;
 	    $helper->log($message);
-	    Mage::helper('connector')->rayLog('10', $message, 'model/cron.php');
+	    Mage::helper('ddg')->rayLog('10', $message, 'model/cron.php');
         return $result;
     }
 

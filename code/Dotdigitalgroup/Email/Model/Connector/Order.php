@@ -106,7 +106,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
         /**
          * custom order attributes
          */
-        $helper = Mage::helper('connector');
+        $helper = Mage::helper('ddg');
         $website = Mage::app()->getStore($orderData->getStore())->getWebsite();
         $customAttributes = $helper->getConfigSelectedCustomOrderAttributes($website);
         if($customAttributes){

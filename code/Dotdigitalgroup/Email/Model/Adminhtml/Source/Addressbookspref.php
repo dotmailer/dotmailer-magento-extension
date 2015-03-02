@@ -19,9 +19,9 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Addressbookspref
 	private function getAddressBooks()
 	{
 		$website = $this->getWebsite();
-		$client = Mage::getModel( 'email_connector/apiconnector_client' );
-		$client->setApiUsername( Mage::helper( 'connector' )->getApiUsername( $website ) )
-			->setApiPassword( Mage::helper( 'connector' )->getApiPassword( $website ) );
+		$client = Mage::getModel( 'ddg_automation/apiconnector_client' );
+		$client->setApiUsername( Mage::helper( 'ddg' )->getApiUsername( $website ) )
+			->setApiPassword( Mage::helper( 'ddg' )->getApiPassword( $website ) );
 
 		$savedAddressBooks = Mage::registry( 'addressbooks' );
 		//get saved address books from registry
@@ -46,17 +46,17 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Addressbookspref
 		$fields = array();
 		$website = $this->getWebsite();
 
-		$enabled = Mage::helper('connector')->isEnabled($website);
+		$enabled = Mage::helper('ddg')->isEnabled($website);
 
 		//get address books options
 		if ($enabled) {
 			$addressBooks = $this->getAddressBooks();
 			//set the error message to the select option
 			if ( isset( $addressBooks->message ) ) {
-				$fields[] = array( 'value' => 0, 'label' => Mage::helper( 'connector' )->__( $addressBooks->message) );
+				$fields[] = array( 'value' => 0, 'label' => Mage::helper( 'ddg' )->__( $addressBooks->message) );
 			}
 
-			$subscriberAddressBook = Mage::helper('connector')->getSubscriberAddressBook(Mage::app()->getWebsite());
+			$subscriberAddressBook = Mage::helper('ddg')->getSubscriberAddressBook(Mage::app()->getWebsite());
 
 			//set up fields with book id and label
 			foreach ( $addressBooks as $book ) {

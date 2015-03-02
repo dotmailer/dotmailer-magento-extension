@@ -1,4 +1,4 @@
-dotmailer for Magento Extension
+EMAIL Connector Magento Integration Module
 ==========================================
 
 This module uses modman
@@ -6,7 +6,7 @@ This module uses modman
 First ensure you have modman installed (see here: https://github.com/colinmollenhour/modman#installation)
 ...and run the following in your magento root:
 `modman init`
-`modman clone https://github.com/dotmailer/dotmailer-magento-extension.git`
+`modman clone https://github.com/dotagency/dotmailer_magento.git`
 
 Don't forget to enable symlinks in:
 `System->Configuration->Advanced->Developer->Template Settings`
@@ -21,8 +21,30 @@ Compatibility
 -------------
 - Magento >= 1.6.2
 
+
 ### Upgrade notice
 
+### V4.0.0
+
+## Features
+ - Transactional email.
+ - Dashboard display conflict checker.
+ - Namespace updated to Ddg Automaiton.
+ - Enterprise version combined.
+ - Appcues onboarding.
+ - Raygun control to disable and enable.
+ - Sweetooth refferal link.
+ - Custom OAUTH domain/redirect link options.
+ - Use dotmailer template for transactional emails.
+ - Wishlist EDC with related, upsell and crosssell.
+ - Customer trend data.
+ 
+## Bug fixes
+
+ - Sync limits lowered to 5000 contacts and 200 orders.
+ - Review is submited before it's approved.
+ - Abandoned Carts triggered from the "LAST_QUOTE_ID".
+ 
 
 ### V3.3.0
 
@@ -43,19 +65,21 @@ Compatibility
 - Checkout awareness for abandoned carts.
 - Compatibility with the older versions 1.6.2(full compatibility).
 - Automation Studio fix width and suppress footer.
-- Bestsellers will select and filter the sellable items in collection.
+- Bestsellers will select and filter the sealable items in collection.
 - Not enough coupons generated.
+
+
 
 
 ### V3.2.0
 
-- Transactional Emails Re-factor.
+- Transactional Emails Refactor.
 - System Status Dashboard
 
 ## Features
 
 - System Status Dashboard.
-- RFM Analysis.
+- RFM Analisys.
 - Api Status.
 - Raygun Integration.
 - Feed for new releases.
@@ -67,12 +91,12 @@ Compatibility
 
 ## Bug fixed
 
-- Major Re-factoring.
+- Magor Refactoring.
 - Cover all the code with testing.
 - Automation when subscriber is not imported yet.
-- Security improvement for api credentials.
+- Security improvment for api credentials.
 - Campaigns for multi website.
-- Mailcheck front end notice.
+- Mailcheck frontend notice.
 - Improve reset subscribers.
 - GeoIp redirection for the dynamic content.
 - Config table to store related data not to update on every request.
@@ -80,11 +104,11 @@ Compatibility
 - Transactional emails refactoring.
 - Payment method for orders.
 - Check for feature active for disabled accounts.
-- Disable sync for not mapped address books.
+- Disable sync for not mapped addressbooks.
 - App emaulation to match the env the order.
 - Subdomain dynamic urls.
 - Buttons to run sync services.
-- Ajax reset of the contacts for an updated address books.
+- Ajax reset of the contacts for an updated addressbooks.
 
 
 ### V3.1.0
@@ -105,7 +129,8 @@ Compatibility
 - Dynamic URLS with no value.
 - Transactional data missing product data.
 - Orders over 1000 showing 1.
-- Auto map on website level.
+- Automap on website level.
+
 
 
 ### V.3.0.3
@@ -114,8 +139,7 @@ Compatibility
 
 * Single Customer Sync Button
 * ROI fix
-* Code standards re-factoring
-
+* Code standards refactoring
 
 ### V.3.0.2
 
@@ -133,9 +157,8 @@ Compatibility
 * Translations update
 * Default values update
 * Transactional emails enabled fix
-* Manually map the customer ID field
-* Emails Reports with website id field
-
+* Manully map the customer ID field
+* Emails Reports enchase with website id field
 
 ### V.3.0.0 : 
 
@@ -166,17 +189,18 @@ Compatibility
 * Newsletter Contact.
 * Newsletter Orders.
 * Newsletter Campaigns.
-* Product Recommendations styling.
+* Product Recomendations styling.
 * TE styling.
 * Subscribers reset button.
-* Custom data fields.
+* Custom datafields.
 * New Lost Baskets.
+
 
 ## Fixes
 
 * New SMS Fixes.
 * Sync Orders by store.
-* Subscribers multi website fix.
+* Subscribers multiwebsite fix.
 * Suppressed contacts for orders.
 * Wishlist contact id update fix.
 * Suppressed contacts per website.
@@ -186,9 +210,9 @@ Compatibility
 * Naming convention for connector compatibility.
 
 
+
 #### V.2.0.5 : 
 * Use the Order statuses to send the SMS.
-
 
 #### V.2.0.4 :
 
@@ -207,3 +231,5 @@ Compatibility
 * Subscriber Sync - fix the contact id when to unsubscribe.
 * Subscriber Sync Empty Request.
 * Change the time format for filenames.
+
+

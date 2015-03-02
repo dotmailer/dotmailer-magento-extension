@@ -23,7 +23,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
     {
         $response = array('success' => true, 'message' => '');
         /** @var Dotdigitalgroup_Email_Helper_Data $helper */
-        $helper = Mage::helper('connector');
+        $helper = Mage::helper('ddg');
 
         $this->_start = microtime(true);
 
@@ -69,14 +69,14 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
     public function exportSubscribersPerWebsite(Mage_Core_Model_Website $website)
     {
         $updated = 0;
-        $fileHelper = Mage::helper('connector/file');
+        $fileHelper = Mage::helper('ddg/file');
         $limit = $website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_LIMIT);
-        $subscribers = Mage::getModel('email_connector/contact')->getSubscribersToImport($website, $limit);
+        $subscribers = Mage::getModel('ddg_automation/contact')->getSubscribersToImport($website, $limit);
         if (count($subscribers)) {
-            $client = Mage::helper('connector')->getWebsiteApiClient($website);
+            $client = Mage::helper('ddg')->getWebsiteApiClient($website);
             $subscribersFilename = strtolower($website->getCode() . '_subscribers_' . date('d_m_Y_Hi') . '.csv');
             //get mapped storename
-            $subscriberStorename = Mage::helper('connector')->getMappedStoreName($website);
+            $subscriberStorename = Mage::helper('ddg')->getMappedStoreName($website);
             //file headers
             $fileHelper->outputCSV($fileHelper->getFilePath($subscribersFilename), array('Email', 'emailType', $subscriberStorename));
             foreach ($subscribers as $subscriber) {
@@ -92,7 +92,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
                     Mage::logException($e);
                 }
             }
-            Mage::helper('connector')->log('Subscriber filename: ' . $subscribersFilename);
+            Mage::helper('ddg')->log('Subscriber filename: ' . $subscribersFilename);
             //Add to subscriber address book
             $client->postAddressBookContactsImport($subscribersFilename, $website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SUBSCRIBERS_ADDRESS_BOOK_ID));
             $fileHelper->archiveCSV($subscribersFilename);
@@ -112,7 +112,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
 	    $limit = 5;
 	    $max_to_select = 1000;
 	    $result['customers'] = 0;
-	    $helper = Mage::helper('connector');
+	    $helper = Mage::helper('ddg');
 	    $date = Mage::app()->getLocale()->date()->subHour(1);
         // force sync all customers
         if($force)
@@ -125,16 +125,17 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
         foreach (Mage::app()->getWebsites(true) as $website) {
 
             $enabled = (bool)$website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED);
-	        $client = Mage::helper('connector')->getWebsiteApiClient($website);
 
 	        //no enabled and valid credentials
             if (! $enabled)
                 continue;
 
-            $contacts = array();
-            $skip = $i = 0;
+	        $skip = $i = 0;
+	        $contacts = array();
+	        $client = Mage::helper('ddg')->getWebsiteApiClient($website);
 
-            //there is a maximum of request we need to loop to get more suppressed contacts
+
+	        //there is a maximum of request we need to loop to get more suppressed contacts
             for ($i=0; $i<= $limit;$i++) {
                 $apiContacts = $client->getContactsSuppressedSinceDate($dateString, $max_to_select , $skip);
 
@@ -166,7 +167,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
                             $client->deleteAddressBookContact($subscriberBookId, $contactId);
                         }
                         //mark contact as suppressed and unsubscribe
-                        $contactCollection = Mage::getModel('email_connector/contact')->getCollection()
+                        $contactCollection = Mage::getModel('ddg_automation/contact')->getCollection()
                             ->addFieldToFilter('email', $email)
                             ->addFieldToFilter('website_id', $website->getId());
                         //unsubscribe from the email contact table.

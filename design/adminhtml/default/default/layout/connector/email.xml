@@ -10,7 +10,7 @@
             <action method="addCss"><name>connector/dashboard.css</name></action>
         </reference>
         <reference name="left">
-            <block type="email_connector/adminhtml_dashboard_switcher" name="store_switcher" as="store_switcher" />
+            <block type="ddg_automation/adminhtml_dashboard_switcher" name="store_switcher" as="store_switcher" />
         </reference>
     </adminhtml_email_dashboard_index>
     <adminhtml_email_contact_index>
@@ -20,7 +20,7 @@
             </action>
         </reference>
         <reference name="content">
-            <block type="email_connector/adminhtml_contact" name="email_contact">
+            <block type="ddg_automation/adminhtml_contact" name="ddg_automation">
                 <block type="adminhtml/store_switcher" name="store_switcher" as="store_switcher">
                     <action method="setUseConfirm"><params>0</params></action>
                 </block>
@@ -29,7 +29,7 @@
     </adminhtml_email_contact_index>
     <adminhtml_email_contact_grid>
         <block type="core/text_list" name="root" output="toHtml">
-            <block type="email_connector/adminhtml_contact_grid" name="contact_grid"/>
+            <block type="ddg_automation/adminhtml_contact_grid" name="contact_grid"/>
         </block>
     </adminhtml_email_contact_grid>
     <adminhtml_email_contact_edit>
@@ -39,7 +39,7 @@
             </action>
         </reference>
         <reference name="content">
-            <block type="email_connector/adminhtml_contact_edit" name="email_contact_edit">
+            <block type="ddg_automation/adminhtml_contact_edit" name="email_contact_edit">
             </block>
         </reference>
     </adminhtml_email_contact_edit>
@@ -50,7 +50,7 @@
             </action>
         </reference>
         <reference name="content">
-            <block type="email_connector/adminhtml_campaign" name="email_campaign">
+            <block type="ddg_automation/adminhtml_campaign" name="email_campaign">
                 <block type="adminhtml/store_switcher" name="store_switcher" as="store_switcher">
                     <action method="setUseConfirm"><params>0</params></action>
                 </block>
@@ -59,7 +59,7 @@
     </adminhtml_email_campaign_index>
     <adminhtml_email_campaign_grid>
         <block type="core/text_list" name="root" output="toHtml">
-            <block type="email_connector/adminhtml_campaign_grid" name="campaign_grid"/>
+            <block type="ddg_automation/adminhtml_campaign_grid" name="campaign_grid"/>
         </block>
     </adminhtml_email_campaign_grid>
     <adminhtml_email_campaign_edit>
@@ -69,7 +69,7 @@
             </action>
         </reference>
         <reference name="content">
-            <block type="email_connector/adminhtml_campaign_edit" name="email_campaign_edit">
+            <block type="ddg_automation/adminhtml_campaign_edit" name="email_campaign_edit">
             </block>
         </reference>
     </adminhtml_email_campaign_edit>
@@ -80,4 +80,9 @@
             </action>
         </reference>
     </adminhtml_system_config_edit>
+    <default>
+        <reference name="content">
+            <block type="core/template" name="ddg-appcues-admin" template="connector/appcues.phtml" />
+        </reference>
+    </default>
 </config>

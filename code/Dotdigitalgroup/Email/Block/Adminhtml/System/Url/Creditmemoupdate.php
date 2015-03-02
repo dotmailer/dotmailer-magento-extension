@@ -17,7 +17,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Url_Creditmemoupdate extends 
             $website = Mage::app()->getWebsite($website);
             $baseUrl  = $website->getConfig('web/secure/base_url');
         }
-        $helper = Mage::helper('connector');
+        $helper = Mage::helper('ddg');
         $passcode = $helper->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_CONTENT_PASSCODE, $website);
         $orderId = $helper->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_MAPPING_LAST_ORDER_ID, $website);
 

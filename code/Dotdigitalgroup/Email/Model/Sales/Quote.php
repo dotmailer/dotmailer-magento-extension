@@ -38,11 +38,11 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
 
 
 	/**
-	 * Proccess lost baskets.
+	 * Proccess abandoned carts.
 	 *
 	 * @param string $mode
 	 */
-    public function proccessLostBaskets($mode = 'all')
+    public function proccessAbandonedCarts($mode = 'all')
     {
         /**
          * Save lost baskets to be send in Send table.
@@ -75,14 +75,18 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
 					    $quoteCollection = $this->_getStoreQuotes( $from->toString( 'YYYY-MM-dd HH:mm' ), $to->toString( 'YYYY-MM-dd HH:mm' ), $guest = false, $storeId );
 
 					    if ( $quoteCollection->getSize() ) {
-						    Mage::helper( 'connector' )->log( 'Customer lost baskets : ' . $num . ', from : ' . $from->toString( 'YYYY-MM-dd HH:mm' ) . ':' . $to->toString( 'YYYY-MM-dd HH:mm' ) );
 					    }
+					    Mage::helper( 'ddg' )->log( 'Customer lost baskets : ' . $num . ', from : ' . $from->toString( 'YYYY-MM-dd HH:mm' ) . ':' . $to->toString( 'YYYY-MM-dd HH:mm' ) );
 
 					    //campaign id for customers
 					    $campaignId = $this->_getLostBasketCustomerCampaignId( $num, $storeId );
 					    foreach ( $quoteCollection as $quote ) {
 
 						    $email        = $quote->getCustomerEmail();
+						    $websiteId    = $store->getWebsiteId();
+						    // upate last quote id for the contact
+						    Mage::helper('ddg')->updateLastQuoteId($quote->getId(), $email, $websiteId);
+
 						    //send email only if the interval limit passed, no emails during this interval
 						    $campignFound = $this->_checkCustomerCartLimit( $email, $storeId );
 
@@ -90,14 +94,14 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
 						    if ( !$campignFound ) {
 
 							    //save lost basket for sending
-							    $sendModel = Mage::getModel('email_connector/campaign')
+							    $sendModel = Mage::getModel('ddg_automation/campaign')
 								    ->setEmail( $email )
 								    ->setCustomerId( $quote->getCustomerId() )
 								    ->setEventName( 'Lost Basket' )
 								    ->setMessage('Abandoned Cart :' . $num)
 								    ->setCampaignId( $campaignId )
 								    ->setStoreId( $storeId )
-								    ->setWebsiteId($store->getWebsiteId())
+								    ->setWebsiteId($websiteId)
 								    ->setIsSent( null )->save();
 						    }
 					    }
@@ -121,26 +125,29 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
 					    $quoteCollection = $this->_getStoreQuotes( $from->toString( 'YYYY-MM-dd HH:mm' ), $to->toString( 'YYYY-MM-dd HH:mm' ), $guest = true, $storeId );
 
 					    if ( $quoteCollection->getSize() ) {
-						    Mage::helper( 'connector' )->log( 'Guest lost baskets : ' . $num . ', from : ' . $from->toString( 'YYYY-MM-dd HH:mm' ) . ':' . $to->toString( 'YYYY-MM-dd HH:mm' ) );
+						    Mage::helper( 'ddg' )->log( 'Guest lost baskets : ' . $num . ', from : ' . $from->toString( 'YYYY-MM-dd HH:mm' ) . ':' . $to->toString( 'YYYY-MM-dd HH:mm' ) );
 					    }
 					    $guestCampaignId = $this->_getLostBasketGuestCampaignId( $num, $storeId );
 					    foreach ( $quoteCollection as $quote ) {
-						    $email        = $quote->getCustomerEmail();
 
+						    $email        = $quote->getCustomerEmail();
+						    $websiteId    = $store->getWebsiteId();
+						    // upate last quote id for the contact
+						    Mage::helper('ddg')->updateLastQuoteId($quote->getId(), $email, $websiteId);
 						    //send email only if the interval limit passed, no emails during this interval
 						    $campignFound = $this->_checkCustomerCartLimit( $email, $storeId );
 
 						    //no campign found for interval pass
 						    if ( !$campignFound ) {
 							    //save lost basket for sending
-							    $sendModel = Mage::getModel('email_connector/campaign')
+							    $sendModel = Mage::getModel('ddg_automation/campaign')
 								    ->setEmail( $email )
 								    ->setEventName( 'Lost Basket' )
 								    ->setCheckoutMethod( 'Guest' )
 								    ->setMessage('Guest Abandoned Cart : ' . $num)
 								    ->setCampaignId( $guestCampaignId )
 								    ->setStoreId( $storeId )
-								    ->setWebsiteId($store->getWebsiteId())
+								    ->setWebsiteId($websiteId)
 								    ->setIsSent( null )->save();
 						    }
 					    }
@@ -247,7 +254,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
 		);
 
 		//number of campigns during this time
-		$campaignLimit = Mage::getModel('email_connector/campaign')->getCollection()
+		$campaignLimit = Mage::getModel('ddg_automation/campaign')->getCollection()
 			->addFieldToFilter('email', $email)
 			->addFieldToFilter('event_name', 'Lost Basket')
 			->addFieldToFilter('sent_at', $updated)

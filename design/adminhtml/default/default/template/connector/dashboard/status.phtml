@@ -20,14 +20,14 @@
 		<div class="entry-edit-head collapseable ">
 
 			<a id="<?php echo $key;?>-head" class="<?php echo $data->getStyle();?>"  href="#" onclick="Fieldset.toggleCollapse('<?php echo $key;?>', '<?php echo $this->getUrl('*/*/state') ;?>');return false;">
-					<?php echo Mage::helper('connector')->__($_checkpoint) ?> </a>
+					<?php echo Mage::helper('ddg')->__($_checkpoint) ?> </a>
 
 		</div>
 		<input id="<?php echo $key;?>-state" name="config_state[<?php echo $key ;?>]" type="hidden" value="<?php echo $collapsable;?>">
 
 		<fieldset class="collapseable" id="<?php echo $key;?>">
 
-			<legend><?php echo Mage::helper('connector')->__($_checkpoint); ?></legend>
+			<legend><?php echo Mage::helper('ddg')->__($_checkpoint); ?></legend>
 			<span><?php echo $data->getTitle();?></span><span class="<?php echo $data->getStyle();?>"><?php echo $data->getMessage();?></span>
 			<div class="<?php echo $showHowTo?>">
 				<ul class="howto">

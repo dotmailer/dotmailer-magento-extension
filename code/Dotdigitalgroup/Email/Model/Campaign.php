@@ -31,26 +31,13 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
 	//error messages
 	const SEND_EMAIL_CONTACT_ID_MISSING = 'Error : missing contact id - will try later to send ';
 
-	//campaign create vars
-	private $fromAddress;
-	private $replyAction;
-	private $replyAddress;
-	private $copyEmail;
-
-	/**
-	 * @var object
-	 */
-	public $transactionalClient;
-
 	/**
 	 * constructor
 	 */
 	public function _construct()
 	{
 		parent::_construct();
-		$this->_init('email_connector/campaign');
-
-		$this->transactionalClient = Mage::helper('connector/transactional')->getWebsiteApiClient();
+		$this->_init('ddg_automation/campaign');
 	}
 
 	/**
@@ -94,12 +81,8 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
 	 */
 	public function sendCampaigns()
 	{
-		//create campaign first
-		$this->createEmailsToCampaigns();
-
 		//grab the emails not send
 		$emailsToSend = $this->_getEmailCampaigns();
-		$templateModel = Mage::getModel('email_connector/email_template');
 
 		foreach ($emailsToSend as $campaign) {
 
@@ -108,8 +91,6 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
 			$campaignId = $campaign->getCampaignId();
 			$store = Mage::app()->getStore($storeId);
 			$websiteId      = $store->getWebsiteId();
-			$storeName      = $store->getName();
-			$websiteName    = $store->getWebsite()->getName();
 
 
 			if (!$campaignId) {
@@ -124,170 +105,24 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
 				continue;
 			}
 			try{
-				if ($campaign->getEventName() == 'Lost Basket') {
-					$client = Mage::helper('connector')->getWebsiteApiClient($websiteId);
-					$contactId = Mage::helper('connector')->getContactId($campaign->getEmail(), $websiteId);
-					if(is_numeric($contactId)) {
-
-                        //update data field
-                        $data = array(
-                            array(
-                                'Key' => 'LAST_QUOTE_ID',
-                                'Value' => $campaign->getQuoteId()
-                            )
-                        );
-                        $client->updateContactDatafieldsByEmail($campaign->getEmail(), $data);
-
-						$response = $client->postCampaignsSend($campaignId, array($contactId));
-						if (isset($response->message)) {
-							//update  the failed to send email message
-							$campaign->setMessage($response->message)->setIsSent(1)->save();
-						}
-						$now = Mage::getSingleton('core/date')->gmtDate();
-						//record suscces
-						$campaign->setIsSent(1)
-						         ->setMessage(NULL)
-						         ->setSentAt($now)
-						         ->save();
-					}else{
-						//update  the failed to send email message- error message from post contact
-						$campaign->setContactMessage($contactId)->setIsSent(1)->save();
+				$client = Mage::helper('ddg')->getWebsiteApiClient($websiteId);
+				$contactId = Mage::helper('ddg')->getContactId($campaign->getEmail(), $websiteId);
+				if(is_numeric($contactId)) {
+					$response = $client->postCampaignsSend($campaignId, array($contactId));
+					if (isset($response->message)) {
+						//update  the failed to send email message
+						$campaign->setMessage($response->message)->setIsSent(1)->save();
 					}
-				} elseif ($campaign->getEventName() == 'New Customer Account') {
-					$contactId = Mage::helper('connector/transactional')->getContactId($campaign->getEmail(), $websiteId);
-					if(is_numeric($contactId)){
-						Mage::helper('connector')->log($contactId);
-						$customerId = $campaign->getCustomerId();
-						$customer = Mage::getModel('customer/customer')->load($customerId);
-						$firstname = $customer->getFirstname();
-						$lastname = $customer->getLastname();
-						$data = array(
-							array(
-								'Key' => 'STORE_NAME',
-								'Value' => $storeName),
-							array(
-								'Key' => 'WEBSITE_NAME',
-								'Value' => $websiteName),
-							array(
-								'Key' => 'FIRSTNAME',
-								'Value' => $firstname),
-							array(
-								'Key' => 'LASTNAME',
-								'Value' => $lastname),
-							array(
-								'Key' => 'CUSTOMER_ID',
-								'Value' => $customerId)
-						);
-                        // last order and last quote
-                        $emailOrder = Mage::getModel('email_connector/sales_order');
-                        $lastOrder = $emailOrder->getCustomerLastOrderId($customer);
-                        $lastQuote = $emailOrder->getCustomerLastQuoteId($customer);
-
-                        if($lastOrder){
-                            $data[] = array(
-                                'Key' => 'LAST_ORDER_ID',
-                                'Value' => $lastOrder->getId()
-                            );
-                        }
-                        if($lastQuote){
-                            $data[] = array(
-                                'Key' => 'LAST_QUOTE_ID',
-                                'Value' => $lastQuote->getId()
-                            );
-                        }
-
-						$this->transactionalClient->updateContactDatafieldsByEmail($email, $data);
-
-						$response = $this->transactionalClient->postCampaignsSend($campaignId, array($contactId));
-						if (isset($response->message)) {
-							//update  the failed to send email message
-							$campaign->setMessage($response->message)->setIsSent(1)->save();
-						} else {
-							$now = Mage::getSingleton('core/date')->gmtDate();
-							//record suscces
-							$campaign->setIsSent(1)
-							         ->setMessage(NULL)
-							         ->setSentAt($now)
-							         ->save();
-						}
-					}else{
-						//update  the failed to send email message- error message from post contact
-						$campaign->setContactMessage($contactId)->setIsSent(1)->save();
-					}
-
-				} elseif ($templateModel->getSalesEvent($campaign->getEventName()) or $campaign->getEventName() == 'Order Review') {
-					// transactional
-					$orderModel = Mage::getModel("sales/order")->loadByIncrementId($campaign->getOrderIncrementId());
-					$contactId = Mage::helper('connector/transactional')->getContactId($campaign->getEmail(), $websiteId);
-					if (is_numeric($contactId)) {
-						Mage::helper('connector')->log($contactId);
-						if ($orderModel->getCustomerId()) {
-							$firstname = $orderModel->getCustomerFirstname();
-							$lastname = $orderModel->getCustomerLastname();
-						} else {
-							$billing = $orderModel->getBillingAddress();
-							$firstname = $billing->getFirstname();
-							$lastname = $billing->getLastname();
-						}
-						$data = array(
-							array(
-								'Key' => 'STORE_NAME',
-								'Value' => $storeName),
-							array(
-								'Key' => 'WEBSITE_NAME',
-								'Value' => $websiteName),
-							array(
-								'Key' => 'FIRSTNAME',
-								'Value' => $firstname),
-							array(
-								'Key' => 'LASTNAME',
-								'Value' => $lastname),
-							array(
-								'Key' => 'LAST_ORDER_ID',
-								'Value' => $orderModel->getId()),
-                            array(
-                                'Key' => 'LAST_QUOTE_ID',
-                                'Value' => $orderModel->getQuoteId()),
-						);
-						$this->transactionalClient->updateContactDatafieldsByEmail($email, $data);
-						$response = $this->transactionalClient->postCampaignsSend($campaignId, array($contactId));
-						if (isset($response->message)) {
-							//update  the failed to send email message
-							$campaign->setMessage($response->message)->setIsSent(1)->save();
-						} else {
-							$now = Mage::getSingleton('core/date')->gmtDate();
-							//record suscces
-							$campaign->setIsSent(1)
-							         ->setMessage(NULL)
-							         ->setSentAt($now)
-							         ->save();
-						}
-					}else{
-						//update  the failed to send email message- error message from post contact
-						$campaign->setContactMessage($contactId)->setIsSent(1)->save();
-					}
+					$now = Mage::getSingleton('core/date')->gmtDate();
+					//record suscces
+					$campaign->setIsSent(1)
+							 ->setMessage(NULL)
+							 ->setSentAt($now)
+							 ->save();
 				}else{
-					$contactId = Mage::helper('connector/transactional')->getContactId($campaign->getEmail(), $websiteId);
-					if(is_numeric($contactId)){
-						Mage::helper('connector')->log($contactId);
-						$response = $this->transactionalClient->postCampaignsSend($campaignId, array($contactId));
-						if (isset($response->message)) {
-							//update  the failed to send email message
-							$campaign->setMessage($response->message)->setIsSent(1)->save();
-						} else{
-							$now = Mage::getSingleton('core/date')->gmtDate();
-							//record suscces
-							$campaign->setIsSent(1)
-							         ->setMessage(NULL)
-							         ->setSentAt($now)
-							         ->save();
-						}
-					}else{
-						//update  the failed to send email message- error message from post contact
-						$campaign->setContactMessage($contactId)->setIsSent(1)->save();
-					}
+					//update  the failed to send email message- error message from post contact
+					$campaign->setContactMessage($contactId)->setIsSent(1)->save();
 				}
-
 			}catch(Exception $e){
 				Mage::logException($e);
 			}
@@ -302,118 +137,8 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
 	{
 		$emailCollection = $this->getCollection();
 		$emailCollection->addFieldToFilter('is_sent', array('null' => true))
-		                ->addFieldToFilter('campaign_id', array('notnull' => true))
-		                ->addFieldToFilter('type', 1);
+		                ->addFieldToFilter('campaign_id', array('notnull' => true));
 		$emailCollection->getSelect()->order('campaign_id');
 		return $emailCollection;
-	}
-
-	/**
-	 * create emails to campaigns
-	 */
-	public function createEmailsToCampaigns()
-	{
-		$helper = Mage::helper('connector/transactional');
-		$emails = $this->getEmailsToCreateCampaigns();
-
-		foreach($emails as $email)
-		{
-			try {
-				$websiteId = $email->getWebsiteId();
-
-				if (!$this->fromAddress) {
-                    if($email->getFromAddress())
-                        $this->fromAddress = $email->getFromAddress();
-                    else
-                        $this->fromAddress = $helper->getFromAddress($websiteId);
-                }
-
-				if (!$this->replyAction)
-					$this->replyAction = $helper->getReplyAction($websiteId);
-				if ($this->replyAction == 'WebMailForward') {
-					if (!$this->replyAddress) {
-						$this->replyAddress = $helper->getReplyAddress($websiteId);
-					}
-				}
-				if (!$this->copyEmail)
-					$this->copyEmail = $helper->getSendCopy($websiteId);
-
-				if ($this->fromAddress && $this->replyAction) {
-					$data = array(
-						'Name' => $email->getEventName(),
-						'Subject' => $email->getSubject(),
-						'FromName' => $email->getFromName(),
-						'FromAddress' => $this->fromAddress,
-						'HtmlContent' => $email->getHtmlContent(),
-						'PlainTextContent' => $email->getPlainTextContent(),
-						'ReplyAction' => $this->replyAction,
-						'IsSplitTest' => false,
-						'Status' => 'Unsent'
-					);
-					if ($this->replyAction == 'WebMailForward' && $this->replyAddress)
-						$data['ReplyToAddress'] = $this->replyAddress;
-					else
-						$data['ReplyToAddress'] = '';
-				}
-
-				if(isset($data)){
-					$client = Mage::helper('connector/transactional')->getWebsiteApiClient($websiteId);
-					$result = $client->postCampaign($data);
-					if (isset($result->message)) {
-						$email->setCreateMessage($result->message)
-						      ->setIsCreated(1)
-						      ->save();
-						continue;
-					}
-					Mage::helper('connector')->log('createEmailsToCampaigns ' . $result->id);
-
-                    //attachment to campaign
-                    if($email->getAttachmentId()){
-                        $attachment = array(
-                            'id' => $email->getAttachmentId()
-                        );
-                        $attachmentResult = $client->postCampaignAttachments($result->id, $attachment);
-                        if (isset($attachmentResult->message)) {
-                            $email->setCreateMessage($attachmentResult->message)
-                                ->setIsCreated(1)
-                                ->save();
-                            continue;
-                        }
-                    }
-
-					$email->setCampaignId($result->id)
-					      ->setType(1)
-					      ->setIsCreated(1)
-					      ->save();
-
-					if($this->copyEmail){
-						$this->setEmail($this->copyEmail)
-						     ->setIsCopy(1)
-						     ->setCampaignId($result->id)
-						     ->setEventName($email->getEventName())
-						     ->setType(1)
-						     ->setIsCreated(1)
-						     ->save();
-					}
-				}
-			}catch(Exception $e){
-				Mage::logException($e);
-			}
-		}
-	}
-
-	/**
-	 * get collection to create campaigns
-	 *
-	 * @param int $pageSize
-	 * @return Mage_Eav_Model_Entity_Collection_Abstract
-	 */
-	protected function getEmailsToCreateCampaigns($pageSize = 100)
-	{
-		$collection =  $this->getCollection()
-		                    ->addFieldToFilter('is_created', array('null' => true))
-		                    ->addFieldToFilter('type', 2);
-		$collection->getSelect()->limit($pageSize);
-		return $collection;
 	}
 }

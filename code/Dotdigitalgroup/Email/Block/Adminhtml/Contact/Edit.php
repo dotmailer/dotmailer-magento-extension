@@ -5,12 +5,12 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Contact_Edit extends Mage_Adminhtml_
     public function __construct()
     {
         parent::__construct();
-        $this->_blockGroup = 'email_connector';
+        $this->_blockGroup = 'ddg_automation';
         $this->_controller = 'adminhtml_contact';
-        $this->_updateButton('save', 'label', Mage::helper('connector')->__('Save Contact'));
-        $this->_updateButton('delete', 'label', Mage::helper('connector')->__('Delete Contact'));
+        $this->_updateButton('save', 'label', Mage::helper('ddg')->__('Save Contact'));
+        $this->_updateButton('delete', 'label', Mage::helper('ddg')->__('Delete Contact'));
         $this->_addButton('saveandcontinue', array(
-            'label'        => Mage::helper('connector')->__('Save And Continue Edit'),
+            'label'        => Mage::helper('ddg')->__('Save And Continue Edit'),
             'onclick'    => 'saveAndContinueEdit()',
             'class'        => 'save',
         ), -100);
@@ -28,9 +28,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Contact_Edit extends Mage_Adminhtml_
     public function getHeaderText()
     {
         if ( Mage::registry('contact_data') && Mage::registry('contact_data')->getId() ) {
-            return Mage::helper('connnector')->__("Edit Contact '%s'", $this->htmlEscape(Mage::registry('contact_data')->getContact()));
+            return Mage::helper('ddg')->__("Edit Contact '%s'", $this->htmlEscape(Mage::registry('contact_data')->getContact()));
         } else {
-            return Mage::helper('connector')->__('Add Contact');
+            return Mage::helper('ddg')->__('Add Contact');
         }
     }
 }

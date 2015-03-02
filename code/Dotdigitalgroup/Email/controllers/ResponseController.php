@@ -2,6 +2,16 @@
 
 class Dotdigitalgroup_Email_ResponseController extends Mage_Core_Controller_Front_Action
 {
+    protected function authenticate()
+    {
+        //authenticate
+        $auth = Mage::helper('ddg')->auth($this->getRequest()->getParam('code'));
+        if(!$auth){
+            $this->sendResponse();
+            die;
+        }
+    }
+
     protected function checkContentNotEmpty($output, $flag = true)
     {
         try{
@@ -15,7 +25,7 @@ class Dotdigitalgroup_Email_ResponseController extends Mage_Core_Controller_Fron
         }
     }
 
-    private function sendResponse()
+    protected function sendResponse()
     {
         try{
             $this->getResponse()

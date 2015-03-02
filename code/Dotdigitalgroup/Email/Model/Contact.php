@@ -12,7 +12,7 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
     public function _construct()
     {
         parent::_construct();
-        $this->_init('email_connector/contact');
+        $this->_init('ddg_automation/contact');
     }
 
 
@@ -43,13 +43,13 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
         $conn = $coreResource->getConnection('core_write');
 
         try{
-            $num = $conn->update($coreResource->getTableName('email_connector/contact'),
+            $num = $conn->update($coreResource->getTableName('ddg_automation/contact'),
                 array('email_imported' => new Zend_Db_Expr('null')),
                 $conn->quoteInto('email_imported is ?', new Zend_Db_Expr('not null'))
             );
         }catch (Exception $e){
             Mage::logException($e);
-            Mage::helper('connector')->rayLog('300', $e);
+            Mage::helper('ddg')->rayLog('300', $e);
         }
         return $num;
     }
@@ -192,13 +192,13 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
 
         try {
             $num = $conn->update(
-                $coreResource->getTableName( 'email_connector/contact' ),
+                $coreResource->getTableName( 'ddg_automation/contact' ),
                 array('subscriber_imported' => new Zend_Db_Expr( 'null' ) ),
                 $conn->quoteInto('subscriber_imported is ?', new Zend_Db_Expr('not null')));
 
         } catch ( Exception $e ) {
             Mage::logException($e);
-            Mage::helper('connector')->getRaygunClient()->SendException($e, array(Mage::getBaseUrl('web')));
+            Mage::helper('ddg')->getRaygunClient()->SendException($e, array(Mage::getBaseUrl('web')));
         }
 
         return $num;
@@ -212,7 +212,7 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
 	 */
 	public function getNumberCustomerContacts($websiteId = 0)
 	{
-		$countContacts = Mage::getModel('email_connector/contact')->getCollection()
+		$countContacts = Mage::getModel('ddg_automation/contact')->getCollection()
 		    ->addFieldToFilter('customer_id', array('gt' => '0'))
 		    ->addFieldToFilter('website_id', $websiteId)
 		    ->getSize();
@@ -228,7 +228,7 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
 	 */
 	public function getNumberCustomerSuppressed( $websiteId = 0 )
 	{
-		$countContacts = Mage::getModel('email_connector/contact')->getCollection()
+		$countContacts = Mage::getModel('ddg_automation/contact')->getCollection()
 			->addFieldToFilter('customer_id', array('gt' => 0))
 			->addFieldToFilter('website_id', $websiteId)
 			->addFieldToFilter('suppressed', '1')
@@ -245,7 +245,7 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
 	 */
 	public function getNumberCustomerSynced( $websiteId = 0 )
 	{
-		$countContacts = Mage::getModel('email_connector/contact')->getCollection()
+		$countContacts = Mage::getModel('ddg_automation/contact')->getCollection()
 			->addFieldToFilter('customer_id', array('gt' => 0))
 			->addFieldToFilter('website_id', $websiteId)
 			->addFieldToFilter('email_imported' , '1')
@@ -263,7 +263,7 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
 	 */
 	public function getNumberSubscribersSynced( $websiteId = 0 )
 	{
-		$countContacts = Mage::getModel('email_connector/contact')->getCollection()
+		$countContacts = Mage::getModel('ddg_automation/contact')->getCollection()
 			->addFieldToFilter('subscriber_status', Dotdigitalgroup_Email_Model_Newsletter_Subscriber::STATUS_SUBSCRIBED)
 			->addFieldToFilter('subscriber_imported', '1')
 			->addFieldToFilter('website_id', $websiteId)
@@ -281,7 +281,7 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
 	public function getNumberSubscribers( $websiteId = 0 )
 	{
 
-		$countContacts = Mage::getModel('email_connector/contact')->getCollection()
+		$countContacts = Mage::getModel('ddg_automation/contact')->getCollection()
 			->addFieldToFilter('subscriber_status', Dotdigitalgroup_Email_Model_Newsletter_Subscriber::STATUS_SUBSCRIBED)
 			->addFieldToFilter('website_id', $websiteId)
             ->getSize();

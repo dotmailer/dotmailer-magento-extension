@@ -6,10 +6,10 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Bestsellers extends M
     protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element) {
 
 	    //base url
-	    $baseUrl = Mage::helper('connector')->generateDynamicUrl();
+	    $baseUrl = Mage::helper('ddg')->generateDynamicUrl();
 
 	    //config passcode
-        $passcode = Mage::helper('connector')->getPasscode();
+        $passcode = Mage::helper('ddg')->getPasscode();
 
         if (!strlen($passcode))
 	        $passcode = '[PLEASE SET UP A PASSCODE]';

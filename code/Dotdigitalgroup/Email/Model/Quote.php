@@ -12,7 +12,7 @@ class Dotdigitalgroup_Email_Model_Quote extends Mage_Core_Model_Abstract
     public function _construct()
     {
         parent::_construct();
-        $this->_init('email_connector/quote');
+        $this->_init('ddg_automation/quote');
     }
 
     /**
@@ -38,12 +38,12 @@ class Dotdigitalgroup_Email_Model_Quote extends Mage_Core_Model_Abstract
     public function sync()
     {
         $response = array('success' => true, 'message' => '');
-        $helper = Mage::helper('connector');
+        $helper = Mage::helper('ddg');
         //resource allocation
         $helper->allowResourceFullExecution();
 
         foreach (Mage::app()->getWebsites(true) as $website) {
-            $enabled = Mage::helper('connector')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_QUOTE_ENABLED, $website);
+            $enabled = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_QUOTE_ENABLED, $website);
             if ($enabled) {
                 //using bulk api
                 $helper->log('---------- Start quote bulk sync ----------');
@@ -51,7 +51,7 @@ class Dotdigitalgroup_Email_Model_Quote extends Mage_Core_Model_Abstract
                 $this->_exportQuoteForWebsite($website);
                 //send quote as transactional data
                 if (isset($this->_quotes[$website->getId()])) {
-                    $client = Mage::helper('connector')->getWebsiteApiClient($website);
+                    $client = Mage::helper('ddg')->getWebsiteApiClient($website);
                     $websiteQuotes = $this->_quotes[$website->getId()];
                     //import quote in bulk
                     $client->postContactsTransactionalDataImport($websiteQuotes, 'Quote');
@@ -77,14 +77,14 @@ class Dotdigitalgroup_Email_Model_Quote extends Mage_Core_Model_Abstract
         try{
             //reset quotes
             $this->_quotes = array();
-            $limit = Mage::helper('connector')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT, $website);
+            $limit = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT, $website);
             $collection = $this->_getQuoteToImport($website, $limit);
             foreach($collection as $emailQuote){
                 $store = Mage::app()->getStore($emailQuote->getStoreId());
                 $quote = Mage::getModel('sales/quote')->setStore($store)->load($emailQuote->getQuoteId());
                 if($quote->getId())
                 {
-                    $connectorQuote = Mage::getModel('email_connector/connector_quote', $quote);
+                    $connectorQuote = Mage::getModel('ddg_automation/connector_quote', $quote);
                     $this->_quotes[$website->getId()][] = $connectorQuote;
                 }
                 $emailQuote->setImported(Dotdigitalgroup_Email_Model_Contact::EMAIL_CONTACT_IMPORTED)
@@ -123,8 +123,8 @@ class Dotdigitalgroup_Email_Model_Quote extends Mage_Core_Model_Abstract
     private function _deleteQuoteForWebsite(Mage_Core_Model_Website $website)
     {
         try{
-            $limit = Mage::helper('connector')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT, $website);
-            $client = Mage::helper('connector')->getWebsiteApiClient($website);
+            $limit = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT, $website);
+            $client = Mage::helper('ddg')->getWebsiteApiClient($website);
             $collection = $this->_getQuoteToDelete($website, $limit);
             foreach($collection as $emailQuote){
                 $result = $client->deleteContactsTransactionalData($emailQuote->getQuoteId(), 'Quote');
@@ -133,7 +133,7 @@ class Dotdigitalgroup_Email_Model_Quote extends Mage_Core_Model_Abstract
                     $this->_count++;
                 }
                 $message = 'Quote removed : ' . $emailQuote->getQuoteId();
-                Mage::helper('connector')->log($message);
+                Mage::helper('ddg')->log($message);
             }
         }catch(Exception $e){
             Mage::logException($e);
@@ -189,7 +189,7 @@ class Dotdigitalgroup_Email_Model_Quote extends Mage_Core_Model_Abstract
         /** @var $conn Varien_Db_Adapter_Pdo_Mysql */
         $conn = $coreResource->getConnection('core_write');
         try{
-            $num = $conn->update($coreResource->getTableName('email_connector/quote'),
+            $num = $conn->update($coreResource->getTableName('ddg_automation/quote'),
                 array('imported' => new Zend_Db_Expr('null')),
                 array(
                     $conn->quoteInto('imported is ?', new Zend_Db_Expr('not null')),

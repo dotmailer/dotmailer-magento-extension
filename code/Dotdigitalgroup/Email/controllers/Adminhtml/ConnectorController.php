@@ -10,11 +10,11 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
         $result = array('errors' => false, 'message' => '');
 	    $websiteParam = $this->getRequest()->getParam('website', 0);
 	    $website = Mage::app()->getWebsite($websiteParam);
-	    $apiModel = Mage::helper('connector')->getWebsiteApiClient($website->getId());
+	    $apiModel = Mage::helper('ddg')->getWebsiteApiClient($website->getId());
 	    $redirectUrl = Mage::helper('adminhtml')->getUrl('adminhtml/system_config/edit', array('section' => 'connector_data_mapping'));
 
         // get all possible datatifileds
-        $datafields = Mage::getModel('email_connector/connector_datafield')->getContactDatafields();
+        $datafields = Mage::getModel('ddg_automation/connector_datafield')->getContactDatafields();
         foreach ($datafields as $key => $datafield) {
             $response = $apiModel->postDataFields($datafield, 'Private');
 
@@ -35,7 +35,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
                  */
                 $config = new Mage_Core_Model_Config();
 	            $config->saveConfig('connector_data_mapping/customer_data/' . $key, strtoupper($datafield['name']), $scope, $scopeId);
-                Mage::helper('connector')->log('successfully connected : ' . $datafield['name']);
+                Mage::helper('ddg')->log('successfully connected : ' . $datafield['name']);
             }
         }
         if ($result['errors']) {
@@ -53,8 +53,8 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
      */
     public function resetordersAction()
     {
-        $num = Mage::getModel('email_connector/order')->resetOrders();
-        Mage::helper('connector')->log('-- Reset Orders for reimport : ' . $num);
+        $num = Mage::getModel('ddg_automation/order')->resetOrders();
+        Mage::helper('ddg')->log('-- Reset Orders for reimport : ' . $num);
         Mage::getSingleton('adminhtml/session')->addSuccess('Done.');
         $this->_redirectReferer();
     }
@@ -64,7 +64,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
 	 */
 	public function resetcustomersimportAction()
 	{
-		Mage::getModel('email_connector/contact')->resetAllContacts();
+		Mage::getModel('ddg_automation/contact')->resetAllContacts();
 
 		Mage::getSingleton('adminhtml/session')->addSuccess('Done.');
 
@@ -76,7 +76,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
      */
     public function suppresscontactsAction()
     {
-        Mage::getModel('email_connector/newsletter_subscriber')
+        Mage::getModel('ddg_automation/newsletter_subscriber')
             ->unsubscribe(true);
         Mage::getSingleton('adminhtml/session')->addSuccess('Done.');
         $this->_redirectReferer();
@@ -93,7 +93,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
         /** @var $conn Varien_Db_Adapter_Pdo_Mysql */
         $conn = $coreResource->getConnection('core_write');
         try{
-            $num = $conn->update($coreResource->getTableName('email_connector/contact'),
+            $num = $conn->update($coreResource->getTableName('ddg_automation/contact'),
                 array('contact_id' => new Zend_Db_Expr('null')),
                 $conn->quoteInto('contact_id is ?', new Zend_Db_Expr('not null'))
             );
@@ -114,7 +114,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
 	    // use javascript btoa function to encode the password
 
 	    $apiPassword     = base64_decode($params['api_password']);
-	    $message = Mage::getModel('email_connector/apiconnector_test')->ajaxvalidate($apiUsername, $apiPassword);
+	    $message = Mage::getModel('ddg_automation/apiconnector_test')->ajaxvalidate($apiUsername, $apiPassword);
         $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($message));
     }
 
@@ -123,7 +123,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
 	 */
 	public function resetcontactsajaxAction()
 	{
-		$numReseted = Mage::getModel('email_connector/contact')->resetAllContacts();
+		$numReseted = Mage::getModel('ddg_automation/contact')->resetAllContacts();
 		$message = array('reseted' => $numReseted);
 		$this->getResponse()->setBody(Mage::helper('core')->jsonEncode($message));
 	}
@@ -133,7 +133,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
 	 */
 	public function ajaxresetsubscribersAction()
 	{
-		$num = Mage::getModel('email_connector/contact')->resetSubscribers();
+		$num = Mage::getModel('ddg_automation/contact')->resetSubscribers();
 		$message = array('reseted' => $num);
 		$this->getResponse()->setBody(Mage::helper('core')->jsonEncode($message));
 	}
@@ -143,7 +143,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
 	 */
 	public function ajaxresetguestsAction()
 	{
-		$num = Mage::getModel('email_connector/order')->resetOrders();
+		$num = Mage::getModel('ddg_automation/order')->resetOrders();
 		$message = array('reseted' => $num);
 		$this->getResponse()->setBody(Mage::helper('core')->jsonEncode($message));
 	}
@@ -159,7 +159,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
 	    $website = $request->getParam('website', 0);
 
 	    //api client for this website
-        $client = Mage::helper('connector')->getWebsiteApiClient($website);
+        $client = Mage::helper('ddg')->getWebsiteApiClient($website);
 	    //only if all data is available
         if ($name && $type && $access) {
 	        //create datafield
@@ -168,7 +168,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
             if (isset($response->message)) {
 	            //send error message to backend
                 Mage::getSingleton('adminhtml/session')->addError($response->message);
-                Mage::helper('connector')->log($response->message);
+                Mage::helper('ddg')->log($response->message);
             } else {
 	            //success message
                 Mage::getSingleton('adminhtml/session')->addSuccess('Datafield created : ' . $name);
@@ -176,7 +176,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
         } else {
 	        $message = 'Name ' . $name . ', type ' . $type . ' default ' . $default . 'access ' . $access;
             Mage::getSingleton('adminhtml/session')->addError('Datafield cannot be empty.');
-	        Mage::helper('connector')->rayLog('100', $message);
+	        Mage::helper('ddg')->rayLog('100', $message);
         }
     }
 
@@ -188,7 +188,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
         $addressBookName = $this->getRequest()->getParam('name');
 	    $visibility = $this->getRequest()->getParam('visibility');
         $website  = $this->getRequest()->getParam('website', 0);
-        $client = Mage::helper('connector')->getWebsiteApiClient($website);
+        $client = Mage::helper('ddg')->getWebsiteApiClient($website);
         if (strlen($addressBookName)) {
             $response = $client->postAddressBooks($addressBookName, $visibility);
             if (isset($response->message))
@@ -201,7 +201,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
 
     public function reimoprtsubscribersAction()
     {
-        $updated = Mage::getModel('email_connector/contact')->resetSubscribers();
+        $updated = Mage::getModel('ddg_automation/contact')->resetSubscribers();
         if ($updated) {
             Mage::getSingleton('adminhtml/session')->addSuccess('Done.');
         } else {
@@ -251,7 +251,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
 			return ;
 		}
 
-		$contactTable = Mage::getSingleton('core/resource')->getTableName('email_connector/contact');
+		$contactTable = Mage::getSingleton('core/resource')->getTableName('ddg_automation/contact');
 
 		$customerCollection = Mage::getModel('customer/customer')->getCollection()
 			->addFieldToFilter('website_id', $website);
@@ -277,7 +277,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
 	 */
 	public function runcontactsyncAction()
 	{
-		$result = Mage::getModel('email_connector/cron')->contactSync();
+		$result = Mage::getModel('ddg_automation/cron')->contactSync();
 
 		if ($result['message'])
 			Mage::getSingleton('adminhtml/session')->addSuccess($result['message']);
@@ -290,7 +290,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
 	 */
 	public function runsubscribersyncAction()
 	{
-		$result = Mage::getModel('email_connector/cron')->subscribersAndGuestSync();
+		$result = Mage::getModel('ddg_automation/cron')->subscribersAndGuestSync();
 
 		if ($result['message'])
 			Mage::getSingleton('adminhtml/session')->addSuccess($result['message']);
@@ -304,7 +304,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
 	public function runordersyncAction()
 	{
 
-		$result = Mage::getModel('email_connector/cron')->orderSync();
+		$result = Mage::getModel('ddg_automation/cron')->orderSync();
 		if ($result['message'])
 			Mage::getSingleton('adminhtml/session')->addSuccess($result['message']);
 
@@ -317,7 +317,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
     public function runreviewsyncAction()
     {
 
-        $result = Mage::getModel('email_connector/cron')->reviewSync();
+        $result = Mage::getModel('ddg_automation/cron')->reviewSync();
         if ($result['message'])
             Mage::getSingleton('adminhtml/session')->addSuccess($result['message']);
 
@@ -330,7 +330,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
     public function runwishlistsyncAction()
     {
 
-        $result = Mage::getModel('email_connector/wishlist')->sync();
+        $result = Mage::getModel('ddg_automation/wishlist')->sync();
         if ($result['message'])
             Mage::getSingleton('adminhtml/session')->addSuccess($result['message']);
 
@@ -343,7 +343,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
     public function runquotesyncAction()
     {
 
-        $result = Mage::getModel('email_connector/cron')->quoteSync();
+        $result = Mage::getModel('ddg_automation/cron')->quoteSync();
         if ($result['message'])
             Mage::getSingleton('adminhtml/session')->addSuccess($result['message']);
 
@@ -355,8 +355,8 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
      */
     public function resetquotesAction()
     {
-        $num = Mage::getModel('email_connector/quote')->resetQuotes();
-        Mage::helper('connector')->log('-- Reset Quotes for reimport : ' . $num);
+        $num = Mage::getModel('ddg_automation/quote')->resetQuotes();
+        Mage::helper('ddg')->log('-- Reset Quotes for reimport : ' . $num);
         Mage::getSingleton('adminhtml/session')->addSuccess('Done.');
         $this->_redirectReferer();
     }
@@ -366,8 +366,8 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
      */
     public function resetreviewsAction()
     {
-        $num = Mage::getModel('email_connector/review')->reset();
-        Mage::helper('connector')->log('-- Reset Reviews for reimport : ' . $num);
+        $num = Mage::getModel('ddg_automation/review')->reset();
+        Mage::helper('ddg')->log('-- Reset Reviews for reimport : ' . $num);
         Mage::getSingleton('adminhtml/session')->addSuccess('Done.');
         $this->_redirectReferer();
     }
@@ -377,8 +377,8 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
      */
     public function resetwishlistsAction()
     {
-        $num = Mage::getModel('email_connector/wishlist')->reset();
-        Mage::helper('connector')->log('-- Reset Wishlist for reimport : ' . $num);
+        $num = Mage::getModel('ddg_automation/wishlist')->reset();
+        Mage::helper('ddg')->log('-- Reset Wishlist for reimport : ' . $num);
         Mage::getSingleton('adminhtml/session')->addSuccess('Done.');
         $this->_redirectReferer();
     }

@@ -31,11 +31,11 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard extends  Mage_Adminhtml_Bl
 			$website = $this->getRequest()->getParam('website');
 		}
 
-		$apiUsername = Mage::helper('connector')->getApiUsername($website);
-		$apiPassword = Mage::helper('connector')->getApiPassword($website);
+		$apiUsername = Mage::helper('ddg')->getApiUsername($website);
+		$apiPassword = Mage::helper('ddg')->getApiPassword($website);
 
 		//api get account info
-		$data = Mage::getModel('email_connector/apiconnector_client')
+		$data = Mage::getModel('ddg_automation/apiconnector_client')
 		            ->setApiUsername($apiUsername)
 		            ->setApiPassword($apiPassword)
 		            ->getAccountInfo();

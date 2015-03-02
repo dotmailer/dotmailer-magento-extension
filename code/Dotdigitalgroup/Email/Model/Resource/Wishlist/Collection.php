@@ -8,6 +8,6 @@ class Dotdigitalgroup_Email_Model_Resource_Wishlist_Collection extends Mage_Core
     public function _construct()
     {
         parent::_construct();
-        $this->_init('email_connector/wishlist');
+        $this->_init('ddg_automation/wishlist');
     }
 }

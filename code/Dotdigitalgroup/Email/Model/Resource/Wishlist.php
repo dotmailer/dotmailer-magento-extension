@@ -7,7 +7,7 @@ class Dotdigitalgroup_Email_Model_Resource_Wishlist extends Mage_Core_Model_Mysq
      */
     protected  function _construct()
     {
-        $this->_init('email_connector/wishlist', 'id');
+        $this->_init('ddg_automation/wishlist', 'id');
 
     }
 }

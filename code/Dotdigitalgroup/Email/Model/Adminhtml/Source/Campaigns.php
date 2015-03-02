@@ -15,17 +15,17 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Campaigns
         $websiteName = Mage::app()->getRequest()->getParam('website', false);
         //admin
         $website = 0;
-	    $fields[] = array('value' => '0', 'label' => Mage::helper('connector')->__('-- Please Select --'));
+	    $fields[] = array('value' => '0', 'label' => Mage::helper('ddg')->__('-- Please Select --'));
 
 	    if ($websiteName) {
             $website = Mage::app()->getWebsite($websiteName);
         }
 
-	    $enabled = Mage::helper('connector')->isEnabled($website);
+	    $enabled = Mage::helper('ddg')->isEnabled($website);
 
 	    //api enabled get campaigns
 	    if ($enabled) {
-		    $client = Mage::helper( 'connector' )->getWebsiteApiClient( $website );
+		    $client = Mage::helper( 'ddg' )->getWebsiteApiClient( $website );
 
 		    $savedCampaigns = Mage::registry( 'savedcampigns' );
 
@@ -42,7 +42,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Campaigns
 			    if ( isset( $one->id ) ) {
 				    $fields[] = array(
 					    'value' => $one->id,
-					    'label' => Mage::helper( 'connector' )->__( addslashes( $one->name ) )
+					    'label' => Mage::helper( 'ddg' )->__( addslashes( $one->name ) )
 				    );
 			    }
 		    }

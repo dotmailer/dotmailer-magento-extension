@@ -10,48 +10,16 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Observer
      */
     public function actionConfigResetContacts()
     {
-        $contactModel = Mage::getModel('email_connector/contact');
+        $contactModel = Mage::getModel('ddg_automation/contact');
         $numImported = $contactModel->getNumberOfImportedContacs();
         $updated = $contactModel->resetAllContacts();
-        Mage::helper('connector')->log('-- Imported contacts: ' . $numImported  . ' reseted :  ' . $updated . ' --');
+        Mage::helper('ddg')->log('-- Imported contacts: ' . $numImported  . ' reseted :  ' . $updated . ' --');
 
         /**
          * check for addressbook mapping and disable if no address selected.
          */
         $this->_checkAddressBookMapping(Mage::app()->getRequest()->getParam('website'));
 
-        return $this;
-    }
-
-    /**
-     * API Transactional Section.
-     * Default data fields for transactional account.
-     * @return $this
-     */
-    public function saveConfigForTransactional()
-    {
-        //check for the datafields created for this api account
-        $username = Mage::helper('connector/transactional')->getApiUsername();
-        $configCreated = Mage::helper('connector')->isConfigCreatedForPath($username);
-
-        // no need to creat new datafields for this account
-        if ($configCreated) {
-            return $this;
-        }
-
-        //create default datafields for new api account
-        $client = Mage::getModel('email_connector/apiconnector_client');
-        $username = Mage::helper('connector/transactional')->getApiUsername();
-        $password = Mage::helper('connector/transactional')->getApiPassword();
-        $client->setApiUsername($username)->setApiPassword($password);
-
-        //required datafields for transactional
-        $dataFields = Mage::getModel('email_connector/connector_datafield')->getTransactionalDefaultDatafields();
-
-        foreach ($dataFields as $field) {
-            //create the datafields
-            $client->postDataFields($field);
-        }
         return $this;
     }
 
@@ -81,7 +49,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Observer
         //only for modification for order and wishlist
         if ($orderEnabled || $wishlistEnabled) {
             //client by website id
-            $client = Mage::helper('connector')->getWebsiteApiClient($scopeId);
+            $client = Mage::helper('ddg')->getWebsiteApiClient($scopeId);
 
             //call request for account info
             $response = $client->getAccountInfo();
@@ -98,7 +66,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Observer
                     Mage::getSingleton('adminhtml/session')->addError($message);
 
                     //send raygun message for trans data
-                    Mage::helper('connector')->rayLog('100', $message);
+                    Mage::helper('ddg')->rayLog('100', $message);
                     //disable the config for wishlist and order sync
                     $config = Mage::getConfig();
                     $config->saveConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_WISHLIST_ENABLED, 0, $scope, $scopeId);
@@ -127,20 +95,10 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Observer
         $apiPassword =  isset($groups['api']['fields']['password']['value'])? $groups['api']['fields']['password']['value'] : false;
         //skip if the inherit option is selected
         if ($apiUsername && $apiPassword) {
-            Mage::helper('connector')->log('----VALIDATING ACCOUNT---');
-            $testModel = Mage::getModel('email_connector/apiconnector_test');
+            Mage::helper('ddg')->log('----VALIDATING ACCOUNT---');
+            $testModel = Mage::getModel('ddg_automation/apiconnector_test');
             $isValid = $testModel->validate($apiUsername, $apiPassword);
             if ($isValid) {
-                /**
-                 * Create account contact datafields
-                 */
-                $client = Mage::getModel('email_connector/apiconnector_client');
-                $client->setApiUsername($apiUsername)
-                    ->setApiPassword($apiPassword);
-                $datafields = Mage::getModel('email_connector/connector_datafield')->getDefaultDataFields();
-                foreach ($datafields as $datafield) {
-                    $client->postDataFields($datafield);
-                }
                 /**
                  * Send install info
                  */
@@ -160,14 +118,14 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Observer
                 $config->saveConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED, 0, $scope, $scopeId);
                 $config->cleanCache();
             }
-            Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('connector')->__('API Credentials Valid.'));
+            Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('ddg')->__('API Credentials Valid.'));
         }
         return $this;
     }
 
     private function _checkAddressBookMapping( $website ) {
 
-        $helper = Mage::helper('connector');
+        $helper = Mage::helper('ddg');
         $customerAddressBook = $helper->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMERS_ADDRESS_BOOK_ID, $website);
         $subscriberAddressBook = $helper->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SUBSCRIBERS_ADDRESS_BOOK_ID, $website);
 
@@ -209,6 +167,69 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Observer
      */
     public function updateFeed()
     {
-        Mage::getModel('email_connector/feed')->checkForUpgrade();
+        Mage::getModel('ddg_automation/feed')->checkForUpgrade();
     }
+
+
+	/**
+	 * Add modified segment for contact.
+	 * @param $observer
+	 *
+	 * @return $this
+	 */
+	public function connectorCustomerSegmentChanged($observer)
+	{
+		$segmentsIds = $observer->getEvent()->getSegmentIds();
+		$customerId = Mage::getSingleton('customer/session')->getCustomerId();
+
+		$websiteId = Mage::app()->getStore()->getWebsiteId();
+
+		if (!empty($segmentsIds)) {
+			$this->addContactsFromWebsiteSegments($customerId, $segmentsIds, $websiteId);
+		}
+
+		return $this;
+	}
+
+
+	/**
+	 * Add segment ids.
+	 * @param $customerId
+	 * @param $segmentIds
+	 * @param $websiteId
+	 *
+	 * @return $this
+	 */
+	protected function addContactsFromWebsiteSegments($customerId, $segmentIds, $websiteId){
+
+		if (empty($segmentIds))
+			return;
+		$segmentIds = implode(',', $segmentIds);
+
+		$contact = Mage::getModel('ddg_automation/contact')->getCollection()
+			->addFieldToFilter('customer_id', $customerId)
+			->addFieldToFilter('website_id', $websiteId)
+			->getFirstItem();
+		try {
+
+			$contact->setSegmentIds($segmentIds)
+			        ->setEmailImported()
+			        ->save();
+
+		}catch (Exception $e){
+			Mage::logException($e);
+		}
+
+		return $this;
+	}
+
+	protected function getCustomerSegmentIdsForWebsite($customerId, $websiteId){
+		$segmentIds = Mage::getModel('ddg_automation/contact')->getCollection()
+			->addFieldToFilter('website_id', $websiteId)
+			->addFieldToFilter('customer_id', $customerId)
+			->getFirstItem()
+			->getSegmentIds();
+
+		return $segmentIds;
+	}
 }

@@ -20,9 +20,9 @@ class Dotdigitalgroup_Email_Block_Recommended_Push extends Mage_Core_Block_Templ
     {
         $productsToDisplay = array();
         $mode  = $this->getRequest()->getActionName();
-        $limit = Mage::helper('connector/recommended')->getDisplayLimitByMode($mode);
+        $limit = Mage::helper('ddg/recommended')->getDisplayLimitByMode($mode);
 
-        $productIds = Mage::helper('connector/recommended')->getProductPushIds();
+        $productIds = Mage::helper('ddg/recommended')->getProductPushIds();
 
         $productCollection = Mage::getResourceModel('catalog/product_collection')
             ->addAttributeToFilter('entity_id', array('in' => $productIds))
@@ -47,7 +47,7 @@ class Dotdigitalgroup_Email_Block_Recommended_Push extends Mage_Core_Block_Templ
 	 */
 	public function getMode()
     {
-        return Mage::helper('connector/recommended')->getDisplayType();
+        return Mage::helper('ddg/recommended')->getDisplayType();
 
     }
 

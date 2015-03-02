@@ -28,9 +28,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_General extends  Mage
 		} elseif ($this->getRequest()->getParam('website')) {
 			$website = $this->getRequest()->getParam('website');
 		}
-		$apiUsername = Mage::helper('connector')->getApiUsername($website);
-		$apiPassword = Mage::helper('connector')->getApiPassword($website);
-		$data = Mage::getModel('email_connector/apiconnector_client')
+		$apiUsername = Mage::helper('ddg')->getApiUsername($website);
+		$apiPassword = Mage::helper('ddg')->getApiPassword($website);
+		$data = Mage::getModel('ddg_automation/apiconnector_client')
 		            ->setApiUsername($apiUsername)
 		            ->setApiPassword($apiPassword)
 		            ->getAccountInfo();
@@ -47,7 +47,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_General extends  Mage
 	{
 		foreach($this->group as $key => $data){
 			$this->setChild($key,
-				$this->getLayout()->createBlock('email_connector/adminhtml_dashboard_tabs_general_data', '', $data)
+				$this->getLayout()->createBlock('ddg_automation/adminhtml_dashboard_tabs_general_data', '', $data)
 			);
 		}
 	}

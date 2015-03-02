@@ -15,28 +15,22 @@ class Dotdigitalgroup_Email_Block_Basket extends Mage_Core_Block_Template
     {
         $params = $this->getRequest()->getParams();
 
-        if (!isset($params['email']) && !isset($params['code']))
-            throw new Exception('Basket no email or code is set');
-        Mage::helper('connector')->auth($params['code']);
+        if (!isset($params['quote_id']) && !isset($params['code'])){
+            Mage::helper('ddg')->log('Basket no quote id or code is set');
+            return false;
+        }
 
-        $email = $params['email'];
-
-        $customer = Mage::getModel('customer/customer');
-        $customer->setWebsiteId(Mage::app()->getWebsite()->getId())->loadByEmail($email);
-
-        //last active  guest  basket
-        $quoteModel = Mage::getResourceModel('sales/quote_collection')
-            ->addFieldToFilter('is_active', 1)
-            ->addFieldToFilter('items_count', array('gt' => 0))
-            ->addFieldToFilter('customer_email', $email)
-            ->setOrder('updated_at', 'DESC')
-            ->setPageSize(1);
-
-        $quoteModel = $quoteModel->getFirstItem();
+        $quoteId = $params['quote_id'];
+	    $quoteModel = Mage::getModel('sales/quote')->load($quoteId);
 
 	    //check for any quote for this email, don't want to render further
 	    if (! $quoteModel->getId()) {
-		    throw new Exception('no quote found for email : ' . $email);
+            Mage::helper('ddg')->log('no quote found for ');
+            return false;
+	    }
+	    if (! $quoteModel->getIsActive()) {
+		    Mage::helper('ddg')->log('Cart is not active');
+		    return false;
 	    }
 
         $this->_quote = $quoteModel;

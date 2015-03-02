@@ -19,7 +19,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Quote_Grid extends Mage_Adminhtml_Bl
     protected function _getCollectionClass()
     {
         // This is the model we are using for the grid
-        return 'email_connector/quote_collection';
+        return 'ddg_automation/quote_collection';
     }
 
     /**
@@ -42,65 +42,65 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Quote_Grid extends Mage_Adminhtml_Bl
     protected function _prepareColumns()
     {
         $this->addColumn('quote_id', array(
-            'header'        => Mage::helper('connector')->__('Quote ID'),
+            'header'        => Mage::helper('ddg')->__('Quote ID'),
             'align'         => 'left',
             'width'         => '50px',
             'index'         => 'quote_id',
             'type'          => 'number',
             'escape'        => true
         ))->addColumn('customer_id', array(
-            'header'        => Mage::helper('connector')->__('Customer ID'),
+            'header'        => Mage::helper('ddg')->__('Customer ID'),
             'align'         => 'left',
             'width'         => '50px',
             'index'         => 'customer_id',
             'type'          => 'number',
             'escape'        => true
         ))->addColumn('store_id', array(
-            'header'        => Mage::helper('connector')->__('Store ID'),
+            'header'        => Mage::helper('ddg')->__('Store ID'),
             'align'         => 'left',
             'width'         => '50px',
             'index'         => 'store_id',
             'type'          => 'number',
             'escape'        => true
         ))->addColumn('imported', array(
-            'header'        => Mage::helper('connector')->__('Quote Imported'),
+            'header'        => Mage::helper('ddg')->__('Quote Imported'),
             'align'         => 'center',
             'width'         => '50px',
             'index'         => 'imported',
             'type'          => 'options',
             'escape'        => true,
-            'renderer'		=> 'email_connector/adminhtml_column_renderer_imported',
-            'options'       => Mage::getModel('email_connector/adminhtml_source_contact_imported')->getOptions(),
+            'renderer'		=> 'ddg_automation/adminhtml_column_renderer_imported',
+            'options'       => Mage::getModel('ddg_automation/adminhtml_source_contact_imported')->getOptions(),
             'filter_condition_callback' => array($this, 'filterCallbackContact')
         ))->addColumn('modified', array(
-            'header'        => Mage::helper('connector')->__('Quote Modified'),
+            'header'        => Mage::helper('ddg')->__('Quote Modified'),
             'align'         => 'center',
             'width'         => '50px',
             'index'         => 'modified',
             'type'          => 'options',
             'escape'        => true,
-            'renderer'		=> 'email_connector/adminhtml_column_renderer_imported',
-            'options'       => Mage::getModel('email_connector/adminhtml_source_contact_imported')->getOptions(),
+            'renderer'		=> 'ddg_automation/adminhtml_column_renderer_imported',
+            'options'       => Mage::getModel('ddg_automation/adminhtml_source_contact_imported')->getOptions(),
             'filter_condition_callback' => array($this, 'filterCallbackContact')
         ))->addColumn('converted_to_order', array(
-            'header'        => Mage::helper('connector')->__('Converted To Order'),
+            'header'        => Mage::helper('ddg')->__('Converted To Order'),
             'align'         => 'center',
             'width'         => '50px',
             'index'         => 'converted_to_order',
             'type'          => 'options',
             'escape'        => true,
-            'renderer'		=> 'email_connector/adminhtml_column_renderer_imported',
-            'options'       => Mage::getModel('email_connector/adminhtml_source_contact_imported')->getOptions(),
+            'renderer'		=> 'ddg_automation/adminhtml_column_renderer_imported',
+            'options'       => Mage::getModel('ddg_automation/adminhtml_source_contact_imported')->getOptions(),
             'filter_condition_callback' => array($this, 'filterCallbackContact')
         ))->addColumn('created_at', array(
-            'header'        => Mage::helper('connector')->__('Created At'),
+            'header'        => Mage::helper('ddg')->__('Created At'),
             'width'         => '50px',
             'align'         => 'center',
             'index'         => 'created_at',
             'type'          => 'datetime',
             'escape'        => true,
         ))->addColumn('updated_at', array(
-            'header'        => Mage::helper('connector')->__('Updated At'),
+            'header'        => Mage::helper('ddg')->__('Updated At'),
             'width'         => '50px',
             'align'         => 'center',
             'index'         => 'updated_at',

@@ -29,7 +29,7 @@ class Dotdigitalgroup_Email_Block_Products extends Mage_Core_Block_Template
 	            $appEmulation = Mage::getSingleton('core/app_emulation');
 	            $appEmulation->startEnvironmentEmulation($storeId);
                 //order products
-                $productRecommended = Mage::getModel('email_connector/dynamic_recommended', $orderModel);
+                $productRecommended = Mage::getModel('ddg_automation/dynamic_recommended', $orderModel);
                 $productRecommended->setMode($mode);
 
                 //get the order items recommendations
@@ -61,7 +61,7 @@ class Dotdigitalgroup_Email_Block_Products extends Mage_Core_Block_Template
 	 */
     public function getDisplayType()
     {
-        return Mage::helper('connector/recommended')->getDisplayType();
+        return Mage::helper('ddg/recommended')->getDisplayType();
 
     }
 }

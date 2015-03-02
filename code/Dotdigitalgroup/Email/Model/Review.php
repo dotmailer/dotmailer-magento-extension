@@ -14,7 +14,7 @@ class Dotdigitalgroup_Email_Model_Review extends Mage_Core_Model_Abstract
     public function _construct()
     {
         parent::_construct();
-        $this->_init('email_connector/review');
+        $this->_init('ddg_automation/review');
     }
 
     /**
@@ -35,7 +35,7 @@ class Dotdigitalgroup_Email_Model_Review extends Mage_Core_Model_Abstract
     public function sync()
     {
         $response = array('success' => true, 'message' => '');
-        $helper = Mage::helper('connector');
+        $helper = Mage::helper('ddg');
         $this->_countReviews = 0;
         $this->_reviews = array();
         $this->_start = microtime(true);
@@ -43,8 +43,8 @@ class Dotdigitalgroup_Email_Model_Review extends Mage_Core_Model_Abstract
         $helper->allowResourceFullExecution();
         foreach (Mage::app()->getWebsites(true) as $website) {
 
-	        $enabled = Mage::helper('connector')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED, $website);
-            $sync = Mage::helper('connector')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_REVIEW_ENABLED, $website);
+	        $enabled = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED, $website);
+            $sync = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_REVIEW_ENABLED, $website);
 
 	        if ($enabled && $sync) {
 				//start the sync
@@ -56,7 +56,7 @@ class Dotdigitalgroup_Email_Model_Review extends Mage_Core_Model_Abstract
             if (isset($this->_reviews[$website->getId()])) {
                 $reviews = $this->_reviews[$website->getId()];
                 //send reviews as transactional data
-                $client = Mage::helper('connector')->getWebsiteApiClient($website);
+                $client = Mage::helper('ddg')->getWebsiteApiClient($website);
                 $client->postContactsTransactionalDataImport($reviews, 'Reviews');
                 $this->_countReviews += count($reviews);
             }
@@ -72,7 +72,7 @@ class Dotdigitalgroup_Email_Model_Review extends Mage_Core_Model_Abstract
 
     private function _exportReviewsForWebsite(Mage_Core_Model_Website $website)
     {
-        $limit = Mage::helper('connector')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT, $website);
+        $limit = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT, $website);
         $reviews = $this->_getReviewsToExport($website, $limit);
 
         if($reviews->getSize()){
@@ -86,7 +86,7 @@ class Dotdigitalgroup_Email_Model_Review extends Mage_Core_Model_Abstract
 
                     $customer = Mage::getModel('customer/customer')->load($mageReview->getCustomerId());
 
-                    $connectorReview = Mage::getModel('email_connector/customer_review', $customer)
+                    $connectorReview = Mage::getModel('ddg_automation/customer_review', $customer)
                         ->setReviewData($mageReview)
                         ->setProduct($product);
 
@@ -100,7 +100,7 @@ class Dotdigitalgroup_Email_Model_Review extends Mage_Core_Model_Abstract
                     );
 
                     foreach($votesCollection as $ratingItem){
-                        $rating = Mage::getModel('email_connector/customer_review_rating', $ratingItem);
+                        $rating = Mage::getModel('ddg_automation/customer_review_rating', $ratingItem);
                         $connectorReview->createRating($ratingItem->getRatingCode(), $rating);
                     }
                     $this->_reviews[$website->getId()][] = $connectorReview;
@@ -134,7 +134,7 @@ class Dotdigitalgroup_Email_Model_Review extends Mage_Core_Model_Abstract
         /** @var $conn Varien_Db_Adapter_Pdo_Mysql */
         $conn = $coreResource->getConnection('core_write');
         try{
-            $num = $conn->update($coreResource->getTableName('email_connector/review'),
+            $num = $conn->update($coreResource->getTableName('ddg_automation/review'),
                 array('review_imported' => new Zend_Db_Expr('null')),
                 $conn->quoteInto('review_imported is ?', new Zend_Db_Expr('not null'))
             );

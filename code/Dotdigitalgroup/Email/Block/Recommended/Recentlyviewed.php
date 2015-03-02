@@ -25,7 +25,7 @@ class Dotdigitalgroup_Email_Block_Recommended_Recentlyviewed extends Mage_Core_B
         $productsToDisplay = array();
         $mode = $this->getRequest()->getActionName();
         $customerId = $this->getRequest()->getParam('customer_id');
-        $limit = Mage::helper('connector/recommended')->getDisplayLimitByMode($mode);
+        $limit = Mage::helper('ddg/recommended')->getDisplayLimitByMode($mode);
         //login customer to receive the recent products
         $session = Mage::getSingleton('customer/session');
         $isLoggedIn = $session->loginById($customerId);
@@ -33,7 +33,7 @@ class Dotdigitalgroup_Email_Block_Recommended_Recentlyviewed extends Mage_Core_B
         $collection = Mage::getSingleton('Mage_Reports_Block_Product_Viewed');
         $items = $collection->getItemsCollection()
             ->setPageSize($limit);
-        Mage::helper('connector')->log('Recentlyviewed customer  : ' . $customerId . ', mode ' . $mode . ', limit : ' . $limit .
+        Mage::helper('ddg')->log('Recentlyviewed customer  : ' . $customerId . ', mode ' . $mode . ', limit : ' . $limit .
             ', items found : ' . count($items) . ', is customer logged in : ' . $isLoggedIn . ', products :' . count($productsToDisplay));
         foreach ($items as $product) {
             $product = Mage::getModel('catalog/product')->load($product->getId());
@@ -54,7 +54,7 @@ class Dotdigitalgroup_Email_Block_Recommended_Recentlyviewed extends Mage_Core_B
 	 */
 	public function getMode()
     {
-        return Mage::helper('connector/recommended')->getDisplayType();
+        return Mage::helper('ddg/recommended')->getDisplayType();
 
     }
 

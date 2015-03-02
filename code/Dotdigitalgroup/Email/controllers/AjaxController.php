@@ -10,10 +10,10 @@ class Dotdigitalgroup_Email_AjaxController extends Mage_Core_Controller_Front_Ac
             if($quote->hasItems()){
                 try {
                     $quote->setCustomerEmail($email)->save();
-                    Mage::helper('connector')->log('ajax emailCapture email: '. $email);
+                    Mage::helper('ddg')->log('ajax emailCapture email: '. $email);
                 }catch(Exception $e){
                     Mage::logException($e);
-                    Mage::helper('connector')->log('ajax emailCapture fail for email: '. $email);
+                    Mage::helper('ddg')->log('ajax emailCapture fail for email: '. $email);
                 }
             }
         }

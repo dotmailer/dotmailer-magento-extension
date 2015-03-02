@@ -69,7 +69,7 @@ class Dotdigitalgroup_Email_Model_Sms_Campaign
     public function sendSms()
     {
         $website = Mage::app()->getStore($this->_storeId)->getWebsite();
-        $client = Mage::helper('connector')->getWebsiteApiClient($website);
+        $client = Mage::helper('ddg')->getWebsiteApiClient($website);
         //all available sms in config
         foreach ($this->_allsms as $num) {
 
@@ -82,11 +82,11 @@ class Dotdigitalgroup_Email_Model_Sms_Campaign
                     $codePhone = preg_replace('/\A(0){1}+/', '+44', $this->_customerTelephone);
                     //status and telephone valid
                     if ($this->_status == $status) {
-                        Mage::helper('connector')->log('sending sms message with status : ' . $status . ' and ' . $codePhone);
+                        Mage::helper('ddg')->log('sending sms message with status : ' . $status . ' and ' . $codePhone);
                         $client->postSmsMessagesSendTo($codePhone, $message);
                     }
                 } else {
-                    Mage::helper('connector')->log('SMS: phone not valid for UK : ' . $this->_customerTelephone);
+                    Mage::helper('ddg')->log('SMS: phone not valid for UK : ' . $this->_customerTelephone);
                 }
             }
         }

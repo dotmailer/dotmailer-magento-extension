@@ -10,7 +10,8 @@ class Dotdigitalgroup_Email_DynamicContentController extends Dotdigitalgroup_Ema
 	public function preDispatch()
 	{
 		//authenticate
-		Mage::helper('connector')->auth($this->getRequest()->getParam('code'));
+		$this->authenticate();
+
 		$orderId = $this->getRequest()->getParam('order_id', false);
 		//check for order_id param
 		if ($orderId) {
@@ -22,10 +23,16 @@ class Dotdigitalgroup_Email_DynamicContentController extends Dotdigitalgroup_Ema
 				$appEmulation = Mage::getSingleton('core/app_emulation');
 				$appEmulation->startEnvironmentEmulation($storeId);
 			} else {
-				throw new Exception('TE invoice : order not found: ' . $orderId);
+				//throw new Exception('TE invoice : order not found: ' . $orderId);
+				Mage::helper('ddg')->log('TE invoice : order not found: ' . $orderId);
+				$this->sendResponse();
+				die;
 			}
 		} else {
-			throw new Exception('TE invoice : order_id missing :' . $orderId);
+			//throw new Exception('TE invoice : order_id missing :' . $orderId);
+			Mage::helper('ddg')->log('TE invoice : order_id missing :' . $orderId);
+			$this->sendResponse();
+			die;
 		}
 		parent::preDispatch();
 	}

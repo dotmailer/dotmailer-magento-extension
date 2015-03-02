@@ -29,10 +29,14 @@ class Dotdigitalgroup_Email_Block_Order extends Mage_Core_Block_Template
         $order = Mage::registry('current_order');
         if (! $orderId) {
             $orderId = Mage::app()->getRequest()->getParam('order_id');
+            if(!$orderId)
+                return false;
             Mage::unregister('order_id'); // additional measure
             Mage::register('order_id', $orderId);
         }
         if (! $order) {
+            if(!$orderId)
+                return false;
             $order = Mage::getModel('sales/order')->load($orderId);
             Mage::unregister('current_order'); // additional measure
             Mage::register('current_order', $order);
@@ -59,7 +63,7 @@ class Dotdigitalgroup_Email_Block_Order extends Mage_Core_Block_Template
         if($order->getCustomerIsGuest())
             return $items;
 
-        if(!Mage::helper('connector/review')->isNewProductOnly($websiteId))
+        if(!Mage::helper('ddg/review')->isNewProductOnly($websiteId))
             return $items;
 
         $customerId = $order->getCustomerId();

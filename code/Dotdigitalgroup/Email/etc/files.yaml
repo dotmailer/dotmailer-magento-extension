@@ -45,7 +45,6 @@ block:
   - Adminhtml#Column#Renderer#Imported.php
   - Adminhtml#Column#Renderer#Status.php
   - Adminhtml#Column#Renderer#Sync.php
-  - Adminhtml#Config#Template#Templatefields.php
   - Adminhtml#Config#Customdatafields.php
   - Adminhtml#Config#Select.php
   - Adminhtml#Contact#Edit#Form.php
@@ -162,7 +161,6 @@ helper:
   - File.php
   - Recommended.php
   - Review.php
-  - Transactional.php
 model:
   - Abstract#Rest.php
   - Adminhtml#Dashboard#Tabs#Analysis#Abandoned.php
@@ -187,12 +185,6 @@ model:
   - Adminhtml#Source#Reviews#Campaigns.php
   - Adminhtml#Source#Reviews#Delay.php
   - Adminhtml#Source#Sweettooth#Yesno.php
-  - Adminhtml#Source#Transactional#Campaigns.php
-  - Adminhtml#Source#Transactional#Customselect.php
-  - Adminhtml#Source#Transactional#Defaultselect.php
-  - Adminhtml#Source#Transactional#Fromaddress.php
-  - Adminhtml#Source#Transactional#Replyactions.php
-  - Adminhtml#Source#Transactional#Sendtype.php
   - Adminhtml#Source#Addressbooks.php
   - Adminhtml#Source#Campaigns.php
   - Adminhtml#Source#Datafields.php
@@ -213,7 +205,6 @@ model:
   - Customer#Observer.php
   - Customer#Review.php
   - Customer#Wishlist.php
-  - Email#Template.php
   - Newsletter#Observer.php
   - Newsletter#Sub.php
   - Newsletter#Subscriber.php
@@ -256,7 +247,6 @@ design:
   - adminhtml#default#default#template#connector#dashboard#status.phtml
   - adminhtml#default#default#template#connector#dashboard#tabs.phtml
   - adminhtml#default#default#template#connector#system#config#createdatafield.phtml
-  - adminhtml#default#default#template#connector#grid.phtml
   - frontend#base#default#layout#connector.xml
   - frontend#base#default#layout#mailcheck.xml
   - frontend#base#default#template#connector#creditmemo#items.phtml

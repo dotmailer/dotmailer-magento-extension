@@ -30,7 +30,7 @@ class Dotdigitalgroup_Email_Model_Sales_Order
     public function sync()
     {
         $response = array('success' => true, 'message' => '');
-        $client = Mage::getModel('email_connector/apiconnector_client');
+        $client = Mage::getModel('ddg_automation/apiconnector_client');
         // Initialise a return hash containing results of our sync attempt
         $this->_searchAccounts();
         foreach ($this->accounts as $account) {
@@ -41,9 +41,9 @@ class Dotdigitalgroup_Email_Model_Sales_Order
             if ($numOrders) {
                 $client->setApiUsername($account->getApiUsername())
                     ->setApiPassword($account->getApiPassword());
-                Mage::helper('connector')->log('--------- Order sync ---------- : ' . count($orders));
+                Mage::helper('ddg')->log('--------- Order sync ---------- : ' . count($orders));
                 $client->postContactsTransactionalDataImport($orders, 'Orders');
-                Mage::helper('connector')->log('----------end order sync----------');
+                Mage::helper('ddg')->log('----------end order sync----------');
             }
             unset($this->accounts[$account->getApiUsername()]);
         }
@@ -58,7 +58,7 @@ class Dotdigitalgroup_Email_Model_Sales_Order
      */
     private function _searchAccounts()
     {
-        $helper = Mage::helper('connector');
+        $helper = Mage::helper('ddg');
         foreach (Mage::app()->getWebsites(true) as $website) {
             if ($helper->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_ORDER_ENABLED, $website)) {
 
@@ -66,9 +66,9 @@ class Dotdigitalgroup_Email_Model_Sales_Order
                 $this->_apiPassword = $helper->getApiPassword($website);
 
                 // limit for orders included to sync
-                $limit = Mage::helper('connector')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT, $website);
+                $limit = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT, $website);
                 if (!isset($this->accounts[$this->_apiUsername])) {
-                    $account = Mage::getModel('email_connector/connector_account')
+                    $account = Mage::getModel('ddg_automation/connector_account')
                         ->setApiUsername($this->_apiUsername)
                         ->setApiPassword($this->_apiPassword);
                     $this->accounts[$this->_apiUsername] = $account;
@@ -88,11 +88,11 @@ class Dotdigitalgroup_Email_Model_Sales_Order
     {
         $orders = $customers = array();
         $storeIds = $website->getStoreIds();
-        $orderModel   = Mage::getModel('email_connector/order');
+        $orderModel   = Mage::getModel('ddg_automation/order');
         if(empty($storeIds))
             return array();
 
-        $helper = Mage::helper('connector');
+        $helper = Mage::helper('ddg');
         $orderStatuses = $helper->getConfigSelectedStatus($website);
 
         if($orderStatuses)
@@ -112,7 +112,7 @@ class Dotdigitalgroup_Email_Model_Sales_Order
                     $this->_createGuestContact($salesOrder->getCustomerEmail(), $websiteId, $storeId);
                 }
                 if ($salesOrder->getId()) {
-                    $connectorOrder = Mage::getModel('email_connector/connector_order', $salesOrder);
+                    $connectorOrder = Mage::getModel('ddg_automation/connector_order', $salesOrder);
                     $orders[] = $connectorOrder;
                 }
                 $order->setEmailImported(Dotdigitalgroup_Email_Model_Contact::EMAIL_CONTACT_IMPORTED)
@@ -134,10 +134,10 @@ class Dotdigitalgroup_Email_Model_Sales_Order
 	 */
 	private function _createGuestContact($email, $websiteId, $storeId){
         try{
-            $client = Mage::helper('connector')->getWebsiteApiClient($websiteId);
+            $client = Mage::helper('ddg')->getWebsiteApiClient($websiteId);
 
 	        //no api credentials or the guest has no been mapped
-	        if (! $client || ! $addressBookId = Mage::helper('connector')->getGuestAddressBook($websiteId))
+	        if (! $client || ! $addressBookId = Mage::helper('ddg')->getGuestAddressBook($websiteId))
 		        return false;
 	        //check if contact exists, create if not
 	        $contactApi = $client->postContacts($email);
@@ -151,7 +151,7 @@ class Dotdigitalgroup_Email_Model_Sales_Order
 	        $response = $client->postAddressBookContacts($addressBookId, $contactApi);
 
 	        //set contact as was found as guest and
-            $contactModel = Mage::getModel('email_connector/contact')->loadByCustomerEmail($email, $websiteId);
+            $contactModel = Mage::getModel('ddg_automation/contact')->loadByCustomerEmail($email, $websiteId);
             $contactModel->setIsGuest(1)
                 ->setStoreId($storeId)
                 ->setEmailImported(1);
@@ -166,9 +166,9 @@ class Dotdigitalgroup_Email_Model_Sales_Order
 	        //save
             $contactModel->save();
 
-            Mage::helper('connector')->log('-- guest found : '  . $email . ' website : ' . $websiteId . ' ,store : ' . $storeId);
+            Mage::helper('ddg')->log('-- guest found : '  . $email . ' website : ' . $websiteId . ' ,store : ' . $storeId);
         }catch(Exception $e){
-	        Mage::helper('connector')->getRaygunClient()->SendException($e, array(Mage::getBaseUrl('web')));
+	        Mage::helper('ddg')->getRaygunClient()->SendException($e, array(Mage::getBaseUrl('web')));
             Mage::logException($e);
         }
 
@@ -199,15 +199,15 @@ class Dotdigitalgroup_Email_Model_Sales_Order
      */
     private function registerCampaign($collection, $websiteId)
     {
-        $helper = Mage::helper('connector/review');
+        $helper = Mage::helper('ddg/review');
         $campaignId = $helper->getCampaign($websiteId);
 
         if($campaignId) {
             foreach ($collection as $order) {
-                Mage::helper('connector')->log('-- Order Review: ' . $order->getIncrementId() . ' Campaign Id: ' . $campaignId);
+                Mage::helper('ddg')->log('-- Order Review: ' . $order->getIncrementId() . ' Campaign Id: ' . $campaignId);
 
                 try {
-                    $emailCampaign = Mage::getModel('email_connector/campaign');
+                    $emailCampaign = Mage::getModel('ddg_automation/campaign');
                     $emailCampaign
                         ->setEmail($order->getCustomerEmail())
                         ->setStoreId($order->getStoreId())
@@ -233,7 +233,7 @@ class Dotdigitalgroup_Email_Model_Sales_Order
      */
     private function searchOrdersForReview()
     {
-        $helper = Mage::helper('connector/review');
+        $helper = Mage::helper('ddg/review');
 
         foreach (Mage::app()->getWebsites(true) as $website){
             if($helper->isEnabled($website) &&
@@ -247,7 +247,7 @@ class Dotdigitalgroup_Email_Model_Sales_Order
                 $orderStatusFromConfig = $helper->getOrderStatus($website);
                 $delayInDays = $helper->getDelay($website);
 
-                $campaignCollection = Mage::getModel('email_connector/campaign')->getCollection();
+                $campaignCollection = Mage::getModel('ddg_automation/campaign')->getCollection();
                 $campaignCollection
                     ->addFieldToFilter('event_name', 'Order Review')
                     ->load();

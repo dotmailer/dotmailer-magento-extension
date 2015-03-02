@@ -8,7 +8,7 @@ class Dotdigitalgroup_Email_Model_Resource_Contact_Collection extends Mage_Core_
 	protected function _construct()
 	{
         parent::_construct();
-        $this->_init('email_connector/contact');
+        $this->_init('ddg_automation/contact');
     }
 
 

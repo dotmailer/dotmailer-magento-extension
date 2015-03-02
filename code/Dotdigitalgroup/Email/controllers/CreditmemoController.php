@@ -10,11 +10,11 @@ class Dotdigitalgroup_Email_CreditmemoController extends Dotdigitalgroup_Email_D
 	public function newAction()
     {
         $this->loadLayout();
-        $newOrder = $this->getLayout()->createBlock('email_connector/order_creditmemo', 'connector_creditmemo_new', array(
+        $newOrder = $this->getLayout()->createBlock('ddg_automation/order_creditmemo', 'connector_creditmemo_new', array(
             'template' => 'connector/creditmemo/new.phtml'
         ));
         $this->getLayout()->getBlock('content')->append($newOrder);
-        $items = $this->getLayout()->createBlock('email_connector/order_creditmemo', 'connector_creditmemo_items', array(
+        $items = $this->getLayout()->createBlock('ddg_automation/order_creditmemo', 'connector_creditmemo_items', array(
             'template' => 'connector/creditmemo/items.phtml'
         ));
         $this->getLayout()->getBlock('connector_creditmemo_new')->append($items);
@@ -28,11 +28,11 @@ class Dotdigitalgroup_Email_CreditmemoController extends Dotdigitalgroup_Email_D
 	public function newguestAction()
     {
         $this->loadLayout();
-        $invoice = $this->getLayout()->createBlock('email_connector/order_invoice', 'connector_creditmemo_guest', array(
+        $invoice = $this->getLayout()->createBlock('ddg_automation/order_invoice', 'connector_creditmemo_guest', array(
             'template' => 'connector/creditmemo/newguest.phtml'
         ));
         $this->getLayout()->getBlock('content')->append($invoice);
-        $items = $this->getLayout()->createBlock('email_connector/order_creditmemo', 'connector_creditmemo_items', array(
+        $items = $this->getLayout()->createBlock('ddg_automation/order_creditmemo', 'connector_creditmemo_items', array(
             'template' => 'connector/creditmemo/items.phtml'
         ));
         $this->getLayout()->getBlock('connector_creditmemo_guest')->append($items);
@@ -46,7 +46,7 @@ class Dotdigitalgroup_Email_CreditmemoController extends Dotdigitalgroup_Email_D
 	public function updateAction()
     {
         $this->loadLayout();
-        $newOrder = $this->getLayout()->createBlock('email_connector/order_creditmemo', 'connector_creditmemo_update', array(
+        $newOrder = $this->getLayout()->createBlock('ddg_automation/order_creditmemo', 'connector_creditmemo_update', array(
             'template' => 'connector/creditmemo/update.phtml'
         ));
         $this->getLayout()->getBlock('content')->append($newOrder);
@@ -60,7 +60,7 @@ class Dotdigitalgroup_Email_CreditmemoController extends Dotdigitalgroup_Email_D
 	public function updateguestAction()
     {
         $this->loadLayout();
-        $newOrder = $this->getLayout()->createBlock('email_connector/order_creditmemo', 'connector_creditmemo_update_guest', array(
+        $newOrder = $this->getLayout()->createBlock('ddg_automation/order_creditmemo', 'connector_creditmemo_update_guest', array(
             'template' => 'connector/creditmemo/updateguest.phtml'
         ));
         $this->getLayout()->getBlock('content')->append($newOrder);

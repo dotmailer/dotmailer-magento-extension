@@ -20,7 +20,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Url_Customernew extends Mage_
             $website = Mage::app()->getWebsite($website);
             $baseUrl  = $website->getConfig('web/secure/base_url');
         }
-        $helper = Mage::helper('connector');
+        $helper = Mage::helper('ddg');
         $passcode = $helper->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_CONTENT_PASSCODE, $website);
         $customerId = $helper->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_MAPPING_CUSTOMER_ID, $website);
 

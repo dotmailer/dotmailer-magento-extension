@@ -32,7 +32,7 @@
         </reference>
         <!--Additional Books And Data Fields -->
         <reference name="my.account.wrapper">
-            <block type="email_connector/customer_account_books" name="connector_additional_books" template="connector/additional-newsletter-pref.phtml">
+            <block type="ddg_automation/customer_account_books" name="connector_additional_books" template="connector/additional-newsletter-pref.phtml">
                 <block type="core/html_calendar" name="html_calendar" as="html_calendar" template="page/js/calendar.phtml"/>
             </block>
             <!--Back button -->

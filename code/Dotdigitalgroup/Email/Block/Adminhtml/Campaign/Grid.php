@@ -18,7 +18,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Campaign_Grid extends Mage_Adminhtml
 	 */
     protected function _prepareCollection()
     {
-        $collection = Mage::getModel('email_connector/campaign')->getCollection();
+        $collection = Mage::getModel('ddg_automation/campaign')->getCollection();
         $this->setCollection($collection);
         $this->setDefaultSort('created_at');
         $this->setDefaultDir('DESC');
@@ -28,109 +28,69 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Campaign_Grid extends Mage_Adminhtml
     protected function _prepareColumns()
     {
         $this->addColumn('id', array(
-            'header'        => Mage::helper('connector')->__('Campaign ID'),
+            'header'        => Mage::helper('ddg')->__('Campaign ID'),
             'width'         => '20px',
             'index'         => 'campaign_id',
             'type'          => 'number',
             'truncate'      => 50,
             'escape'        => true,
         ))->addColumn('email', array(
-            'header'        => Mage::helper('connector')->__('Email'),
+            'header'        => Mage::helper('ddg')->__('Email'),
             'align'         => 'left',
             'width'         => '50px',
             'index'         => 'email',
             'type'          => 'text',
             'escape'        => true
-        ))->addColumn('is_created', array(
-            'header'        => Mage::helper('connector')->__('Is Created'),
-            'align'         => 'center',
-            'width'         => '20px',
-            'index'         => 'is_created',
-            'escape'        => true,
-	        'type'          => 'options',
-            'renderer'     => 'email_connector/adminhtml_column_renderer_imported',
-            'options'       => array(
-	            '1'    => 'Is Created',
-	            'null' => 'Not Created'
-            ),
-            'filter_condition_callback' => array($this, 'filterCallbackContact')
         ))->addColumn('is_sent', array(
-            'header'        => Mage::helper('connector')->__('Is Sent'),
+            'header'        => Mage::helper('ddg')->__('Is Sent'),
             'align'         => 'center',
             'width'         => '20px',
             'index'         => 'is_sent',
             'escape'        => true,
             'type'          => 'options',
-            'renderer'     => 'email_connector/adminhtml_column_renderer_imported',
+            'renderer'     => 'ddg_automation/adminhtml_column_renderer_imported',
             'options'       => array(
                 '1'    => 'Is Send',
                 'null' => 'Not Send'
             ),
             'filter_condition_callback' => array($this, 'filterCallbackContact')
-        ))->addColumn('is_copy', array(
-            'header'        => Mage::helper('connector')->__('Is Copy'),
-            'align'         => 'center',
-            'width'         => '20px',
-            'index'         => 'is_copy',
-            'escape'        => true,
-            'type'          => 'options',
-            'renderer'     => 'email_connector/adminhtml_column_renderer_imported',
-            'options'       => array(
-                '1'    => 'Is A Copy',
-                'null' => 'Not A Copy'
-            ),
-            'filter_condition_callback' => array($this, 'filterCallbackContact')
         ))->addColumn('order_increment_id', array(
-            'header'        => Mage::helper('connector')->__('Increment ID'),
+            'header'        => Mage::helper('ddg')->__('Increment ID'),
             'align'         => 'left',
             'width'         => '50px',
             'index'         => 'order_increment_id',
             'type'          => 'number',
             'escape'        => true
-        ))->addColumn('create_message', array(
-            'header'		=> Mage::helper('connector')->__('Create Message'),
-            'align'		=> 'left',
-            'width'		=> '300px',
-            'index'     => 'create_message',
-            'type'      => 'text',
-            'escape'    => true
-        ))->addColumn('contact_message', array(
-            'header'		=> Mage::helper('connector')->__('Contact Message'),
-            'align'		=> 'left',
-            'width'		=> '300px',
-            'index'     => 'contact_message',
-            'type'      => 'text',
-            'escape'    => true
         ))->addColumn('message', array(
-            'header'		=> Mage::helper('connector')->__('Send Message'),
+            'header'		=> Mage::helper('ddg')->__('Send Message'),
             'align'		=> 'left',
             'width'		=> '300px',
             'index'     => 'message',
             'type'      => 'text',
             'escape'    => true
         ))->addColumn('event_name', array(
-            'header'        => Mage::helper('connector')->__('Email Name'),
+            'header'        => Mage::helper('ddg')->__('Email Name'),
             'align'         => 'left',
             'index'         => 'event_name',
             'width'		    => '100px',
             'type'          => 'string',
             'escape'        => true,
         ))->addColumn('created_at', array(
-            'header'    => Mage::helper('connector')->__('Created At'),
+            'header'    => Mage::helper('ddg')->__('Created At'),
             'align'     => 'center',
             'width'     => '100px',
             'index'     => 'created_at',
             'type'      => 'datetime',
             'escape'    => true
         ))->addColumn('updated_at', array(
-            'header'    => Mage::helper('connector')->__('Updated At'),
+            'header'    => Mage::helper('ddg')->__('Updated At'),
             'align'     => 'center',
             'width'     => '100px',
             'index'     => 'updated_at',
             'type'      => 'datetime',
             'escape'    => true
         ))->addColumn('sent_at', array(
-            'header'    => Mage::helper('connector')->__('Sent At'),
+            'header'    => Mage::helper('ddg')->__('Sent At'),
             'align'     => 'center',
             'width'     => '100px',
             'index'     => 'sent_at',
@@ -144,11 +104,12 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Campaign_Grid extends Mage_Adminhtml
                 'width'     => '80px',
                 'type'      => 'options',
                 'options'   => Mage::getSingleton('adminhtml/system_store')->getWebsiteOptionHash(true),
-                'index'     => 'website_id',
+                'index'     => 'store_id',
+                'renderer'  => 'ddg_automation/adminhtml_column_renderer_website',
             ));
         }
 
-        $this->addExportType('*/*/exportCsv', Mage::helper('connector')->__('CSV'));
+        $this->addExportType('*/*/exportCsv', Mage::helper('ddg')->__('CSV'));
         return parent::_prepareColumns();
     }
 
@@ -172,14 +133,14 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Campaign_Grid extends Mage_Adminhtml
         $this->setMassactionIdField('id');
         $this->getMassactionBlock()->setFormFieldName('campaign');
         $this->getMassactionBlock()->addItem('delete', array (
-		        'label'=> Mage::helper('connector')->__('Delete'),
+		        'label'=> Mage::helper('ddg')->__('Delete'),
                 'url'  => $this->getUrl('*/*/massDelete'),
-                'confirm'  => Mage::helper('connector')->__('Are you sure?')
+                'confirm'  => Mage::helper('ddg')->__('Are you sure?')
 	        )
         );
 
-        $this->getMassactionBlock()->addItem('resend', array('label'=>Mage::helper('connector')->__('Resend'),'url'=>$this->getUrl('*/*/massResend')));
-        $this->getMassactionBlock()->addItem('re-create', array('label'=>Mage::helper('connector')->__('Recreate'),'url'=>$this->getUrl('*/*/massRecreate')));
+        $this->getMassactionBlock()->addItem('resend', array('label'=>Mage::helper('ddg')->__('Resend'),'url'=>$this->getUrl('*/*/massResend')));
+        $this->getMassactionBlock()->addItem('re-create', array('label'=>Mage::helper('ddg')->__('Recreate'),'url'=>$this->getUrl('*/*/massRecreate')));
         return $this;
     }
 

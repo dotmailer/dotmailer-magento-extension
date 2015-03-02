@@ -24,7 +24,7 @@ class Dotdigitalgroup_Email_Block_Customer_Account_Books extends Mage_Customer_B
      */
     private function _getWebsiteConfigFromHelper($path, $website)
     {
-        return Mage::helper('connector')->getWebsiteConfig($path, $website);
+        return Mage::helper('ddg')->getWebsiteConfig($path, $website);
     }
 
     /**
@@ -36,9 +36,9 @@ class Dotdigitalgroup_Email_Block_Customer_Account_Books extends Mage_Customer_B
     {
         if(empty($this->_client)) {
             $website = $this->getCustomer()->getStore()->getWebsite();
-            $client = Mage::getModel('email_connector/apiconnector_client');
-            $client->setApiUsername(Mage::helper('connector')->getApiUsername($website))
-                ->setApiPassword(Mage::helper('connector')->getApiPassword($website));
+            $client = Mage::getModel('ddg_automation/apiconnector_client');
+            $client->setApiUsername(Mage::helper('ddg')->getApiUsername($website))
+                ->setApiPassword(Mage::helper('ddg')->getApiPassword($website));
             $this->_client = $client;
         }
         return $this->_client;

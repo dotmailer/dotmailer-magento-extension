@@ -6,11 +6,11 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Couponinfo extends Ma
     protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element)
     {
 	    //base url
-        $baseUrl = Mage::helper('connector')->generateDynamicUrl();
+        $baseUrl = Mage::helper('ddg')->generateDynamicUrl();
 
 
 	    //config code
-        $code = Mage::helper('connector')->getPasscode();
+        $code = Mage::helper('ddg')->getPasscode();
 
 	    if (!strlen($code))
             $code = '[PLEASE SET UP A PASSCODE]';

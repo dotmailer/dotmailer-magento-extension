@@ -8,18 +8,23 @@ class Dotdigitalgroup_Email_FeefoController extends Dotdigitalgroup_Email_Respon
 	 */
     public function preDispatch()
     {
-        $helper = Mage::helper('connector');
-        $helper->auth($this->getRequest()->getParam('code'));
+        $helper = Mage::helper('ddg');
+        //authenticate
+        $this->authenticate();
 
         $actionName = $this->getRequest()->getActionName();
         switch ($actionName) {
             case 'score':
-                if(!$helper->getFeefoLogon())
+                if(!$helper->getFeefoLogon()){
+                    $this->sendResponse();
                     die;
+                }
                 break;
             case 'reviews':
-                if(!$helper->getFeefoLogon() or !Mage::app()->getRequest()->getParam('quote_id'))
+                if(!$helper->getFeefoLogon() or !Mage::app()->getRequest()->getParam('quote_id')){
+                    $this->sendResponse();
                     die;
+                }
                 break;
         }
 
@@ -33,7 +38,7 @@ class Dotdigitalgroup_Email_FeefoController extends Dotdigitalgroup_Email_Respon
     {
         $this->loadLayout();
 
-        $block = $this->getLayout()->createBlock('email_connector/feefo', 'connector_feefo_service_score', array(
+        $block = $this->getLayout()->createBlock('ddg_automation/feefo', 'connector_feefo_service_score', array(
             'template' => 'connector/feefo/score.phtml'
         ));
         $this->getLayout()->getBlock('content')->append($block);
@@ -48,7 +53,7 @@ class Dotdigitalgroup_Email_FeefoController extends Dotdigitalgroup_Email_Respon
     {
         $this->loadLayout();
 
-        $block = $this->getLayout()->createBlock('email_connector/feefo', 'connector_feefo_product_reviews', array(
+        $block = $this->getLayout()->createBlock('ddg_automation/feefo', 'connector_feefo_product_reviews', array(
             'template' => 'connector/feefo/reviews.phtml'
         ));
         $this->getLayout()->getBlock('content')->append($block);

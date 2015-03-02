@@ -25,7 +25,7 @@ class Dotdigitalgroup_Email_Block_Recommended_Quoteproducts extends Mage_Core_Bl
         $mode  = $this->getRequest()->getActionName();
         $quoteModel = Mage::getModel('sales/quote')->load($quoteId);
         //number of product items to be displayed
-        $limit      = Mage::helper('connector/recommended')->getDisplayLimitByMode($mode);
+        $limit      = Mage::helper('ddg/recommended')->getDisplayLimitByMode($mode);
         $quoteItems = $quoteModel->getAllItems();
         $numItems = count($quoteItems);
 
@@ -38,7 +38,7 @@ class Dotdigitalgroup_Email_Block_Recommended_Quoteproducts extends Mage_Core_Bl
             $maxPerChild = number_format($limit / count($quoteItems));
         }
 
-        Mage::helper('connector')->log('DYNAMIC QUOTE PRODUCTS : limit ' . $limit . ' products : ' . $numItems . ', max per child : '. $maxPerChild);
+        Mage::helper('ddg')->log('DYNAMIC QUOTE PRODUCTS : limit ' . $limit . ' products : ' . $numItems . ', max per child : '. $maxPerChild);
 
         foreach ($quoteItems as $item) {
             $i = 0;
@@ -68,7 +68,7 @@ class Dotdigitalgroup_Email_Block_Recommended_Quoteproducts extends Mage_Core_Bl
 
         //check for more space to fill up the table with fallback products
         if (count($productsToDisplay) < $limit) {
-            $fallbackIds = Mage::helper('connector/recommended')->getFallbackIds();
+            $fallbackIds = Mage::helper('ddg/recommended')->getFallbackIds();
 
             foreach ($fallbackIds as $productId) {
                 $product = Mage::getModel('catalog/product')->load($productId);
@@ -81,7 +81,7 @@ class Dotdigitalgroup_Email_Block_Recommended_Quoteproducts extends Mage_Core_Bl
             }
         }
 
-        Mage::helper('connector')->log('quote - loaded product to display ' . count($productsToDisplay));
+        Mage::helper('ddg')->log('quote - loaded product to display ' . count($productsToDisplay));
         return $productsToDisplay;
     }
 
@@ -120,7 +120,7 @@ class Dotdigitalgroup_Email_Block_Recommended_Quoteproducts extends Mage_Core_Bl
      */
     public function getMode()
     {
-        return Mage::helper('connector/recommended')->getDisplayType();
+        return Mage::helper('ddg/recommended')->getDisplayType();
 
     }
 
@@ -131,7 +131,7 @@ class Dotdigitalgroup_Email_Block_Recommended_Quoteproducts extends Mage_Core_Bl
      */
     public function getColumnCount()
     {
-        return Mage::helper('connector/recommended')->getDisplayLimitByMode($this->getRequest()->getActionName());
+        return Mage::helper('ddg/recommended')->getDisplayLimitByMode($this->getRequest()->getActionName());
     }
 
     /**

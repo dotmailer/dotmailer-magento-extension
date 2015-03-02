@@ -59,7 +59,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Config_Customdatafields  extends Mag
                 ->setName($inputName)
                 ->setTitle($columnName)
                 ->setExtraParams('style="width:160px"')
-                ->setOptions(Mage::getModel('email_connector/adminhtml_source_datafields')->toOptionArray())
+                ->setOptions(Mage::getModel('ddg_automation/adminhtml_source_datafields')->toOptionArray())
                 ->toHtml();
         }
         return parent::_renderCellTemplate($columnName);
@@ -87,7 +87,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Config_Customdatafields  extends Mag
     {
         if (!$this->_getAttributeRenderer) {
             $this->_getAttributeRenderer = $this->getLayout()
-                ->createBlock('email_connector/adminhtml_config_select')
+                ->createBlock('ddg_automation/adminhtml_config_select')
                 ->setIsRenderToJsTemplate(true);
         }
         return $this->_getAttributeRenderer;
@@ -97,7 +97,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Config_Customdatafields  extends Mag
     {
         if (!$this->_getDatafieldRenderer) {
             $this->_getDatafieldRenderer = $this->getLayout()
-                ->createBlock('email_connector/adminhtml_config_select')
+                ->createBlock('ddg_automation/adminhtml_config_select')
                 ->setIsRenderToJsTemplate(true);
         }
         return $this->_getDatafieldRenderer;

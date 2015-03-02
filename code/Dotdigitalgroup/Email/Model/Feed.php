@@ -28,7 +28,7 @@ class Dotdigitalgroup_Email_Model_Feed extends Mage_AdminNotification_Model_Feed
 			foreach ($feedXml->release as $data) {
 
 				//only if the version number was updated for the connector
-				if (version_compare($data->version, Mage::helper('connector')->getConnectorVersion(), '>')) {
+				if (version_compare($data->version, Mage::helper('ddg')->getConnectorVersion(), '>')) {
 
 					$feedData[] = array(
 						'severity'    => $data->severity,

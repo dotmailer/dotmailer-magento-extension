@@ -31,7 +31,9 @@ class Dotdigitalgroup_Email_Block_Order_Creditmemo  extends Mage_Sales_Block_Ord
             Mage::register('current_order', $order);
         }
         if (! $order->hasCreditmemos()) {
-            throw new Exception('TE - no creditmemo for order : '. $orderId);
+            //throw new Exception('TE - no creditmemo for order : '. $orderId);
+            Mage::helper('ddg')->log('TE - no creditmemo for order : '. $orderId);
+            return false;
         }
 
         return $order;

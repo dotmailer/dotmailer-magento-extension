@@ -8,6 +8,6 @@ class Dotdigitalgroup_Email_Model_Resource_Campaign_Collection extends Mage_Core
 	public function _construct()
     {
         parent::_construct();
-        $this->_init('email_connector/campaign');
+        $this->_init('ddg_automation/campaign');
     }
 }

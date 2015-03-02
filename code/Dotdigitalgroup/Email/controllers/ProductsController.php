@@ -8,7 +8,8 @@ class Dotdigitalgroup_Email_ProductsController extends Dotdigitalgroup_Email_Res
 	 */
     public function preDispatch()
     {
-        Mage::helper('connector')->auth($this->getRequest()->getParam('code'));
+        //authenticate
+        $this->authenticate();
 	    //skip order_id check for this actions
 	    $skip = array('push', 'nosto');
 	    $actionName = $this->getRequest()->getActionName();
@@ -25,11 +26,11 @@ class Dotdigitalgroup_Email_ProductsController extends Dotdigitalgroup_Email_Res
 	                $appEmulation->startEnvironmentEmulation($storeId);
                 } else {
 		            $message = 'Dynamic : order not found: ' . $orderId;
-                    Mage::helper('connector')->log($message);
-		            Mage::helper('connector')->rayLog('100', $message);
+                    Mage::helper('ddg')->log($message);
+		            Mage::helper('ddg')->rayLog('100', $message);
                 }
             } else {
-                Mage::helper('connector')->log('Dynamic : order_id missing :' . $orderId);
+                Mage::helper('ddg')->log('Dynamic : order_id missing :' . $orderId);
             }
         }
 
@@ -42,7 +43,7 @@ class Dotdigitalgroup_Email_ProductsController extends Dotdigitalgroup_Email_Res
     public function relatedAction()
     {
         $this->loadLayout();
-        $products = $this->getLayout()->createBlock('email_connector/recommended_products', 'connector_recommended_related', array(
+        $products = $this->getLayout()->createBlock('ddg_automation/recommended_products', 'connector_recommended_related', array(
             'template' => 'connector/product/list.phtml'
         ));
 	    //append related products
@@ -58,7 +59,7 @@ class Dotdigitalgroup_Email_ProductsController extends Dotdigitalgroup_Email_Res
     public function crosssellAction()
     {
         $this->loadLayout();
-        $products = $this->getLayout()->createBlock('email_connector/recommended_products', 'connector_recommended_crosssell', array(
+        $products = $this->getLayout()->createBlock('ddg_automation/recommended_products', 'connector_recommended_crosssell', array(
             'template' => 'connector/product/list.phtml'
         ));
 	    //append crosssell products.
@@ -73,7 +74,7 @@ class Dotdigitalgroup_Email_ProductsController extends Dotdigitalgroup_Email_Res
     public function upsellAction()
     {
         $this->loadLayout();
-        $products = $this->getLayout()->createBlock('email_connector/recommended_products', 'connector_recommended_upsell', array(
+        $products = $this->getLayout()->createBlock('ddg_automation/recommended_products', 'connector_recommended_upsell', array(
             'template' => 'connector/product/list.phtml'
         ));
 	    //append upsell products
@@ -88,7 +89,7 @@ class Dotdigitalgroup_Email_ProductsController extends Dotdigitalgroup_Email_Res
     public function pushAction()
     {
         $this->loadLayout();
-        $products = $this->getLayout()->createBlock('email_connector/recommended_push', 'connector_product_push', array(
+        $products = $this->getLayout()->createBlock('ddg_automation/recommended_push', 'connector_product_push', array(
             'template' => 'connector/product/list.phtml'
         ));
 	    //append push products
@@ -103,7 +104,7 @@ class Dotdigitalgroup_Email_ProductsController extends Dotdigitalgroup_Email_Res
 	{
 		$this->loadLayout();
 
-		$products = $this->getLayout()->createBlock('email_connector/recommended_products', 'connector_nosto_recommended', array(
+		$products = $this->getLayout()->createBlock('ddg_automation/recommended_products', 'connector_nosto_recommended', array(
 			'template' => 'connector/product/nosto.phtml'
 		));
 		$this->getLayout()->getBlock('content')->append($products);

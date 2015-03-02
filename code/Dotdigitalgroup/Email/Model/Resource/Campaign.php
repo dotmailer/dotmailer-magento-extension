@@ -7,7 +7,7 @@ class Dotdigitalgroup_Email_Model_Resource_Campaign extends Mage_Core_Model_Reso
 	 */
 	protected  function _construct()
     {
-        $this->_init('email_connector/campaign', 'id');
+        $this->_init('ddg_automation/campaign', 'id');
 
     }
 }

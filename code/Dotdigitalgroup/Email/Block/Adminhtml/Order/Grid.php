@@ -19,7 +19,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Order_Grid extends Mage_Adminhtml_Bl
     protected function _getCollectionClass()
     {
         // This is the model we are using for the grid
-        return 'email_connector/order_collection';
+        return 'ddg_automation/order_collection';
     }
 
     /**
@@ -42,14 +42,14 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Order_Grid extends Mage_Adminhtml_Bl
     protected function _prepareColumns()
     {
         $this->addColumn('order_id', array(
-            'header'        => Mage::helper('connector')->__('Order ID'),
+            'header'        => Mage::helper('ddg')->__('Order ID'),
             'align'         => 'left',
             'width'         => '50px',
             'index'         => 'order_id',
             'type'          => 'number',
             'escape'        => true
         ))->addColumn('order_status', array(
-            'header'        => Mage::helper('connector')->__('Order Status'),
+            'header'        => Mage::helper('ddg')->__('Order Status'),
             'align'         => 'right',
             'width'         => '50px',
             'index'         => 'order_status',
@@ -57,30 +57,30 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Order_Grid extends Mage_Adminhtml_Bl
             'escape'        => true,
             'options' => Mage::getSingleton('sales/order_config')->getStatuses(),
         ))->addColumn('store_id', array(
-            'header'        => Mage::helper('connector')->__('Store ID'),
+            'header'        => Mage::helper('ddg')->__('Store ID'),
             'width'         => '50px',
             'index'         => 'store_id',
             'type'          => 'number',
             'escape'        => true,
         ))->addColumn('email_imported', array(
-            'header'        => Mage::helper('connector')->__('Email Imported'),
+            'header'        => Mage::helper('ddg')->__('Email Imported'),
             'align'         => 'center',
             'width'         => '50px',
             'index'         => 'email_imported',
             'type'          => 'options',
             'escape'        => true,
-            'renderer'		=> 'email_connector/adminhtml_column_renderer_imported',
-            'options'       => Mage::getModel('email_connector/adminhtml_source_contact_imported')->getOptions(),
+            'renderer'		=> 'ddg_automation/adminhtml_column_renderer_imported',
+            'options'       => Mage::getModel('ddg_automation/adminhtml_source_contact_imported')->getOptions(),
             'filter_condition_callback' => array($this, 'filterCallbackContact')
         ))->addColumn('created_at', array(
-            'header'        => Mage::helper('connector')->__('Created At'),
+            'header'        => Mage::helper('ddg')->__('Created At'),
             'width'         => '50px',
             'align'         => 'center',
             'index'         => 'created_at',
             'type'          => 'datetime',
             'escape'        => true,
         ))->addColumn('updated_at', array(
-            'header'        => Mage::helper('connector')->__('Updated At'),
+            'header'        => Mage::helper('ddg')->__('Updated At'),
             'width'         => '50px',
             'align'         => 'center',
             'index'         => 'updated_at',

@@ -22,7 +22,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Config_Validator extends Mage
         $html .=$jquery;
         $javaScript = "<script type=\"text/javascript\"> var show_warning = 0;";
 
-        if(!Mage::helper('connector')->isSweetToothEnabled()){
+        if(!Mage::helper('ddg')->isSweetToothEnabled()){
             $javaScript .= "show_warning = 1;";
         }
 

@@ -32,7 +32,7 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
 	        // start app emulation
 	        $appEmulation = Mage::getSingleton('core/app_emulation');
 	        $initialEnvironmentInfo = $appEmulation->startEnvironmentEmulation($storeId);
-            $emailOrder = Mage::getModel('email_connector/order')->loadByOrderId($order->getEntityId(), $order->getQuoteId());
+            $emailOrder = Mage::getModel('ddg_automation/order')->loadByOrderId($order->getEntityId(), $order->getQuoteId());
             //reimport email order
             $emailOrder->setUpdatedAt($order->getUpdatedAt())
                 ->setStoreId($storeId)
@@ -48,7 +48,7 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
                 if($emailOrder->getEmailImported() == Dotdigitalgroup_Email_Model_Contact::EMAIL_CONTACT_IMPORTED) {
                     $emailOrder->setEmailImported(Dotdigitalgroup_Email_Model_Contact::EMAIL_CONTACT_NOT_IMPORTED);
                 }
-                $smsCampaign = Mage::getModel('email_connector/sms_campaign', $order);
+                $smsCampaign = Mage::getModel('ddg_automation/sms_campaign', $order);
                 $smsCampaign->setStatus($status);
                 $smsCampaign->sendSms();
 	            // set back the current store
@@ -74,23 +74,61 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
 	 */
 	public function handleSalesOrderPlaceAfter(Varien_Event_Observer $observer)
     {
-        $data = new Varien_Object();
+        /** @var $order Mage_Sales_Model_Order */
         $order = $observer->getEvent()->getOrder();
         $website = Mage::app()->getWebsite($order->getWebsiteId());
         $websiteName = $website->getName();
-        if (Mage::helper('connector')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Transactional::XML_PATH_TRANSACTIONAL_API_ENABLED, $website)) {
-            $storeName = Mage::app()->getStore($order->getStoreId())->getName();
-            $data->setCustomerId($order->getCustomerId())
-                ->setCustomerEmail($order->getCustomerEmail())
-                ->setOrderId($order->getId())
-                ->setOrderIncrementId($order->getIncrementId())
-                ->setWebsiteName($websiteName)
-                ->setStoreName($storeName)
-                ->setWebsite($website)
-                ->setOrderDate($order->getCreatedAt());
+        $storeName = Mage::app()->getStore($order->getStoreId())->getName();
+        $data = array();
 
-            Mage::helper('connector/transactional')->updateContactData($data);
+        //if api is not enabled
+        if (!$website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED))
+            return $this;
+
+        //data fields
+        if($last_order_id = $website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_LAST_ORDER_ID)){
+            $data[] = array(
+                'Key' => $last_order_id,
+                'Value' => $order->getId()
+            );
         }
+        if($order_increment_id = $website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_LAST_ORDER_INCREMENT_ID)){
+            $data[] = array(
+                'Key' => $order_increment_id,
+                'Value' => $order->getIncrementId()
+            );
+        }
+        if($store_name = $website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_STORE_NAME)){
+            $data[] = array(
+                'Key' => $store_name,
+                'Value' => $storeName
+            );
+        }
+        if($website_name = $website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_WEBSITE_NAME)){
+            $data[] = array(
+                'Key' => $website_name,
+                'Value' => $websiteName
+            );
+        }
+        if($last_order_date = $website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_LAST_ORDER_DATE)){
+            $data[] = array(
+                'Key' => $last_order_date,
+                'Value' => $order->getCreatedAt()
+            );
+        }
+        if(($customer_id = $website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_ID)) && $order->getCustomerId()){
+            $data[] = array(
+                'Key' => $customer_id,
+                'Value' => $order->getCustomerId()
+            );
+        }
+
+        if(!empty($data)){
+            //update data fields
+            $client = Mage::helper('ddg')->getWebsiteApiClient($website);
+            $client->updateContactDatafieldsByEmail($order->getCustomerEmail(), $data);
+        }
+
         //automation enrolment for order
         if($order->getCustomerIsGuest()){
             //send guest to automation mapped
@@ -127,9 +165,9 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
             /**
              * Reimport transactional data.
              */
-            $emailOrder = Mage::getModel('email_connector/order')->loadByOrderId($orderId, $quoteId, $storeId);
+            $emailOrder = Mage::getModel('ddg_automation/order')->loadByOrderId($orderId, $quoteId, $storeId);
             if (!$emailOrder->getId()) {
-                Mage::helper('connector')->log('ERROR Creditmemmo Order not found :' . $orderId . ', quote id : ' . $quoteId . ', store id ' . $storeId);
+                Mage::helper('ddg')->log('ERROR Creditmemmo Order not found :' . $orderId . ', quote id : ' . $quoteId . ', store id ' . $storeId);
                 return $this;
             }
             $emailOrder->setEmailImported(Dotdigitalgroup_Email_Model_Contact::EMAIL_CONTACT_NOT_IMPORTED)->save();
@@ -153,9 +191,9 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
         $storeId = $order->getStoreId();
         $websiteId = Mage::app()->getStore($storeId)->getWebsiteId();
         $customerEmail = $order->getCustomerEmail();
-        $helper = Mage::helper('connector');
+        $helper = Mage::helper('ddg');
         if ($helper->isEnabled($websiteId)) {
-            $client = Mage::getModel('email_connector/apiconnector_client');
+            $client = Mage::getModel('ddg_automation/apiconnector_client');
             $client->setApiUsername($helper->getApiUsername($websiteId));
             $client->setApiPassword($helper->getApiPassword($websiteId));
             // delete the order transactional data
@@ -177,13 +215,13 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
          * Automation Programme
          */
         $path = constant('Dotdigitalgroup_Email_Helper_Config::' . $automationType);
-        $automationCampaignId = Mage::helper('connector')->getWebsiteConfig($path, $websiteId);
-        $enabled = Mage::helper('connector')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_TRANSACTIONAL_API_ENABLED, $websiteId);
+        $automationCampaignId = Mage::helper('ddg')->getWebsiteConfig($path, $websiteId);
+        $enabled = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED, $websiteId);
 
         //add customer to automation
         if ($enabled && $automationCampaignId) {
-            Mage::helper( 'connector' )->log( 'AS - ' . $automationType . ' automation Campaign id : ' . $automationCampaignId );
-            $client = Mage::helper( 'connector' )->getWebsiteApiClient( $websiteId );
+            Mage::helper( 'ddg' )->log( 'AS - ' . $automationType . ' automation Campaign id : ' . $automationCampaignId );
+            $client = Mage::helper( 'ddg' )->getWebsiteApiClient( $websiteId );
             $apiContact = $client->postContacts($email);
 
             // get a program by id
@@ -194,7 +232,7 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
              * status
              * dateCreated
              */
-            Mage::helper( 'connector' )->log( 'AS - get ' . $automationType . ' Program id : ' . $program->id);
+            Mage::helper( 'ddg' )->log( 'AS - get ' . $automationType . ' Program id : ' . $program->id);
             //check for active program with status "Active"
             if (isset($program->status) && $program->status == 'Active') {
                 $data = array(
@@ -220,7 +258,7 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
         /* @var $order Mage_Sales_Model_Order */
         $order = $observer->getOrder();
         $quoteId = $order->getQuoteId();
-        $connectorQuote = Mage::getModel('email_connector/quote')->loadQuote($quoteId);
+        $connectorQuote = Mage::getModel('ddg_automation/quote')->loadQuote($quoteId);
         if($connectorQuote)
             $connectorQuote->setModified(1)->setConvertedToOrder(1)->save();
 
@@ -238,7 +276,7 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
         /* @var $quote Mage_Sales_Model_Quote */
         $quote = $observer->getEvent()->getQuote();
         if($quote->getCustomerId() && $quote->getAllItems() > 0) {
-            $connectorQuote = Mage::getModel('email_connector/quote')->loadQuote($quote->getId());
+            $connectorQuote = Mage::getModel('ddg_automation/quote')->loadQuote($quote->getId());
             if($connectorQuote){
                 if($connectorQuote->getImported())
                     $connectorQuote->setModified(1)->setImported(null)->save();
@@ -257,7 +295,7 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
     private function _registerQuote(Mage_Sales_Model_Quote $quote)
     {
         try {
-            $connectorQuote = Mage::getModel('email_connector/quote');
+            $connectorQuote = Mage::getModel('ddg_automation/quote');
             $connectorQuote->setQuoteId($quote->getId())
                 ->setCustomerId($quote->getCustomerId())
                 ->setStoreId($quote->getStoreId())

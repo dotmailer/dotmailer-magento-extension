@@ -5,11 +5,11 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Crosssell extends Mag
     protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element)
     {
         //base url
-	    $baseUrl = Mage::helper('connector')->generateDynamicUrl();
+	    $baseUrl = Mage::helper('ddg')->generateDynamicUrl();
 	    //config passcode
-        $passcode = Mage::helper('connector')->getPasscode();
+        $passcode = Mage::helper('ddg')->getPasscode();
         //last order id for dynamic page
-	    $lastOrderId = Mage::helper('connector')->getLastOrderId();
+	    $lastOrderId = Mage::helper('ddg')->getLastOrderId();
 
         if (!strlen($passcode))
 	        $passcode = '[PLEASE SET UP A PASSCODE]';

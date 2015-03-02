@@ -8,7 +8,7 @@ $installer->startSetup();
 /**
  * create quote table
  */
-$quoteTable = $installer->getTable('email_connector/quote');
+$quoteTable = $installer->getTable('ddg_automation/quote');
 
 //drop table if exist
 if ($installer->getConnection()->isTableExists($quoteTable)) {

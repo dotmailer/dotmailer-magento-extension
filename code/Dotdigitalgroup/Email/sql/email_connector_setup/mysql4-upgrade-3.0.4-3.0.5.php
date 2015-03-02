@@ -7,7 +7,7 @@ $installer = $this;
 $installer->startSetup();
 
 //Insert status column to email_order table
-$orderTable = $installer->getTable('email_connector/order');
+$orderTable = $installer->getTable('ddg_automation/order');
 
 $installer->getConnection()->addColumn($orderTable, 'order_status', array(
     'type' => Varien_Db_Ddl_Table::TYPE_TEXT,
@@ -39,7 +39,7 @@ $installer->getConnection()->query($updateSql);
 /**
  * create table
  */
-$createTable = $installer->getTable('email_connector/create');
+$createTable = $installer->getTable('ddg_automation/create');
 
 if ($installer->getConnection()->isTableExists($createTable)) {
     $installer->getConnection()->dropTable($createTable);

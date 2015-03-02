@@ -5,11 +5,11 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Basket_Crosssell exte
     protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element)
     {
         //base url
-	    $baseUrl = Mage::helper('connector')->generateDynamicUrl();
+	    $baseUrl = Mage::helper('ddg')->generateDynamicUrl();
 	    //config passcode
-        $passcode = Mage::helper('connector')->getPasscode();
+        $passcode = Mage::helper('ddg')->getPasscode();
         //last quote id for dynamic page
-	    $lastQuoteId = Mage::helper('connector')->getLastQuoteId();
+	    $lastQuoteId = Mage::helper('ddg')->getLastQuoteId();
 
         if (!strlen($passcode))
 	        $passcode = '[PLEASE SET UP A PASSCODE]';

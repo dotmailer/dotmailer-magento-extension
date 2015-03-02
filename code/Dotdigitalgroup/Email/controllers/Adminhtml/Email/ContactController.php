@@ -29,11 +29,11 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ContactController extends Mage_Admin
         $contactId  = (int) $this->getRequest()->getParam('id');
         $contact = $this->_initAction();
         if ($contactId && !$contact->getId()) {
-            $this->_getSession()->addError(Mage::helper('connector')->__('This contact no longer exists.'));
+            $this->_getSession()->addError(Mage::helper('ddg')->__('This contact no longer exists.'));
             $this->_redirect('*/*/');
             return;
         }
-        $contactEmail = Mage::getModel('email_connector/apiconnector_contact')->syncContact();
+        $contactEmail = Mage::getModel('ddg_automation/apiconnector_contact')->syncContact();
         if ($contactEmail)
             Mage::getSingleton('adminhtml/session')->addSuccess('Successfully synced : ' . $contactEmail);
 
@@ -60,7 +60,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ContactController extends Mage_Admin
             try {
                 $contact->save();
                 $contactId = $contact->getId();
-                $this->_getSession()->addSuccess(Mage::helper('connector')->__('Contact was saved.'));
+                $this->_getSession()->addSuccess(Mage::helper('ddg')->__('Contact was saved.'));
             }catch (Mage_Core_Exception $e) {
                 Mage::logException($e);
                 $this->_getSession()->addError($e->getMessage())
@@ -68,7 +68,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ContactController extends Mage_Admin
                 $redirectBack = true;
             }catch (Exception $e){
                 Mage::logException($e);
-                $this->_getSession()->addError(Mage::helper('connector')->__('Error saving contact'))
+                $this->_getSession()->addError(Mage::helper('ddg')->__('Error saving contact'))
                     ->setContactData($contactData);
                 $redirectBack = true;
             }
@@ -89,10 +89,10 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ContactController extends Mage_Admin
 	public function deleteAction()
     {
         if ($id = $this->getRequest()->getParam('id')) {
-            $contact = Mage::getModel('email_connector/contact')->load($id);
+            $contact = Mage::getModel('ddg_automation/contact')->load($id);
             try {
                 $contact->delete();
-                $this->_getSession()->addSuccess(Mage::helper('connector')->__('The contact has been deleted.'));
+                $this->_getSession()->addSuccess(Mage::helper('ddg')->__('The contact has been deleted.'));
             }
             catch (Exception $e) {
                 $this->_getSession()->addError($e->getMessage());
@@ -112,12 +112,12 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ContactController extends Mage_Admin
         }else {
             try {
                 foreach ($contactIds as $contactId) {
-                    $contact = Mage::getSingleton('email_connector/contact')->load($contactId);
+                    $contact = Mage::getSingleton('ddg_automation/contact')->load($contactId);
                     Mage::dispatchEvent('connector_controller_affiliate_delete', array('contact' => $contact));
                     $contact->delete();
                 }
                 $this->_getSession()->addSuccess(
-                    Mage::helper('connector')->__('Total of %d record(s) have been deleted.', count($contactIds))
+                    Mage::helper('ddg')->__('Total of %d record(s) have been deleted.', count($contactIds))
                 );
             } catch (Exception $e) {
                 $this->_getSession()->addError($e->getMessage());
@@ -138,11 +138,11 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ContactController extends Mage_Admin
         }else {
             try {
                 foreach ($contactIds as $contactId) {
-                    $contact = Mage::getSingleton('email_connector/contact')->load($contactId);
+                    $contact = Mage::getSingleton('ddg_automation/contact')->load($contactId);
                     $contact->setEmailImported(null)->save();
                 }
                 $this->_getSession()->addSuccess(
-                    Mage::helper('connector')->__('Total of %d record(s) set for resend.', count($contactIds))
+                    Mage::helper('ddg')->__('Total of %d record(s) set for resend.', count($contactIds))
                 );
             } catch (Exception $e) {
                 $this->_getSession()->addError($e->getMessage());
@@ -166,7 +166,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ContactController extends Mage_Admin
             ->_title($this->__('Manage Contacts'));
 
         $contactId  = (int) $this->getRequest()->getParam('id');
-        $contact    = Mage::getModel('email_connector/contact')
+        $contact    = Mage::getModel('ddg_automation/contact')
             ->setStoreId($this->getRequest()->getParam('store', 0));
 
         if ($contactId) {
@@ -179,14 +179,14 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ContactController extends Mage_Admin
     public function exportCsvAction()
     {
         $fileName   = 'contacts.csv';
-        $content    = $this->getLayout()->createBlock('email_connector/adminhtml_contact_grid')
+        $content    = $this->getLayout()->createBlock('ddg_automation/adminhtml_contact_grid')
             ->getCsvFile();
         $this->_prepareDownloadResponse($fileName, $content);
     }
 
     protected function _isAllowed()
     {
-        return Mage::getSingleton('admin/session')->isAllowed('newsletter/email_connector/email_connector_contact');
+        return Mage::getSingleton('admin/session')->isAllowed('newsletter/ddg_automation/ddg_automation_contact');
     }
 
 }

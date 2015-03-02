@@ -10,12 +10,12 @@ class Dotdigitalgroup_Email_OrderController extends Dotdigitalgroup_Email_Dynami
     {
         $this->loadLayout();
 	    //set content template
-        $newOrder = $this->getLayout()->createBlock('email_connector/order', 'connector_order', array(
+        $newOrder = $this->getLayout()->createBlock('ddg_automation/order', 'connector_order', array(
             'template' => 'connector/order/new.phtml'
         ));
         $this->getLayout()->getBlock('content')->append($newOrder);
 	    //set the items for this order
-        $items = $this->getLayout()->createBlock('email_connector/order', 'connector_order_items', array(
+        $items = $this->getLayout()->createBlock('ddg_automation/order', 'connector_order_items', array(
             'template' => 'connector/order/items.phtml'
         ));
         $this->getLayout()->getBlock('connector_order')->append($items);
@@ -30,12 +30,12 @@ class Dotdigitalgroup_Email_OrderController extends Dotdigitalgroup_Email_Dynami
     {
         $this->loadLayout();
 	    //set content template
-        $newGuestOrder = $this->getLayout()->createBlock('email_connector/order', 'connector_order_guest', array(
+        $newGuestOrder = $this->getLayout()->createBlock('ddg_automation/order', 'connector_order_guest', array(
             'template' => 'connector/order/newguest.phtml'
         ));
         $this->getLayout()->getBlock('content')->append($newGuestOrder);
 	    //set the items for this order
-        $items = $this->getLayout()->createBlock('email_connector/order', 'connector_order_items', array(
+        $items = $this->getLayout()->createBlock('ddg_automation/order', 'connector_order_items', array(
             'template' => 'connector/order/items.phtml'
         ));
         $this->getLayout()->getBlock('connector_order_guest')->append($items);
@@ -50,7 +50,7 @@ class Dotdigitalgroup_Email_OrderController extends Dotdigitalgroup_Email_Dynami
     {
         $this->loadLayout();
 	    //set content template
-        $newOrder = $this->getLayout()->createBlock('email_connector/order', 'connector_order_update', array(
+        $newOrder = $this->getLayout()->createBlock('ddg_automation/order', 'connector_order_update', array(
             'template' => 'connector/order/update.phtml'
         ));
         $this->getLayout()->getBlock('content')->append($newOrder);
@@ -65,7 +65,7 @@ class Dotdigitalgroup_Email_OrderController extends Dotdigitalgroup_Email_Dynami
     {
         $this->loadLayout();
 	    //set the content template
-        $newOrder = $this->getLayout()->createBlock('email_connector/order', 'connector_order_update_guest', array(
+        $newOrder = $this->getLayout()->createBlock('ddg_automation/order', 'connector_order_update_guest', array(
             'template' => 'connector/order/updateguest.phtml'
         ));
         $this->getLayout()->getBlock('content')->append($newOrder);

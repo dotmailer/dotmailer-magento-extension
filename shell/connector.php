@@ -50,7 +50,7 @@ class Dotdigitalgroup_Email_Shell_Connector extends Mage_Shell_Abstract
         }
 
 	    if (in_array($mode, $available)) {
-		    Mage::getModel('email_connector/sales_quote')->proccessLostBaskets($mode);
+		    Mage::getModel('ddg_automation/sales_quote')->proccessAbandonedCarts($mode);
 
 		    echo 'Done mode: ' . $mode;
 	    } else {

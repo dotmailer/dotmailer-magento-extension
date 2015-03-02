@@ -1,4 +1,4 @@
-<?php if(Mage::helper('connector')->getRoiTrackingEnabled()):
+<?php if(Mage::helper('ddg')->getRoiTrackingEnabled()):
     $order = Mage::getModel('sales/order')->loadByIncrementId($this->getOrderId());
     $orderId = $this->getOrderId();
     $items = $order->getAllItems();

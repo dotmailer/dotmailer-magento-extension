@@ -31,7 +31,7 @@ class Dotdigitalgroup_Email_Block_Recommended_Products extends Mage_Core_Block_T
         $mode  = $this->getRequest()->getActionName();
         $orderModel = Mage::getModel('sales/order')->load($orderId);
 	    //number of product items to be displayed
-        $limit      = Mage::helper('connector/recommended')->getDisplayLimitByMode($mode);
+        $limit      = Mage::helper('ddg/recommended')->getDisplayLimitByMode($mode);
         $orderItems = $orderModel->getAllItems();
 	    $numItems = count($orderItems);
 
@@ -44,7 +44,7 @@ class Dotdigitalgroup_Email_Block_Recommended_Products extends Mage_Core_Block_T
             $maxPerChild = number_format($limit / count($orderItems));
         }
 
-		Mage::helper('connector')->log('DYNAMIC PRODUCTS : limit ' . $limit . ' products : ' . $numItems . ', max per child : '. $maxPerChild);
+		Mage::helper('ddg')->log('DYNAMIC PRODUCTS : limit ' . $limit . ' products : ' . $numItems . ', max per child : '. $maxPerChild);
 
         foreach ($orderItems as $item) {
 	        $i = 0;
@@ -74,7 +74,7 @@ class Dotdigitalgroup_Email_Block_Recommended_Products extends Mage_Core_Block_T
 
         //check for more space to fill up the table with fallback products
         if (count($productsToDisplay) < $limit) {
-            $fallbackIds = Mage::helper('connector/recommended')->getFallbackIds();
+            $fallbackIds = Mage::helper('ddg/recommended')->getFallbackIds();
 
             foreach ($fallbackIds as $productId) {
                 $product = Mage::getModel('catalog/product')->load($productId);
@@ -87,7 +87,7 @@ class Dotdigitalgroup_Email_Block_Recommended_Products extends Mage_Core_Block_T
             }
         }
 
-        Mage::helper('connector')->log('loaded product to display ' . count($productsToDisplay));
+        Mage::helper('ddg')->log('loaded product to display ' . count($productsToDisplay));
         return $productsToDisplay;
     }
 
@@ -126,7 +126,7 @@ class Dotdigitalgroup_Email_Block_Recommended_Products extends Mage_Core_Block_T
 	 */
 	public function getMode()
     {
-        return Mage::helper('connector/recommended')->getDisplayType();
+        return Mage::helper('ddg/recommended')->getDisplayType();
 
     }
 
@@ -137,7 +137,7 @@ class Dotdigitalgroup_Email_Block_Recommended_Products extends Mage_Core_Block_T
 	 */
 	public function getColumnCount()
     {
-        return Mage::helper('connector/recommended')->getDisplayLimitByMode($this->getRequest()->getActionName());
+        return Mage::helper('ddg/recommended')->getDisplayLimitByMode($this->getRequest()->getActionName());
     }
 
 	/**
@@ -160,7 +160,7 @@ class Dotdigitalgroup_Email_Block_Recommended_Products extends Mage_Core_Block_T
 	 */
 	public function getNostoProducts()
 	{
-		$client = Mage::getModel('email_connector/apiconnector_client');
+		$client = Mage::getModel('ddg_automation/apiconnector_client');
 		//slot name, div id
 		$slot  = Mage::app()->getRequest()->getParam('slot', false);
 

@@ -14,7 +14,8 @@ class Dotdigitalgroup_Email_Adminhtml_Email_AutomationController extends Mage_Ad
 
         // authorize or create token.
         $token = $this->generatetokenAction();
-        $loginuserUrl = Dotdigitalgroup_Email_Helper_Config::API_CONNECTOR_URL_LOG_USER  . $token . '&suppressfooter=true';
+        $baseUrl = Mage::helper('ddg/config')->getLogUserUrl();
+        $loginuserUrl = $baseUrl  . $token . '&suppressfooter=true';
 
         $block = $this->getLayout()
             ->createBlock('core/text', 'connector_iframe')
@@ -28,7 +29,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_AutomationController extends Mage_Ad
 
     protected function _isAllowed()
     {
-        return Mage::getSingleton('admin/session')->isAllowed('email_connector/automation_studio');
+        return Mage::getSingleton('admin/session')->isAllowed('ddg_automation/automation_studio');
     }
 
     /**
@@ -48,14 +49,15 @@ class Dotdigitalgroup_Email_Adminhtml_Email_AutomationController extends Mage_Ad
         $refreshToken = Mage::getSingleton('admin/user')->load($adminUser->getId())->getRefreshToken();
 
         if ($refreshToken) {
-            $code = Mage::helper('connector')->getCode();
+            $code = Mage::helper('ddg')->getCode();
             $params = 'client_id=' . Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CLIENT_ID) .
                 '&client_secret=' . Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CLIENT_SECRET_ID) .
                 '&refresh_token=' . $refreshToken .
                 '&grant_type=refresh_token';
 
-            $url = Dotdigitalgroup_Email_Helper_Config::API_CONNECTOR_URL_TOKEN;
-            Mage::helper('connector')->log('token code : ' . $code . ', params : ' . $params);
+            $url = Mage::helper('ddg/config')->getTokenUrl();
+
+            Mage::helper('ddg')->log('token code : ' . $code . ', params : ' . $params);
 
             /**
              * Refresh Token request.
@@ -73,7 +75,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_AutomationController extends Mage_Ad
             $response = json_decode(curl_exec($ch));
 
             if (isset($response->error)) {
-                Mage::helper('connector')->log("Token Error Num`ber:" . curl_errno($ch) . "Error String:" . curl_error($ch));
+                Mage::helper('ddg')->log("Token Error Num`ber:" . curl_errno($ch) . "Error String:" . curl_error($ch));
             }
             curl_close($ch);
 
@@ -84,7 +86,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_AutomationController extends Mage_Ad
             Mage::getSingleton('adminhtml/session')->addNotice('Please Connect To Access The Page.');
         }
 
-        $this->_redirect('*/system_config/edit', array('section' => 'connector_api_credentials'));
+        $this->_redirect('*/system_config/edit', array('section' => 'connector_developer_settings'));
     }
 
 	/**

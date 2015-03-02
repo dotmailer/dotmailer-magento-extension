@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
     <sections>
-        <connector_configuration translate="label" module="connector">
+        <connector_configuration translate="label" module="ddg">
             <groups>
-                <mailcheck translate="label" module="connector">
+                <mailcheck translate="label" module="ddg">
                     <label>MailCheck Settings</label>
                     <frontend_type>text</frontend_type>
                     <sort_order>9999</sort_order>

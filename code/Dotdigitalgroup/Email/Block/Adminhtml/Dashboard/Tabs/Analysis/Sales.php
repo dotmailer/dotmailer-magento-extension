@@ -43,7 +43,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Analysis_Sales extend
      */
     protected function getSalesInformationForTab()
     {
-        $orderAnalysisModel = Mage::getModel('email_connector/adminhtml_dashboard_tabs_analysis_orders');
+        $orderAnalysisModel = Mage::getModel('ddg_automation/adminhtml_dashboard_tabs_analysis_orders');
         return $orderAnalysisModel->getLifetimeSales($this->_store, $this->_website, $this->_group);
     }
 

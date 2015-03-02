@@ -7,6 +7,6 @@ class Dotdigitalgroup_Email_Model_Resource_Quote extends Mage_Core_Model_Resourc
      */
     protected function _construct()
     {
-        $this->_init('email_connector/quote', 'id');
+        $this->_init('ddg_automation/quote', 'id');
     }
 }

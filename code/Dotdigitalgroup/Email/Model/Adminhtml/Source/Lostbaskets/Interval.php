@@ -23,12 +23,12 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Lostbaskets_Interval
             if ($i == 0) {
 	            $row = array(
 		            'value' => $one,
-		            'label' => Mage::helper( 'connector' )->__( $one . ' Hour' )
+		            'label' => Mage::helper( 'ddg' )->__( $one . ' Hour' )
 	            );
             } else {
 	            $row = array(
 		            'value' => $one,
-		            'label' => Mage::helper( 'connector' )->__( $one . ' Hours' )
+		            'label' => Mage::helper( 'ddg' )->__( $one . ' Hours' )
 	            );
             }
             $result[] = $row;

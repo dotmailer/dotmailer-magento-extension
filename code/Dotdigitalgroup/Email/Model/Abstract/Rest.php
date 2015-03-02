@@ -18,8 +18,8 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
         $this->verb				= 'GET'; //$verb;
         $this->requestBody		= null; //$requestBody;
         $this->requestLength	= 0;
-        $this->_apiUsername     = (string)Mage::helper('connector')->getApiUsername($website);
-        $this->_apiPassword 	= (string)Mage::helper('connector')->getApiPassword($website);
+        $this->_apiUsername     = (string)Mage::helper('ddg')->getApiUsername($website);
+        $this->_apiPassword 	= (string)Mage::helper('ddg')->getApiPassword($website);
         $this->acceptType		= 'application/json';
         $this->responseBody		= null;
         $this->responseInfo		= null;

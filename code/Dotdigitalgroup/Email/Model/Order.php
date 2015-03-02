@@ -9,7 +9,7 @@ class Dotdigitalgroup_Email_Model_Order extends Mage_Core_Model_Abstract
     public function _construct()
     {
         parent::_construct();
-        $this->_init('email_connector/order');
+        $this->_init('ddg_automation/order');
     }
 
     /**
@@ -128,7 +128,7 @@ class Dotdigitalgroup_Email_Model_Order extends Mage_Core_Model_Abstract
 		/** @var $conn Varien_Db_Adapter_Pdo_Mysql */
 		$conn = $coreResource->getConnection('core_write');
 		try{
-			$num = $conn->update($coreResource->getTableName('email_connector/order'),
+			$num = $conn->update($coreResource->getTableName('ddg_automation/order'),
 				array('email_imported' => new Zend_Db_Expr('null')),
 				$conn->quoteInto('email_imported is ?', new Zend_Db_Expr('not null'))
 			);

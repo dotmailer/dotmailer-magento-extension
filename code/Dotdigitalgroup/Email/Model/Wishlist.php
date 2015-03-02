@@ -12,7 +12,7 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
     public function _construct()
     {
         parent::_construct();
-        $this->_init('email_connector/wishlist');
+        $this->_init('ddg_automation/wishlist');
     }
 
     /**
@@ -49,12 +49,12 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
     public function sync()
     {
         $response = array('success' => true, 'message' => '');
-        $helper = Mage::helper('connector');
+        $helper = Mage::helper('ddg');
         //resource allocation
         $helper->allowResourceFullExecution();
 
         foreach (Mage::app()->getWebsites(true) as $website) {
-            $enabled = Mage::helper('connector')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_WISHLIST_ENABLED, $website);
+            $enabled = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_WISHLIST_ENABLED, $website);
             if ($enabled) {
                 //using bulk api
                 $helper->log('---------- Start wishlist bulk sync ----------');
@@ -62,7 +62,7 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
                 $this->_exportWishlistForWebsite($website);
                 //send wishlist as transactional data
                 if (isset($this->_wishlists[$website->getId()])) {
-                    $client = Mage::helper('connector')->getWebsiteApiClient($website);
+                    $client = Mage::helper('ddg')->getWebsiteApiClient($website);
                     $websiteWishlists = $this->_wishlists[$website->getId()];
                     //import wishlists in bulk
                     $client->postContactsTransactionalDataImport($websiteWishlists, 'Wishlist');
@@ -82,13 +82,13 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
     {
         //reset wishlists
         $this->_wishlists = array();
-        $limit = Mage::helper('connector')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT, $website);
+        $limit = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT, $website);
         $collection = $this->_getWishlistToImport($website, $limit);
         foreach($collection as $emailWishlist){
             $customer = Mage::getModel('customer/customer')->load($emailWishlist->getCustomerId());
             $wishlist = Mage::getModel('wishlist/wishlist')->load($emailWishlist->getWishlistId());
             /** @var  $connectorWishlist */
-            $connectorWishlist = Mage::getModel('email_connector/customer_wishlist', $customer);
+            $connectorWishlist = Mage::getModel('ddg_automation/customer_wishlist', $customer);
             $connectorWishlist->setId($wishlist->getId())
                 ->setUpdatedAt($wishlist->getUpdatedAt());
             $wishListItemCollection = $wishlist->getItemCollection();
@@ -96,7 +96,7 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
                 foreach ($wishListItemCollection as $item) {
                     /* @var $product Mage_Catalog_Model_Product */
                     $product = $item->getProduct();
-                    $wishlistItem = Mage::getModel('email_connector/customer_wishlist_item', $product)
+                    $wishlistItem = Mage::getModel('ddg_automation/customer_wishlist_item', $product)
                         ->setQty($item->getQty())
                         ->setPrice($product);
                     //store for wishlists
@@ -123,7 +123,7 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
 
     private function _exportWishlistForWebsiteInSingle(Mage_Core_Model_Website $website)
     {
-        $helper = Mage::helper('connector');
+        $helper = Mage::helper('ddg');
         $client = $helper->getWebsiteApiClient($website);
         $limit = $helper->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT, $website);
         $collection = $this->_getModifiedWishlistToImport($website, $limit);
@@ -131,14 +131,14 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
             $customer = Mage::getModel('customer/customer')->load($emailWishlist->getCustomerId());
             $wishlist = Mage::getModel('wishlist/wishlist')->load($emailWishlist->getWishlistId());
             /** @var  $connectorWishlist */
-            $connectorWishlist = Mage::getModel('email_connector/customer_wishlist', $customer);
+            $connectorWishlist = Mage::getModel('ddg_automation/customer_wishlist', $customer);
             $connectorWishlist->setId($wishlist->getId());
             $wishListItemCollection = $wishlist->getItemCollection();
             if (count($wishListItemCollection)) {
                 foreach ($wishListItemCollection as $item) {
                     /* @var $product Mage_Catalog_Model_Product */
                     $product = $item->getProduct();
-                    $wishlistItem = Mage::getModel('email_connector/customer_wishlist_item', $product)
+                    $wishlistItem = Mage::getModel('ddg_automation/customer_wishlist_item', $product)
                         ->setQty($item->getQty())
                         ->setPrice($product);
                     //store for wishlists
@@ -189,7 +189,7 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
         /** @var $conn Varien_Db_Adapter_Pdo_Mysql */
         $conn = $coreResource->getConnection('core_write');
         try{
-            $num = $conn->update($coreResource->getTableName('email_connector/wishlist'),
+            $num = $conn->update($coreResource->getTableName('ddg_automation/wishlist'),
                 array('wishlist_imported' => new Zend_Db_Expr('null')),
                 $conn->quoteInto('wishlist_imported is ?', new Zend_Db_Expr('not null'))
             );

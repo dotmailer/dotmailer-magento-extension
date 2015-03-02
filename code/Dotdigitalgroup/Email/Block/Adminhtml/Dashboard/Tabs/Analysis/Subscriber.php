@@ -42,7 +42,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Analysis_Subscriber e
      */
     protected function getSubscriberInformationForTab()
     {
-        $subscriberAnalysisModel = Mage::getModel('email_connector/adminhtml_dashboard_tabs_analysis_subscriber');
+        $subscriberAnalysisModel = Mage::getModel('ddg_automation/adminhtml_dashboard_tabs_analysis_subscriber');
         return $subscriberAnalysisModel->getLifetimeSubscribers($this->_store, $this->_website, $this->_group);
     }
 

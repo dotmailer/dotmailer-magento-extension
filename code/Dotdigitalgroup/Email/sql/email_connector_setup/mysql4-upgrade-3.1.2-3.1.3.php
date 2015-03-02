@@ -12,7 +12,7 @@ if ($installer->getConnection()->isTableExists($createTable)) {
 }
 
 //add columns to table
-$campaignTable = $installer->getTable('email_connector/campaign');
+$campaignTable = $installer->getTable('ddg_automation/campaign');
 $installer->getConnection()->addColumn($campaignTable, 'subject', array(
     'type' => Varien_Db_Ddl_Table::TYPE_TEXT,
     'unsigned'  => true,
@@ -86,7 +86,7 @@ $installer->getConnection()->addColumn($campaignTable, 'website_id', array(
 /**
  * create Config table.
  */
-$configTable = $installer->getTable('email_connector/config');
+$configTable = $installer->getTable('ddg_automation/config');
 
 if ($installer->getConnection()->isTableExists($configTable)) {
 	$installer->getConnection()->dropTable($configTable);

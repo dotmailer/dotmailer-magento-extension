@@ -40,7 +40,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_CampaignController extends Mage_Admi
         $contactId  = (int) $this->getRequest()->getParam('id');
         $contact = $this->_initAction();
         if ($contactId && !$contact->getId()) {
-            $this->_getSession()->addError(Mage::helper('connector')->__('This campaign no longer exists.'));
+            $this->_getSession()->addError(Mage::helper('ddg')->__('This campaign no longer exists.'));
             $this->_redirect('*/*/');
             return;
         }
@@ -51,7 +51,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_CampaignController extends Mage_Admi
         $this->loadLayout();
         if ($contact->getId()) {
             if (!Mage::app()->isSingleStoreMode() && ($switchBlock = $this->getLayout()->getBlock('store_switcher'))) {
-                $switchBlock->setDefaultStoreName(Mage::helper('connector')->__('Default Values'))
+                $switchBlock->setDefaultStoreName(Mage::helper('ddg')->__('Default Values'))
                     ->setSwitchUrl($this->getUrl('*/*/*', array('_current'=>true, 'active_tab'=>null, 'tab' => null, 'store'=>null)));
             }
         } else {
@@ -78,7 +78,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_CampaignController extends Mage_Admi
 
             try {
                 $campaign->save();
-                $this->_getSession()->addSuccess(Mage::helper('connector')->__('Campaign was saved.'));
+                $this->_getSession()->addSuccess(Mage::helper('ddg')->__('Campaign was saved.'));
             }catch (Mage_Core_Exception $e) {
                 Mage::logException($e);
                 $this->_getSession()->addError($e->getMessage())
@@ -86,7 +86,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_CampaignController extends Mage_Admi
                 $redirectBack = true;
             }catch (Exception $e){
                 Mage::logException($e);
-                $this->_getSession()->addError(Mage::helper('connector')->__('Error saving campaign'))
+                $this->_getSession()->addError(Mage::helper('ddg')->__('Error saving campaign'))
                     ->setContactData($campaignData);
                 $redirectBack = true;
             }
@@ -107,10 +107,10 @@ class Dotdigitalgroup_Email_Adminhtml_Email_CampaignController extends Mage_Admi
     public function deleteAction()
 	{
         if ($id = $this->getRequest()->getParam('id')) {
-            $campaign = Mage::getModel('email_connector/campaign')->load($id);
+            $campaign = Mage::getModel('ddg_automation/campaign')->load($id);
             try {
                 $campaign->delete();
-                $this->_getSession()->addSuccess(Mage::helper('connector')->__('The campaign has been deleted.'));
+                $this->_getSession()->addSuccess(Mage::helper('ddg')->__('The campaign has been deleted.'));
             }
             catch (Exception $e) {
                 $this->_getSession()->addError($e->getMessage());
@@ -130,12 +130,12 @@ class Dotdigitalgroup_Email_Adminhtml_Email_CampaignController extends Mage_Admi
         } else {
             try {
                 foreach ($campaignIds as $campaignId) {
-                    $campaign = Mage::getSingleton('email_connector/campaign')->load($campaignId);
+                    $campaign = Mage::getSingleton('ddg_automation/campaign')->load($campaignId);
                     Mage::dispatchEvent('connector_controller_campaign_delete', array('campaign' => $campaign));
                     $campaign->delete();
                 }
                 $this->_getSession()->addSuccess(
-                    Mage::helper('connector')->__('Total of %d record(s) have been deleted.', count($campaignIds))
+                    Mage::helper('ddg')->__('Total of %d record(s) have been deleted.', count($campaignIds))
                 );
             } catch (Exception $e) {
                 $this->_getSession()->addError($e->getMessage());
@@ -155,12 +155,12 @@ class Dotdigitalgroup_Email_Adminhtml_Email_CampaignController extends Mage_Admi
         } else {
             try {
                 foreach ($campaignIds as $campaignId) {
-                    $campaign = Mage::getSingleton('email_connector/campaign')->load($campaignId);
+                    $campaign = Mage::getSingleton('ddg_automation/campaign')->load($campaignId);
                     Mage::dispatchEvent('connector_controller_campaign_delete', array('campaign' => $campaign));
                     $campaign->setIsSent(null)->save();
                 }
                 $this->_getSession()->addSuccess(
-                    Mage::helper('connector')->__('Total of %d record(s) have resend .', count($campaignIds))
+                    Mage::helper('ddg')->__('Total of %d record(s) have resend .', count($campaignIds))
                 );
             } catch (Exception $e) {
                 $this->_getSession()->addError($e->getMessage());
@@ -181,7 +181,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_CampaignController extends Mage_Admi
         } else {
             try {
                 foreach ($campaignIds as $campaignId) {
-                    $campaign = Mage::getSingleton('email_connector/campaign')->load($campaignId);
+                    $campaign = Mage::getSingleton('ddg_automation/campaign')->load($campaignId);
                     if($campaign->getSubject() && $campaign->getHtmlContent() && ($campaign->getIsSent() == NULL)){
                         $count++;
                         Mage::dispatchEvent('connector_controller_campaign_recreate', array('campaign' => $campaign));
@@ -194,7 +194,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_CampaignController extends Mage_Admi
                     }
                 }
                 $this->_getSession()->addSuccess(
-                    Mage::helper('connector')->__('Total of %d record(s) have recreate.', $count)
+                    Mage::helper('ddg')->__('Total of %d record(s) have recreate.', $count)
                 );
             } catch (Exception $e) {
                 $this->_getSession()->addError($e->getMessage());
@@ -224,7 +224,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_CampaignController extends Mage_Admi
             ->_title($this->__('Manage Campaigns'));
 
         $campaignId  = (int) $this->getRequest()->getParam('id');
-        $campaign    = Mage::getModel('email_connector/campaign');
+        $campaign    = Mage::getModel('ddg_automation/campaign');
 
         if ($campaignId) {
             $campaign->load($campaignId);
@@ -239,14 +239,14 @@ class Dotdigitalgroup_Email_Adminhtml_Email_CampaignController extends Mage_Admi
     public function exportCsvAction()
     {
         $fileName   = 'campaign.csv';
-        $content  = $this->getLayout()->createBlock('email_connector/adminhtml_campaign_grid')
+        $content  = $this->getLayout()->createBlock('ddg_automation/adminhtml_campaign_grid')
             ->getCsvFile();
         $this->_prepareDownloadResponse($fileName, $content);
     }
 
     protected function _isAllowed()
     {
-        return Mage::getSingleton('admin/session')->isAllowed('newsletter/email_connetor/email_connector_campaign');
+        return Mage::getSingleton('admin/session')->isAllowed('newsletter/email_connetor/ddg_automation_campaign');
     }
 
 }

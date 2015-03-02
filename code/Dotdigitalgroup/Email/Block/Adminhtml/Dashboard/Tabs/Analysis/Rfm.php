@@ -30,7 +30,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Analysis_Rfm extends 
      */
     protected function _prepareLayout()
     {
-        $rfmAnalysisModel = Mage::getModel('email_connector/adminhtml_dashboard_tabs_analysis_rfm');
+        $rfmAnalysisModel = Mage::getModel('ddg_automation/adminhtml_dashboard_tabs_analysis_rfm');
         $this->rfm = $rfmAnalysisModel->getPreparedRfm($this->_store, $this->_website, $this->_group);
         foreach($this->rfm['Monetary'] as $key => $value)
         {

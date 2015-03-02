@@ -10,7 +10,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Automation_Connect extends Ma
 
     protected function _getAddRowButtonHtml()
     {
-        $url = Mage::helper('connector')->getAuthoriseUrl();
+        $url = Mage::helper('ddg')->getAuthoriseUrl();
         $ssl = $this->_checkForSecureUrl();
         $disabled = false;
 	    //disable for ssl missing

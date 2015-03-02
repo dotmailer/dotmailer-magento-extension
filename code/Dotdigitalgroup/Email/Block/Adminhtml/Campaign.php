@@ -8,11 +8,10 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Campaign extends Mage_Adminhtml_Bloc
     public function __construct()
     {
         $this->_controller         = 'adminhtml_campaign';
-        $this->_blockGroup         = 'email_connector';
+        $this->_blockGroup         = 'ddg_automation';
         parent::__construct();
-        $this->_headerText         = Mage::helper('connector')->__('Campaigns');
+        $this->_headerText         = Mage::helper('ddg')->__('Campaigns');
         $this->_removeButton('add');
 
-        $this->setTemplate('connector/grid.phtml');
     }
 }

@@ -41,7 +41,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Config extends  Mage_
 	public function getConfigData()
 	{
 		//config data collection
-		$collection = Mage::getModel('email_connector/config')->getCollection()
+		$collection = Mage::getModel('ddg_automation/config')->getCollection()
 			->addFieldToFilter('path', array('neq' => 'connector_api_hour_trigger'))
 			->addFieldToFilter('is_api', true);
 
@@ -56,7 +56,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Config extends  Mage_
 	 */
 	public function getTimeTrigger()
 	{
-		$timeData = Mage::getModel('email_connector/config')->getCollection()
+		$timeData = Mage::getModel('ddg_automation/config')->getCollection()
 			->addFieldToFilter('path', Dotdigitalgroup_Email_Helper_Config::CONNECTOR_EMAIL_CONFIG_HOUR_TRIGGER)
 			->setPageSize(1)
 			->getFirstItem();

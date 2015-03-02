@@ -10,7 +10,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_DashboardController extends Mage_Adm
 		//check the api valid for any of the website
 		foreach ( Mage::app()->getWebsites( true ) as $website ) {
 
-			$passed = Mage::helper('connector')->isEnabled($website);
+			$passed = Mage::helper('ddg')->isEnabled($website);
 
 			if (! $passed)
 				$this->_redirect('*/system_config/edit', array('section' => 'connector_api_credentials'));
@@ -25,9 +25,9 @@ class Dotdigitalgroup_Email_Adminhtml_Email_DashboardController extends Mage_Adm
 		$this->_title($this->__('Dashboard'));
 
 		$this->loadLayout();
-		$this->_setActiveMenu('email_connector');
+		$this->_setActiveMenu('ddg_automation');
 		$this->_addContent($this->getLayout()->createBlock('adminhtml/widget_container'))
-		     ->_addLeft($this->getLayout()->createBlock ('email_connector/adminhtml_dashboard_tabs'));
+		     ->_addLeft($this->getLayout()->createBlock ('ddg_automation/adminhtml_dashboard_tabs'));
 		$this->renderLayout();
 	}
 
@@ -36,7 +36,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_DashboardController extends Mage_Adm
 	 */
 	public function statusGridAction() {
 
-		$block = $this->getLayout()->createBlock('email_connector/adminhtml_dashboard_tabs_status');
+		$block = $this->getLayout()->createBlock('ddg_automation/adminhtml_dashboard_tabs_status');
 		$this->getResponse()->setBody($block->toHtml());
 
 	}
@@ -45,14 +45,14 @@ class Dotdigitalgroup_Email_Adminhtml_Email_DashboardController extends Mage_Adm
 	 * Ajax tab for config data.
 	 */
 	public function emailConfigAction() {
-		$block = $this->getLayout()->createBlock('email_connector/adminhtml_dashboard_tabs_config');
+		$block = $this->getLayout()->createBlock('ddg_automation/adminhtml_dashboard_tabs_config');
 
 		$this->getResponse()->setBody($block->toHtml());
 	}
 
 	protected function _isAllowed()
 	{
-		return Mage::getSingleton('admin/session')->isAllowed('newsletter/email_connector/email_connector_dashboard');
+		return Mage::getSingleton('admin/session')->isAllowed('newsletter/ddg_automation/ddg_automation_dashboard');
 	}
 
 

@@ -9,7 +9,7 @@ class Dotdigitalgroup_Email_Model_Sweettooth_Observer
         if (!$customer)
             return $this;
 
-        $helper = Mage::helper('connector');
+        $helper = Mage::helper('ddg');
         $website = Mage::app()->getWebsite($customer->getWebsiteId());
 
         if($helper->isSweetToothToGo($website))

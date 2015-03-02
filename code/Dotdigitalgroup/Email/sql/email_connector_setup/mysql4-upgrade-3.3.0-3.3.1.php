@@ -8,7 +8,7 @@ $installer->startSetup();
 /**
  * create review table
  */
-$reviewTable = $installer->getTable('email_connector/review');
+$reviewTable = $installer->getTable('ddg_automation/review');
 
 //drop table if exist
 if ($installer->getConnection()->isTableExists($reviewTable)) {
@@ -64,7 +64,7 @@ $sqlQuery = $select->insertFromSelect($reviewTable, $insertArray, false);
 $installer->getConnection()->query($sqlQuery);
 
 //add columns to table
-$campaignTable = $installer->getTable('email_connector/campaign');
+$campaignTable = $installer->getTable('ddg_automation/campaign');
 
 $installer->getConnection()->addColumn($campaignTable, 'from_address', array(
 	'type' => Varien_Db_Ddl_Table::TYPE_TEXT,
@@ -84,7 +84,7 @@ $installer->getConnection()->addColumn($campaignTable, 'attachment_id', array(
 /**
  * create wishlist table
  */
-$wishlistTable = $installer->getTable('email_connector/wishlist');
+$wishlistTable = $installer->getTable('ddg_automation/wishlist');
 
 //drop table if exist
 if ($installer->getConnection()->isTableExists($wishlistTable)) {

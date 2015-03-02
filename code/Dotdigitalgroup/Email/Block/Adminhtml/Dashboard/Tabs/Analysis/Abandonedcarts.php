@@ -43,7 +43,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Analysis_Abandonedcar
      */
     protected function getAbandonedCartInformationForTab()
     {
-        $abandonedAnalysisModel = Mage::getModel('email_connector/adminhtml_dashboard_tabs_analysis_abandoned');
+        $abandonedAnalysisModel = Mage::getModel('ddg_automation/adminhtml_dashboard_tabs_analysis_abandoned');
         return $abandonedAnalysisModel->getLifeTimeAbandoned($this->_store, $this->_website, $this->_group);
     }
 

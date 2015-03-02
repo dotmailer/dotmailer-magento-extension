@@ -9,9 +9,9 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Datafields
     public function toOptionArray()
     {
         $fields = array();
-        $helper = Mage::helper('connector');
+        $helper = Mage::helper('ddg');
 	    //default data option
-	    $fields[] = array('value' => 0, 'label' => Mage::helper('connector')->__('-- Please Select --'));
+	    $fields[] = array('value' => 0, 'label' => Mage::helper('ddg')->__('-- Please Select --'));
 
 	    $website = Mage::app()->getRequest()->getParam('website', 0);
         $client = $helper->getWebsiteApiClient($website);
@@ -34,7 +34,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Datafields
 		    if ( isset( $datafields->message ) ) {
 
 			    //message
-			    $fields[] = array( 'value' => 0, 'label' => Mage::helper( 'connector' )->__( $datafields->message ) );
+			    $fields[] = array( 'value' => 0, 'label' => Mage::helper( 'ddg' )->__( $datafields->message ) );
 
 		    } else {
 
@@ -43,7 +43,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Datafields
 				    if ( isset( $datafield->name ) ) {
 					    $fields[] = array(
 						    'value' => $datafield->name,
-						    'label' => Mage::helper( 'connector' )->__( $datafield->name )
+						    'label' => Mage::helper( 'ddg' )->__( $datafield->name )
 					    );
 				    }
 			    }

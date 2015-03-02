@@ -24,7 +24,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs extends Mage_Adminhtm
 			array (
 				'label' => $this->__('Account Information'),
 				'title' => $this->__('Account Information'),
-				'content' => $this->getLayout()->createBlock('email_connector/adminhtml_dashboard_tabs_general')->toHtml(),
+				'content' => $this->getLayout()->createBlock('ddg_automation/adminhtml_dashboard_tabs_general')->toHtml(),
 			)
 		);
 		$this->addTab(
@@ -42,7 +42,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs extends Mage_Adminhtm
 			array (
 				'label' => $this->__('Data Analysis'),
 				'title' => $this->__('Data Analysis'),
-				'content' => $this->getLayout()->createBlock('email_connector/adminhtml_dashboard_tabs_analysis')->toHtml()
+				'content' => $this->getLayout()->createBlock('ddg_automation/adminhtml_dashboard_tabs_analysis')->toHtml()
 			)
 		);
 		$this->addTab(
@@ -50,7 +50,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs extends Mage_Adminhtm
 			array (
 				'label' => $this->__('API Status'),
 				'title' => $this->__('API Status'),
-				'content' => $this->getLayout()->createBlock('email_connector/adminhtml_dashboard_tabs_config')->toHtml()
+				'content' => $this->getLayout()->createBlock('ddg_automation/adminhtml_dashboard_tabs_config')->toHtml()
 			)
 		);
 		return parent::_beforeToHtml();

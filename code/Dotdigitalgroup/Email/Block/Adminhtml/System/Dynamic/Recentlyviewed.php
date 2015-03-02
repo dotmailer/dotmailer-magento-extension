@@ -4,11 +4,11 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Recentlyviewed extend
     protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element)
     {
         //generate base url for dynamic content
-	    $baseUrl = Mage::helper('connector')->generateDynamicUrl();
+	    $baseUrl = Mage::helper('ddg')->generateDynamicUrl();
 
 	    //config passcode
-        $passcode = Mage::helper('connector')->getPasscode();
-        $customerId = Mage::helper('connector')->getMappedCustomerId();
+        $passcode = Mage::helper('ddg')->getPasscode();
+        $customerId = Mage::helper('ddg')->getMappedCustomerId();
 
         if (!strlen($passcode))
 	        $passcode = '[PLEASE SET UP A PASSCODE]';

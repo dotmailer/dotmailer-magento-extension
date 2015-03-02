@@ -31,7 +31,8 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
     {
         if ($authRequest != Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_CONTENT_PASSCODE)) {
             $this->getRaygunClient()->Send('Authentication failed with code :' . $authRequest);
-            throw new Exception('Authentication failed : ' . $authRequest);
+            //throw new Exception('Authentication failed : ' . $authRequest);
+            return false;
         }
         return true;
     }
@@ -199,6 +200,31 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         return unserialize($attr);
     }
 
+
+	/**
+	 * Enterprise custom datafields attributes.
+	 * @param int $website
+	 *
+	 * @return array
+	 * @throws Mage_Core_Exception
+	 */
+	public function getEnterpriseAttributes( $website = 0) {
+		$website = Mage::app()->getWebsite($website);
+		$result = array();
+		$attrs = $website->getConfig('connector_data_mapping/enterprise_data');
+		//get individual mapped keys
+		foreach ( $attrs as $key => $one ) {
+			$config = $website->getConfig('connector_data_mapping/enterprise_data/' . $key);
+			//check for the mapped field
+			if ($config)
+				$result[$key] = $config;
+		}
+
+		if (empty($result))
+			return false;
+		return $result;
+	}
+
     /**
      * @param $path
      * @param null|string|bool|int|Mage_Core_Model_Website $websiteId
@@ -213,7 +239,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
     /**
      * Api client by website.
      *
-     * @param int $website
+     * @param mixed $website
      *
      * @return bool|Dotdigitalgroup_Email_Model_Apiconnector_Client
      */
@@ -222,7 +248,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         if (! $apiUsername = $this->getApiUsername($website) || ! $apiPassword = $this->getApiPassword($website))
             return false;
 
-        $client = Mage::getModel('email_connector/apiconnector_client');
+        $client = Mage::getModel('ddg_automation/apiconnector_client');
         $client->setApiUsername($this->getApiUsername($website))
             ->setApiPassword($this->getApiPassword($website));
 
@@ -241,27 +267,37 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * Autorisation url.
+     * Autorisation url for OAUTH.
      * @return string
      */
     public function getAuthoriseUrl()
     {
         $clientId = Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CLIENT_ID);
-        $baseUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB, true);
-        $callback    = $baseUrl . 'connector/email/callback';
-        $adminUser = Mage::getSingleton('admin/session')->getUser();
 
-	    //query params
+	    //callback uri if not set custom
+	    $redirectUri = $this->getRedirectUri();
+	    $redirectUri .= 'connector/email/callback';
+	    $adminUser = Mage::getSingleton('admin/session')->getUser();
+        //query params
         $params = array(
-            'redirect_uri' => $callback,
+            'redirect_uri' => $redirectUri,
             'scope' => 'Account',
             'state' => $adminUser->getId(),
             'response_type' => 'code'
         );
-        $url = Dotdigitalgroup_Email_Helper_Config::API_CONNECTOR_URL_AUTHORISE . http_build_query($params) . '&client_id=' . $clientId;
+
+        $authorizeBaseUrl = Mage::helper('ddg/config')->getAuthorizeLink();
+        $url = $authorizeBaseUrl . http_build_query($params) . '&client_id=' . $clientId;
 
         return $url;
     }
+
+	public function getRedirectUri()
+	{
+		$callback = Mage::helper('ddg/config')->getCallbackUrl();
+
+		return $callback;
+	}
 
     /**
      * order status config value
@@ -318,7 +354,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
 
     public function setConnectorContactToReImport($customerId)
     {
-        $contactModel = Mage::getModel('email_connector/contact');
+        $contactModel = Mage::getModel('ddg_automation/contact');
         $contactModel
             ->loadByCustomerId($customerId)
             ->setEmailImported(Dotdigitalgroup_Email_Model_Contact::EMAIL_CONTACT_NOT_IMPORTED)
@@ -437,41 +473,6 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
 
     }
 
-
-    /**
-     * Create new config if the config was not found.
-     * mark the account api datafields was created
-     * @param $value
-     * @param string $scope
-     *
-     * @return bool
-     */
-    public function isConfigCreatedForPath( $value, $scope = 'default' )
-    {
-        $configModel = Mage::getModel('email_connector/config');
-
-        //we use path as the transactional usename config value
-        $path = Dotdigitalgroup_Email_Helper_Transactional::XML_PATH_TRANSACTIONAL_API_USERNAME;
-
-        $itemConfig = $configModel->getCollection()
-            ->addFieldToFilter('path', $path)
-            ->addFieldToFilter('value', $value)
-            ->addFieldToFilter('scope', $scope)
-            ->getFirstItem();
-
-        //config was created
-        if ($itemConfig->getId()) {
-            return true;
-        }
-
-        //new config save data
-        $itemConfig->setPath($path)
-            ->setScope($scope)
-            ->setValue($value)
-            ->save();
-        return false;
-    }
-
     /**
      * Generate the baseurl for the default store
      * dynamic content will be displayed
@@ -551,7 +552,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getFeefoLogon()
     {
-        return $this->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_CONTENT_FEEFO_LOGON);
+        return $this->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_REVIEWS_FEEFO_LOGON);
     }
 
     /**
@@ -561,7 +562,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getFeefoReviewsPerProduct()
     {
-        return $this->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_CONTENT_FEEFO_REVIEWS);
+        return $this->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_REVIEWS_FEEFO_REVIEWS);
     }
 
     /**
@@ -571,6 +572,130 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getFeefoLogoTemplate()
     {
-        return $this->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_CONTENT_FEEFO_TEMPLATE);
+        return $this->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_REVIEWS_FEEFO_TEMPLATE);
     }
+
+    /**
+     * update data fields
+     *
+     * @param $email
+     * @param $website
+     * @param $storeName
+     */
+    public function updateDataFields($email, $website, $storeName)
+    {
+        $data = array();
+        if($store_name = $website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_STORE_NAME)){
+            $data[] = array(
+                'Key' => $store_name,
+                'Value' => $storeName
+            );
+        }
+        if($website_name = $website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_WEBSITE_NAME)){
+            $data[] = array(
+                'Key' => $website_name,
+                'Value' => $website->getName()
+            );
+        }
+        if(!empty($data)){
+            //update data fields
+            $client = $this->getWebsiteApiClient($website);
+            $client->updateContactDatafieldsByEmail($email, $data);
+        }
+    }
+
+    /**
+     * check connector SMTP installed/active status
+     * @return boolean
+     */
+    public function isSmtpEnabled()
+    {
+        return (bool)Mage::getConfig()->getModuleConfig('Ddg_Transactional')->is('active', 'true');
+    }
+
+	/**
+	 * Is magento enterprise.
+	 * @return bool
+	 */
+	public function isEnterprise()
+	{
+		return Mage::getConfig ()->getModuleConfig ( 'Enterprise_Enterprise' ) && Mage::getConfig ()->getModuleConfig ( 'Enterprise_AdminGws' ) && Mage::getConfig ()->getModuleConfig ( 'Enterprise_Checkout' ) && Mage::getConfig ()->getModuleConfig ( 'Enterprise_Customer' );
+
+	}
+
+    public function getTemplateList()
+    {
+        $client = $this->getWebsiteApiClient(Mage::app()->getWebsite());
+        if(!$client)
+            return array();
+
+        $templates = $client->getApiTemplateList();
+        $fields[] = array('value' => '', 'label' => '');
+        foreach ( $templates as $one ) {
+            if ( isset( $one->id ) ) {
+                $fields[] = array(
+                    'value' => $one->id,
+                    'label' => $this->__( addslashes( $one->name ) )
+                );
+            }
+        }
+        return $fields;
+    }
+
+	/**
+	 * Update last quote id datafield.
+	 * @param $quoteId
+	 * @param $email
+	 * @param $websiteId
+	 */
+	public function updateLastQuoteId($quoteId, $email, $websiteId)
+	{
+		$client = $this->getWebsiteApiClient($websiteId);
+		//last quote id config data mapped
+		$quoteIdField = $this->getLastQuoteId();
+
+		$data[] = array(
+			'Key' => $quoteIdField,
+			'Value' => $quoteId
+		);
+		//update datafields for conctact
+		$client->updateContactDatafieldsByEmail($email, $data);
+	}
+
+	/**
+	 * Remove code and disable Raygun.
+	 */
+	public function disableRaygun()
+	{
+		$config = new Mage_Core_Model_Config();
+		$config->saveConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_RAYGUN_APPLICATION_CODE, '');
+		Mage::getConfig()->cleanCache();
+	}
+
+	public function enableRaygunCode()
+	{
+		$curl = new Varien_Http_Adapter_Curl();
+		$curl->setConfig(array(
+			'timeout'   => 2
+		));
+		$curl->write(Zend_Http_Client::GET, Dotdigitalgroup_Email_Helper_Config::RAYGUN_API_CODE_URL, '1.0');
+		$data = $curl->read();
+
+		if ($data === false) {
+			return false;
+		}
+		$data = preg_split('/^\r?$/m', $data, 2);
+		$data = trim($data[1]);
+		$curl->close();
+
+		$xml  = new SimpleXMLElement($data);
+		$raygunCode = $xml->code;
+
+		//not found
+		if (!$raygunCode)
+			return;
+
+		$config = new Mage_Core_Model_Config();
+		$config->saveConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_RAYGUN_APPLICATION_CODE, $raygunCode);
+	}
 }

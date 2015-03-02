@@ -21,7 +21,7 @@ class Dotdigitalgroup_Email_Helper_Review extends Mage_Core_Helper_Abstract
      */
     public function getReviewWebsiteSettings($path, $website)
     {
-        $helper = Mage::helper('connector');
+        $helper = Mage::helper('ddg');
         return $helper->getWebsiteConfig($path, $website);
     }
 

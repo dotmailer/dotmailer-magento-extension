@@ -8,7 +8,7 @@ class Dotdigitalgroup_Email_Model_Resource_Config extends Mage_Core_Model_Mysql4
 	 */
 	protected  function _construct()
     {
-        $this->_init('email_connector/config', 'email_config_id');
+        $this->_init('ddg_automation/config', 'email_config_id');
 
     }
 }

@@ -32,7 +32,7 @@ class Dotdigitalgroup_Email_Model_Api2_Subscriber_Rest_Admin_V1 extends Mage_Api
 				    ->save();
 
 			}catch (Mage_Api2_Exception $e){
-				Mage::helper("connector")->log($e->getMessage());
+				Mage::helper('ddg')->log($e->getMessage());
 			}catch (Exception $e){
 				Mage::logException($e);
 			}
@@ -52,7 +52,7 @@ class Dotdigitalgroup_Email_Model_Api2_Subscriber_Rest_Admin_V1 extends Mage_Api
 	{
 		$email = $this->getRequest()->getParam('email', false);
 		if (! $email) {
-			Mage::helper("connector")->log('Subscriber id is not set');
+			Mage::helper('ddg')->log('Subscriber id is not set');
 			return array();
 		}
 		try {
@@ -61,7 +61,7 @@ class Dotdigitalgroup_Email_Model_Api2_Subscriber_Rest_Admin_V1 extends Mage_Api
 			return json_encode($data);
 
 		}catch (Mage_Api2_Exception $e){
-			Mage::helper("connector")->log($e->getMessage());
+			Mage::helper('ddg')->log($e->getMessage());
 		}catch (Exception $e){
 			Mage::logException($e);
 		}
@@ -97,12 +97,12 @@ class Dotdigitalgroup_Email_Model_Api2_Subscriber_Rest_Admin_V1 extends Mage_Api
 					           ->setStoreId( $storeId )
 					           ->save();
 				} else {
-					Mage::helper( "connector" )->log( "REST Subscriber not found : " . $email);
+					Mage::helper( 'ddg' )->log( "REST Subscriber not found : " . $email);
 				}
 
 				echo json_encode( $data );
 			}catch (Mage_Api2_Exception $e){
-				Mage::helper("connector")->log($e->getMessage());
+				Mage::helper('ddg')->log($e->getMessage());
 			}catch (Exception $e){
 				Mage::logException($e);
 			}

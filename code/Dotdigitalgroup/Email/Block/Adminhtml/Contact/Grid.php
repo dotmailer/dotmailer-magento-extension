@@ -14,7 +14,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Contact_Grid extends Mage_Adminhtml_
 
     protected function _prepareCollection()
     {
-	    $collection = Mage::getModel('email_connector/contact')->getCollection();
+	    $collection = Mage::getModel('ddg_automation/contact')->getCollection();
         $this->setCollection($collection);
         $this->setDefaultSort('updated_at');
         $this->setDefaultDir('DESC');
@@ -24,20 +24,20 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Contact_Grid extends Mage_Adminhtml_
     protected function _prepareColumns()
     {
         $this->addColumn('email_contact_id', array(
-            'header'        => Mage::helper('connector')->__('Email Contact ID'),
+            'header'        => Mage::helper('ddg')->__('Email Contact ID'),
             'width'         => '20px',
             'index'         => 'email_contact_id',
             'type'          => 'number',
             'escape'        => true,
         ))->addColumn('email', array(
-            'header'        => Mage::helper('connector')->__('Email'),
+            'header'        => Mage::helper('ddg')->__('Email'),
             'align'         => 'left',
             'width'         => '50px',
             'index'         => 'email',
             'type'          => 'text',
             'escape'        => true
         ))->addColumn('is_guest', array(
-            'header'        => Mage::helper('connector')->__('Is Guest'),
+            'header'        => Mage::helper('ddg')->__('Is Guest'),
             'align'         => 'right',
             'width'         => '50px',
             'index'         => 'is_guest',
@@ -49,14 +49,14 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Contact_Grid extends Mage_Adminhtml_
             'escape'        => true,
             'filter_condition_callback' => array($this, 'filterCallbackContact')
         ))->addColumn('customer_id', array(
-            'header'        => Mage::helper('connector')->__('Customer ID'),
+            'header'        => Mage::helper('ddg')->__('Customer ID'),
             'align'         => 'left',
             'width'         => '20px',
             'index'         => 'customer_id',
             'type'          => 'number',
             'escape'        => true
         ))->addColumn('is_subscriber', array(
-            'header'        => Mage::helper('connector')->__('Is Subscriber'),
+            'header'        => Mage::helper('ddg')->__('Is Subscriber'),
             'width'         => '50px',
             'align'         => 'right',
             'index'         => 'is_subscriber',
@@ -68,7 +68,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Contact_Grid extends Mage_Adminhtml_
 	        'filter_condition_callback' => array($this, 'filterCallbackContact'),
             'escape'        => true,
         ))->addColumn('subscriber_status', array(
-            'header'        => Mage::helper('connector')->__('Subscriber Status'),
+            'header'        => Mage::helper('ddg')->__('Subscriber Status'),
             'align'         => 'center',
             'width'         => '50px',
             'index'         => 'subscriber_status',
@@ -81,27 +81,27 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Contact_Grid extends Mage_Adminhtml_
 	        ),
             'escape'        => true,
         ))->addColumn('email_imported', array(
-            'header'        => Mage::helper('connector')->__('Email Imported'),
+            'header'        => Mage::helper('ddg')->__('Email Imported'),
             'width'         => '20px',
             'align'         => 'center',
             'index'         => 'email_imported',
             'escape'        => true,
             'type'          => 'options',
-            'options'       => Mage::getModel('email_connector/adminhtml_source_contact_imported')->getOptions(),
-            'renderer'      => 'email_connector/adminhtml_column_renderer_imported',
+            'options'       => Mage::getModel('ddg_automation/adminhtml_source_contact_imported')->getOptions(),
+            'renderer'      => 'ddg_automation/adminhtml_column_renderer_imported',
             'filter_condition_callback' => array($this, 'filterCallbackContact')
         ))->addColumn('subscriber_imported', array(
-            'header'        => Mage::helper('connector')->__('Subscriber Imported'),
+            'header'        => Mage::helper('ddg')->__('Subscriber Imported'),
             'width'         => '20px',
             'align'         => 'center',
             'index'         => 'subscriber_imported',
             'type'          => 'options',
             'escape'        => true,
-            'renderer'      => 'email_connector/adminhtml_column_renderer_imported',
-            'options'       => Mage::getModel('email_connector/adminhtml_source_contact_imported')->getOptions(),
+            'renderer'      => 'ddg_automation/adminhtml_column_renderer_imported',
+            'options'       => Mage::getModel('ddg_automation/adminhtml_source_contact_imported')->getOptions(),
             'filter_condition_callback' => array($this, 'filterCallbackContact')
         ))->addColumn('suppressed', array(
-            'header'        => Mage::helper('connector')->__('Suppressed'),
+            'header'        => Mage::helper('ddg')->__('Suppressed'),
             'align'         => 'right',
             'width'         => '50px',
             'index'         => 'suppressed',
@@ -113,6 +113,18 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Contact_Grid extends Mage_Adminhtml_
 	        ),
             'filter_condition_callback' => array($this, 'filterCallbackContact')
         ));
+
+	    //Enterprise customer segments.
+	    if (Mage::helper('ddg')->isEnterprise()) {
+		    $this->addColumn( 'segment_ids', array(
+			    'header' => Mage::helper( 'ddg' )->__( 'Segment Id\'s' ),
+			    'align'  => 'right',
+			    'width'  => '50px',
+			    'index'  => 'segment_ids',
+			    'escape' => true,
+			    'type'   => 'text'
+		    ) );
+	    }
         if (!Mage::app()->isSingleStoreMode()) {
             $this->addColumn('website_id', array(
                 'header'    => Mage::helper('customer')->__('Website'),
@@ -125,14 +137,14 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Contact_Grid extends Mage_Adminhtml_
         }
 
         $this->addColumn('sync', array(
-            'header' => Mage::helper('connector')->__('Sync Contact'),
+            'header' => Mage::helper('ddg')->__('Sync Contact'),
             'align'         => 'center',
             'width'         => '80px',
-            'renderer'     => 'email_connector/adminhtml_column_renderer_sync'
+            'renderer'     => 'ddg_automation/adminhtml_column_renderer_sync'
 
         ));
 
-        $this->addExportType('*/*/exportCsv', Mage::helper('connector')->__('CSV'));
+        $this->addExportType('*/*/exportCsv', Mage::helper('ddg')->__('CSV'));
         return parent::_prepareColumns();
     }
 
@@ -157,11 +169,11 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Contact_Grid extends Mage_Adminhtml_
         $this->setMassactionIdField('email_contact_id');
         $this->getMassactionBlock()->setFormFieldName('contact');
         $this->getMassactionBlock()->addItem('delete', array(
-            'label'=> Mage::helper('connector')->__('Delete'),
+            'label'=> Mage::helper('ddg')->__('Delete'),
             'url'  => $this->getUrl('*/*/massDelete'),
-            'confirm'  => Mage::helper('connector')->__('Are you sure?')));
+            'confirm'  => Mage::helper('ddg')->__('Are you sure?')));
         $this->getMassactionBlock()->addItem('resend', array(
-            'label' => Mage::helper('connector')->__('Resend'),
+            'label' => Mage::helper('ddg')->__('Resend'),
             'url' => $this->getUrl('*/*/massResend'),
 
         ));

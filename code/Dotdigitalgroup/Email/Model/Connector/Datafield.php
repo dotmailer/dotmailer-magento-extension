@@ -24,26 +24,6 @@ class Dotdigitalgroup_Email_Model_Connector_Datafield
 	 */
 	public $datafields = array();
 
-    /**
-     * Default datafields
-     * @return array
-     */
-    protected $_defaultDataFields = array(
-        array(
-            'name' => 'CUSTOMER_ID',
-            'type' => 'string',
-            'visibility' => 'private',
-        ),array(
-            'name' => 'LAST_ORDER_ID',
-            'type' => 'numeric',
-            'visibility' => 'private',
-        ),array(
-            'name' => 'ORDER_INCREMENT_ID',
-            'type' => 'numeric',
-            'visibility' => 'private',
-        )
-    );
-
 	/**
 	 * Contact default datafields.
 	 *
@@ -201,6 +181,11 @@ class Dotdigitalgroup_Email_Model_Connector_Datafield
             'type' => 'numeric',
             'visibility' => 'private',
         ),
+        'last_increment_id' => array(
+            'name' => 'LAST_INCREMENT_ID',
+            'type' => 'numeric',
+            'visibility' => 'private',
+        ),
         'last_quote_id' => array(
             'name' => 'LAST_QUOTE_ID',
             'type' => 'numeric',
@@ -226,42 +211,46 @@ class Dotdigitalgroup_Email_Model_Connector_Datafield
             'type' => 'string',
             'visibility' => 'private',
         ),
-    );
-
-	/**
-	 * transactional data default datafields.
-	 *
-	 * @var array
-	 */
-	private $_transactionalDefaultDatafields = array(
-        array(
-            'name' => 'CUSTOMER_ID',
-            'type' => 'string',
-            'visibility' => 'private',
-        ),array(
-            'name' => 'LAST_ORDER_ID',
-            'type' => 'numeric',
-            'visibility' => 'private',
-        ),array(
-            'name' => 'ORDER_INCREMENT_ID',
-            'type' => 'numeric',
-            'visibility' => 'private',
-        ),
-        array(
-            'name' => 'WEBSITE_NAME',
+        'most_pur_category' => array(
+            'name' => 'MOST_PUR_CATEGORY',
             'type' => 'string',
             'visibility' => 'private',
         ),
-        array(
-            'name' => 'STORE_NAME',
+        'most_pur_brand' => array(
+            'name' => 'MOST_PUR_BRAND',
             'type' => 'string',
             'visibility' => 'private',
         ),
-        array(
-            'name' => 'LAST_ORDER_DATE',
-            'type' => 'date',
+        'most_freq_pur_day' => array(
+            'name' => 'MOST_FREQ_PUR_DAY',
+            'type' => 'string',
             'visibility' => 'private',
-        )
+        ),
+        'most_freq_pur_mon' => array(
+            'name' => 'MOST_FREQ_PUR_MON',
+            'type' => 'string',
+            'visibility' => 'private',
+        ),
+        'first_category_pur' => array(
+            'name' => 'FIRST_CATEGORY_PUR',
+            'type' => 'string',
+            'visibility' => 'private',
+        ),
+        'last_category_pur' => array(
+            'name' => 'LAST_CATEGORY_PUR',
+            'type' => 'string',
+            'visibility' => 'private',
+        ),
+        'first_brand_pur' => array(
+            'name' => 'FIRST_BRAND_PUR',
+            'type' => 'string',
+            'visibility' => 'private',
+        ),
+        'last_brand_pur' => array(
+            'name' => 'LAST_BRAND_PUR',
+            'type' => 'string',
+            'visibility' => 'private',
+        ),
     );
 
     /**
@@ -278,38 +267,6 @@ class Dotdigitalgroup_Email_Model_Connector_Datafield
     public function getContactDatafields()
     {
         return $this->_contactDatafields;
-    }
-
-    /**
-     * @param array $transactionalDefaultDatafields
-     */
-    public function setTransactionalDefaultDatafields($transactionalDefaultDatafields)
-    {
-        $this->_transactionalDefaultDatafields = $transactionalDefaultDatafields;
-    }
-
-    /**
-     * @return array
-     */
-    public function getTransactionalDefaultDatafields()
-    {
-        return $this->_transactionalDefaultDatafields;
-    }
-
-    /**
-     * @param mixed $defaultDataFields
-     */
-    public function setDefaultDataFields($defaultDataFields)
-    {
-        $this->_defaultDataFields = $defaultDataFields;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDefaultDataFields()
-    {
-        return $this->_defaultDataFields;
     }
 
 	/**

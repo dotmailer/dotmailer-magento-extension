@@ -19,7 +19,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Review_Grid extends Mage_Adminhtml_B
     protected function _getCollectionClass()
     {
         // This is the model we are using for the grid
-        return 'email_connector/review_collection';
+        return 'ddg_automation/review_collection';
     }
 
     /**
@@ -42,44 +42,44 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Review_Grid extends Mage_Adminhtml_B
     protected function _prepareColumns()
     {
         $this->addColumn('review_id', array(
-            'header'        => Mage::helper('connector')->__('Review ID'),
+            'header'        => Mage::helper('ddg')->__('Review ID'),
             'align'         => 'left',
             'width'         => '50px',
             'index'         => 'review_id',
             'type'          => 'number',
             'escape'        => true
         ))->addColumn('customer_id', array(
-        'header'        => Mage::helper('connector')->__('Customer ID'),
+        'header'        => Mage::helper('ddg')->__('Customer ID'),
         'align'         => 'left',
         'width'         => '50px',
         'index'         => 'customer_id',
         'type'          => 'number',
         'escape'        => true
         ))->addColumn('store_id', array(
-            'header'        => Mage::helper('connector')->__('Store ID'),
+            'header'        => Mage::helper('ddg')->__('Store ID'),
             'width'         => '50px',
             'index'         => 'store_id',
             'type'          => 'number',
             'escape'        => true,
         ))->addColumn('review_imported', array(
-            'header'        => Mage::helper('connector')->__('Review Imported'),
+            'header'        => Mage::helper('ddg')->__('Review Imported'),
             'align'         => 'center',
             'width'         => '50px',
             'index'         => 'review_imported',
             'type'          => 'options',
             'escape'        => true,
-            'renderer'		=> 'email_connector/adminhtml_column_renderer_imported',
-            'options'       => Mage::getModel('email_connector/adminhtml_source_contact_imported')->getOptions(),
+            'renderer'		=> 'ddg_automation/adminhtml_column_renderer_imported',
+            'options'       => Mage::getModel('ddg_automation/adminhtml_source_contact_imported')->getOptions(),
             'filter_condition_callback' => array($this, 'filterCallbackContact')
         ))->addColumn('created_at', array(
-            'header'        => Mage::helper('connector')->__('Created At'),
+            'header'        => Mage::helper('ddg')->__('Created At'),
             'width'         => '50px',
             'align'         => 'center',
             'index'         => 'created_at',
             'type'          => 'datetime',
             'escape'        => true,
         ))->addColumn('updated_at', array(
-            'header'        => Mage::helper('connector')->__('Updated At'),
+            'header'        => Mage::helper('ddg')->__('Updated At'),
             'width'         => '50px',
             'align'         => 'center',
             'index'         => 'updated_at',

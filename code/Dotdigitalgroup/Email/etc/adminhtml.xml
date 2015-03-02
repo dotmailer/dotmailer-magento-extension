@@ -30,7 +30,7 @@
                             <action>adminhtml/email_campaign</action>
                         </email_connector_campaign>
                         <email_connector_contact translate="title">
-                            <title>Contact Sync</title>
+                            <title>Contacts Sync</title>
                             <sort_order>10</sort_order>
                             <action>adminhtml/email_contact</action>
                         </email_connector_contact>
@@ -80,7 +80,7 @@
             <admin>
                 <children>
                     <email_connector>
-                        <title>Email Connector</title>
+                        <title>DDG Automation</title>
                         <children>
                             <email_connector_dashboard translate="title">
                                 <title>Dashboard</title>

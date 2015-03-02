@@ -22,7 +22,7 @@ class Dotdigitalgroup_Email_Block_Feefo extends Mage_Core_Block_Template
      */
     public function getServiceScoreLogo()
     {
-        $helper = Mage::helper('connector');
+        $helper = Mage::helper('ddg');
         $url = 'http://www.feefo.com/feefo/feefologo.jsp?logon=';
         $logon = $helper->getFeefoLogon();
         $template = '';
@@ -75,7 +75,7 @@ class Dotdigitalgroup_Email_Block_Feefo extends Mage_Core_Block_Template
         $check = true;
         $reviews = array();
         $feefo_dir = Mage::getModel('core/config_options')->getLibDir().DS.'connector'.DS.'feefo';
-        $helper = Mage::helper('connector');
+        $helper = Mage::helper('ddg');
         $logon = $helper->getFeefoLogon();
         $limit = $helper->getFeefoReviewsPerProduct();
         $products = $this->getQuoteProducts();

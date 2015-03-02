@@ -102,7 +102,7 @@ class Dotdigitalgroup_Email_Model_Connector_Quote
         /**
          * custom quote attributes
          */
-        $helper = Mage::helper('connector');
+        $helper = Mage::helper('ddg');
         $website = Mage::app()->getStore($quoteData->getStore())->getWebsite();
         $customAttributes = $helper->getConfigSelectedCustomQuoteAttributes($website);
         if($customAttributes){

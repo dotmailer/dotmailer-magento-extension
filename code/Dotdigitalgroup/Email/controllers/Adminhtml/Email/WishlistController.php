@@ -8,8 +8,8 @@ class Dotdigitalgroup_Email_Adminhtml_Email_WishlistController extends Mage_Admi
     public function indexAction()
     {
         $this->loadLayout();
-        $this->_setActiveMenu('email_connector');
-        $this->_addContent($this->getLayout()->createBlock('email_connector/adminhtml_wishlist'));
+        $this->_setActiveMenu('ddg_automation');
+        $this->_addContent($this->getLayout()->createBlock('ddg_automation/adminhtml_wishlist'));
         $this->getLayout()->getBlock('head')->setTitle('Connector Wishlist(s)');
         $this->renderLayout();
     }
@@ -21,6 +21,6 @@ class Dotdigitalgroup_Email_Adminhtml_Email_WishlistController extends Mage_Admi
      */
     protected function _isAllowed()
     {
-        return Mage::getSingleton('admin/session')->isAllowed('newsletter/email_connector/email_connector_wishlist');
+        return Mage::getSingleton('admin/session')->isAllowed('newsletter/ddg_automation/email_connector_wishlist');
     }
 }

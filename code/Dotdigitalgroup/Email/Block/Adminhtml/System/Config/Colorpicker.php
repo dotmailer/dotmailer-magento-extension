@@ -58,7 +58,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Config_Colorpicker extends Ma
     {
         return
             '<script type="text/javascript">
-                Validation.add(\'validate-hex\', \'' . Mage::helper('connector')->__('Please enter a valid hex color code') . '\', function(v) {
+                Validation.add(\'validate-hex\', \'' . Mage::helper('ddg')->__('Please enter a valid hex color code') . '\', function(v) {
                     return /^#(?:[0-9a-fA-F]{3}){1,2}$/.test(v);
                 });
             </script>';

@@ -9,8 +9,8 @@ class Dotdigitalgroup_Email_ReportController extends Dotdigitalgroup_Email_Respo
 	 */
 	public function preDispatch()
     {
-	    //authenticate
-        Mage::helper('connector')->auth($this->getRequest()->getParam('code'));
+        //authenticate
+        $this->authenticate();
         parent::preDispatch();
     }
 
@@ -21,7 +21,7 @@ class Dotdigitalgroup_Email_ReportController extends Dotdigitalgroup_Email_Respo
     {
         $this->loadLayout();
 	    //set the content template
-        $products = $this->getLayout()->createBlock('email_connector/recommended_bestsellers', 'connector_customer', array(
+        $products = $this->getLayout()->createBlock('ddg_automation/recommended_bestsellers', 'connector_customer', array(
             'template' => 'connector/product/list.phtml'
         ));
         $this->getLayout()->getBlock('content')->append($products);
@@ -36,7 +36,7 @@ class Dotdigitalgroup_Email_ReportController extends Dotdigitalgroup_Email_Respo
     {
         $this->loadLayout();
 	    //set the content template
-        $products = $this->getLayout()->createBlock('email_connector/recommended_mostviewed', 'connector_customer', array(
+        $products = $this->getLayout()->createBlock('ddg_automation/recommended_mostviewed', 'connector_customer', array(
             'template' => 'connector/product/list.phtml'
         ));
         $this->getLayout()->getBlock('content')->append($products);
@@ -53,11 +53,14 @@ class Dotdigitalgroup_Email_ReportController extends Dotdigitalgroup_Email_Respo
         $customerId = $this->getRequest()->getParam('customer_id');
 	    //no customer was found
         if (! $customerId) {
-            throw new Exception('Recentlyviewed : no customer id : ' . $customerId);
+            //throw new Exception('Recentlyviewed : no customer id : ' . $customerId);
+            Mage::helper('ddg')->log('Recentlyviewed : no customer id : ' . $customerId);
+            $this->sendResponse();
+            die;
         }
         $this->loadLayout();
 	    //set content template
-        $products = $this->getLayout()->createBlock('email_connector/recommended_recentlyviewed', 'connector_customer', array(
+        $products = $this->getLayout()->createBlock('ddg_automation/recommended_recentlyviewed', 'connector_customer', array(
             'template' => 'connector/product/list.phtml'
         ));
         $this->getLayout()->getBlock('content')->append($products);

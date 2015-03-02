@@ -10,12 +10,12 @@ class Dotdigitalgroup_Email_InvoiceController extends Dotdigitalgroup_Email_Dyna
     {
         $this->loadLayout();
 	    //set content template
-        $invoiceNew = $this->getLayout()->createBlock('email_connector/order_invoice', 'connector_invoice_new', array(
+        $invoiceNew = $this->getLayout()->createBlock('ddg_automation/order_invoice', 'connector_invoice_new', array(
             'template' => 'connector/invoice/new.phtml'
         ));
         $this->getLayout()->getBlock('content')->append($invoiceNew);
 	    //invoice items
-        $items = $this->getLayout()->createBlock('email_connector/order_invoice', 'connector_order_items', array(
+        $items = $this->getLayout()->createBlock('ddg_automation/order_invoice', 'connector_order_items', array(
             'template' => 'connector/order/items.phtml'
         ));
         $this->getLayout()->getBlock('connector_invoice_new')->append($items);
@@ -29,12 +29,12 @@ class Dotdigitalgroup_Email_InvoiceController extends Dotdigitalgroup_Email_Dyna
 	public function newguestAction()
     {
         $this->loadLayout();
-        $invoiceGuest = $this->getLayout()->createBlock('email_connector/order_invoice', 'connector_invoiceguest_new', array(
+        $invoiceGuest = $this->getLayout()->createBlock('ddg_automation/order_invoice', 'connector_invoiceguest_new', array(
             'template' => 'connector/invoice/newguest.phtml'
         ));
 
         $this->getLayout()->getBlock('content')->append($invoiceGuest);
-        $items = $this->getLayout()->createBlock('email_connector/order_invoice', 'connector_order_items', array(
+        $items = $this->getLayout()->createBlock('ddg_automation/order_invoice', 'connector_order_items', array(
             'template' => 'connector/order/items.phtml'
         ));
 	    //set invoice items
@@ -49,7 +49,7 @@ class Dotdigitalgroup_Email_InvoiceController extends Dotdigitalgroup_Email_Dyna
 	public function updateAction()
     {
         $this->loadLayout();
-        $invoice = $this->getLayout()->createBlock('email_connector/order_invoice', 'connector_invoice_update', array(
+        $invoice = $this->getLayout()->createBlock('ddg_automation/order_invoice', 'connector_invoice_update', array(
             'template' => 'connector/invoice/update.phtml'
         ));
 	    //set invoice content
@@ -64,7 +64,7 @@ class Dotdigitalgroup_Email_InvoiceController extends Dotdigitalgroup_Email_Dyna
 	public function updateguestAction()
     {
         $this->loadLayout();
-        $invoice = $this->getLayout()->createBlock('email_connector/order_invoice', 'connector_invoice_updateguest', array(
+        $invoice = $this->getLayout()->createBlock('ddg_automation/order_invoice', 'connector_invoice_updateguest', array(
             'template' => 'connector/invoice/updateguest.phtml'
         ));
 	    //set invoice content

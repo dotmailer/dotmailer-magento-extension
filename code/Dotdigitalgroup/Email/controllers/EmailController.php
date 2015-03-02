@@ -4,20 +4,34 @@ require_once 'Dotdigitalgroup' . DS . 'Email' . DS . 'controllers' . DS . 'Respo
 class Dotdigitalgroup_Email_EmailController extends Dotdigitalgroup_Email_ResponseController
 {
     /**
+     * wishlist
+     */
+    public function wishlistAction()
+    {
+        //authenticate
+        $this->authenticate();
+        $this->loadLayout();
+        $wishlist = $this->getLayout()->createBlock('ddg_automation/wishlist', 'connector_wishlist', array(
+            'template' => 'connector/wishlist.phtml'
+        ));
+        $this->getLayout()->getBlock('content')->append($wishlist);
+        $this->renderLayout();
+        $this->checkContentNotEmpty($wishlist->toHtml(), false);
+    }
+
+    /**
      * Generate coupon for a coupon code id.
      */
     public function couponAction()
     {
-        //authenticate
-        Mage::helper('connector')->auth($this->getRequest()->getParam('code'));
-
+        $this->authenticate();
         $this->loadLayout();
         //page root template
         if ($root = $this->getLayout()->getBlock('root')) {
             $root->setTemplate('page/blank.phtml');
         }
         //content template
-        $coupon = $this->getLayout()->createBlock('email_connector/coupon', 'connector_coupon', array(
+        $coupon = $this->getLayout()->createBlock('ddg_automation/coupon', 'connector_coupon', array(
             'template' => 'connector/coupon.phtml'
         ));
         $this->checkContentNotEmpty($coupon->toHtml(), false);
@@ -31,12 +45,12 @@ class Dotdigitalgroup_Email_EmailController extends Dotdigitalgroup_Email_Respon
     public function basketAction()
     {
         //authenticate
-        Mage::helper('connector')->auth($this->getRequest()->getParam('code'));
+        $this->authenticate();
         $this->loadLayout();
         if ($root = $this->getLayout()->getBlock('root')) {
             $root->setTemplate('page/blank.phtml');
         }
-        $basket = $this->getLayout()->createBlock('email_connector/basket', 'connector_basket', array(
+        $basket = $this->getLayout()->createBlock('ddg_automation/basket', 'connector_basket', array(
             'template' => 'connector/basket.phtml'
         ));
         $this->getLayout()->getBlock('content')->append($basket);
@@ -47,9 +61,9 @@ class Dotdigitalgroup_Email_EmailController extends Dotdigitalgroup_Email_Respon
     public function reviewAction()
     {
         //authenticate
-        Mage::helper('connector')->auth($this->getRequest()->getParam('code'));
+        $this->authenticate();
         $this->loadLayout();
-        $review = $this->getLayout()->createBlock('email_connector/order', 'connector_review', array(
+        $review = $this->getLayout()->createBlock('ddg_automation/order', 'connector_review', array(
             'template' => 'connector/review.phtml'
         ));
         $this->getLayout()->getBlock('content')->append($review);
@@ -104,6 +118,42 @@ class Dotdigitalgroup_Email_EmailController extends Dotdigitalgroup_Email_Respon
         return;
     }
 
+	/**
+	 * Disable raygun by removing the code.
+	 */
+	public function disableraygunAction()
+	{
+		$code = $this->getRequest()->getParam('code', false);
+
+		//code missing
+		if (!$code) {
+			return ;
+		}
+
+		//code not matching
+		if ($code != Mage::helper('ddg')->getPasscode())
+			return;
+
+		Mage::helper('ddg')->disableRaygun();
+	}
+
+	/**
+	 * Enable raygun and update code.
+	 */
+	public function enableraygunAction()
+	{
+		$code = $this->getRequest()->getParam('code', false);
+
+		//code missing
+		if (! $code)
+			return;
+		//code not matching
+		if ($code != Mage::helper('ddg')->getPasscode())
+			return;
+
+		Mage::helper('ddg')->enableRaygunCode();
+	}
+
     /**
      * Callback action for the automation studio.
      */
@@ -125,7 +175,7 @@ class Dotdigitalgroup_Email_EmailController extends Dotdigitalgroup_Email_Respon
                 '&code='            . $code;
 
 
-            $url = Dotdigitalgroup_Email_Helper_Config::API_CONNECTOR_URL_TOKEN;
+            $url = Mage::helper('ddg/config')->getTokenUrl();
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -138,8 +188,8 @@ class Dotdigitalgroup_Email_EmailController extends Dotdigitalgroup_Email_Respon
 
             $response = json_decode(curl_exec($ch));
             if ($response === false) {
-                Mage::helper('connector')->rayLog('100', 'Automaion studio number not found : ' . serialize($response));
-                Mage::helper('connector')->log("Error Number: " . curl_errno($ch));
+                Mage::helper('ddg')->rayLog('100', 'Automaion studio number not found : ' . serialize($response));
+                Mage::helper('ddg')->log("Error Number: " . curl_errno($ch));
             }
 
             //save the refresh token to the admin user

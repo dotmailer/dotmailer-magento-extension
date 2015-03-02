@@ -47,9 +47,9 @@ class Dotdigitalgroup_Email_Customer_NewsletterController extends Mage_Core_Cont
 
         //client
         $website = Mage::getModel('customer/session')->getCustomer()->getStore()->getWebsite();
-        $client = Mage::getModel('email_connector/apiconnector_client');
-        $client->setApiUsername(Mage::helper('connector')->getApiUsername($website))
-            ->setApiPassword(Mage::helper('connector')->getApiPassword($website));
+        $client = Mage::getModel('ddg_automation/apiconnector_client');
+        $client->setApiUsername(Mage::helper('ddg')->getApiUsername($website))
+            ->setApiPassword(Mage::helper('ddg')->getApiPassword($website));
 
         $contact = $client->getContactById($customer_id);
         if(isset($contact->id)){
@@ -61,7 +61,7 @@ class Dotdigitalgroup_Email_Customer_NewsletterController extends Mage_Core_Cont
                 $processedFields[$dataField->name] = $dataField->type;
             }
             foreach($data_fields as $key => $value){
-                if(isset($processedFields[$key])){
+                if(isset($processedFields[$key]) && $value){
                     if($processedFields[$key] == 'Numeric'){
                         $data_fields[$key] = (int)$value;
                     }
@@ -83,7 +83,7 @@ class Dotdigitalgroup_Email_Customer_NewsletterController extends Mage_Core_Cont
             //contact address books
             $bookError = false;
             $addressBooks = $client->getContactAddressBooks($contact->id);
-            $subscriberAddressBook = Mage::helper('connector')->getSubscriberAddressBook(Mage::app()->getWebsite());
+            $subscriberAddressBook = Mage::helper('ddg')->getSubscriberAddressBook(Mage::app()->getWebsite());
             $processedAddressBooks = array();
             if(is_array($addressBooks)){
                 foreach($addressBooks as $addressBook){

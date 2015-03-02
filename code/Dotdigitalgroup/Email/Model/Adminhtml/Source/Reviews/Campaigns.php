@@ -12,7 +12,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Reviews_Campaigns
     public function toOptionArray()
     {
         $fields = array();
-        $client = Mage::getModel('email_connector/apiconnector_client');
+        $client = Mage::getModel('ddg_automation/apiconnector_client');
 
         $website = Mage::app()->getRequest()->getParam('website', false);
         if ($website) {
@@ -20,8 +20,8 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Reviews_Campaigns
         } else {
             $website = 0;
         }
-        $client->setApiUsername(Mage::helper('connector')->getApiUsername($website));
-        $client->setApiPassword(Mage::helper('connector')->getApiPassword($website));
+        $client->setApiUsername(Mage::helper('ddg')->getApiUsername($website));
+        $client->setApiPassword(Mage::helper('ddg')->getApiPassword($website));
 
         $savedCampaigns = Mage::registry('savedcampignsforreview');
 
@@ -33,12 +33,12 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Reviews_Campaigns
             Mage::register('savedcampignsforreview', $campaigns);
         }
 
-        $fields[] = array('value' => '0', 'label' => Mage::helper('connector')->__('-- Please Select --'));
+        $fields[] = array('value' => '0', 'label' => Mage::helper('ddg')->__('-- Please Select --'));
 
         if (is_array($fields)) {
             foreach ( $campaigns as $one ) {
                 if ( isset( $one->id ) )
-                    $fields[] = array( 'value' => $one->id, 'label' => Mage::helper( 'connector' )->__( addslashes($one->name)) );
+                    $fields[] = array( 'value' => $one->id, 'label' => Mage::helper( 'ddg' )->__( addslashes($one->name)) );
             }
         }
 

@@ -8,7 +8,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Advanced_Attributes
      */
     public function toOptionArray()
     {
-        $fields = Mage::helper('connector')->getOrderTableDescription();
+        $fields = Mage::helper('ddg')->getOrderTableDescription();
 
         $customFields = array();
         foreach($fields as $key => $field){

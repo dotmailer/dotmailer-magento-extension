@@ -22,19 +22,19 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Analysis extends  Mag
 	protected function _prepareLayout()
 	{
 		$this->setChild('sales',
-			$this->getLayout()->createBlock('email_connector/adminhtml_dashboard_tabs_analysis_sales')
+			$this->getLayout()->createBlock('ddg_automation/adminhtml_dashboard_tabs_analysis_sales')
 		);
 		$this->setChild('abandoned_cart',
-			$this->getLayout()->createBlock('email_connector/adminhtml_dashboard_tabs_analysis_abandonedcarts')
+			$this->getLayout()->createBlock('ddg_automation/adminhtml_dashboard_tabs_analysis_abandonedcarts')
 		);
 		$this->setChild('customer',
-			$this->getLayout()->createBlock('email_connector/adminhtml_dashboard_tabs_analysis_customer')
+			$this->getLayout()->createBlock('ddg_automation/adminhtml_dashboard_tabs_analysis_customer')
 		);
 		$this->setChild('subscriber',
-			$this->getLayout()->createBlock('email_connector/adminhtml_dashboard_tabs_analysis_subscriber')
+			$this->getLayout()->createBlock('ddg_automation/adminhtml_dashboard_tabs_analysis_subscriber')
 		);
 		$this->setChild('rfm',
-			$this->getLayout()->createBlock('email_connector/adminhtml_dashboard_tabs_analysis_rfm')
+			$this->getLayout()->createBlock('ddg_automation/adminhtml_dashboard_tabs_analysis_rfm')
 		);
 		parent::_prepareLayout();
 	}

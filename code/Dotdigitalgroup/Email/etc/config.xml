@@ -2,36 +2,36 @@
 <config>
     <modules>
         <Dotdigitalgroup_Email>
-            <version>3.4.0</version>
+            <version>4.0.0</version>
         </Dotdigitalgroup_Email>
     </modules>
     <frontend>
         <routers>
-            <connector>
+            <ddg_automation>
                 <use>standard</use>
                 <args>
                     <module>Dotdigitalgroup_Email</module>
                     <frontName>connector</frontName>
                 </args>
-            </connector>
+            </ddg_automation>
         </routers>
         <secure_url>
-            <connector_customer_newsletter_save>/connector/customer_newsletter/save</connector_customer_newsletter_save>
+            <connector_customer_newsletter_save>/ddg/customer_newsletter/save</connector_customer_newsletter_save>
         </secure_url>
         <layout>
             <updates>
-                <connector>
+                <ddg_automation>
                     <file>connector.xml</file>
-                </connector>
+                </ddg_automation>
             </updates>
         </layout>
         <events>
             <controller_action_postdispatch>
                 <observers>
-                    <connector_switcher>
+                    <ddg_switcher>
                         <class>Dotdigitalgroup_Email_Model_Controller_Observer</class>
                         <method>controllerActionPostdispatch</method>
-                    </connector_switcher>
+                    </ddg_switcher>
                 </observers>
             </controller_action_postdispatch>
         </events>
@@ -45,11 +45,21 @@
                 </setup>
             </email_connector_setup>
         </resources>
+        <events>
+            <enterprise_customersegment_ids_changed>
+                <observers>
+                    <ddg_customersegment_changed>
+                        <class>Dotdigitalgroup_Email_Model_Adminhtml_Observer</class>
+                        <method>connectorCustomerSegmentChanged</method>
+                    </ddg_customersegment_changed>
+                </observers>
+            </enterprise_customersegment_ids_changed>
+        </events>
         <models>
-            <email_connector>
+            <ddg_automation>
                 <class>Dotdigitalgroup_Email_Model</class>
                 <resourceModel>email_connector_resource</resourceModel>
-            </email_connector>
+            </ddg_automation>
             <email_connector_resource>
                 <class>Dotdigitalgroup_Email_Model_Resource</class>
                 <entities>
@@ -79,11 +89,6 @@
                     </quote>
                 </entities>
             </email_connector_resource>
-            <core>
-                <rewrite>
-                    <email_template>Dotdigitalgroup_Email_Model_Email_Template</email_template>
-                </rewrite>
-            </core>
             <newsletter>
                 <rewrite>
                     <subscriber>Dotdigitalgroup_Email_Model_Newsletter_Sub</subscriber>
@@ -94,187 +99,188 @@
                     <customer>Dotdigitalgroup_Email_Model_Customer</customer>
                 </rewrite>
             </customer>
+            <enterprise_customersegment_resource>
+                <rewrite>
+                    <segment>Dotdigitalgroup_Email_Model_Resource_Segment</segment>
+                </rewrite>
+            </enterprise_customersegment_resource>
         </models>
         <helpers>
-            <connector>
+            <ddg>
                 <class>Dotdigitalgroup_Email_Helper</class>
-            </connector>
+            </ddg>
         </helpers>
         <blocks>
-            <email_connector>
+            <ddg_automation>
                 <class>Dotdigitalgroup_Email_Block</class>
-            </email_connector>
+            </ddg_automation>
+            <adminhtml>
+                <rewrite>
+                    <system_email_template_edit>Dotdigitalgroup_Email_Block_System_Email_Template_Edit</system_email_template_edit>
+                </rewrite>
+            </adminhtml>
         </blocks>
         <events>
-
             <admin_system_config_changed_section_connector_api_credentials>
                 <observers>
-                    <connector_api_save>
+                    <ddg_api_save>
                         <class>Dotdigitalgroup_Email_Model_Adminhtml_Observer</class>
                         <method>actionConfigSaveApi</method>
-                    </connector_api_save>
+                    </ddg_api_save>
                 </observers>
             </admin_system_config_changed_section_connector_api_credentials>
-            <admin_system_config_changed_section_connector_transactional_emails>
-                <observers>
-                    <connector_transactional_api>
-                        <class>Dotdigitalgroup_Email_Model_Adminhtml_Observer</class>
-                        <method>saveConfigForTransactional</method>
-                    </connector_transactional_api>
-                </observers>
-            </admin_system_config_changed_section_connector_transactional_emails>
             <admin_system_config_changed_section_connector_data_mapping>
                 <observers>
-                    <connector_data_mapping_reset>
+                    <ddg_data_mapping_reset>
                         <class>Dotdigitalgroup_Email_Model_Adminhtml_Observer</class>
                         <method>actionConfigResetContacts</method>
-                    </connector_data_mapping_reset>
+                    </ddg_data_mapping_reset>
                 </observers>
             </admin_system_config_changed_section_connector_data_mapping>
             <admin_system_config_changed_section_connector_sync_settings>
                 <observers>
-                    <connector_sys_check_feature_active>
+                    <ddg_sys_check_feature_active>
                         <class>Dotdigitalgroup_Email_Model_Adminhtml_Observer</class>
                         <method>checkFeatureActive</method>
-                    </connector_sys_check_feature_active>
+                    </ddg_sys_check_feature_active>
                 </observers>
             </admin_system_config_changed_section_connector_sync_settings>
             <customer_save_after>
                 <observers>
-                    <connector_customer_save_after>
+                    <ddg_customer_save_after>
                         <class>Dotdigitalgroup_Email_Model_Customer_Observer</class>
                         <method>handleCustomerSaveBefore</method>
-                    </connector_customer_save_after>
+                    </ddg_customer_save_after>
                 </observers>
             </customer_save_after>
             <customer_register_success>
                 <observers>
-                    <connector_customer_register_success>
+                    <ddg_customer_register_success>
                         <type>singleton</type>
                         <class>Dotdigitalgroup_Email_Model_Customer_Observer</class>
                         <method>handleCustomerRegiterSuccess</method>
-                    </connector_customer_register_success>
+                    </ddg_customer_register_success>
                 </observers>
             </customer_register_success>
             <customer_delete_after>
                 <observers>
-                    <connector_customer_delete_after>
+                    <ddg_customer_delete_after>
                         <class>Dotdigitalgroup_Email_Model_Customer_Observer</class>
                         <method>handleCustomerDeleteAfter</method>
-                    </connector_customer_delete_after>
+                    </ddg_customer_delete_after>
                 </observers>
             </customer_delete_after>
             <newsletter_subscriber_save_before>
                 <observers>
-                    <connector_newsletter_subscriber_save_before>
+                    <ddg_newsletter_subscriber_save_before>
                         <class>Dotdigitalgroup_Email_Model_Newsletter_Observer</class>
                         <method>handleNewsletterSubscriberSave</method>
-                    </connector_newsletter_subscriber_save_before>
+                    </ddg_newsletter_subscriber_save_before>
                 </observers>
             </newsletter_subscriber_save_before>
             <sales_order_place_after>
                 <observers>
-                    <connector_record_sale>
+                    <ddg_record_sale>
                         <type>singleton</type>
                         <class>Dotdigitalgroup_Email_Model_Sales_Observer</class>
                         <method>handleSalesOrderPlaceAfter</method>
-                    </connector_record_sale>
+                    </ddg_record_sale>
                 </observers>
             </sales_order_place_after>
             <sales_order_save_before>
                 <observers>
-                    <connector_sales_save_before>
+                    <ddg_sales_save_before>
                         <class>Dotdigitalgroup_Email_Model_Sales_Observer</class>
                         <method>handleSalesOrderSaveBefore</method>
-                    </connector_sales_save_before>
+                    </ddg_sales_save_before>
                 </observers>
             </sales_order_save_before>
             <sales_order_save_after>
                 <observers>
-                    <connector_checkout_type_onepage_save_order_after>
+                    <ddg_checkout_type_onepage_save_order_after>
                         <class>Dotdigitalgroup_Email_Model_Sales_Observer</class>
                         <method>handleSalesOrderSaveAfter</method>
-                    </connector_checkout_type_onepage_save_order_after>
+                    </ddg_checkout_type_onepage_save_order_after>
                 </observers>
             </sales_order_save_after>
             <sales_order_creditmemo_save_after>
                 <observers>
-                    <connector_sales_order_payment_refund>
+                    <ddg_sales_order_payment_refund>
                         <class>Dotdigitalgroup_Email_Model_Sales_Observer</class>
                         <method>handleSalesOrderRefund</method>
-                    </connector_sales_order_payment_refund>
+                    </ddg_sales_order_payment_refund>
                 </observers>
             </sales_order_creditmemo_save_after>
             <order_cancel_after>
                 <observers>
-                    <connector_sales_order_cancel>
+                    <ddg_sales_order_cancel>
                         <class>Dotdigitalgroup_Email_Model_Sales_Observer</class>
                         <method>hangleSalesOrderCancel</method>
-                    </connector_sales_order_cancel>
+                    </ddg_sales_order_cancel>
                 </observers>
             </order_cancel_after>
             <rewards_points_indexer_update>
                 <observers>
-                    <connector_rewards_points_indexer_update>
+                    <ddg_rewards_points_indexer_update>
                         <class>Dotdigitalgroup_Email_Model_Sweettooth_Observer</class>
                         <method>ConnectorRewardsPointsIndexerUpdate</method>
-                    </connector_rewards_points_indexer_update>
+                    </ddg_rewards_points_indexer_update>
                 </observers>
             </rewards_points_indexer_update>
             <review_save_after>
                 <observers>
-                    <connector_review_save_after>
+                    <ddg_review_save_after>
                         <class>Dotdigitalgroup_Email_Model_Customer_Observer</class>
                         <method>reviewSaveAfter</method>
-                    </connector_review_save_after>
+                    </ddg_review_save_after>
                 </observers>
             </review_save_after>
             <model_save_after>
                 <observers>
-                    <connector_wishlist_save_after>
+                    <ddg_wishlist_save_after>
                         <class>Dotdigitalgroup_Email_Model_Customer_Observer</class>
                         <method>wishlistSaveAfter</method>
-                    </connector_wishlist_save_after>
+                    </ddg_wishlist_save_after>
                 </observers>
             </model_save_after>
             <wishlist_item_save_after>
                 <observers>
-                    <connector_wishlist_item_save_after>
+                    <ddg_wishlist_item_save_after>
                         <class>Dotdigitalgroup_Email_Model_Customer_Observer</class>
                         <method>wishlistItemSaveAfter</method>
-                    </connector_wishlist_item_save_after>
+                    </ddg_wishlist_item_save_after>
                 </observers>
             </wishlist_item_save_after>
             <wishlist_delete_after>
                 <observers>
-                    <connector_wishlist_delete_after>
+                    <ddg_wishlist_delete_after>
                         <class>Dotdigitalgroup_Email_Model_Customer_Observer</class>
                         <method>wishlistDeleteAfter</method>
-                    </connector_wishlist_delete_after>
+                    </ddg_wishlist_delete_after>
                 </observers>
             </wishlist_delete_after>
             <wishlist_item_delete_after>
                 <observers>
-                    <connector_wishlist_item_delete_after>
+                    <ddg_wishlist_item_delete_after>
                         <class>Dotdigitalgroup_Email_Model_Customer_Observer</class>
                         <method>wishlistItemSaveAfter</method>
-                    </connector_wishlist_item_delete_after>
+                    </ddg_wishlist_item_delete_after>
                 </observers>
             </wishlist_item_delete_after>
             <sales_convert_quote_to_order>
                 <observers>
-                    <connector_quote_to_order>
+                    <ddg_quote_to_order>
                         <class>Dotdigitalgroup_Email_Model_Sales_Observer</class>
                         <method>handleQuoteToOrder</method>
-                    </connector_quote_to_order>
+                    </ddg_quote_to_order>
                 </observers>
             </sales_convert_quote_to_order>
             <sales_quote_save_after>
                 <observers>
-                    <connector_sales_quote_save_after>
+                    <ddg_sales_quote_save_after>
                         <class>Dotdigitalgroup_Email_Model_Sales_Observer</class>
                         <method>handleQuoteSaveAfter</method>
-                    </connector_sales_quote_save_after>
+                    </ddg_sales_quote_save_after>
                 </observers>
             </sales_quote_save_after>
         </events>
@@ -282,19 +288,19 @@
     <adminhtml>
         <layout>
             <updates>
-                <connector_email>
+                <ddg_automation>
                     <file>connector/email.xml</file>
-                </connector_email>
+                </ddg_automation>
             </updates>
         </layout>
         <events>
             <controller_action_predispatch>
                 <observers>
-                    <connector_feed>
+                    <ddg_feed>
                         <type>singleton</type>
                         <class>Dotdigitalgroup_Email_Model_Adminhtml_Observer</class>
                         <method>updateFeed</method>
-                    </connector_feed>
+                    </ddg_feed>
                 </observers>
             </controller_action_predispatch>
         </events>
@@ -321,52 +327,52 @@
     </admin>
     <crontab>
         <jobs>
-            <connector_email_customer_sync>
-                <run><model>email_connector/cron::contactSync</model></run>
+            <ddg_automation_customer_sync>
+                <run><model>ddg_automation/cron::contactSync</model></run>
                 <schedule>
                     <cron_expr>*/15 * * * *</cron_expr>
                 </schedule>
-            </connector_email_customer_sync>
-            <connector_email_subscriber_and_guest_sync>
-                <run><model>email_connector/cron::subscribersAndGuestSync</model></run>
+            </ddg_automation_customer_sync>
+            <ddg_automation_subscriber_and_guest_sync>
+                <run><model>ddg_automation/cron::subscribersAndGuestSync</model></run>
                 <schedule>
                     <cron_expr>*/15 * * * *</cron_expr>
                 </schedule>
-            </connector_email_subscriber_and_guest_sync>
-            <connector_email_lostbaskets>
-                <run><model>email_connector/cron::lostBaskets</model></run>
+            </ddg_automation_subscriber_and_guest_sync>
+            <ddg_automation_abandonedcarts>
+                <run><model>ddg_automation/cron::abandonedCarts</model></run>
                 <schedule>
                     <cron_expr>*/5 * * * *</cron_expr>
                 </schedule>
-            </connector_email_lostbaskets>
-            <connector_email_reviews_and_wishlist>
+            </ddg_automation_abandonedcarts>
+            <ddg_automation_reviews_and_wishlist>
                 <run>
-                    <model>email_connector/cron::reviewsAndWishlist</model>
+                    <model>ddg_automation/cron::reviewsAndWishlist</model>
                 </run>
                 <schedule>
                     <cron_expr>0 * * * *</cron_expr>
                 </schedule>
-            </connector_email_reviews_and_wishlist>
-            <connector_email_campaign>
+            </ddg_automation_reviews_and_wishlist>
+            <ddg_automation_campaign>
                 <run>
-                    <model>email_connector/cron::sendMappedEmails</model>
+                    <model>ddg_automation/cron::sendEmails</model>
                 </run>
                 <schedule>
                     <cron_expr>*/5 * * * *</cron_expr>
                 </schedule>
-            </connector_email_campaign>
-            <connector_email_order_sync>
-                <run><model>email_connector/cron::orderAndOrderSync</model></run>
+            </ddg_automation_campaign>
+            <ddg_automation_order_sync>
+                <run><model>ddg_automation/cron::orderAndQuoteSync</model></run>
                 <schedule>
                     <cron_expr>*/15 * * * *</cron_expr>
                 </schedule>
-            </connector_email_order_sync>
-            <connector_email_cleaner>
-                <run><model>email_connector/cron::cleaning</model></run>
+            </ddg_automation_order_sync>
+            <ddg_automation_cleaner>
+                <run><model>ddg_automation/cron::cleaning</model></run>
                 <schedule>
                     <cron_expr>0 0 1 * * </cron_expr>
                 </schedule>
-            </connector_email_cleaner>
+            </ddg_automation_cleaner>
         </jobs>
     </crontab>
     <default>
@@ -441,8 +447,17 @@
                 <last_order_date></last_order_date>
                 <last_order_id></last_order_id>
                 <total_refund></total_refund>
+                <most_purchased_category></most_purchased_category>
+                <most_purchased_brand></most_purchased_brand>
+                <most_frequent_purchase_day></most_frequent_purchase_day>
+                <most_frequent_purchase_month></most_frequent_purchase_month>
+                <first_category_purchased></first_category_purchased>
+                <last_category_purchased></last_category_purchased>
+                <first_brand_purchased></first_brand_purchased>
+                <last_brand_purchased></last_brand_purchased>
                 <custom_attributes></custom_attributes>
                 <validator></validator>
+                <last_increment_id></last_increment_id>
             </customer_data>
             <dynamic_datafield>
                 <datafield_name></datafield_name>
@@ -532,6 +547,7 @@
                 <recently_viewed_display_type>list</recently_viewed_display_type>
                 <recently_viewed_items_to_display>2</recently_viewed_items_to_display>
                 <review_display_type>list</review_display_type>
+                <wishlist_display_type>list</wishlist_display_type>
             </products>
             <external_dynamic_content_urls>
                 <passcode>secret</passcode>
@@ -562,6 +578,7 @@
                 <new_shipment_guest_url></new_shipment_guest_url>
                 <shipment_update_url></shipment_update_url>
                 <shipment_update_guest_url></shipment_update_guest_url>
+                <wishlist_url></wishlist_url>
             </external_dynamic_content_urls>
             <manual_product_search>
                 <display_type>list</display_type>
@@ -571,11 +588,6 @@
             <fallback_products>
                 <product_list></product_list>
             </fallback_products>
-            <feefo_feedback_engine>
-                <logon></logon>
-                <reviews_per_product></reviews_per_product>
-                <template></template>
-            </feefo_feedback_engine>
         </connector_dynamic_content>
         <connector_reviews>
             <settings>
@@ -586,25 +598,12 @@
                 <campaign>0</campaign>
                 <anchor></anchor>
             </settings>
+            <feefo_feedback_engine>
+                <logon></logon>
+                <reviews_per_product></reviews_per_product>
+                <template></template>
+            </feefo_feedback_engine>
         </connector_reviews>
-        <connector_transactional_emails>
-            <credentials>
-                <enabled>0</enabled>
-                <api_username></api_username>
-                <api_password></api_password>
-            </credentials>
-            <email_settings>
-                <from_address></from_address>
-                <unsubscribe_link>1</unsubscribe_link>
-                <reply_action>Webmail</reply_action>
-                <reply_address></reply_address>
-                <send_copy></send_copy>
-            </email_settings>
-            <email_mapping>
-                <default_email_templates></default_email_templates>
-                <custom_email_templates></custom_email_templates>
-            </email_mapping>
-        </connector_transactional_emails>
         <connector_automation_studio>
             <automation>
                 <customer_automation>0</customer_automation>
@@ -650,8 +649,8 @@
         <connector_developer_settings>
             <import_settings>
                 <memory_limit>0</memory_limit>
-                <batch_size>10000</batch_size>
-                <orders>500</orders>
+                <batch_size>5000</batch_size>
+                <orders>200</orders>
             </import_settings>
             <abandoned_cart>
                 <shell></shell>
@@ -674,7 +673,7 @@
             </debug>
             <feed_configuration>
                 <feed_enabled>1</feed_enabled>
-                <feed_url>dotmailerformagento.co.uk/feed</feed_url>
+                <feed_url>dotmailerformagento.co.uk/feed.xml</feed_url>
                 <use_https>0</use_https>
                 <frequency>1</frequency>
                 <last_update></last_update>
