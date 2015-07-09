@@ -24,6 +24,39 @@ Compatibility
 
 ### Upgrade notice
 
+### V5.0.0
+  
+## Features
+ 
+ -  New Importer.
+ -  Nosto fallback products.
+ -  Customer deletion is queued.
+ -  Log long API response.
+ -  New Queue Automation Enrolment.
+ -  Product Importer.
+ -  Automation enrollment based on order status.
+ -  Take me to my basket link for AC.
+ -  Reset Tables button.
+ -  Integration dashboard.
+ -  Order status automation enrolment.
+
+
+## Bug fixes
+ 
+ -  Custom order attributes not syncing.
+ -  Admin place an order, wrong enviroment.
+ -  Update RFM table.
+ -  Observers that are hit more then ones.
+ -  Refactor of the quote sync.
+ -  For sync/observer events only if the feature enabled.
+ -  Sync quotes only with products in it.
+ -  Canceled orders removed the trans data.
+ -  ACL for enterprise report tables. Access denied.
+ -  Date localization for bestsellers and mostviewed.
+ -  Resubscribe subscriber with new status. 
+ -  Remove the API log table.
+ -  Add indexes to the tables.
+
 ### V4.0.0
 
 ## Features
