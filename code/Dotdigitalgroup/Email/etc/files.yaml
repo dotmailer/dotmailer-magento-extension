@@ -136,7 +136,6 @@ block:
   - Adminhtml#Widget#Chooser#Product.php
   - Adminhtml#Wishlist#Grid.php
   - Adminhtml#Campaign.php
-  - Adminhtml#Config.php
   - Adminhtml#Contact.php
   - Adminhtml#Dashboard.php
   - Adminhtml#Order.php
@@ -209,13 +208,11 @@ model:
   - Newsletter#Sub.php
   - Newsletter#Subscriber.php
   - Resource#Campaign#Collection.php
-  - Resource#Config#Collection.php
   - Resource#Contact#Collection.php
   - Resource#Order#Collection.php
   - Resource#Review#Collection.php
   - Resource#Wishlist#Collection.php
   - Resource#Campaign.php
-  - Resource#Config.php
   - Resource#Contact.php
   - Resource#Order.php
   - Resource#Review.php
@@ -227,7 +224,6 @@ model:
   - Sms#Campaign.php
   - Sweettooth#Observer.php
   - Campaign.php
-  - Config.php
   - Contact.php
   - Cron.php
   - Customer.php
@@ -240,7 +236,6 @@ design:
   - adminhtml#default#default#template#connector#dashboard#tabs#analysis#index.phtml
   - adminhtml#default#default#template#connector#dashboard#tabs#analysis#rfm.phtml
   - adminhtml#default#default#template#connector#dashboard#tabs#general#index.phtml
-  - adminhtml#default#default#template#connector#dashboard#tabs#config.phtml
   - adminhtml#default#default#template#connector#dashboard#tabs#data.phtml
   - adminhtml#default#default#template#connector#dashboard#accountbar.phtml
   - adminhtml#default#default#template#connector#dashboard#content.phtml
@@ -282,8 +277,6 @@ design:
 skin:
   - adminhtml#default#default#connector#dashboard.css
   - frontend#base#default#js#mailcheck#init.js
-shell:
-  - connector.php
 lib:
   - Raygun4php#RaygunClient.php
 js:

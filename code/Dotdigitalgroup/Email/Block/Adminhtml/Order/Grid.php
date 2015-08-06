@@ -48,6 +48,12 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Order_Grid extends Mage_Adminhtml_Bl
             'index'         => 'order_id',
             'type'          => 'number',
             'escape'        => true
+        ))->addColumn('store_id', array(
+	        'header'        => Mage::helper('ddg')->__('Store ID'),
+	        'width'         => '50px',
+	        'index'         => 'store_id',
+	        'type'          => 'number',
+	        'escape'        => true,
         ))->addColumn('order_status', array(
             'header'        => Mage::helper('ddg')->__('Order Status'),
             'align'         => 'right',
@@ -56,14 +62,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Order_Grid extends Mage_Adminhtml_Bl
             'type'          => 'options',
             'escape'        => true,
             'options' => Mage::getSingleton('sales/order_config')->getStatuses(),
-        ))->addColumn('store_id', array(
-            'header'        => Mage::helper('ddg')->__('Store ID'),
-            'width'         => '50px',
-            'index'         => 'store_id',
-            'type'          => 'number',
-            'escape'        => true,
         ))->addColumn('email_imported', array(
-            'header'        => Mage::helper('ddg')->__('Email Imported'),
+            'header'        => Mage::helper('ddg')->__('Imported'),
             'align'         => 'center',
             'width'         => '50px',
             'index'         => 'email_imported',
@@ -71,6 +71,19 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Order_Grid extends Mage_Adminhtml_Bl
             'escape'        => true,
             'renderer'		=> 'ddg_automation/adminhtml_column_renderer_imported',
             'options'       => Mage::getModel('ddg_automation/adminhtml_source_contact_imported')->getOptions(),
+            'filter_condition_callback' => array($this, 'filterCallbackContact')
+        ))->addColumn('modified', array(
+            'header' => Mage::helper('ddg')->__('Modified'),
+            'align' => 'center',
+            'width' => '50px',
+            'index' => 'modified',
+            'type' => 'options',
+            'escape' => true,
+            'renderer' => 'ddg_automation/adminhtml_column_renderer_imported',
+            'options' => array(
+                1 => 'Modified',
+                null => 'Not Modified',
+            ),
             'filter_condition_callback' => array($this, 'filterCallbackContact')
         ))->addColumn('created_at', array(
             'header'        => Mage::helper('ddg')->__('Created At'),

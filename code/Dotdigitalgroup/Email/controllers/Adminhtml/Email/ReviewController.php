@@ -21,6 +21,6 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ReviewController extends Mage_Adminh
      */
     protected function _isAllowed()
     {
-        return Mage::getSingleton('admin/session')->isAllowed('newsletter/ddg_automation/email_connector_review');
+        return Mage::getSingleton('admin/session')->isAllowed('email_connector/reports/email_connector_review');
     }
 }

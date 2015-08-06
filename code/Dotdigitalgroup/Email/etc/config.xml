@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Dotdigitalgroup_Email>
-            <version>4.0.0</version>
+            <version>5.0.1</version>
         </Dotdigitalgroup_Email>
     </modules>
     <frontend>
@@ -87,6 +87,18 @@
                     <quote>
                         <table>email_quote</table>
                     </quote>
+                    <automation>
+                        <table>email_automation</table>
+                    </automation>
+                    <catalog>
+                        <table>email_catalog</table>
+                    </catalog>
+                    <rules>
+                        <table>email_rules</table>
+                    </rules>
+                    <importer>
+                        <table>email_importer</table>
+                    </importer>
                 </entities>
             </email_connector_resource>
             <newsletter>
@@ -149,7 +161,7 @@
                 <observers>
                     <ddg_customer_save_after>
                         <class>Dotdigitalgroup_Email_Model_Customer_Observer</class>
-                        <method>handleCustomerSaveBefore</method>
+                        <method>handleCustomerSaveAfter</method>
                     </ddg_customer_save_after>
                 </observers>
             </customer_save_after>
@@ -283,6 +295,38 @@
                     </ddg_sales_quote_save_after>
                 </observers>
             </sales_quote_save_after>
+            <catalog_product_save_after>
+                <observers>
+                    <ddg_catalog_product_save_after>
+                        <class>Dotdigitalgroup_Email_Model_Catalog</class>
+                        <method>handleProductSaveAfter</method>
+                    </ddg_catalog_product_save_after>
+                </observers>
+            </catalog_product_save_after>
+            <catalog_product_delete_after>
+                <observers>
+                    <ddg_catalog_product_delete_after>
+                        <class>Dotdigitalgroup_Email_Model_Catalog</class>
+                        <method>handleProductDeleteAfter</method>
+                    </ddg_catalog_product_delete_after>
+                </observers>
+            </catalog_product_delete_after>
+            <core_config_data_save_before>
+                <observers>
+                    <ddg_core_config_data_save_before>
+                        <class>Dotdigitalgroup_Email_Model_Catalog</class>
+                        <method>handleConfigSaveBefore</method>
+                    </ddg_core_config_data_save_before>
+                </observers>
+            </core_config_data_save_before>
+            <core_config_data_save_after>
+                <observers>
+                    <ddg_core_config_data_save_after>
+                        <class>Dotdigitalgroup_Email_Model_Catalog</class>
+                        <method>handleConfigSaveAfter</method>
+                    </ddg_core_config_data_save_after>
+                </observers>
+            </core_config_data_save_after>
         </events>
     </global>
     <adminhtml>
@@ -327,18 +371,18 @@
     </admin>
     <crontab>
         <jobs>
-            <ddg_automation_customer_sync>
+            <ddg_automation_customer_subscriber_guest_sync>
                 <run><model>ddg_automation/cron::contactSync</model></run>
                 <schedule>
-                    <cron_expr>*/15 * * * *</cron_expr>
+                    <cron_expr>*/5 * * * *</cron_expr>
                 </schedule>
-            </ddg_automation_customer_sync>
-            <ddg_automation_subscriber_and_guest_sync>
-                <run><model>ddg_automation/cron::subscribersAndGuestSync</model></run>
+            </ddg_automation_customer_subscriber_guest_sync>
+            <ddg_automation_status>
+                <run><model>ddg_automation/cron::automationStatus</model></run>
                 <schedule>
                     <cron_expr>*/15 * * * *</cron_expr>
                 </schedule>
-            </ddg_automation_subscriber_and_guest_sync>
+            </ddg_automation_status>
             <ddg_automation_abandonedcarts>
                 <run><model>ddg_automation/cron::abandonedCarts</model></run>
                 <schedule>
@@ -350,7 +394,7 @@
                     <model>ddg_automation/cron::reviewsAndWishlist</model>
                 </run>
                 <schedule>
-                    <cron_expr>0 * * * *</cron_expr>
+                    <cron_expr>*/5 * * * *</cron_expr>
                 </schedule>
             </ddg_automation_reviews_and_wishlist>
             <ddg_automation_campaign>
@@ -361,18 +405,32 @@
                     <cron_expr>*/5 * * * *</cron_expr>
                 </schedule>
             </ddg_automation_campaign>
-            <ddg_automation_order_sync>
+            <ddg_automation_order_and_quote_sync>
                 <run><model>ddg_automation/cron::orderAndQuoteSync</model></run>
                 <schedule>
-                    <cron_expr>*/15 * * * *</cron_expr>
+                    <cron_expr>*/5 * * * *</cron_expr>
                 </schedule>
-            </ddg_automation_order_sync>
+            </ddg_automation_order_and_quote_sync>
             <ddg_automation_cleaner>
                 <run><model>ddg_automation/cron::cleaning</model></run>
                 <schedule>
                     <cron_expr>0 0 1 * * </cron_expr>
                 </schedule>
             </ddg_automation_cleaner>
+            <ddg_automation_catalog_sync>
+                <run><model>ddg_automation/cron::catalogSync</model></run>
+                <schedule>
+                    <cron_expr>*/5 * * * *</cron_expr>
+                </schedule>
+            </ddg_automation_catalog_sync>
+            <ddg_automation_importer>
+                <run>
+                    <model>ddg_automation/cron::emailImporter</model>
+                </run>
+                <schedule>
+                    <cron_expr>*/5 * * * *</cron_expr>
+                </schedule>
+            </ddg_automation_importer>
         </jobs>
     </crontab>
     <default>
@@ -382,11 +440,6 @@
                 <username></username>
                 <password></password>
             </api>
-            <oauth>
-                <client_id></client_id>
-                <client_key></client_key>
-                <test_connect></test_connect>
-            </oauth>
         </connector_api_credentials>
         <connector_sync_settings>
             <address_book>
@@ -394,24 +447,220 @@
                 <subscribers>0</subscribers>
                 <guests>0</guests>
             </address_book>
+            <sync>
+                <contact_enabled>0</contact_enabled>
+                <guest_enabled>0</guest_enabled>
+                <subscriber_enabled>0</subscriber_enabled>
+                <order_enabled>0</order_enabled>
+                <wishlist_enabled>0</wishlist_enabled>
+                <review_enabled>0</review_enabled>
+                <quote_enabled>0</quote_enabled>
+                <catalog_enabled>0</catalog_enabled>
+            </sync>
+            <dynamic_addressbook>
+                <addressbook_name></addressbook_name>
+                <visibility></visibility>
+            </dynamic_addressbook>
+        </connector_sync_settings>
+        <connector_lost_baskets>
+            <customers>
+                <enabled_1>0</enabled_1>
+                <send_after_1></send_after_1>
+                <campaign_1></campaign_1>
+                <enabled_2>0</enabled_2>
+                <send_after_2></send_after_2>
+                <campaign_2></campaign_2>
+                <enabled_3>0</enabled_3>
+                <send_after_3></send_after_3>
+                <campaign_3></campaign_3>
+            </customers>
+            <guests>
+                <enabled_1>0</enabled_1>
+                <send_after_1></send_after_1>
+                <campaign_1></campaign_1>
+                <enabled_2>0</enabled_2>
+                <send_after_2></send_after_2>
+                <campaign_2></campaign_2>
+                <enabled_3>0</enabled_3>
+                <send_after_3></send_after_3>
+                <campaign_3></campaign_3>
+            </guests>
+        </connector_lost_baskets>
+        <connector_automation_studio>
+            <visitor_automation>
+                <customer_automation>0</customer_automation>
+                <subscriber_automation>0</subscriber_automation>
+                <order_automation>0</order_automation>
+                <guest_order_automation>0</guest_order_automation>
+                <review_automation>0</review_automation>
+                <wishlist_automation>0</wishlist_automation>
+            </visitor_automation>
+            <order_status_automation>
+                <status_to_automation></status_to_automation>
+            </order_status_automation>
+            <review_settings>
+                <enabled>0</enabled>
+                <status></status>
+                <delay></delay>
+                <new_product></new_product>
+                <campaign></campaign>
+                <anchor></anchor>
+            </review_settings>
+            <feefo_feedback_engine>
+                <logon></logon>
+                <reviews_per_product></reviews_per_product>
+                <template></template>
+                <service_score_url></service_score_url>
+                <product_reviews_url></product_reviews_url>
+            </feefo_feedback_engine>
+            <sms>
+                <sms_one_enabled>0</sms_one_enabled>
+                <sms_one_status></sms_one_status>
+                <sms_one_message></sms_one_message>
+                <sms_two_enabled>0</sms_two_enabled>
+                <sms_two_status></sms_two_status>
+                <sms_two_message></sms_two_message>
+                <sms_three_enabled>0</sms_three_enabled>
+                <sms_three_status></sms_three_status>
+                <sms_three_message></sms_three_message>
+                <sms_four_enabled>0</sms_four_enabled>
+                <sms_four_status></sms_four_status>
+                <sms_four_message></sms_four_message>
+            </sms>
+        </connector_automation_studio>
+        <connector_dynamic_content>
+            <products>
+                <related_display_type>grid</related_display_type>
+                <related_items_to_display>2</related_items_to_display>
+                <upsell_display_type>grid</upsell_display_type>
+                <upsell_items_to_display>2</upsell_items_to_display>
+                <crosssell_display_type>grid</crosssell_display_type>
+                <crosssell_items_to_display>2</crosssell_items_to_display>
+                <bestsellers_display_type>grid</bestsellers_display_type>
+                <bestsellers_items_to_display>2</bestsellers_items_to_display>
+                <bestsellers_time_period></bestsellers_time_period>
+                <most_viewed_display_type>grid</most_viewed_display_type>
+                <most_viewed_items_to_display>2</most_viewed_items_to_display>
+                <most_viewed_time_period></most_viewed_time_period>
+                <recently_viewed_display_type>grid</recently_viewed_display_type>
+                <recently_viewed_items_to_display>2</recently_viewed_items_to_display>
+                <review_display_type>grid</review_display_type>
+                <wishlist_display_type>grid</wishlist_display_type>
+            </products>
+            <external_dynamic_content_urls>
+                <passcode>secret</passcode>
+                <lost_basket_url></lost_basket_url>
+                <review_url></review_url>
+                <coupon_code_url></coupon_code_url>
+                <dynamic_content_url></dynamic_content_url>
+                <related_products_url></related_products_url>
+                <upsell_products_url></upsell_products_url>
+                <crosssell_products_url></crosssell_products_url>
+                <best_sellers_url></best_sellers_url>
+                <most_viewed_url></most_viewed_url>
+                <product_push_url></product_push_url>
+                <recently_viewed_url></recently_viewed_url>
+                <new_order_url></new_order_url>
+                <new_order_guest_url></new_order_guest_url>
+                <order_update_url></order_update_url>
+                <order_update_guest_url></order_update_guest_url>
+                <new_invoice_url></new_invoice_url>
+                <new_invoice_guest_url></new_invoice_guest_url>
+                <invoice_update_url></invoice_update_url>
+                <invoice_update_guest_url></invoice_update_guest_url>
+                <new_creditmemo_url></new_creditmemo_url>
+                <new_creditmemo_guest_url></new_creditmemo_guest_url>
+                <creditmemo_update_url></creditmemo_update_url>
+                <creditmemo_update_guest_url></creditmemo_update_guest_url>
+                <new_shipment_url></new_shipment_url>
+                <new_shipment_guest_url></new_shipment_guest_url>
+                <shipment_update_url></shipment_update_url>
+                <shipment_update_guest_url></shipment_update_guest_url>
+                <wishlist_url></wishlist_url>
+            </external_dynamic_content_urls>
+            <manual_product_search>
+                <display_type>list</display_type>
+                <items_to_display>2</items_to_display>
+                <products_push_items></products_push_items>
+            </manual_product_search>
+            <fallback_products>
+                <product_list></product_list>
+            </fallback_products>
+            <nosto_recommendation>
+                <api></api>
+                <dynamic_url></dynamic_url>
+            </nosto_recommendation>
+        </connector_dynamic_content>
+        <connector_transactional_emails>
+            <ddg_transactional>
+                <enabled>0</enabled>
+            </ddg_transactional>
+        </connector_transactional_emails>
+        <connector_configuration>
+            <data_fields>
+                <order_statuses>complete,pending</order_statuses>
+            </data_fields>
+            <transactional_data>
+                <order_statuses>complete,pending</order_statuses>
+                <order_custom_attributes></order_custom_attributes>
+                <quote_custom_attributes></quote_custom_attributes>
+                <order_product_attributes></order_product_attributes>
+                <order_product_custom_options>0</order_product_custom_options>
+            </transactional_data>
+            <abandoned_carts>
+                <email_capture>0</email_capture>
+                <limits></limits>
+                <email_capture_newsletter>0</email_capture_newsletter>
+                <link_enabled>0</link_enabled>
+                <link_text></link_text>
+                <cart_url></cart_url>
+                <login_url></login_url>
+            </abandoned_carts>
+            <tracking>
+                <roi_enabled>0</roi_enabled>
+                <page_enabled>0</page_enabled>
+            </tracking>
+            <dynamic_content_style>
+                <dynamic_syling><![CDATA[table{font-family: Arial, Helvetica, sans-serif; font-size:12px;}]]></dynamic_syling>
+                <name_color><![CDATA[#000000]]></name_color>
+                <name_font_size><![CDATA[12px]]></name_font_size>
+                <name_style></name_style>
+                <price_color><![CDATA[#000000]]></price_color>
+                <price_font_size><![CDATA[12px]]></price_font_size>
+                <price_style></price_style>
+                <link_color><![CDATA[#000000]]></link_color>
+                <link_font_size><![CDATA[12px]]></link_font_size>
+                <link_style></link_style>
+                <other_color><![CDATA[#000000]]></other_color>
+                <other_font_size><![CDATA[14px]]></other_font_size>
+                <other_style></other_style>
+                <font_picker><![CDATA[Arial, Helvetica, sans-serif]]></font_picker>
+                <doc_color><![CDATA[#FFFFFF]]></doc_color>
+                <coupon_color><![CDATA[#000000]]></coupon_color>
+                <coupon_font_size><![CDATA[14px]]></coupon_font_size>
+                <coupon_style></coupon_style>
+                <coupon_font_picker><![CDATA[Arial, Helvetica, sans-serif]]></coupon_font_picker>
+                <coupon_doc_color><![CDATA[#FFFFFF]]></coupon_doc_color>
+            </dynamic_content_style>
+            <dynamic_content_edit>
+                <link_text></link_text>
+            </dynamic_content_edit>
+            <admin>
+                <disable_newsletter_success>0</disable_newsletter_success>
+                <disable_customer_success>0</disable_customer_success>
+            </admin>
+            <catalog_sync>
+                <catalog_values>1</catalog_values>
+                <catalog_visibility></catalog_visibility>
+                <catalog_type></catalog_type>
+            </catalog_sync>
             <address_book_pref>
                 <can_change>0</can_change>
                 <show_books></show_books>
                 <can_show_fields>0</can_show_fields>
                 <fields_to_show></fields_to_show>
             </address_book_pref>
-            <sync>
-                <contact_enabled>0</contact_enabled>
-                <subscriber_enabled>0</subscriber_enabled>
-                <order_enabled>0</order_enabled>
-                <wishlist_enabled>0</wishlist_enabled>
-                <review_enabled>0</review_enabled>
-                <quote_enabled>0</quote_enabled>
-            </sync>
-            <dynamic_addressbook>
-                <addressbook_name></addressbook_name>
-            </dynamic_addressbook>
-        </connector_sync_settings>
+        </connector_configuration>
         <connector_data_mapping>
             <customer_data>
                 <customer_id></customer_id>
@@ -484,177 +733,12 @@
                 <enabled>0</enabled>
             </roi_tracking>
         </connector_roi_tracking>
-        <connector_lost_baskets>
-            <customers>
-                <enabled_1>0</enabled_1>
-                <send_after_1></send_after_1>
-                <campaign_1></campaign_1>
-                <enabled_2>0</enabled_2>
-                <send_after_2></send_after_2>
-                <campaign_2></campaign_2>
-                <enabled_3>0</enabled_3>
-                <send_after_3></send_after_3>
-                <campaign_3></campaign_3>
-            </customers>
-            <guests>
-                <enabled_1>0</enabled_1>
-                <send_after_1></send_after_1>
-                <campaign_1></campaign_1>
-                <enabled_2>0</enabled_2>
-                <send_after_2></send_after_2>
-                <campaign_2></campaign_2>
-                <enabled_3>0</enabled_3>
-                <send_after_3></send_after_3>
-                <campaign_3></campaign_3>
-            </guests>
-        </connector_lost_baskets>
-        <connector_sms>
-            <sms_one>
-                <enabled>0</enabled>
-                <status></status>
-                <message></message>
-            </sms_one>
-            <sms_two>
-                <enabled>0</enabled>
-                <status></status>
-                <message></message>
-            </sms_two>
-            <sms_three>
-                <enabled>0</enabled>
-                <status></status>
-                <message></message>
-            </sms_three>
-            <sms_four>
-                <enabled>0</enabled>
-                <status></status>
-                <message></message>
-            </sms_four>
-        </connector_sms>
-        <connector_dynamic_content>
-            <products>
-                <related_display_type>list</related_display_type>
-                <related_items_to_display>2</related_items_to_display>
-                <upsell_display_type>list</upsell_display_type>
-                <upsell_items_to_display>2</upsell_items_to_display>
-                <crosssell_display_type>list</crosssell_display_type>
-                <crosssell_items_to_display>2</crosssell_items_to_display>
-                <bestsellers_display_type>list</bestsellers_display_type>
-                <bestsellers_items_to_display>2</bestsellers_items_to_display>
-                <bestsellers_time_period></bestsellers_time_period>
-                <most_viewed_display_type>list</most_viewed_display_type>
-                <most_viewed_items_to_display>2</most_viewed_items_to_display>
-                <most_viewed_time_period></most_viewed_time_period>
-                <recently_viewed_display_type>list</recently_viewed_display_type>
-                <recently_viewed_items_to_display>2</recently_viewed_items_to_display>
-                <review_display_type>list</review_display_type>
-                <wishlist_display_type>list</wishlist_display_type>
-            </products>
-            <external_dynamic_content_urls>
-                <passcode>secret</passcode>
-                <lost_basket_url></lost_basket_url>
-                <review_url></review_url>
-                <coupon_code_url></coupon_code_url>
-                <dynamic_content_url></dynamic_content_url>
-                <related_products_url></related_products_url>
-                <upsell_products_url></upsell_products_url>
-                <crosssell_products_url></crosssell_products_url>
-                <best_sellers_url></best_sellers_url>
-                <most_viewed_url></most_viewed_url>
-                <product_push_url></product_push_url>
-                <recently_viewed_url></recently_viewed_url>
-                <new_order_url></new_order_url>
-                <new_order_guest_url></new_order_guest_url>
-                <order_update_url></order_update_url>
-                <order_update_guest_url></order_update_guest_url>
-                <new_invoice_url></new_invoice_url>
-                <new_invoice_guest_url></new_invoice_guest_url>
-                <invoice_update_url></invoice_update_url>
-                <invoice_update_guest_url></invoice_update_guest_url>
-                <new_creditmemo_url></new_creditmemo_url>
-                <new_creditmemo_guest_url></new_creditmemo_guest_url>
-                <creditmemo_update_url></creditmemo_update_url>
-                <creditmemo_update_guest_url></creditmemo_update_guest_url>
-                <new_shipment_url></new_shipment_url>
-                <new_shipment_guest_url></new_shipment_guest_url>
-                <shipment_update_url></shipment_update_url>
-                <shipment_update_guest_url></shipment_update_guest_url>
-                <wishlist_url></wishlist_url>
-            </external_dynamic_content_urls>
-            <manual_product_search>
-                <display_type>list</display_type>
-                <items_to_display>2</items_to_display>
-                <products_push_items></products_push_items>
-            </manual_product_search>
-            <fallback_products>
-                <product_list></product_list>
-            </fallback_products>
-        </connector_dynamic_content>
-        <connector_reviews>
-            <settings>
-                <enabled>0</enabled>
-                <status></status>
-                <delay></delay>
-                <new_product>0</new_product>
-                <campaign>0</campaign>
-                <anchor></anchor>
-            </settings>
-            <feefo_feedback_engine>
-                <logon></logon>
-                <reviews_per_product></reviews_per_product>
-                <template></template>
-            </feefo_feedback_engine>
-        </connector_reviews>
-        <connector_automation_studio>
-            <automation>
-                <customer_automation>0</customer_automation>
-                <subscriber_automation>0</subscriber_automation>
-                <order_automation>0</order_automation>
-                <guest_order_automation>0</guest_order_automation>
-                <review_automation>0</review_automation>
-                <wishlist_automation>0</wishlist_automation>
-            </automation>
-        </connector_automation_studio>
-        <connector_configuration>
-            <transactional_data>
-                <order_statuses></order_statuses>
-                <order_custom_attributes></order_custom_attributes>
-                <quote_custom_attributes></quote_custom_attributes>
-            </transactional_data>
-            <abandoned_carts>
-                <email_capture>0</email_capture>
-                <limits></limits>
-            </abandoned_carts>
-            <dynamic_content_style>
-                <dynamic_syling><![CDATA[table{font-family: Arial, Helvetica, sans-serif; font-size:12px;}]]></dynamic_syling>
-                <name_color><![CDATA[#000000]]></name_color>
-                <name_font_size><![CDATA[12px]]></name_font_size>
-                <name_style></name_style>
-                <price_color><![CDATA[#000000]]></price_color>
-                <price_font_size><![CDATA[12px]]></price_font_size>
-                <price_style></price_style>
-                <link_color><![CDATA[#000000]]></link_color>
-                <link_font_size><![CDATA[12px]]></link_font_size>
-                <link_style></link_style>
-                <other_color><![CDATA[#000000]]></other_color>
-                <other_font_size><![CDATA[14px]]></other_font_size>
-                <other_style></other_style>
-                <font_picker><![CDATA[Arial, Helvetica, sans-serif]]></font_picker>
-                <doc_color><![CDATA[#FFFFFF]]></doc_color>
-            </dynamic_content_style>
-            <admin>
-                <disable_newsletter_success>0</disable_newsletter_success>
-                <disable_customer_success>0</disable_customer_success>
-            </admin>
-        </connector_configuration>
         <connector_developer_settings>
             <import_settings>
                 <memory_limit>0</memory_limit>
-                <batch_size>5000</batch_size>
-                <orders>200</orders>
+                <batch_size>500</batch_size>
+                <orders>50</orders>
             </import_settings>
-            <abandoned_cart>
-                <shell></shell>
-            </abandoned_cart>
             <sync_settings>
                 <setup_data_fields></setup_data_fields>
                 <contact_sync></contact_sync>
@@ -668,8 +752,9 @@
             </sync_settings>
             <debug>
                 <debug_enabled>1</debug_enabled>
-                <debug_api_calls>0</debug_api_calls>
+                <api_request_time_limit>10</api_request_time_limit>
                 <raygun_code>JOWaQ4nf4Ox7eAFUvr+TAw==</raygun_code>
+                <raygun_async>1</raygun_async>
             </debug>
             <feed_configuration>
                 <feed_enabled>1</feed_enabled>
@@ -678,6 +763,14 @@
                 <frequency>1</frequency>
                 <last_update></last_update>
             </feed_configuration>
+            <oauth>
+                <client_id></client_id>
+                <client_key></client_key>
+                <test_connect></test_connect>
+            </oauth>
+            <ip_restriction>
+                <ip_addresses>94.143.111.2, 94.143.111.3</ip_addresses>
+            </ip_restriction>
         </connector_developer_settings>
     </default>
 </config>

@@ -57,7 +57,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Observer
             //properties must be checked
             if (isset($response->properties)) {
                 $accountInfo = $response->properties;
-                $result = $this->_checkForOption(Dotdigitalgroup_Email_Model_Apiconnector_Client::REST_API_TRANSACTIONAL_DATA_ALLOWANCE, $accountInfo);
+                $result = $this->_checkForOption(Dotdigitalgroup_Email_Model_Apiconnector_Client::API_ERROR_TRANS_ALLOWANCE, $accountInfo);
 
                 //account is disabled to use transactional data
                 if (! $result) {
@@ -98,12 +98,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Observer
             Mage::helper('ddg')->log('----VALIDATING ACCOUNT---');
             $testModel = Mage::getModel('ddg_automation/apiconnector_test');
             $isValid = $testModel->validate($apiUsername, $apiPassword);
-            if ($isValid) {
-                /**
-                 * Send install info
-                 */
-                $testModel->sendInstallConfirmation();
-            } else {
+            if (! $isValid) {
                 /**
                  * Disable invalid Api credentials
                  */
@@ -181,10 +176,9 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Observer
 	{
 		$segmentsIds = $observer->getEvent()->getSegmentIds();
 		$customerId = Mage::getSingleton('customer/session')->getCustomerId();
-
 		$websiteId = Mage::app()->getStore()->getWebsiteId();
 
-		if (!empty($segmentsIds)) {
+		if (!empty($segmentsIds) && $customerId) {
 			$this->addContactsFromWebsiteSegments($customerId, $segmentsIds, $websiteId);
 		}
 
@@ -202,7 +196,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Observer
 	 */
 	protected function addContactsFromWebsiteSegments($customerId, $segmentIds, $websiteId){
 
-		if (empty($segmentIds))
+		if (empty($segmentIds) || ! $customerId)
 			return;
 		$segmentIds = implode(',', $segmentIds);
 

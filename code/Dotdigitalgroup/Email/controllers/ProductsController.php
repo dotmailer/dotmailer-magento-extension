@@ -107,8 +107,16 @@ class Dotdigitalgroup_Email_ProductsController extends Dotdigitalgroup_Email_Res
 		$products = $this->getLayout()->createBlock('ddg_automation/recommended_products', 'connector_nosto_recommended', array(
 			'template' => 'connector/product/nosto.phtml'
 		));
-		$this->getLayout()->getBlock('content')->append($products);
-		$this->renderLayout();
+        $html = $products->toHtml();
+
+        //if empty than display our fallback products instead.
+        if (empty($html)) {
+            Mage::app()->getRequest()->setActionName('push');
+            $this->pushAction();
+        } else {
+            $this->getLayout()->getBlock('content')->append($products);
+            $this->renderLayout();
+        }
 	}
 
 }

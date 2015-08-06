@@ -13,8 +13,8 @@ Don't forget to enable symlinks in:
 
 Facts
 -----
-- community version.
-- current version - V.2.0.4 [config.xml](https://github.com/dotagency/dotmailer_magento/blob/master/code/Dotdigitalgroup/Email/etc/config.xml)
+- community & enterprise version.
+- current version - V.5.0.0 [config.xml](https://github.com/dotagency/dotmailer_magento/blob/master/code/Dotdigitalgroup/Email/etc/config.xml)
 - also available on Magento Connect [link](http://www.magentocommerce.com/magento-connect/dotmailer-truly-integrated-email-marketing.html)
 
 Compatibility
@@ -28,34 +28,48 @@ Compatibility
   
 ## Features
  
- -  New Importer.
- -  Nosto fallback products.
- -  Customer deletion is queued.
- -  Log long API response.
- -  New Queue Automation Enrolment.
- -  Product Importer.
- -  Automation enrollment based on order status.
- -  Take me to my basket link for AC.
- -  Reset Tables button.
- -  Integration dashboard.
- -  Order status automation enrolment.
-
+ -  New Data Importer
+ -  Abandoned cart exclusion rules
+ -  Review request exclusion rules
+ -  Include product attributes in order sync
+ -  Include product custom options in order sync
+ -  Update transactional data for modified orders
+ -  Configure order status used in customer calculations
+ -  Automation Queue Enrolment
+ -  Easy Email capture on newsletter signup
+ -  Campaign stats for customers in admin
+ -  Seperate customer and guest syncs
+ -  Add to cart button for abandoned carts
+ -  Coupon code styling
+ -  Editable "view now" text for EDC pages
+ -  Nosto fallback products
+ -  Queued customer deletion
+ -  Log long API response
+ -  Catalog importer
+ -  Automation enrollment based on order status
+ -  Reset Tables button
+ -  IP restrictions on EDC pages
 
 ## Bug fixes
  
- -  Custom order attributes not syncing.
- -  Admin place an order, wrong enviroment.
- -  Update RFM table.
- -  Observers that are hit more then ones.
- -  Refactor of the quote sync.
- -  For sync/observer events only if the feature enabled.
- -  Sync quotes only with products in it.
- -  Canceled orders removed the trans data.
- -  ACL for enterprise report tables. Access denied.
- -  Date localization for bestsellers and mostviewed.
- -  Resubscribe subscriber with new status. 
- -  Remove the API log table.
- -  Add indexes to the tables.
+ -  Reduced default batch size and more frequent batching
+ -  Custom order attributes not syncing
+ -  Performance improvements to all data syncs
+ -  Performance improvments to data analysis page
+ -  Admin place an order, wrong enviroment
+ -  Update RFM table
+ -  Observers that are hit more then once
+ -  Refactor of the quote sync
+ -  For sync/observer events only if the feature enabled
+ -  Sync quotes only with products in it
+ -  Canceled orders removed the trans data
+ -  ACL for enterprise report tables. Access denied
+ -  Date localization for bestsellers and mostviewed
+ -  Resubscribe subscriber with new status
+ -  Remove the API log table
+ -  Add indexes to tables
+ -  Automation enrollment per website level
+ -  Fix for rec's per item logic for EDC pages
 
 ### V4.0.0
 
@@ -77,7 +91,6 @@ Compatibility
  - Sync limits lowered to 5000 contacts and 200 orders.
  - Review is submited before it's approved.
  - Abandoned Carts triggered from the "LAST_QUOTE_ID".
- 
 
 ### V3.3.0
 

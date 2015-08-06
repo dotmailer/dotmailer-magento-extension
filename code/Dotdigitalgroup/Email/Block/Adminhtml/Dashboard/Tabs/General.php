@@ -80,7 +80,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_General extends  Mage
 		$this->group['api'] = array(
 			'Title' => 'Api',
 			'APILocale' => $this->__('Not Available'),
-			'ApiCallsInLastHour' => $this->__('Not Available'),
 			'ApiCallsRemaining' => $this->__('Not Available')
 		);
 	}

@@ -33,7 +33,14 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Campaign_Grid extends Mage_Adminhtml
             'index'         => 'campaign_id',
             'type'          => 'number',
             'truncate'      => 50,
-            'escape'        => true,
+            'escape'        => true
+        ))->addColumn('customer_id', array(
+	        'header'        => Mage::helper('ddg')->__('Customer ID'),
+	        'align'         => 'left',
+	        'width'         => '50px',
+	        'index'         => 'customer_id',
+	        'type'          => 'number',
+	        'escape'        => true
         ))->addColumn('email', array(
             'header'        => Mage::helper('ddg')->__('Email'),
             'align'         => 'left',
@@ -54,13 +61,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Campaign_Grid extends Mage_Adminhtml
                 'null' => 'Not Send'
             ),
             'filter_condition_callback' => array($this, 'filterCallbackContact')
-        ))->addColumn('order_increment_id', array(
-            'header'        => Mage::helper('ddg')->__('Increment ID'),
-            'align'         => 'left',
-            'width'         => '50px',
-            'index'         => 'order_increment_id',
-            'type'          => 'number',
-            'escape'        => true
         ))->addColumn('message', array(
             'header'		=> Mage::helper('ddg')->__('Send Message'),
             'align'		=> 'left',
@@ -69,12 +69,26 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Campaign_Grid extends Mage_Adminhtml
             'type'      => 'text',
             'escape'    => true
         ))->addColumn('event_name', array(
-            'header'        => Mage::helper('ddg')->__('Email Name'),
+            'header'        => Mage::helper('ddg')->__('Event Name'),
             'align'         => 'left',
             'index'         => 'event_name',
             'width'		    => '100px',
             'type'          => 'string',
-            'escape'        => true,
+            'escape'        => true
+        ))->addColumn('quote_id', array(
+	        'header'        => Mage::helper('ddg')->__('Quote Id'),
+	        'align'         => 'left',
+	        'width'         => '50px',
+	        'index'         => 'quote_id',
+	        'type'          => 'number',
+	        'escape'        => true
+        ))->addColumn('sent_at', array(
+	        'header'    => Mage::helper('ddg')->__('Sent At'),
+	        'align'     => 'center',
+	        'width'     => '100px',
+	        'index'     => 'sent_at',
+	        'type'     => 'datetime',
+	        'escape'   => true
         ))->addColumn('created_at', array(
             'header'    => Mage::helper('ddg')->__('Created At'),
             'align'     => 'center',
@@ -89,23 +103,15 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Campaign_Grid extends Mage_Adminhtml
             'index'     => 'updated_at',
             'type'      => 'datetime',
             'escape'    => true
-        ))->addColumn('sent_at', array(
-            'header'    => Mage::helper('ddg')->__('Sent At'),
-            'align'     => 'center',
-            'width'     => '100px',
-            'index'     => 'sent_at',
-            'type'     => 'datetime',
-            'escape'   => true
         ));
         if (!Mage::app()->isSingleStoreMode()) {
-            $this->addColumn('website_id', array(
-                'header'    => Mage::helper('customer')->__('Website'),
+            $this->addColumn('store_id', array(
+                'header'    => Mage::helper('customer')->__('Store'),
                 'align'     => 'center',
                 'width'     => '80px',
                 'type'      => 'options',
-                'options'   => Mage::getSingleton('adminhtml/system_store')->getWebsiteOptionHash(true),
-                'index'     => 'store_id',
-                'renderer'  => 'ddg_automation/adminhtml_column_renderer_website',
+                'options'   => Mage::getSingleton('adminhtml/system_store')->getStoreOptionHash(true),
+                'index'     => 'store_id'
             ));
         }
 

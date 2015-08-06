@@ -1,9 +1,6 @@
-<?php
-$products = $this->getNostoProducts();
-$slot = $this->getSlotName();
-?>
-
-<div class="nosto_element" id="<?php echo $slot;?>">
-	<?php echo $products;?>
-</div>
-
+<?php if ($products = $this->getNostoProducts()): ?>
+    <?php $slot = $this->getSlotName(); ?>
+    <div class="nosto_element" id="<?php echo $slot; ?>">
+        <?php echo $products; ?>
+    </div>
+<?php endif; ?>

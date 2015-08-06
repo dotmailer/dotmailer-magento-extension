@@ -251,6 +251,11 @@ class Dotdigitalgroup_Email_Model_Connector_Datafield
             'type' => 'string',
             'visibility' => 'private',
         ),
+        'abandoned_prod_name' => array(
+            'name' => 'ABANDONED_PROD_NAME',
+            'type' => 'string',
+            'visibility' => 'private',
+        ),
     );
 
     /**

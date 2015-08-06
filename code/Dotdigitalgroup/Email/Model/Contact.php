@@ -85,7 +85,8 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
         $collection =  $this->getCollection()
             ->addFieldToFilter('website_id', $websiteId)
             ->addFieldToFilter('email_imported', array('null' => true))
-            ->addFieldToFilter('customer_id', array('notnull' => true));
+            ->addFieldToFilter('customer_id', array('neq' => '0'));
+
 
         $collection->getSelect()->limit($pageSize);
 
@@ -102,7 +103,7 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
     {
         $collection = $this->getCollection()
             ->addFieldToFilter('contact_id', array('null' => true))
-            ->addFieldToFilter('suppressed', null)
+            ->addFieldToFilter('suppressed', array('null' => true))
             ->addFieldToFilter('website_id', $websiteId);
 
         $collection->getSelect()->limit($pageSize);
@@ -198,7 +199,7 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
 
         } catch ( Exception $e ) {
             Mage::logException($e);
-            Mage::helper('ddg')->getRaygunClient()->SendException($e, array(Mage::getBaseUrl('web')));
+	        Mage::helper('ddg')->sendRaygunException($e);
         }
 
         return $num;
@@ -287,4 +288,34 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
             ->getSize();
 		return $countContacts;
 	}
+
+    /**
+     * Reset the imported contacts as guest
+     * @return int
+     */
+    public function resetAllGuestContacts()
+    {
+
+        /** @var $coreResource Mage_Core_Model_Resource */
+        $coreResource = Mage::getSingleton('core/resource');
+
+        /** @var $conn Varien_Db_Adapter_Pdo_Mysql */
+        $conn = $coreResource->getConnection('core_write');
+
+        try {
+            $where = array();
+            $where[] = $conn->quoteInto('email_imported is ?', new Zend_Db_Expr('not null'));
+            $where[] = $conn->quoteInto('is_guest is ?', new Zend_Db_Expr('not null'));
+
+            $num = $conn->update($coreResource->getTableName('ddg_automation/contact'),
+                array('email_imported' => new Zend_Db_Expr('null')),
+                $where
+            );
+        } catch (Exception $e) {
+            Mage::logException($e);
+            Mage::helper('ddg')->rayLog('300', $e);
+        }
+        return $num;
+    }
+
 }

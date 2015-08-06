@@ -2,10 +2,10 @@
 
 class Dotdigitalgroup_Email_Model_Customer_Wishlist_Item
 {
-    protected   $name;
-    protected   $sku;
-    protected   $price;
-    protected   $qty;
+	protected   $sku;
+	protected   $qty;
+	protected   $name;
+	protected   $price;
     protected   $total_value_of_product;
 
 

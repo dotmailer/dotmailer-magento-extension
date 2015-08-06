@@ -28,10 +28,18 @@ $label = array(
 					<tbody>
 					<?php foreach($this->getRfm() as $key => $level):?>
 						<tr class="even">
-							<td><?php echo $this->__($label[$key]) ?></td>
-							<td class=" a-right "><?php echo "0 - " . $level['Low'] ?></td>
-							<td class=" a-right "><?php echo $level['Low'] . " - " . $level['Medium'] ?></td>
-							<td class=" a-right last"><?php echo $level['Medium'] . " - " . $level['High'] . ' +' ?></td>
+                            <?php if ($key != Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Rfm::RECENCY): ?>
+                                <td><?php echo $this->__($label[$key]) ?></td>
+                                <td class=" a-right "><?php echo "0 - " . $level['Low'] ?></td>
+                                <td class=" a-right "><?php echo $level['Low'] . " - " . $level['Medium'] ?></td>
+                                <td class=" a-right last"><?php echo $level['Medium'] . " - " . $level['High'] . ' +' ?></td>
+                            <?php endif; ?>
+                            <?php if ($key == Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Rfm::RECENCY): ?>
+                                <td><?php echo $this->__($label[$key]) ?></td>
+                                <td class=" a-right last"><?php echo $level['Medium'] . " - " . $level['High'] . ' +' ?></td>
+                                <td class=" a-right "><?php echo $level['Low'] . " - " . $level['Medium'] ?></td>
+                                <td class=" a-right "><?php echo "0 - " . $level['Low'] ?></td>
+                            <?php endif; ?>
 						</tr>
 					<?php endforeach; ?>
 					</tbody>

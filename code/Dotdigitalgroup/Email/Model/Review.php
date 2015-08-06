@@ -5,6 +5,7 @@ class Dotdigitalgroup_Email_Model_Review extends Mage_Core_Model_Abstract
     private $_start;
     private $_countReviews;
     private $_reviews;
+    private $_reviewIds;
 
     const EMAIL_REVIEW_IMPORTED = 1;
 
@@ -56,8 +57,17 @@ class Dotdigitalgroup_Email_Model_Review extends Mage_Core_Model_Abstract
             if (isset($this->_reviews[$website->getId()])) {
                 $reviews = $this->_reviews[$website->getId()];
                 //send reviews as transactional data
-                $client = Mage::helper('ddg')->getWebsiteApiClient($website);
-                $client->postContactsTransactionalDataImport($reviews, 'Reviews');
+                //register in queue with importer
+                $check = Mage::getModel('ddg_automation/importer')->registerQueue(
+                    Dotdigitalgroup_Email_Model_Importer::IMPORT_TYPE_REVIEWS,
+                    $reviews,
+                    Dotdigitalgroup_Email_Model_Importer::MODE_BULK,
+                    $website->getId()
+                );
+                //if no error then set imported
+                if ($check) {
+                    $this->_setImported($this->_reviewIds);
+                }
                 $this->_countReviews += count($reviews);
             }
         }
@@ -74,6 +84,7 @@ class Dotdigitalgroup_Email_Model_Review extends Mage_Core_Model_Abstract
     {
         $limit = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT, $website);
         $reviews = $this->_getReviewsToExport($website, $limit);
+        $this->_reviewIds = array();
 
         if($reviews->getSize()){
             foreach($reviews as $review){
@@ -104,7 +115,7 @@ class Dotdigitalgroup_Email_Model_Review extends Mage_Core_Model_Abstract
                         $connectorReview->createRating($ratingItem->getRatingCode(), $rating);
                     }
                     $this->_reviews[$website->getId()][] = $connectorReview;
-                    $review->setReviewImported(self::EMAIL_REVIEW_IMPORTED)->save();
+                    $this->_reviewIds[] = $review->getReviewId();
                 }catch(Exception $e){
                     Mage::logException($e);
                 }
@@ -117,8 +128,7 @@ class Dotdigitalgroup_Email_Model_Review extends Mage_Core_Model_Abstract
         return $this->getCollection()
             ->addFieldToFilter('review_imported', array('null' => 'true'))
             ->addFieldToFilter('store_id', array('in' => $website->getStoreIds()))
-            ->setPageSize($limit)
-            ->load();
+            ->setPageSize($limit);
     }
 
     /**
@@ -143,5 +153,24 @@ class Dotdigitalgroup_Email_Model_Review extends Mage_Core_Model_Abstract
         }
 
         return $num;
+    }
+
+    /**
+     * set imported in bulk query
+     *
+     * @param $ids
+     */
+    private function _setImported($ids)
+    {
+        try{
+            $coreResource = Mage::getSingleton('core/resource');
+            $write = $coreResource->getConnection('core_write');
+            $tableName = $coreResource->getTableName('email_review');
+            $ids = implode(', ', $ids);
+            $now = Mage::getSingleton('core/date')->gmtDate();
+            $write->update($tableName, array('review_imported' => 1, 'updated_at' => $now), "review_id IN ($ids)");
+        }catch (Exception $e){
+            Mage::logException($e);
+        }
     }
 }

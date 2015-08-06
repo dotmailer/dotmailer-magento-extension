@@ -1,6 +1,6 @@
 <?php
 
-class Dotdigitalgroup_Email_Block_Recommended_Push extends Mage_Core_Block_Template
+class Dotdigitalgroup_Email_Block_Recommended_Push extends Dotdigitalgroup_Email_Block_Edc
 {
 	/**
 	 * Prepare layout, set template.

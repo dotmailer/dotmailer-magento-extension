@@ -1,6 +1,6 @@
 <?php
 
-class Dotdigitalgroup_Email_Block_Recommended_Wishlistproducts extends Mage_Core_Block_Template
+class Dotdigitalgroup_Email_Block_Recommended_Wishlistproducts extends Dotdigitalgroup_Email_Block_Edc
 {
     /**
      * Prepare layout, set the template.

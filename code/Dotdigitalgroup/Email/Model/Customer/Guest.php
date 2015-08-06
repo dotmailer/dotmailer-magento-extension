@@ -17,8 +17,9 @@ class Dotdigitalgroup_Email_Model_Customer_Guest
 
 	        //check if the guest is mapped and enabled
 	        $enabled = $helper->getGuestAddressBook($website);
-	        $mapped = $website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_SUBSCRIBER_ENABLED);
-	        if ($enabled && $mapped) {
+	        $syncEnabled = $website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_GUEST_ENABLED);
+            $apiEnabled = $helper->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED, $website);
+	        if ($enabled && $syncEnabled && $apiEnabled) {
 
 		        //ready to start sync
 		        if (!$this->_countGuests)
@@ -38,7 +39,6 @@ class Dotdigitalgroup_Email_Model_Customer_Guest
         $fileHelper = Mage::helper('ddg/file');
         $guests = Mage::getModel('ddg_automation/contact')->getGuests($website);
         if ($guests->getSize()) {
-            $client = Mage::helper('ddg')->getWebsiteApiClient($website);
             $guestFilename = strtolower($website->getCode() . '_guest_' . date('d_m_Y_Hi') . '.csv');
             $helper->log('Guest file: ' . $guestFilename);
             $storeName = $helper->getMappedStoreName($website);
@@ -57,11 +57,15 @@ class Dotdigitalgroup_Email_Model_Customer_Guest
                 }
             }
             if ($this->_countGuests) {
-                //Add to guest address book
-                $client->postAddressBookContactsImport($guestFilename, $helper->getGuestAddressBook($website));
+                //register in queue with importer
+                Mage::getModel('ddg_automation/importer')->registerQueue(
+                    Dotdigitalgroup_Email_Model_Importer::IMPORT_TYPE_GUEST,
+                    '',
+                    Dotdigitalgroup_Email_Model_Importer::MODE_BULK,
+                    $website->getId(),
+                    $guestFilename
+                );
             }
-            //archive guest file
-            $fileHelper->archiveCSV($guestFilename);
         }
     }
 }

@@ -141,35 +141,52 @@ $helper = Mage::helper('core');
                 continue;
             $_product = Mage::getModel('catalog/product')->load($one->getProductId());
 
-            $name = $_product->getName();
-            $stock = $_product->getStockItem()->getIsInStock();
-            $inStock = ($stock)? 'In Stock' : 'Out of stock';
-            $img = $_product->getImageUrl();
+            $inStock = ($_product->getStockItem()->getIsInStock())? 'In Stock' : 'Out of stock';
             $total = $helper->currency($one->getBaseRowTotalInclTax());
-            $productUrl = Mage::getBaseUrl() . $_product->getUrlPath();
+            $productUrl = $_product->getProductUrl();
             $grandTotal = $helper->currency($this->getGrandTotal());
-
             ?>
             <tr>
                 <td style="padding: 1px; border-bottom: 1px solid #cbd3d4; border-right: 1px solid #cbd3d4;">
-                    <img alt="" src="<?php echo $img;?>" width="85" align="middle" border="0" height="85">
+                    <img alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>"
+	                src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(85);?>" width="85" height="85" align="middle" border="0">
                 </td>
-                <td  class="product-name" style="padding: 1px; border-bottom: 1px solid #cbd3d4; border-right: 1px solid #cbd3d4;">Product Name : <a class="proudct-url" href="<?php echo $productUrl;?>"><?php echo  $name  . '</a></br>'. $inStock;?></td>
+                <td  class="product-name" style="padding: 1px; border-bottom: 1px solid #cbd3d4; border-right: 1px solid #cbd3d4;">Product Name : <a class="proudct-url" href="<?php echo $productUrl;?>"><?php echo  $_product->getName()  . '</a></br>'. $inStock;?></td>
                 <td class="product-price" style="padding: 1px; border-bottom: 1px solid #cbd3d4; border-right: 1px solid #cbd3d4;"><?php echo (int)$one->getQty();?></td>
                 <td class="product-price" style="padding: 1px; border-bottom: 1px solid #cbd3d4;"><?php echo $total;?></td>
             </tr>
 
         <?php endforeach;?>
         <tr>
-            <td style="padding: 1px; border-right: 1px solid #cbd3d4;"></td>
-            <td style="padding: 1px; border-right: 1px solid #cbd3d4;"></td>
+            <td style="padding: 1px; border-right: 1px solid #cbd3d4; border-bottom: 1px solid #cbd3d4;"></td>
+            <td style="padding: 1px; border-right: 1px solid #cbd3d4; border-bottom: 1px solid #cbd3d4;"></td>
 
-            <td class="other-text" style="padding: 1px; border-right: 1px solid #cbd3d4;">Order Total</td>
-            <td class="other-text" style="padding: 1px;">
+            <td class="other-text" style="padding: 1px; border-right: 1px solid #cbd3d4; border-bottom: 1px solid #cbd3d4;">Order Total</td>
+            <td class="other-text" style="padding: 1px; border-bottom: 1px solid #cbd3d4;">
                 <?php echo $grandTotal;?>
             </td>
         </tr>
-
+        <?php if($this->canShowUrl()): ?>
+            <tr>
+                <td class="other-text" style="padding: 1px;"></td>
+                <td class="other-text" style="padding: 1px;"></td>
+                <td class="other-text" style="padding: 1px;"></td>
+                <td class="other-text" style="padding: 1px;">
+                    <div align="center" style="padding: 5px;">
+                        <a href="<?php echo $this->getUrlForLink(); ?>" class="proudct-url">
+                            <strong>
+                                <?php
+                                    if($text = $this->takeMeToCartTextForUrl())
+                                        echo $this->__($text);
+                                    else
+                                        echo $this->__('Take Me To My Basket');
+                                ?>
+                            </strong>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        <?php endif; ?>
     </table>
     </body>
     </html>

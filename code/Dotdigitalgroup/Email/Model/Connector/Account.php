@@ -14,6 +14,9 @@ class Dotdigitalgroup_Email_Model_Connector_Account
     private  $_mapping_hash;
     private  $_contacts = array();
     private  $_orders = array();
+    private  $_orderIds;
+    private $_ordersForSingleSync = array();
+    private $_orderIdsForSingleSync;
 
     /**
      * @param $api_password
@@ -217,4 +220,53 @@ class Dotdigitalgroup_Email_Model_Connector_Account
         return $this->_websites;
     }
 
+    /**
+     * @param array $orderIds
+     */
+    public function setOrderIds($orderIds)
+    {
+        $this->_orderIds = $orderIds;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOrderIds()
+    {
+        return $this->_orderIds;
+    }
+
+    /**
+     * @param array $orders
+     */
+    public function setOrdersForSingleSync($orders)
+    {
+        foreach ($orders as $order) {
+            $this->_ordersForSingleSync[$order->id] = $order;
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function getOrdersForSingleSync()
+    {
+        return $this->_ordersForSingleSync;
+    }
+
+    /**
+     * @param array $orderIds
+     */
+    public function setOrderIdsForSingleSync($orderIds)
+    {
+        $this->_orderIdsForSingleSync = $orderIds;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOrderIdsForSingleSync()
+    {
+        return $this->_orderIdsForSingleSync;
+    }
 }

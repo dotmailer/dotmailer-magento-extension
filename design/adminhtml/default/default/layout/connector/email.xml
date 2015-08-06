@@ -73,11 +73,49 @@
             </block>
         </reference>
     </adminhtml_email_campaign_edit>
+    <adminhtml_email_automation_index>
+        <reference name="menu">
+            <action method="setActive">
+                <menupath>email_contact/email_connector_automation</menupath>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="ddg_automation/adminhtml_automation" name="ddg_automation">
+                <block type="adminhtml/store_switcher" name="store_switcher" as="store_switcher">
+                    <action method="setUseConfirm"><params>0</params></action>
+                </block>
+            </block>
+        </reference>
+    </adminhtml_email_automation_index>
+    <adminhtml_email_automation_grid>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="ddg_automation/adminhtml_automation_grid" name="automation_grid"/>
+        </block>
+    </adminhtml_email_automation_grid>
+    <adminhtml_email_automation_edit>
+        <reference name="menu">
+            <action method="setActive">
+                <menupath>email_contact/email_connector_automation</menupath>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="ddg_automation/adminhtml_automation_edit" name="ddg_automation">
+                <block type="adminhtml/store_switcher" name="store_switcher" as="store_switcher">
+                    <action method="setUseConfirm"><params>0</params></action>
+                </block>
+            </block>
+        </reference>
+    </adminhtml_email_automation_edit>
     <adminhtml_system_config_edit>
         <reference name="head">
             <action method="addJs">
                 <script>connector/selector.js</script>
             </action>
+        </reference>
+        <reference name="before_body_end">
+            <block type="ddg_automation/adminhtml_system_installation" name="ddg.adminhtml.installation"
+                   template="connector/beacon.phtml">
+            </block>
         </reference>
     </adminhtml_system_config_edit>
     <default>
@@ -85,4 +123,30 @@
             <block type="core/template" name="ddg-appcues-admin" template="connector/appcues.phtml" />
         </reference>
     </default>
+    <adminhtml_email_rules_index>
+        <reference name="content">
+            <block type="ddg_automation/adminhtml_rules" name="ddg_rules"/>
+        </reference>
+    </adminhtml_email_rules_index>
+    <adminhtml_email_rules_edit>
+        <reference name="left">
+            <block type="ddg_automation/adminhtml_rules_edit_tabs" name="ddg_rules_tabs">
+                <block type="ddg_automation/adminhtml_rules_edit_tab_main" name="ddg_rule_edit_tab_main" />
+                <block type="ddg_automation/adminhtml_rules_edit_tab_conditions" name="ddg_rule_edit_tab_conditions"/>
+                <action method="addTab"><name>main_section</name><block>ddg_rule_edit_tab_main</block></action>
+                <action method="addTab"><name>conditions_section</name><block>ddg_rule_edit_tab_conditions</block></action>
+            </block>
+        </reference>
+        <reference name="content">
+            <block type="ddg_automation/adminhtml_rules_edit" name="ddg_rule_edit"/>
+        </reference>
+    </adminhtml_email_rules_edit>
+    <adminhtml_customer_edit>
+        <reference name="customer_edit_tabs">
+            <action method="addTab">
+                <name>connector.campaign.stats</name>
+                <block>ddg_automation/adminhtml_customer_tab</block>
+            </action>
+        </reference>
+    </adminhtml_customer_edit>
 </config>

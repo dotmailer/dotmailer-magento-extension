@@ -13,42 +13,62 @@
                 <automation_studio translate="title">
                     <title>Automation Studio</title>
                     <sort_order>20</sort_order>
-                    <action>adminhtml/email_automation</action>
+                    <action>adminhtml/email_studio</action>
                 </automation_studio>
+                <automation_rules translate="title">
+                    <title>Exclusion Rules</title>
+                    <sort_order>25</sort_order>
+                    <action>adminhtml/email_rules</action>
+                </automation_rules>
                 <reports translate="title">
                     <title>Reports</title>
                     <sort_order>30</sort_order>
                     <children>
-                        <email_connector_order translate="title">
-                            <title>Orders Sync</title>
-                            <sort_order>20</sort_order>
-                            <action>adminhtml/email_order</action>
-                        </email_connector_order>
-                        <email_connector_campaign translate="title">
-                            <title>Email Send Status</title>
-                            <sort_order>35</sort_order>
-                            <action>adminhtml/email_campaign</action>
-                        </email_connector_campaign>
                         <email_connector_contact translate="title">
                             <title>Contacts Sync</title>
                             <sort_order>10</sort_order>
                             <action>adminhtml/email_contact</action>
                         </email_connector_contact>
+                        <email_connector_order translate="title">
+                            <title>Orders Sync</title>
+                            <sort_order>20</sort_order>
+                            <action>adminhtml/email_order</action>
+                        </email_connector_order>
+                        <email_connector_quote translate="title">
+                            <title>Quote Sync</title>
+                            <sort_order>30</sort_order>
+                            <action>adminhtml/email_quote</action>
+                        </email_connector_quote>
                         <email_connector_review translate="title">
                             <title>Review Sync</title>
-                            <sort_order>25</sort_order>
+                            <sort_order>40</sort_order>
                             <action>adminhtml/email_review</action>
                         </email_connector_review>
                         <email_connector_wishlist translate="title">
                             <title>Wishlist Sync</title>
-                            <sort_order>30</sort_order>
+                            <sort_order>50</sort_order>
                             <action>adminhtml/email_wishlist</action>
                         </email_connector_wishlist>
-                        <email_connector_quote translate="title">
-                            <title>Quote Sync</title>
-                            <sort_order>22</sort_order>
-                            <action>adminhtml/email_quote</action>
-                        </email_connector_quote>
+                        <email_connector_catalog translate="title">
+                            <title>Catalog Sync</title>
+                            <sort_order>60</sort_order>
+                            <action>adminhtml/email_catalog</action>
+                        </email_connector_catalog>
+                        <email_connector_importer>
+                            <title>Importer Status</title>
+                            <sort_order>70</sort_order>
+                            <action>adminhtml/email_importer</action>
+                        </email_connector_importer>
+                        <email_connector_campaign translate="title">
+                            <title>Email Send Status</title>
+                            <sort_order>80</sort_order>
+                            <action>adminhtml/email_campaign</action>
+                        </email_connector_campaign>
+                        <email_connector_automation translate="title">
+                            <title>Automation Status</title>
+                            <sort_order>90</sort_order>
+                            <action>adminhtml/email_automation</action>
+                        </email_connector_automation>
                     </children>
                 </reports>
                 <email_configuration translate="title">
@@ -88,6 +108,9 @@
                             <automation_studio translate="title">
                                 <title>Automation Studio</title>
                             </automation_studio>
+                            <automation_rules translate="title">
+                                <title>Exclusion Rules</title>
+                            </automation_rules>
                             <reports>
                                 <title>Reports</title>
                                 <children>
@@ -109,6 +132,15 @@
                                     <email_connector_quote translate="title">
                                         <title>Email Connector Quote</title>
                                     </email_connector_quote>
+                                    <email_connector_catalog translate="title">
+                                        <title>Email Connector Catalog</title>
+                                    </email_connector_catalog>
+                                    <email_connector_importer translate="title">
+                                        <title>Email Connector Importer</title>
+                                    </email_connector_importer>
+                                    <email_connector_automation translate="title">
+                                        <title>Email Automation Status</title>
+                                    </email_connector_automation>
                                 </children>
                             </reports>
                             <email_configuration translate="title">
@@ -144,7 +176,7 @@
                                         <title><![CDATA[Email ROI & Tracking]]></title>
                                     </connector_roi_tracking>
                                     <connector_lost_baskets translate="title">
-                                        <title><![CDATA[Abandoned Carts]]></title>
+                                        <title><![CDATA[Email Abandoned Carts]]></title>
                                     </connector_lost_baskets>
                                     <connector_reviews translate="title">
                                         <title><![CDATA[Reviews]]></title>
@@ -159,13 +191,13 @@
                                         <title><![CDATA[Email Transactional Email]]></title>
                                     </connector_transactional_emails>
                                     <connector_automation_studio translate="title">
-                                        <title><![CDATA[Automation Studio]]></title>
+                                        <title><![CDATA[Email Automation Studio]]></title>
                                     </connector_automation_studio>
                                     <connector_configuration translate="title">
-                                        <title><![CDATA[Configuration]]></title>
+                                        <title><![CDATA[Email Configuration]]></title>
                                     </connector_configuration>
                                     <connector_developer_settings translate="title">
-                                        <title><![CDATA[Developer]]></title>
+                                        <title><![CDATA[Email Developer]]></title>
                                     </connector_developer_settings>
                                 </children>
                             </config>

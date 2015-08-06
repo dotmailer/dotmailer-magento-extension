@@ -1,0 +1,41 @@
+<div class="dashboard">
+    <div class="my-account">
+        <div class="page-title">
+            <h1><?php echo $this->__('Email Activity'); ?></h1>
+        </div>
+        <?php foreach($this->getStats() as $title => $campaignStat): ?>
+            <div class="box-head head block-title">
+                <h2 class="legend"><?php echo $this->__('CAMPAIGN: ') . $this->__($title); ?></h2>
+            </div>
+            <table style="width:100%">
+                <?php foreach($campaignStat as $key => $value): ?>
+                    <tr>
+                        <td><?php echo $this->__($key) ?></td>
+                        <?php if($key == 'unsubscribed' or $key == 'softBounced' or $key == 'hardBounced'): ?>
+                            <?php
+                                if($value)
+                                    $value = 'TRUE';
+                                else
+                                    $value = 'FALSE';
+                            ?>
+                            <td><?php echo $value ?></td>
+                        <?php elseif($key == 'dateSent' or $key == 'dateFirstOpened' or $key == 'dateLastOpened'): ?>
+                            <?php
+                                if($value == '1970-01-01T00:00:00Z')
+                                    $value = '';
+                            ?>
+                            <td>
+                                <?php
+                                    if(!empty($value))
+                                        echo new Zend_Date($value, Zend_Date::ISO_8601)
+                                ?>
+                            </td>
+                        <?php else: ?>
+                            <td><?php echo $value ?></td>
+                        <?php endif; ?>
+                    </tr>
+                <?php endforeach; ?>
+            </table>
+        <?php endforeach; ?>
+    </div>
+</div>

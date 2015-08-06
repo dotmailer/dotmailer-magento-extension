@@ -243,27 +243,29 @@ class Dotdigitalgroup_Email_Model_Connector_Quote
         }
 
         $value = null;
-        if($type == 'int' or $type == 'smallint'){
-            try{
-                $value = (int)$quoteData->$function();
-            }catch (Exception $e){
-                Mage::logException($e);
+        try{
+            switch ($type) {
+                case 'int':
+                case 'smallint':
+                    $value = (int)$quoteData->$function();
+                    break;
+
+                case 'decimal':
+                    $value = (float)number_format($quoteData->$function(), 2 , '.', '');
+                    break;
+
+                case 'timestamp':
+                case 'datetime':
+                case 'date':
+                    $date = new Zend_Date($quoteData->$function(), Zend_Date::ISO_8601);
+                    $value = $date->toString(Zend_Date::ISO_8601);
+                break;
+
+                default:
+                    $value = $quoteData->$function();
             }
-        }
-        if($type == 'decimal'){
-            try{
-                $value = (float)number_format($quoteData->$function(), 2 , '.', '');
-            }catch (Exception $e){
-                Mage::logException($e);
-            }
-        }
-        if($type == 'timestamp' or $type == 'datetime'){
-            try{
-                $date = new Zend_Date($quoteData->$function(), Zend_Date::ISO_8601);
-                $value = $date->toString(Zend_Date::ISO_8601);
-            }catch (Exception $e){
-                Mage::logException($e);
-            }
+        }catch (Exception $e){
+            Mage::logException($e);
         }
 
         return $value;

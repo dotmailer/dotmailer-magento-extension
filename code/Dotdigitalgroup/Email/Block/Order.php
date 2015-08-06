@@ -1,6 +1,6 @@
 <?php
 
-class Dotdigitalgroup_Email_Block_Order extends Mage_Core_Block_Template
+class Dotdigitalgroup_Email_Block_Order extends Dotdigitalgroup_Email_Block_Edc
 {
 
     /**

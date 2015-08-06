@@ -166,7 +166,29 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
             throw $e;
         }
 
-        return $this->responseBody;
+	    /**
+	     * check and debug api request total time
+	     */
+	    if (Mage::helper('ddg')->getDebugEnabled()){
+		    $info = $this->getResponseInfo();
+			//the response info data is set
+		    if (isset($info['url']) && isset($info['total_time'])){
+			    $url       = $info['url'];
+		        $time      = $info['total_time'];
+			    $totalTime = sprintf(' time : %g sec', $time);
+			    $check = Mage::helper('ddg')->getApiResponseTimeLimit();
+			    $limit = ($check)? $check : '2';
+			    $message = $this->verb . ', ' .  $url. $totalTime;
+			    //check for slow queries
+			    if ( $time >  $limit) {
+				    //log the slow queries
+				    Mage::helper('ddg')->rayLog('100', $message);
+				    Mage::helper( 'ddg' )->log( $message );
+			    }
+		    }
+	    }
+
+	    return $this->responseBody;
     }
 
     /**

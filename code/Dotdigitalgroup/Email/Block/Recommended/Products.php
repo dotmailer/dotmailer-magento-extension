@@ -1,6 +1,6 @@
 <?php
 
-class Dotdigitalgroup_Email_Block_Recommended_Products extends Mage_Core_Block_Template
+class Dotdigitalgroup_Email_Block_Recommended_Products extends Dotdigitalgroup_Email_Block_Edc
 {
 	/**
 	 * Slot div name.

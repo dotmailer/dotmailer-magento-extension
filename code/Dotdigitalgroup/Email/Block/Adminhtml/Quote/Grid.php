@@ -82,16 +82,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Quote_Grid extends Mage_Adminhtml_Bl
             'renderer'		=> 'ddg_automation/adminhtml_column_renderer_imported',
             'options'       => Mage::getModel('ddg_automation/adminhtml_source_contact_imported')->getOptions(),
             'filter_condition_callback' => array($this, 'filterCallbackContact')
-        ))->addColumn('converted_to_order', array(
-            'header'        => Mage::helper('ddg')->__('Converted To Order'),
-            'align'         => 'center',
-            'width'         => '50px',
-            'index'         => 'converted_to_order',
-            'type'          => 'options',
-            'escape'        => true,
-            'renderer'		=> 'ddg_automation/adminhtml_column_renderer_imported',
-            'options'       => Mage::getModel('ddg_automation/adminhtml_source_contact_imported')->getOptions(),
-            'filter_condition_callback' => array($this, 'filterCallbackContact')
         ))->addColumn('created_at', array(
             'header'        => Mage::helper('ddg')->__('Created At'),
             'width'         => '50px',

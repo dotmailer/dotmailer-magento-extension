@@ -43,7 +43,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Subscriber e
 		//all active subscribers who are also customers
 		$customerSubscribers = $this->_getCollection();
 		$customerSubscribers->addFieldToFilter('customer_id', array('neq' => '0'));
-		$customerSubscriberCount = $customerSubscribers->count();
+        $customerSubscriberCount = $customerSubscribers->getSize();
 
 		$days = $this->calculateOperationalDaysFromOrder();
 		if($days)

@@ -36,6 +36,13 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Contact_Grid extends Mage_Adminhtml_
             'index'         => 'email',
             'type'          => 'text',
             'escape'        => true
+        ))->addColumn('customer_id', array(
+	        'header'        => Mage::helper('ddg')->__('Customer ID'),
+	        'align'         => 'left',
+	        'width'         => '20px',
+	        'index'         => 'customer_id',
+	        'type'          => 'number',
+	        'escape'        => true
         ))->addColumn('is_guest', array(
             'header'        => Mage::helper('ddg')->__('Is Guest'),
             'align'         => 'right',
@@ -48,13 +55,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Contact_Grid extends Mage_Adminhtml_
 	        ),
             'escape'        => true,
             'filter_condition_callback' => array($this, 'filterCallbackContact')
-        ))->addColumn('customer_id', array(
-            'header'        => Mage::helper('ddg')->__('Customer ID'),
-            'align'         => 'left',
-            'width'         => '20px',
-            'index'         => 'customer_id',
-            'type'          => 'number',
-            'escape'        => true
         ))->addColumn('is_subscriber', array(
             'header'        => Mage::helper('ddg')->__('Is Subscriber'),
             'width'         => '50px',

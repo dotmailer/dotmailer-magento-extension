@@ -38,4 +38,41 @@
             return re.test(email);
         }
     };
+
+    //Email Capture For Newsletter
+
+    var newsletterEmailCapture = Class.create();
+    emailCapture.prototype = {
+        initialize: function(options) {
+            this.options = Object.extend({
+                elements: "input[name='email']"
+            }, options || {} );
+
+            // Observe blur on email field
+            $$(this.options.elements).each(function(email) {
+                Event.observe(email,'blur',this.captureEmail.bindAsEventListener(this));
+            }.bind(this));
+        },
+
+        //capture email
+        captureEmail: function(event) {
+            var el = $(Event.element(event));
+            //validate email
+            if(el.value && this.validateEmail(el.value)){
+                //ajax call
+                new Ajax.Request('<?php echo $base_url; ?>' + 'connector/ajax/emailcapture', {
+                    method: 'post',
+                    parameters:{
+                        email:el.value
+                    }
+                });
+            }
+        },
+
+        //email validation
+        validateEmail: function (email) {
+            var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(email);
+        }
+    };
 </script>

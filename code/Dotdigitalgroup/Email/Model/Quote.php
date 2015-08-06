@@ -5,6 +5,7 @@ class Dotdigitalgroup_Email_Model_Quote extends Mage_Core_Model_Abstract
     private $_start;
     private $_quotes;
     private $_count = 0;
+    private $_quoteIds;
 
     /**
      * constructor
@@ -43,24 +44,34 @@ class Dotdigitalgroup_Email_Model_Quote extends Mage_Core_Model_Abstract
         $helper->allowResourceFullExecution();
 
         foreach (Mage::app()->getWebsites(true) as $website) {
+            $apiEnabled = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED, $website);
             $enabled = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_QUOTE_ENABLED, $website);
-            if ($enabled) {
+            if ($enabled && $apiEnabled) {
                 //using bulk api
                 $helper->log('---------- Start quote bulk sync ----------');
                 $this->_start = microtime(true);
                 $this->_exportQuoteForWebsite($website);
                 //send quote as transactional data
                 if (isset($this->_quotes[$website->getId()])) {
-                    $client = Mage::helper('ddg')->getWebsiteApiClient($website);
                     $websiteQuotes = $this->_quotes[$website->getId()];
-                    //import quote in bulk
-                    $client->postContactsTransactionalDataImport($websiteQuotes, 'Quote');
+                    //register in queue with importer
+                    $check = Mage::getModel('ddg_automation/importer')->registerQueue(
+                        Dotdigitalgroup_Email_Model_Importer::IMPORT_TYPE_QUOTE,
+                        $websiteQuotes,
+                        Dotdigitalgroup_Email_Model_Importer::MODE_BULK,
+                        $website->getId()
+                    );
+                    //set imported
+                    if ($check) {
+                        $this->_setImported($this->_quoteIds);
+                    }
                 }
                 $message = 'Total time for quote bulk sync : ' . gmdate("H:i:s", microtime(true) - $this->_start);
                 $helper->log($message);
 
-                //remove quotes
-                $this->_deleteQuoteForWebsite($website);
+                //update quotes
+                $this->_exportQuoteForWebsiteInSingle($website);
+
             }
         }
         $response['message'] = "quote updated: ". $this->_count;
@@ -77,6 +88,7 @@ class Dotdigitalgroup_Email_Model_Quote extends Mage_Core_Model_Abstract
         try{
             //reset quotes
             $this->_quotes = array();
+            $this->_quoteIds = array();
             $limit = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT, $website);
             $collection = $this->_getQuoteToImport($website, $limit);
             foreach($collection as $emailQuote){
@@ -87,9 +99,7 @@ class Dotdigitalgroup_Email_Model_Quote extends Mage_Core_Model_Abstract
                     $connectorQuote = Mage::getModel('ddg_automation/connector_quote', $quote);
                     $this->_quotes[$website->getId()][] = $connectorQuote;
                 }
-                $emailQuote->setImported(Dotdigitalgroup_Email_Model_Contact::EMAIL_CONTACT_IMPORTED)
-                    ->setModified(null)
-                    ->save();
+                $this->_quoteIds[] = $emailQuote->getQuoteId();
                 $this->_count++;
             }
         }catch(Exception $e){
@@ -102,60 +112,55 @@ class Dotdigitalgroup_Email_Model_Quote extends Mage_Core_Model_Abstract
      *
      * @param Mage_Core_Model_Website $website
      * @param int $limit
+     * @param $modified
+     *
      * @return mixed
      */
-    private function _getQuoteToImport(Mage_Core_Model_Website $website, $limit = 100)
+    private function _getQuoteToImport(Mage_Core_Model_Website $website, $limit = 100, $modified = false)
     {
         $collection = $this->getCollection()
-            ->addFieldToFilter('imported', array('null' => true))
             ->addFieldToFilter('store_id', array('in' => $website->getStoreIds()))
             ->addFieldToFilter('customer_id', array('notnull' => true));
 
+        if ($modified) {
+            $collection->addFieldToFilter('modified', 1)
+                ->addFieldToFilter('imported', 1);
+        } else {
+            $collection->addFieldToFilter('imported', array('null' => true));
+        }
+
         $collection->getSelect()->limit($limit);
-        return $collection->load();
+        return $collection;
     }
 
     /**
-     * remove quotes for website
+     * update quotes for website in single
      *
      * @param Mage_Core_Model_Website $website
      */
-    private function _deleteQuoteForWebsite(Mage_Core_Model_Website $website)
+    private function _exportQuoteForWebsiteInSingle(Mage_Core_Model_Website $website)
     {
-        try{
+        try {
             $limit = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT, $website);
-            $client = Mage::helper('ddg')->getWebsiteApiClient($website);
-            $collection = $this->_getQuoteToDelete($website, $limit);
-            foreach($collection as $emailQuote){
-                $result = $client->deleteContactsTransactionalData($emailQuote->getQuoteId(), 'Quote');
-                if (!isset($result->message)){
+            $collection = $this->_getQuoteToImport($website, $limit, true);
+            foreach ($collection as $emailQuote) {
+                //register in queue with importer
+                $check = Mage::getModel('ddg_automation/importer')->registerQueue(
+                    Dotdigitalgroup_Email_Model_Importer::IMPORT_TYPE_QUOTE,
+                    array($emailQuote->getQuoteId()),
+                    Dotdigitalgroup_Email_Model_Importer::MODE_SINGLE,
+                    $website->getId()
+                );
+                if ($check) {
+                    $message = 'Quote updated : ' . $emailQuote->getQuoteId();
+                    Mage::helper('ddg')->log($message);
                     $emailQuote->setModified(null)->save();
                     $this->_count++;
                 }
-                $message = 'Quote removed : ' . $emailQuote->getQuoteId();
-                Mage::helper('ddg')->log($message);
             }
-        }catch(Exception $e){
+        } catch (Exception $e) {
             Mage::logException($e);
         }
-    }
-
-    /**
-     * get collection that will be used to remove quotes from connector
-     *
-     * @param Mage_Core_Model_Website $website
-     * @param int $limit
-     * @return mixed
-     */
-    private function _getQuoteToDelete(Mage_Core_Model_Website $website, $limit = 100)
-    {
-        $collection = $this->getCollection()
-            ->addFieldToFilter('converted_to_order', 1)
-            ->addFieldToFilter('modified', 1)
-            ->addFieldToFilter('store_id', array('in' => $website->getStoreIds()));
-
-        $collection->getSelect()->limit($limit);
-        return $collection->load();
     }
 
     /**
@@ -190,16 +195,31 @@ class Dotdigitalgroup_Email_Model_Quote extends Mage_Core_Model_Abstract
         $conn = $coreResource->getConnection('core_write');
         try{
             $num = $conn->update($coreResource->getTableName('ddg_automation/quote'),
-                array('imported' => new Zend_Db_Expr('null')),
-                array(
-                    $conn->quoteInto('imported is ?', new Zend_Db_Expr('not null')),
-                    $conn->quoteInto('converted_to_order is ?', new Zend_Db_Expr('null'))
-                )
+                array('imported' => new Zend_Db_Expr('null'), 'modified' => new Zend_Db_Expr('null'))
             );
         }catch (Exception $e){
             Mage::logException($e);
         }
 
         return $num;
+    }
+
+    /**
+     * set imported in bulk query
+     *
+     * @param $ids
+     */
+    private function _setImported($ids)
+    {
+        try{
+            $coreResource = Mage::getSingleton('core/resource');
+            $write = $coreResource->getConnection('core_write');
+            $tableName = $coreResource->getTableName('email_quote');
+            $ids = implode(', ', $ids);
+            $now = Mage::getSingleton('core/date')->gmtDate();
+            $write->update($tableName, array('imported' => 1, 'updated_at' => $now, 'modified' => new Zend_Db_Expr('null')), "quote_id IN ($ids)");
+        }catch (Exception $e){
+            Mage::logException($e);
+        }
     }
 }

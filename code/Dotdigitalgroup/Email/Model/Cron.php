@@ -3,12 +3,33 @@
 class Dotdigitalgroup_Email_Model_Cron
 {
     /**
+     * CRON FOR EMAIL IMPORTER PROCESSOR
+     */
+    public function emailImporter()
+    {
+        return Mage::getModel('ddg_automation/importer')->processQueue();
+    }
+
+    /**
+     * CRON FOR CATALOG SYNC
+     */
+    public function catalogSync()
+    {
+        // send customers
+        $result = Mage::getModel('ddg_automation/catalog')->sync();
+        return $result;
+    }
+
+    /**
      * CRON FOR CONTACTS SYNC
      */
     public function contactSync()
     {
         // send customers
         $result = Mage::getModel('ddg_automation/apiconnector_contact')->sync();
+        $subscriberResult = $this->subscribersAndGuestSync();
+        if(isset($subscriberResult['message']) && isset($result['message']))
+            $result['message'] = $result['message'] . ' - ' . $subscriberResult['message'];
 	    return $result;
     }
 
@@ -17,11 +38,9 @@ class Dotdigitalgroup_Email_Model_Cron
      */
     public function abandonedCarts()
     {
-	    //don't execute if the cron is running from shell
-	    if (! Mage::getStoreConfigFlag(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_ABANDONED_CART_SHELL)) {
-		    // send lost basket
-		    Mage::getModel( 'ddg_automation/sales_quote' )->proccessAbandonedCarts();
-	    }
+
+		Mage::getModel( 'ddg_automation/sales_quote' )->proccessAbandonedCarts();
+
     }
 
     /**
@@ -136,15 +155,21 @@ class Dotdigitalgroup_Email_Model_Cron
 
 		$schedules = Mage::getModel('cron/schedule')->getCollection();
 		$schedules->getSelect()->limit(1)->order('executed_at DESC');
-		$schedules->addFieldToFilter('status', Mage_Cron_Model_Schedule::STATUS_SUCCESS);
-		$schedules->addFieldToFilter('job_code', 'connector_email_customer_sync');
-		$schedules->load();
+		$schedules->addFieldToFilter('status', Mage_Cron_Model_Schedule::STATUS_SUCCESS)
+            ->addFieldToFilter('job_code', 'ddg_automation_customer_subscriber_guest_sync')
+			->getSize();
 
-		if (count($schedules) == 0) {
+
+		if ($schedules->getSize() == 0) {
 			return false;
 		}
 		$executedAt = $schedules->getFirstItem()->getExecutedAt();
 		return Mage::getModel('core/date')->date(NULL, $executedAt);
 	}
 
+	public function automationStatus()
+	{
+		Mage::getModel('ddg_automation/automation')->enrollment();
+
+	}
 }

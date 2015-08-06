@@ -36,7 +36,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Datafields
 			    //message
 			    $fields[] = array( 'value' => 0, 'label' => Mage::helper( 'ddg' )->__( $datafields->message ) );
 
-		    } else {
+		    } elseif(is_array($datafields)) {
 
 			    //loop for all datafields option
 			    foreach ( $datafields as $datafield ) {

@@ -21,10 +21,12 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Customer_Attributes_Select
         foreach ($attributes as $attribute) {
             if ($attribute->getFrontendLabel()) {
                 $code = $attribute->getAttributeCode();
+	            //escape the label in case of quotes
+	            $label = addslashes($attribute->getFrontendLabel());
                 if(!in_array($code, $excluded))
                     $options[] = array(
                         'value' => $attribute->getAttributeCode(),
-                        'label' => $attribute->getFrontendLabel()
+                        'label' => $label
                     );
             }
         }

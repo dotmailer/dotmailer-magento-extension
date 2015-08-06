@@ -702,3 +702,4 @@ $installer->getConnection()->dropColumn($campaignTable, 'create_message');
 $installer->getConnection()->dropColumn($campaignTable, 'contact_message');
 
 $installer->endSetup();
+

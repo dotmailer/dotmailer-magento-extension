@@ -5,11 +5,11 @@ class Dotdigitalgroup_Email_Helper_Review extends Mage_Core_Helper_Abstract
     /**
      * configs
      */
-    const XML_PATH_REVIEW_STATUS                                  = 'connector_reviews/settings/status';
-    const XML_PATH_REVIEW_DELAY                                   = 'connector_reviews/settings/delay';
-    const XML_PATH_REVIEW_NEW_PRODUCT                             = 'connector_reviews/settings/new_product';
-    const XML_PATH_REVIEW_CAMPAIGN                                = 'connector_reviews/settings/campaign';
-    const XML_PATH_REVIEW_ANCHOR                                  = 'connector_reviews/settings/anchor';
+    const XML_PATH_REVIEW_STATUS                                  = 'connector_automation_studio/review_settings/status';
+    const XML_PATH_REVIEW_DELAY                                   = 'connector_automation_studio/review_settings/delay';
+    const XML_PATH_REVIEW_NEW_PRODUCT                             = 'connector_automation_studio/review_settings/new_product';
+    const XML_PATH_REVIEW_CAMPAIGN                                = 'connector_automation_studio/review_settings/campaign';
+    const XML_PATH_REVIEW_ANCHOR                                  = 'connector_automation_studio/review_settings/anchor';
     const XML_PATH_REVIEW_DISPLAY_TYPE                            = 'connector_dynamic_content/products/review_display_type';
 
     /**

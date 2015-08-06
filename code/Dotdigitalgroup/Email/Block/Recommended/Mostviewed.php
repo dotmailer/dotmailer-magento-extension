@@ -1,6 +1,6 @@
 <?php
 
-class Dotdigitalgroup_Email_Block_Recommended_Mostviewed extends Mage_Core_Block_Template
+class Dotdigitalgroup_Email_Block_Recommended_Mostviewed extends Dotdigitalgroup_Email_Block_Edc
 {
 
 	/**
@@ -25,9 +25,9 @@ class Dotdigitalgroup_Email_Block_Recommended_Mostviewed extends Mage_Core_Block
         $mode = $this->getRequest()->getActionName();
         $limit = Mage::helper('ddg/recommended')->getDisplayLimitByMode($mode);
         $from  = Mage::helper('ddg/recommended')->getTimeFromConfig($mode);
-	    //@todo localize this value
-        $to = Zend_Date::now()->toString(Zend_Date::ISO_8601);
+	    $locale = Mage::app()->getLocale()->getLocale();
 
+	    $to = Zend_Date::now($locale)->toString(Zend_Date::ISO_8601);
         $productCollection = Mage::getResourceModel('reports/product_collection')
             ->addViewsCount($from, $to)
             ->setPageSize($limit);

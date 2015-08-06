@@ -48,6 +48,13 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Wishlist_Grid extends Mage_Adminhtml
             'index'         => 'wishlist_id',
             'type'          => 'number',
             'escape'        => true
+        ))->addColumn('customer_id', array(
+	        'header'        => Mage::helper('ddg')->__('Customer ID'),
+	        'align'         => 'left',
+	        'width'         => '50px',
+	        'index'         => 'customer_id',
+	        'type'          => 'number',
+	        'escape'        => true
         ))->addColumn('item_count', array(
             'header'        => Mage::helper('ddg')->__('Item Count'),
             'align'         => 'left',
@@ -55,13 +62,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Wishlist_Grid extends Mage_Adminhtml
             'index'         => 'item_count',
             'type'          => 'number',
             'escape'        => true
-        ))->addColumn('customer_id', array(
-        'header'        => Mage::helper('ddg')->__('Customer ID'),
-        'align'         => 'left',
-        'width'         => '50px',
-        'index'         => 'customer_id',
-        'type'          => 'number',
-        'escape'        => true
         ))->addColumn('wishlist_imported', array(
             'header'        => Mage::helper('ddg')->__('Wishlist Imported'),
             'align'         => 'center',

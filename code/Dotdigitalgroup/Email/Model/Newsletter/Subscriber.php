@@ -29,11 +29,12 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
 
         foreach (Mage::app()->getWebsites(true) as $website) {
             //if subscriber is enabled and mapped
+            $apiEnabled = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED, $website);
             $enabled = (bool)$website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_SUBSCRIBER_ENABLED);
             $addressBook = $website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SUBSCRIBERS_ADDRESS_BOOK_ID);
 
 	        //enabled and mapped
-            if ( $enabled && $addressBook ) {
+            if ($enabled && $addressBook && $apiEnabled) {
 
 	            //ready to start sync
 	            if (!$this->_countSubscriber)
@@ -73,7 +74,6 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
         $limit = $website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_LIMIT);
         $subscribers = Mage::getModel('ddg_automation/contact')->getSubscribersToImport($website, $limit);
         if (count($subscribers)) {
-            $client = Mage::helper('ddg')->getWebsiteApiClient($website);
             $subscribersFilename = strtolower($website->getCode() . '_subscribers_' . date('d_m_Y_Hi') . '.csv');
             //get mapped storename
             $subscriberStorename = Mage::helper('ddg')->getMappedStoreName($website);
@@ -93,9 +93,14 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
                 }
             }
             Mage::helper('ddg')->log('Subscriber filename: ' . $subscribersFilename);
-            //Add to subscriber address book
-            $client->postAddressBookContactsImport($subscribersFilename, $website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SUBSCRIBERS_ADDRESS_BOOK_ID));
-            $fileHelper->archiveCSV($subscribersFilename);
+            //register in queue with importer
+            Mage::getModel('ddg_automation/importer')->registerQueue(
+                Dotdigitalgroup_Email_Model_Importer::IMPORT_TYPE_SUBSCRIBERS,
+                '',
+                Dotdigitalgroup_Email_Model_Importer::MODE_BULK,
+                $website->getId(),
+                $subscribersFilename
+            );
         }
         //add updated number for the website
         $this->_countSubscriber += $updated;
@@ -113,7 +118,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
 	    $max_to_select = 1000;
 	    $result['customers'] = 0;
 	    $helper = Mage::helper('ddg');
-	    $date = Mage::app()->getLocale()->date()->subHour(1);
+	    $date = Mage::app()->getLocale()->date()->subHour(24);
         // force sync all customers
         if($force)
             $date = $date->subYear(10);
@@ -170,6 +175,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
                         $contactCollection = Mage::getModel('ddg_automation/contact')->getCollection()
                             ->addFieldToFilter('email', $email)
                             ->addFieldToFilter('website_id', $website->getId());
+
                         //unsubscribe from the email contact table.
                         foreach ($contactCollection as $contact) {
                             $contact->setIsSubscriber(null)

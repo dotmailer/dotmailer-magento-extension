@@ -246,7 +246,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_CampaignController extends Mage_Admi
 
     protected function _isAllowed()
     {
-        return Mage::getSingleton('admin/session')->isAllowed('newsletter/email_connetor/ddg_automation_campaign');
+        return Mage::getSingleton('admin/session')->isAllowed('email_connector/reports/email_connector_campaign');
     }
 
 }

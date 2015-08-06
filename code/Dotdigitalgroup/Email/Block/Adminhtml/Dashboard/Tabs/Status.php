@@ -10,7 +10,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
 	const FAST_FIX_MESSAGE = 'Fast Fix Available, Click To Enable The Mapping And Redirect Back.';
 
 	private $_checkpoints = array(
-		'extention_installed' => 'Extension And CURL Installed',
+		'valid_api_credentials' => 'API Credentials',
 		'cron_running' => 'Cron running',
 		'conflict_check' => 'Conflict Check',
 		'address_book_mapped' => 'Address Book Mapping',
@@ -23,20 +23,19 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
 		'automation_active' => 'Automation Programs Active',
 		'abandoned_carts_enabled' => 'Abandoned Carts Enabled',
 		'data_field_mapped' => 'Data Field Mapped',
-		'valid_api_credentials' => 'API Credentials',
 		'order_enabled' => 'Order Sync Enabled',
-        'custom_order_attributes' => 'Custom Order Attributes',
 		'order_syncing' => 'Orders Syncing',
-        'quote_enabled' => 'Quote Sync Enabled',
-        'custom_quote_attributes' => 'Custom Quote Attributes',
-        'quote_syncing' => 'Quote Syncing',
+		'custom_order_attributes' => 'Custom Order Attributes',
+		'quote_enabled' => 'Quote Sync Enabled',
+		'quote_syncing' => 'Quote Syncing',
+		'custom_quote_attributes' => 'Custom Quote Attributes',
 		'last_abandoned_cart_sent_day' => 'Last Abandoned Cart Sent Day',
-        'easy_email_capture_enabled' => 'Easy Email Capture Enabled',
-        'disable_newsletter_success_enabled' => 'Disable Newsletter Success Enabled',
+		'easy_email_capture_enabled' => 'Easy Email Capture Enabled',
+		'disable_newsletter_success_enabled' => 'Disable Newsletter Success Enabled',
 		'system_information' => 'System Information'
 
 	);
-    /**
+	/**
      * Set the template.
      */
     public function __construct()
@@ -101,27 +100,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
 		$this->_checkpoints[$checkpoint->getName()] = $checkpoint;
 	}
 
-	/**
-	 * Extension modules and curl check.
-	 * @return Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Content
-	 */
-	public function extentionInstalled()
-	{
-		$resultContent = Mage::getModel('ddg_automation/adminhtml_dashboard_content');
 
-		$resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
-	          ->setTitle('Extension Status : ')
-              ->setMessage('Extension active and PHP Curl extension installed.');
-
-		$installed = (bool)Mage::getConfig()->getModuleConfig('Dotdigitalgroup_Email')->is('active', 'true');
-
-		if (! $installed ||  ! function_exists('curl_version')) {
-			$resultContent->setStyle( self::CONNECTOR_DASHBOARD_FAILED );
-			$resultContent->setMessage('Sync May Not Work Properly.');
-			$resultContent->setHowto((! function_exists('curl_version'))? 'PHP Curl extention not found !' : 'PHP and Curl extension installed');
-		}
-		return $resultContent;
-	}
 
 	/**
 	 * Check cron for the customer sync.

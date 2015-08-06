@@ -83,18 +83,26 @@ class Dotdigitalgroup_Email_Model_Order extends Mage_Core_Model_Abstract
 	 * @param $storeIds
 	 * @param $limit
 	 * @param $orderStatuses
+     * @param $modified
 	 *
 	 * @return Dotdigitalgroup_Email_Model_Resource_Order_Collection
 	 */
-    public function getOrdersToImport($storeIds, $limit, $orderStatuses)
+    public function getOrdersToImport($storeIds, $limit, $orderStatuses, $modified = false)
     {
         $collection = $this->getCollection()
-            ->addFieldToFilter('email_imported', array('null' => true))
             ->addFieldToFilter('store_id', array('in' => $storeIds))
             ->addFieldToFilter('order_status', array('in' => $orderStatuses));
 
+        if ($modified) {
+            $collection
+                ->addFieldToFilter('email_imported', 1)
+                ->addFieldToFilter('modified', 1);
+        } else
+            $collection->addFieldToFilter('email_imported', array('null' => true));
+
+
         $collection->getSelect()->limit($limit);
-        return $collection->load();
+        return $collection;
     }
 
     /**
@@ -129,7 +137,7 @@ class Dotdigitalgroup_Email_Model_Order extends Mage_Core_Model_Abstract
 		$conn = $coreResource->getConnection('core_write');
 		try{
 			$num = $conn->update($coreResource->getTableName('ddg_automation/order'),
-				array('email_imported' => new Zend_Db_Expr('null')),
+				array('email_imported' => new Zend_Db_Expr('null'), 'modified' => new Zend_Db_Expr('null')),
 				$conn->quoteInto('email_imported is ?', new Zend_Db_Expr('not null'))
 			);
 		}catch (Exception $e){

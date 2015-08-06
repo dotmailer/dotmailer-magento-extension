@@ -16,8 +16,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Sms_Smsmessagethree extends M
         $element->setData('placeholder', self::DEFAULT_TEXT);
         $element->setData('after_element_html',
 
-            "<a href='#' onclick=\"injectText('connector_sms_sms_three_message', '{{var order_number}}');return false;\">Insert Order Number</a>
-            <a href='#' onclick=\"injectText('connector_sms_sms_three_message', '{{var customer_name}}');return false;\">Insert Customer Name</a>"
+            "<a href='#' onclick=\"injectText('connector_automation_studio_sms_sms_three_message', '{{var order_number}}');return false;\">Insert Order Number</a>
+            <a href='#' onclick=\"injectText('connector_automation_studio_sms_sms_three_message', '{{var customer_name}}');return false;\">Insert Customer Name</a>"
         );
         return parent::_getElementHtml($element);
     }

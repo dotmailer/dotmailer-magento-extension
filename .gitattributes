@@ -1,0 +1,2 @@
+*.psd filter=lfs diff=lfs merge=lfs -crlf
+*.zip filter=lfs diff=lfs merge=lfs -crlf

@@ -53,33 +53,6 @@ class Dotdigitalgroup_Email_Customer_NewsletterController extends Mage_Core_Cont
 
         $contact = $client->getContactById($customer_id);
         if(isset($contact->id)){
-            //contact data fields
-            $data = array();
-            $dataFields = $client->getDataFields();
-            $processedFields = array();
-            foreach($dataFields as $dataField){
-                $processedFields[$dataField->name] = $dataField->type;
-            }
-            foreach($data_fields as $key => $value){
-                if(isset($processedFields[$key]) && $value){
-                    if($processedFields[$key] == 'Numeric'){
-                        $data_fields[$key] = (int)$value;
-                    }
-                    if($processedFields[$key] == 'String'){
-                        $data_fields[$key] = (string)$value;
-                    }
-                    if($processedFields[$key] == 'Date'){
-                        $date = new Zend_Date($value, "Y/M/d");
-                        $data_fields[$key] = $date->toString(Zend_Date::ISO_8601);
-                    }
-                    $data[] = array(
-                        'Key' => $key,
-                        'Value' => $data_fields[$key]
-                    );
-                }
-            }
-            $contactResponse = $client->updateContactDatafieldsByEmail($customer_email, $data);
-
             //contact address books
             $bookError = false;
             $addressBooks = $client->getContactAddressBooks($contact->id);
@@ -115,6 +88,33 @@ class Dotdigitalgroup_Email_Customer_NewsletterController extends Mage_Core_Cont
                         $bookError = true;
                 }
             }
+
+            //contact data fields
+            $data = array();
+            $dataFields = $client->getDataFields();
+            $processedFields = array();
+            foreach($dataFields as $dataField){
+                $processedFields[$dataField->name] = $dataField->type;
+            }
+            foreach($data_fields as $key => $value){
+                if(isset($processedFields[$key]) && $value){
+                    if($processedFields[$key] == 'Numeric'){
+                        $data_fields[$key] = (int)$value;
+                    }
+                    if($processedFields[$key] == 'String'){
+                        $data_fields[$key] = (string)$value;
+                    }
+                    if($processedFields[$key] == 'Date'){
+                        $date = new Zend_Date($value, "Y/M/d");
+                        $data_fields[$key] = $date->toString(Zend_Date::ISO_8601);
+                    }
+                    $data[] = array(
+                        'Key' => $key,
+                        'Value' => $data_fields[$key]
+                    );
+                }
+            }
+            $contactResponse = $client->updateContactDatafieldsByEmail($customer_email, $data);
 
             if(isset($contactResponse->message) && $bookError)
                 Mage::getSingleton('customer/session')->addError($this->__('An error occurred while saving your subscription preferences.'));

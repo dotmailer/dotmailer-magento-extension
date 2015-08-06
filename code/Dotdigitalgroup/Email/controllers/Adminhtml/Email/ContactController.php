@@ -186,7 +186,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ContactController extends Mage_Admin
 
     protected function _isAllowed()
     {
-        return Mage::getSingleton('admin/session')->isAllowed('newsletter/ddg_automation/ddg_automation_contact');
+        return Mage::getSingleton('admin/session')->isAllowed('email_connector/reports/email_connector_contact');
     }
 
 }

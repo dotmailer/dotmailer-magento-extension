@@ -78,12 +78,16 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         return (bool) Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_ADVANCED_DEBUG_ENABLED);
     }
 
+    /**
+     * Extension version number.
+     * @return string
+     */
     public function getConnectorVersion()
     {
         $modules = (array) Mage::getConfig()->getNode('modules')->children();
         if (isset($modules['Dotdigitalgroup_Email'])) {
             $moduleName = $modules['Dotdigitalgroup_Email'];
-            return $moduleName->version;
+            return (string) $moduleName->version;
         }
         return '';
     }
@@ -120,12 +124,21 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getContactId($email, $websiteId)
     {
+        $contact = Mage::getModel('ddg_automation/contact')->loadByCustomerEmail($email, $websiteId);
+        if ($contactId = $contact->getContactId()) {
+            return $contactId;
+        }
+
         $client = $this->getWebsiteApiClient($websiteId);
         $response = $client->postContacts($email);
 
         if (isset($response->message))
-            return $response->message;
-
+            return false;
+        //save contact id
+        if (isset($response->id)){
+            $contact->setContactId($response->id)
+                ->save();
+        }
         return $response->id;
     }
 
@@ -201,29 +214,29 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
 
-	/**
-	 * Enterprise custom datafields attributes.
-	 * @param int $website
-	 *
-	 * @return array
-	 * @throws Mage_Core_Exception
-	 */
-	public function getEnterpriseAttributes( $website = 0) {
-		$website = Mage::app()->getWebsite($website);
-		$result = array();
-		$attrs = $website->getConfig('connector_data_mapping/enterprise_data');
-		//get individual mapped keys
-		foreach ( $attrs as $key => $one ) {
-			$config = $website->getConfig('connector_data_mapping/enterprise_data/' . $key);
-			//check for the mapped field
-			if ($config)
-				$result[$key] = $config;
-		}
+    /**
+     * Enterprise custom datafields attributes.
+     * @param int $website
+     *
+     * @return array
+     * @throws Mage_Core_Exception
+     */
+    public function getEnterpriseAttributes( $website = 0) {
+        $website = Mage::app()->getWebsite($website);
+        $result = array();
+        $attrs = $website->getConfig('connector_data_mapping/enterprise_data');
+        //get individual mapped keys
+        foreach ( $attrs as $key => $one ) {
+            $config = $website->getConfig('connector_data_mapping/enterprise_data/' . $key);
+            //check for the mapped field
+            if ($config)
+                $result[$key] = $config;
+        }
 
-		if (empty($result))
-			return false;
-		return $result;
-	}
+        if (empty($result))
+            return false;
+        return $result;
+    }
 
     /**
      * @param $path
@@ -245,6 +258,9 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getWebsiteApiClient($website = 0)
     {
+        if(!$this->isEnabled($website))
+            return false;
+
         if (! $apiUsername = $this->getApiUsername($website) || ! $apiPassword = $this->getApiPassword($website))
             return false;
 
@@ -274,10 +290,10 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
     {
         $clientId = Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CLIENT_ID);
 
-	    //callback uri if not set custom
-	    $redirectUri = $this->getRedirectUri();
-	    $redirectUri .= 'connector/email/callback';
-	    $adminUser = Mage::getSingleton('admin/session')->getUser();
+        //callback uri if not set custom
+        $redirectUri = $this->getRedirectUri();
+        $redirectUri .= 'connector/email/callback';
+        $adminUser = Mage::getSingleton('admin/session')->getUser();
         //query params
         $params = array(
             'redirect_uri' => $redirectUri,
@@ -292,12 +308,12 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         return $url;
     }
 
-	public function getRedirectUri()
-	{
-		$callback = Mage::helper('ddg/config')->getCallbackUrl();
+    public function getRedirectUri()
+    {
+        $callback = Mage::helper('ddg/config')->getCallbackUrl();
 
-		return $callback;
-	}
+        return $callback;
+    }
 
     /**
      * order status config value
@@ -424,8 +440,10 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         $code = Mage::getstoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_RAYGUN_APPLICATION_CODE);
 
         if ($this->raygunEnabled()) {
+            //use async mode for sending.
+            $async = Mage::getStoreConfigFlag(Dotdigitalgroup_Email_Helper_Config::XML_PATH_RAYGUN_APPLICATION_ASYNC);
             require_once Mage::getBaseDir('lib') . DS . 'Raygun4php' . DS  . 'RaygunClient.php';
-            return new Raygun4php\RaygunClient($code, false, true);
+            return new Raygun4php\RaygunClient($code, $async);
         }
 
         return false;
@@ -443,18 +461,21 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function rayLog($errno = 100, $message, $filename = 'helper/data.php', $line = 1, $tags = array())
     {
-        $client = $this->getRaygunClient();
-        if ($client) {
-            //use tags to log the client baseurl
-            if (empty($tags))
-                $tags = array(Mage::getBaseUrl('web'));
-            //send message
-            $code = $client->SendError( $errno, $message, $filename, $line, $tags );
-
-            return $code;
+        if (!$this->raygunEnabled())
+            return;
+        $baseUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);
+        if (empty($tags)) {
+            $tags = array(
+                $baseUrl,
+                Mage::getVersion()
+            );
         }
 
-        return false;
+        $client = $this->getRaygunClient();
+        //user, firstname, lastname, email, annonim, uuid
+        $client->SetUser($baseUrl, null, null, $this->getApiUsername());
+        $client->SetVersion($this->getConnectorVersion());
+        $client->SendError($errno, $message, $filename,$line, $tags);
     }
 
 
@@ -479,25 +500,25 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      * @return string
      * @throws Mage_Core_Exception
      */
-	public function generateDynamicUrl()
-	{
-		$website = Mage::app()->getRequest()->getParam('website', false);
+    public function generateDynamicUrl()
+    {
+        $website = Mage::app()->getRequest()->getParam('website', false);
 
-		//set website url for the default store id
-		$website = ($website)? Mage::app()->getWebsite( $website ) : 0;
+        //set website url for the default store id
+        $website = ($website)? Mage::app()->getWebsite( $website ) : 0;
 
-		$defaultGroup = Mage::app()->getWebsite($website)
-		                    ->getDefaultGroup();
+        $defaultGroup = Mage::app()->getWebsite($website)
+            ->getDefaultGroup();
 
-		if (! $defaultGroup)
-			return $mage = Mage::app()->getStore()->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);
+        if (! $defaultGroup)
+            return $mage = Mage::app()->getStore()->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);
 
-		//base url
-		$baseUrl = Mage::app()->getStore($defaultGroup->getDefaultStore())->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK);
+        //base url
+        $baseUrl = Mage::app()->getStore($defaultGroup->getDefaultStore())->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK);
 
-		return $baseUrl;
+        return $baseUrl;
 
-	}
+    }
 
     /**
      *
@@ -546,6 +567,13 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * @return bool
+     */
+    public function getEasyEmailCaptureForNewsletter()
+    {
+        return Mage::getStoreConfigFlag(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_EMAIL_CAPTURE_NEWSLETTER);
+    }
+    /**
      * get feefo logon config value
      *
      * @return mixed
@@ -579,10 +607,10 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      * update data fields
      *
      * @param $email
-     * @param $website
+     * @param Mage_Core_Model_Website $website
      * @param $storeName
      */
-    public function updateDataFields($email, $website, $storeName)
+    public function updateDataFields($email, Mage_Core_Model_Website $website, $storeName)
     {
         $data = array();
         if($store_name = $website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_STORE_NAME)){
@@ -613,15 +641,15 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         return (bool)Mage::getConfig()->getModuleConfig('Ddg_Transactional')->is('active', 'true');
     }
 
-	/**
-	 * Is magento enterprise.
-	 * @return bool
-	 */
-	public function isEnterprise()
-	{
-		return Mage::getConfig ()->getModuleConfig ( 'Enterprise_Enterprise' ) && Mage::getConfig ()->getModuleConfig ( 'Enterprise_AdminGws' ) && Mage::getConfig ()->getModuleConfig ( 'Enterprise_Checkout' ) && Mage::getConfig ()->getModuleConfig ( 'Enterprise_Customer' );
+    /**
+     * Is magento enterprise.
+     * @return bool
+     */
+    public function isEnterprise()
+    {
+        return Mage::getConfig ()->getModuleConfig ( 'Enterprise_Enterprise' ) && Mage::getConfig ()->getModuleConfig ( 'Enterprise_AdminGws' ) && Mage::getConfig ()->getModuleConfig ( 'Enterprise_Checkout' ) && Mage::getConfig ()->getModuleConfig ( 'Enterprise_Customer' );
 
-	}
+    }
 
     public function getTemplateList()
     {
@@ -642,60 +670,252 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         return $fields;
     }
 
-	/**
-	 * Update last quote id datafield.
-	 * @param $quoteId
-	 * @param $email
-	 * @param $websiteId
-	 */
-	public function updateLastQuoteId($quoteId, $email, $websiteId)
-	{
-		$client = $this->getWebsiteApiClient($websiteId);
-		//last quote id config data mapped
-		$quoteIdField = $this->getLastQuoteId();
+    /**
+     * Update last quote id datafield.
+     * @param $quoteId
+     * @param $email
+     * @param $websiteId
+     */
+    public function updateLastQuoteId($quoteId, $email, $websiteId)
+    {
+        $client = $this->getWebsiteApiClient($websiteId);
+        //last quote id config data mapped
+        $quoteIdField = $this->getLastQuoteId();
 
-		$data[] = array(
-			'Key' => $quoteIdField,
-			'Value' => $quoteId
-		);
-		//update datafields for conctact
-		$client->updateContactDatafieldsByEmail($email, $data);
-	}
+        $data[] = array(
+            'Key' => $quoteIdField,
+            'Value' => $quoteId
+        );
+        //update datafields for conctact
+        $client->updateContactDatafieldsByEmail($email, $data);
+    }
 
-	/**
-	 * Remove code and disable Raygun.
-	 */
-	public function disableRaygun()
-	{
-		$config = new Mage_Core_Model_Config();
-		$config->saveConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_RAYGUN_APPLICATION_CODE, '');
-		Mage::getConfig()->cleanCache();
-	}
+    /**
+     * Remove code and disable Raygun.
+     */
+    public function disableRaygun()
+    {
+        $config = new Mage_Core_Model_Config();
+        $config->saveConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_RAYGUN_APPLICATION_CODE, '');
+        Mage::getConfig()->cleanCache();
+    }
 
-	public function enableRaygunCode()
-	{
-		$curl = new Varien_Http_Adapter_Curl();
-		$curl->setConfig(array(
-			'timeout'   => 2
-		));
-		$curl->write(Zend_Http_Client::GET, Dotdigitalgroup_Email_Helper_Config::RAYGUN_API_CODE_URL, '1.0');
-		$data = $curl->read();
+    public function enableRaygunCode()
+    {
+        $curl = new Varien_Http_Adapter_Curl();
+        $curl->setConfig(array(
+            'timeout'   => 2
+        ));
+        $curl->write(Zend_Http_Client::GET, Dotdigitalgroup_Email_Helper_Config::RAYGUN_API_CODE_URL, '1.0');
+        $data = $curl->read();
 
-		if ($data === false) {
-			return false;
-		}
-		$data = preg_split('/^\r?$/m', $data, 2);
-		$data = trim($data[1]);
-		$curl->close();
+        if ($data === false) {
+            return false;
+        }
+        $data = preg_split('/^\r?$/m', $data, 2);
+        $data = trim($data[1]);
+        $curl->close();
 
-		$xml  = new SimpleXMLElement($data);
-		$raygunCode = $xml->code;
+        $xml  = new SimpleXMLElement($data);
+        $raygunCode = $xml->code;
 
-		//not found
-		if (!$raygunCode)
-			return;
+        //not found
+        if (!$raygunCode)
+            return;
 
-		$config = new Mage_Core_Model_Config();
-		$config->saveConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_RAYGUN_APPLICATION_CODE, $raygunCode);
-	}
+        $config = new Mage_Core_Model_Config();
+        $config->saveConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_RAYGUN_APPLICATION_CODE, $raygunCode);
+    }
+
+    /**
+     * Send the exception to raygun.
+     *
+     * @param $e Exception
+     */
+    public function sendRaygunException( $e )
+    {
+        if (!$this->raygunEnabled())
+            return;
+        $baseUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);
+        $tags = array(
+            $baseUrl,
+            Mage::getVersion()
+        );
+
+        $client = $this->getRaygunClient();
+        //user, firstname, lastname, email, annonim, uuid
+        $client->SetUser($baseUrl, null, null, $this->getApiUsername());
+        $client->SetVersion($this->getConnectorVersion());
+        $client->SendException($e, $tags);
+    }
+
+    /**
+     * @param int $websiteId
+     *
+     * @return bool
+     */
+    public function getOrderSyncEnabled($websiteId = 0)
+    {
+        return Mage::getStoreConfigFlag(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_ORDER_ENABLED, $websiteId);
+    }
+    /**
+     * @param int $websiteId
+     *
+     * @return bool
+     */
+    public function getCatalogSyncEnabled($websiteId = 0)
+    {
+        return Mage::getStoreConfigFlag(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_CATALOG_ENABLED, $websiteId);
+    }
+
+    /**
+     * @param int $websiteId
+     *
+     * @return bool
+     */
+    public function getContactSyncEnabled($websiteId = 0)
+    {
+        return Mage::getStoreConfigFlag(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_CONTACT_ENABLED, $websiteId);
+    }
+
+    /**
+     * @param int $websiteId
+     *
+     * @return bool
+     */
+    public function getGuestSyncEnabled($websiteId = 0)
+    {
+        return Mage::getStoreConfigFlag(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_GUEST_ENABLED, $websiteId);
+    }
+
+    /**
+     * @param int $websiteId
+     *
+     * @return bool
+     */
+    public function getSubscriberSyncEnabled($websiteId = 0)
+    {
+        return Mage::getStoreConfigFlag(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_SUBSCRIBER_ENABLED, $websiteId);
+    }
+
+    /**
+     * @return bool
+     */
+    public function getCronInstalled()
+    {
+        $lastCustomerSync = Mage::getModel('ddg_automation/cron')->getLastCustomerSync();
+        $timespan = Mage::helper('ddg')->dateDiff($lastCustomerSync);
+
+        //last customer cron was less then 15 min
+        if ($timespan <= 15 * 60) {
+            return true;
+        }
+        return false;
+    }
+    /**
+     * Get the config id by the automation type.
+     * @param $automationType
+     * @param int $websiteId
+     *
+     * @return mixed
+     */
+    public function getAutomationIdByType($automationType, $websiteId = 0)
+    {
+        $path = constant('Dotdigitalgroup_Email_Helper_Config::' . $automationType);
+        $automationCampaignId = $this->getWebsiteConfig($path, $websiteId);
+
+        return $automationCampaignId;
+    }
+
+    public function getAbandonedProductName()
+    {
+        return Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_ABANDONED_PRODUCT_NAME);
+
+    }
+
+    /**
+     * Update last quote id datafield.
+     * @param $name
+     * @param $email
+     * @param $websiteId
+     */
+    public function updateAbandonedProductName($name, $email, $websiteId)
+    {
+        $client = $this->getWebsiteApiClient($websiteId);
+        // id config data mapped
+        $field = $this->getAbandonedProductName();
+
+        if ($field) {
+            $data[] = array(
+                'Key' => $field,
+                'Value' => $name
+            );
+            //update data field for contact
+            $client->updateContactDatafieldsByEmail($email, $data);
+        }
+    }
+
+
+    /**
+     * Api request response time limit that should be logged.
+     *
+     * @param int $websiteId
+     *
+     * @return mixed
+     * @throws Mage_Core_Exception
+     */
+    public function getApiResponseTimeLimit($websiteId = 0)
+    {
+        $website = Mage::app()->getWebsite($websiteId);
+        $limit = $website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DEBUG_API_REQUEST_LIMIT);
+
+        return $limit;
+    }
+
+    /**
+     * Main email for an account.
+     *
+     * @param int $website
+     *
+     * @return string
+     */
+    public function getAccountEmail( $website = 0)
+    {
+        $client = $this->getWebsiteApiClient($website);
+        $info =  $client->getAccountInfo();
+        $email = '';
+
+        if(isset($info->properties)){
+            $properties = $info->properties;
+
+            foreach ( $properties as $property ) {
+
+                if ($property->name == 'MainEmail')
+                    $email = $property->value;
+            }
+        }
+        return $email;
+    }
+
+    public function authIpAddress()
+    {
+        if ($ipString = Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_IP_RESTRICTION_ADDRESSES)) {
+            //string to array
+            $ipArray = explode(',', $ipString);
+            //remove white spaces
+            foreach($ipArray as $key => $ip){
+                $ipArray[$key] = preg_replace('/\s+/', '', $ip);
+            }
+            //ip address
+            $ipAddress = Mage::helper('core/http')->getRemoteAddr();
+
+            if(in_array($ipAddress, $ipArray)) {
+                return true;
+            }
+
+            $this->getRaygunClient()->Send('Ip address auth failed with ip address :' . $ipAddress);
+            return false;
+        }
+        return false;
+    }
 }

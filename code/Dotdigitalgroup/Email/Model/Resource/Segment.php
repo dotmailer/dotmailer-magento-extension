@@ -85,7 +85,7 @@ class Dotdigitalgroup_Email_Model_Resource_Segment extends Enterprise_CustomerSe
 	}
 
 	protected function updateContactSegmentIds($customerId, $segmentId, $websiteId = 0){
-		$collection = Mage::getModel('email_connector/contact')->getCollection()
+		$collection = Mage::getModel('ddg_automation/contact')->getCollection()
 		                  ->addFieldToFilter('customer_id', $customerId);
 		if ($websiteId)
 			$collection->addFieldToFilter('website_id', $websiteId);
@@ -128,7 +128,7 @@ class Dotdigitalgroup_Email_Model_Resource_Segment extends Enterprise_CustomerSe
 
 	protected function deleteSegmentContacts($segment){
 
-		$contacts = Mage::getModel('email_connector/contact')->getCollection()
+		$contacts = Mage::getModel('ddg_automation/contact')->getCollection()
 		                ->addFieldToFilter('segment_ids', array('finset'=> array($segment)));
 		foreach ( $contacts as $contact ) {
 			//segments found for contact

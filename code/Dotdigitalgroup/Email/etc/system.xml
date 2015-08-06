@@ -67,270 +67,6 @@
                 </api>
             </groups>
         </connector_api_credentials>
-        <connector_sync_settings translate="label" module="ddg">
-            <label><![CDATA[Sync Settings]]></label>
-            <tab>connector</tab>
-            <frontend_type>text</frontend_type>
-            <sort_order>3000</sort_order>
-            <show_in_default>1</show_in_default>
-            <show_in_website>1</show_in_website>
-            <show_in_store>0</show_in_store>
-            <groups>
-                <address_book translate="label" module="ddg">
-                    <label>Address Book Mapping</label>
-                    <sort_order>10</sort_order>
-                    <show_in_default>1</show_in_default>
-                    <show_in_website>1</show_in_website>
-                    <show_in_store>0</show_in_store>
-                    <expanded>1</expanded>
-                    <fields>
-                        <customers translate="label" module="ddg">
-                            <label>Add Customers To</label>
-                            <frontend_type>select</frontend_type>
-                            <frontend_model>ddg_automation/adminhtml_system_config_resetcontacts</frontend_model>
-                            <source_model>ddg_automation/adminhtml_source_addressbooks</source_model>
-                            <sort_order>10</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </customers>
-                        <subscribers translate="label" module="ddg">
-                            <label>Add Subscribers To</label>
-                            <frontend_type>select</frontend_type>
-                            <frontend_model>ddg_automation/adminhtml_system_config_resetsubscribers</frontend_model>
-                            <source_model>ddg_automation/adminhtml_source_addressbooks</source_model>
-                            <sort_order>20</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </subscribers>
-                        <guests translate="label" module="ddg">
-                            <label>Add Guests To</label>
-                            <frontend_type>select</frontend_type>
-                            <frontend_model>ddg_automation/adminhtml_system_config_resetguests</frontend_model>
-                            <source_model>ddg_automation/adminhtml_source_addressbooks</source_model>
-                            <sort_order>30</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </guests>
-                    </fields>
-                </address_book>
-                <address_book_pref>
-                    <label>Customer Address Book Preference</label>
-                    <sort_order>15</sort_order>
-                    <show_in_default>1</show_in_default>
-                    <show_in_website>1</show_in_website>
-                    <show_in_store>0</show_in_store>
-                    <expanded>1</expanded>
-                    <fields>
-                        <can_change translate="label" module="ddg">
-                            <label>Show Address Books To Customer?</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>10</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </can_change>
-                        <show_books>
-                            <label>Address Books To Show</label>
-                            <frontend_type>multiselect</frontend_type>
-                            <source_model>ddg_automation/adminhtml_source_addressbookspref</source_model>
-                            <sort_order>20</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                            <depends>
-                                <can_change>1</can_change>
-                            </depends>
-                            <comment><![CDATA[ Choose additional address books to show in addition to the Magento General Subscription list.]]></comment>
-                        </show_books>
-                        <can_show_fields translate="label" module="ddg">
-                            <label>Show Data Fields To Customer?</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>30</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </can_show_fields>
-                        <fields_to_show>
-                            <label>Data Fields To Show</label>
-                            <frontend_type>multiselect</frontend_type>
-                            <source_model>ddg_automation/adminhtml_source_publicdatafields</source_model>
-                            <sort_order>40</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                            <depends>
-                                <can_show_fields>1</can_show_fields>
-                            </depends>
-                            <comment><![CDATA[Only data fields with visibility public can be shown to customers. You can create more data fields within the Data Mapping section.]]></comment>
-                        </fields_to_show>
-                    </fields>
-                </address_book_pref>
-                <sync translate="label" module="ddg">
-                    <label>Sync</label>
-                    <frontend_type>text</frontend_type>
-                    <sort_order>20</sort_order>
-                    <show_in_default>1</show_in_default>
-                    <show_in_website>1</show_in_website>
-                    <show_in_store>0</show_in_store>
-                    <expanded>1</expanded>
-                    <fields>
-                        <contact_title translate="label" module="ddg">
-                            <label>Contact Sync</label>
-                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
-                            <sort_order>10</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </contact_title>
-                        <contact_enabled translate="label" module="ddg">
-                            <label>Enabled</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>20</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </contact_enabled>
-                        <subscriber_title translate="label" module="ddg">
-                            <label>Subscriber Sync</label>
-                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
-                            <sort_order>50</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </subscriber_title>
-                        <subscriber_enabled translate="label" module="ddg">
-                            <label>Enabled</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>60</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </subscriber_enabled>
-                        <order_title translate="label" module="ddg">
-                            <label>Order Sync</label>
-                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
-                            <sort_order>70</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </order_title>
-                        <order_enabled translate="label" module="ddg">
-                            <label>Enabled</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>80</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </order_enabled>
-                        <quote_title translate="label" module="ddg">
-                            <label>Quote Sync</label>
-                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
-                            <sort_order>83</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </quote_title>
-                        <quote_enabled translate="label" module="ddg">
-                            <label>Enabled</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>86</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </quote_enabled>
-                        <wishlist_title translate="label" module="ddg">
-                            <label>Wishlist Sync</label>
-                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
-                            <sort_order>90</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </wishlist_title>
-                        <wishlist_enabled translate="label" module="ddg">
-                            <label>Enabled</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>100</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </wishlist_enabled>
-                        <review_title translate="label" module="ddg">
-                            <label>Review Sync</label>
-                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
-                            <sort_order>103</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </review_title>
-                        <review_enabled translate="label" module="ddg">
-                            <label>Enabled</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>106</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </review_enabled>
-                        <validator>
-                            <frontend_type>hidden</frontend_type>
-                            <frontend_model>ddg_automation/adminhtml_system_config_waitingfield</frontend_model>
-                            <sort_order>110</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                            <can_be_empty>1</can_be_empty>
-                        </validator>
-                    </fields>
-                </sync>
-                <dynamic_addressbook translate="label" module="ddg">
-                    <label>Create Address Book</label>
-                    <sort_order>30</sort_order>
-                    <show_in_default>1</show_in_default>
-                    <show_in_website>1</show_in_website>
-                    <show_in_store>0</show_in_store>
-                    <fields>
-                        <addressbook_name translate="label" module="ddg">
-                            <label>Address Book Name</label>
-                            <frontend_type>text</frontend_type>
-                            <frontend_model>ddg_automation/adminhtml_system_config_addressbook</frontend_model>
-                            <sort_order>10</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </addressbook_name>
-                        <visibility translate="label comment">
-                            <label>Visibility</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>ddg_automation/adminhtml_source_datamapping_datafieldaccess</source_model>
-                            <sort_order>20</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                            <comment>Select if a contact can join/unsubscribe from the address book via the unsubscribe page</comment>
-                        </visibility>
-                        <addresbook_button translate="label button_label" module="ddg">
-                            <label />
-                            <button_label>Create New Address Book</button_label>
-                            <frontend_model>ddg_automation/adminhtml_system_dynamic_addressbookbutton</frontend_model>
-                            <sort_order>30</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </addresbook_button>
-                    </fields>
-                </dynamic_addressbook>
-            </groups>
-        </connector_sync_settings>
         <connector_data_mapping translate="label" module="ddg">
             <label><![CDATA[Data Mapping]]></label>
             <tab>connector</tab>
@@ -770,6 +506,15 @@
                             <show_in_store>0</show_in_store>
                             <sort_order>328</sort_order>
                         </last_brand_pur>
+                        <abandoned_prod_name translate="label">
+                            <label>Abandoned Product Name</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>ddg_automation/adminhtml_source_datafields</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <sort_order>329</sort_order>
+                        </abandoned_prod_name>
                         <custom_title translate="label" module="ddg">
                             <label>Custom Attributes</label>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
@@ -1048,37 +793,57 @@
                 </sweet_tooth>
             </groups>
         </connector_data_mapping>
-        <connector_roi_tracking translate="label" module="ddg">
-            <label><![CDATA[ROI & Tracking]]></label>
+        <connector_sync_settings translate="label" module="ddg">
+            <label><![CDATA[Sync Settings]]></label>
             <tab>connector</tab>
             <frontend_type>text</frontend_type>
-            <sort_order>5000</sort_order>
+            <sort_order>3000</sort_order>
             <show_in_default>1</show_in_default>
             <show_in_website>1</show_in_website>
             <show_in_store>0</show_in_store>
             <groups>
-                <page_tracking translate="label" module="ddg">
-                    <label>Page Tracking</label>
-                    <frontend_type>text</frontend_type>
+                <address_book translate="label" module="ddg">
+                    <label>Address Book Mapping</label>
                     <sort_order>10</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>0</show_in_store>
                     <expanded>1</expanded>
                     <fields>
-                        <enabled translate="label" module="ddg">
-                            <label>Enabled</label>
+                        <customers translate="label" module="ddg">
+                            <label>Add Customers To</label>
                             <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <frontend_model>ddg_automation/adminhtml_system_config_resetcontacts</frontend_model>
+                            <source_model>ddg_automation/adminhtml_source_addressbooks</source_model>
                             <sort_order>10</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
-                        </enabled>
+                        </customers>
+                        <subscribers translate="label" module="ddg">
+                            <label>Add Subscribers To</label>
+                            <frontend_type>select</frontend_type>
+                            <frontend_model>ddg_automation/adminhtml_system_config_resetsubscribers</frontend_model>
+                            <source_model>ddg_automation/adminhtml_source_addressbooks</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </subscribers>
+                        <guests translate="label" module="ddg">
+                            <label>Add Guests To</label>
+                            <frontend_type>select</frontend_type>
+                            <frontend_model>ddg_automation/adminhtml_system_config_resetguests</frontend_model>
+                            <source_model>ddg_automation/adminhtml_source_addressbooks</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </guests>
                     </fields>
-                </page_tracking>
-                <roi_tracking translate="label" module="ddg">
-                    <label>ROI Tracking</label>
+                </address_book>
+                <sync translate="label" module="ddg">
+                    <label>Sync</label>
                     <frontend_type>text</frontend_type>
                     <sort_order>20</sort_order>
                     <show_in_default>1</show_in_default>
@@ -1086,24 +851,197 @@
                     <show_in_store>0</show_in_store>
                     <expanded>1</expanded>
                     <fields>
-                        <enabled translate="label" module="ddg">
-                            <label>Enabled</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                        <contact_title translate="label" module="ddg">
+                            <label>Customer Sync</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <sort_order>10</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
-                        </enabled>
+                        </contact_title>
+                        <contact_enabled translate="label" module="ddg">
+                            <label>Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </contact_enabled>
+                        <guest_title translate="label" module="ddg">
+                            <label>Guest Sync</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </guest_title>
+                        <guest_enabled translate="label" module="ddg">
+                            <label>Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </guest_enabled>
+                        <subscriber_title translate="label" module="ddg">
+                            <label>Subscriber Sync</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </subscriber_title>
+                        <subscriber_enabled translate="label" module="ddg">
+                            <label>Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </subscriber_enabled>
+                        <order_title translate="label" module="ddg">
+                            <label>Order Sync</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </order_title>
+                        <order_enabled translate="label" module="ddg">
+                            <label>Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </order_enabled>
+                        <quote_title translate="label" module="ddg">
+                            <label>Quote Sync</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>83</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </quote_title>
+                        <quote_enabled translate="label" module="ddg">
+                            <label>Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>86</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </quote_enabled>
+                        <wishlist_title translate="label" module="ddg">
+                            <label>Wishlist Sync</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </wishlist_title>
+                        <wishlist_enabled translate="label" module="ddg">
+                            <label>Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </wishlist_enabled>
+                        <review_title translate="label" module="ddg">
+                            <label>Review Sync</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>110</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </review_title>
+                        <review_enabled translate="label" module="ddg">
+                            <label>Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>120</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </review_enabled>
+                        <catalog_title translate="label" module="ddg">
+                            <label>Catalog Sync</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>130</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </catalog_title>
+                        <catalog_enabled translate="label" module="ddg">
+                            <label>Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>140</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </catalog_enabled>
+                        <validator>
+                            <frontend_type>hidden</frontend_type>
+                            <frontend_model>ddg_automation/adminhtml_system_config_waitingfield</frontend_model>
+                            <sort_order>190</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website></show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <can_be_empty>1</can_be_empty>
+                        </validator>
                     </fields>
-                </roi_tracking>
+                </sync>
+                <dynamic_addressbook translate="label" module="ddg">
+                    <label>Create Address Book</label>
+                    <sort_order>30</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <addressbook_name translate="label" module="ddg">
+                            <label>Address Book Name</label>
+                            <frontend_type>text</frontend_type>
+                            <frontend_model>ddg_automation/adminhtml_system_config_addressbook</frontend_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </addressbook_name>
+                        <visibility translate="label comment">
+                            <label>Visibility</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>ddg_automation/adminhtml_source_datamapping_datafieldaccess</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Select if a contact can join/unsubscribe from the address book via the unsubscribe page</comment>
+                        </visibility>
+                        <addresbook_button translate="label button_label" module="ddg">
+                            <label />
+                            <button_label>Create New Address Book</button_label>
+                            <frontend_model>ddg_automation/adminhtml_system_dynamic_addressbookbutton</frontend_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </addresbook_button>
+                    </fields>
+                </dynamic_addressbook>
             </groups>
-        </connector_roi_tracking>
+        </connector_sync_settings>
         <connector_lost_baskets translate="label" module="ddg">
             <label><![CDATA[Abandoned Carts]]></label>
             <tab>connector</tab>
             <frontend_type>text</frontend_type>
-            <sort_order>6000</sort_order>
+            <sort_order>4000</sort_order>
             <show_in_default>1</show_in_default>
             <show_in_website>1</show_in_website>
             <show_in_store>0</show_in_store>
@@ -1341,19 +1279,103 @@
                 </guests>
             </groups>
         </connector_lost_baskets>
-        <connector_reviews translate="label" module="ddg">
-            <label><![CDATA[Reviews]]></label>
+        <connector_automation_studio translate="label" module="ddg">
+            <label>Automation</label>
             <tab>connector</tab>
             <frontend_type>text</frontend_type>
-            <sort_order>6500</sort_order>
+            <sort_order>5000</sort_order>
             <show_in_default>1</show_in_default>
             <show_in_website>1</show_in_website>
-            <show_in_store>1</show_in_store>
+            <show_in_store>0</show_in_store>
             <groups>
-                <settings translate="label" module="ddg">
-                    <label>Settings</label>
+                <visitor_automation translate="label" module="ddg">
+                    <label>Visitor action automation enrolment</label>
                     <frontend_type>text</frontend_type>
-                    <sort_order>10</sort_order>
+                    <sort_order>100</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <expanded>1</expanded>
+                    <fields>
+                        <customer_automation translate="label" module="ddg">
+                            <label>New Customer</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>ddg_automation/adminhtml_source_automation_programme</source_model>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </customer_automation>
+                        <subscriber_automation>
+                            <label>New Subscriber</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>ddg_automation/adminhtml_source_automation_programme</source_model>
+                            <sort_order>110</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </subscriber_automation>
+                        <order_automation>
+                            <label>New Customer Order</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>ddg_automation/adminhtml_source_automation_programme</source_model>
+                            <sort_order>120</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </order_automation>
+                        <guest_order_automation>
+                            <label>New Guest Order</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>ddg_automation/adminhtml_source_automation_programme</source_model>
+                            <sort_order>130</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </guest_order_automation>
+                        <review_automation>
+                            <label>Approved Review</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>ddg_automation/adminhtml_source_automation_programme</source_model>
+                            <sort_order>140</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </review_automation>
+                        <wishlist_automation>
+                            <label>New Wishlist</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>ddg_automation/adminhtml_source_automation_programme</source_model>
+                            <sort_order>150</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </wishlist_automation>
+                    </fields>
+                </visitor_automation>
+                <order_status_automation translate="label" module="ddg">
+                    <label>Order status automation enrolment</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>200</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <status_to_automation translate="label" module="ddg">
+                            <frontend_model>ddg_automation/adminhtml_config_automation_customdatafields</frontend_model>
+                            <backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+                            <source_model>ddg_automation/adminhtml_source_orderstatus</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </status_to_automation>
+                    </fields>
+                </order_status_automation>
+                <review_settings translate="label" module="ddg">
+                    <label>Review Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>300</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
@@ -1401,7 +1423,7 @@
                             <label>Campaign To Send</label>
                             <sort_order>50</sort_order>
                             <frontend_type>select</frontend_type>
-                            <source_model>ddg_automation/adminhtml_source_reviews_campaigns</source_model>
+                            <source_model>ddg_automation/adminhtml_source_campaigns</source_model>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -1416,10 +1438,10 @@
                             <comment><![CDATA[Please provide the anchor used on product pages for reviews e.g. #reviews]]></comment>
                         </anchor>
                     </fields>
-                </settings>
+                </review_settings>
                 <feefo_feedback_engine translate="label" module="ddg">
                     <label>Feefo Feedback Engine</label>
-                    <sort_order>100</sort_order>
+                    <sort_order>400</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>0</show_in_store>
@@ -1470,176 +1492,167 @@
                         </product_reviews_url>
                     </fields>
                 </feefo_feedback_engine>
-            </groups>
-        </connector_reviews>
-        <connector_sms translate="label" module="ddg">
-            <label><![CDATA[SMS]]></label>
-            <tab>connector</tab>
-            <frontend_type>text</frontend_type>
-            <sort_order>7000</sort_order>
-            <show_in_default>1</show_in_default>
-            <show_in_website>1</show_in_website>
-            <show_in_store>1</show_in_store>
-            <groups>
-                <sms_one translate="label" module="ddg">
-                    <label>SMS Message 1</label>
+                <sms translate="label" module="ddg">
+                    <label>SMS</label>
                     <frontend_type>text</frontend_type>
-                    <sort_order>10</sort_order>
+                    <sort_order>500</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
                     <fields>
-                        <enabled translate="label" module="ddg">
-                            <label>Enabled</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                        <sms_one_heading translate="label" module="ddg">
+                            <label>SMS 1</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <sort_order>10</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                        </enabled>
-                        <status translate="label" module="ddg">
-                            <label>Order Status</label>
+                        </sms_one_heading>
+                        <sms_one_enabled translate="label" module="ddg">
+                            <label>SMS 1 Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
                             <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </sms_one_enabled>
+                        <sms_one_status translate="label" module="ddg">
+                            <label>SMS 1 Order Status</label>
+                            <sort_order>30</sort_order>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_order_status</source_model>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                        </status>
-                        <message translate="label" module="ddg">
-                            <label>Message</label>
+                        </sms_one_status>
+                        <sms_one_message translate="label" module="ddg">
+                            <label>SMS 1 Message</label>
                             <frontend_type>textarea</frontend_type>
                             <frontend_model>ddg_automation/adminhtml_system_sms_smsmessageone</frontend_model>
-                            <sort_order>30</sort_order>
+                            <sort_order>40</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <validate>validate-length maximum-length-160</validate>
-                        </message>
-                    </fields>
-                </sms_one>
-                <sms_two translate="label" module="ddg">
-                    <label>SMS Message 2</label>
-                    <frontend_type>text</frontend_type>
-                    <sort_order>20</sort_order>
-                    <show_in_default>1</show_in_default>
-                    <show_in_website>1</show_in_website>
-                    <show_in_store>1</show_in_store>
-                    <fields>
-                        <enabled translate="label" module="ddg">
-                            <label>Enabled</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>10</sort_order>
+                        </sms_one_message>
+                        <sms_two_heading translate="label" module="ddg">
+                            <label>SMS 2</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>50</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                        </enabled>
-                        <status translate="label" module="ddg">
-                            <label>Order Status</label>
-                            <sort_order>20</sort_order>
+                        </sms_two_heading>
+                        <sms_two_enabled translate="label" module="ddg">
+                            <label>SMS 2 Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </sms_two_enabled>
+                        <sms_two_status translate="label" module="ddg">
+                            <label>SMS 2 Order Status</label>
+                            <sort_order>70</sort_order>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_order_status</source_model>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                        </status>
-                        <message translate="label" module="ddg">
-                            <label>Message</label>
+                        </sms_two_status>
+                        <sms_two_message translate="label" module="ddg">
+                            <label>SMS 2 Message</label>
                             <frontend_type>textarea</frontend_type>
                             <frontend_model>ddg_automation/adminhtml_system_sms_smsmessagetwo</frontend_model>
-                            <sort_order>30</sort_order>
+                            <sort_order>80</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <validate>validate-length maximum-length-160</validate>
-                        </message>
-                    </fields>
-                </sms_two>
-                <sms_three translate="label" module="ddg">
-                    <label>SMS Message 3</label>
-                    <frontend_type>text</frontend_type>
-                    <sort_order>30</sort_order>
-                    <show_in_default>1</show_in_default>
-                    <show_in_website>1</show_in_website>
-                    <show_in_store>1</show_in_store>
-                    <fields>
-                        <enabled translate="label" module="ddg">
-                            <label>Enabled</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>10</sort_order>
+                        </sms_two_message>
+                        <sms_tree_heading translate="label" module="ddg">
+                            <label>SMS 3</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>90</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                        </enabled>
-                        <status translate="label" module="ddg">
-                            <label>Order Status</label>
-                            <sort_order>20</sort_order>
+                        </sms_tree_heading>
+                        <sms_three_enabled translate="label" module="ddg">
+                            <label>SMS 3 Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </sms_three_enabled>
+                        <sms_three_status translate="label" module="ddg">
+                            <label>SMS 3 Order Status</label>
+                            <sort_order>110</sort_order>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_order_status</source_model>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                        </status>
-                        <message translate="label" module="ddg">
-                            <label>Message</label>
+                        </sms_three_status>
+                        <sms_three_message translate="label" module="ddg">
+                            <label>SMS 3 Message</label>
                             <frontend_type>textarea</frontend_type>
                             <frontend_model>ddg_automation/adminhtml_system_sms_smsmessagethree</frontend_model>
-                            <sort_order>30</sort_order>
+                            <sort_order>111</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <validate>validate-length maximum-length-160</validate>
-                        </message>
-                    </fields>
-                </sms_three>
-                <sms_four translate="label" module="ddg">
-                    <label>SMS Message 4</label>
-                    <frontend_type>text</frontend_type>
-                    <sort_order>40</sort_order>
-                    <show_in_default>1</show_in_default>
-                    <show_in_website>1</show_in_website>
-                    <show_in_store>1</show_in_store>
-                    <fields>
-                        <enabled translate="label" module="ddg">
-                            <label>Enabled</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>10</sort_order>
+                        </sms_three_message>
+                        <sms_four_heading translate="label" module="ddg">
+                            <label>SMS 4</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>120</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                        </enabled>
-                        <status translate="label" module="ddg">
-                            <label>Order Status</label>
-                            <sort_order>20</sort_order>
+                        </sms_four_heading>
+                        <sms_four_enabled translate="label" module="ddg">
+                            <label>SMS 4 Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>130</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </sms_four_enabled>
+                        <sms_four_status translate="label" module="ddg">
+                            <label>SMS 4 Order Status</label>
+                            <sort_order>140</sort_order>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_order_status</source_model>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                        </status>
-                        <message translate="label" module="ddg">
-                            <label>Message</label>
+                        </sms_four_status>
+                        <sms_four_message translate="label" module="ddg">
+                            <label>SMS 4 Message</label>
                             <frontend_type>textarea</frontend_type>
                             <frontend_model>ddg_automation/adminhtml_system_sms_smsmessagefour</frontend_model>
-                            <sort_order>30</sort_order>
+                            <sort_order>150</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <validate>validate-length maximum-length-160</validate>
-                        </message>
+                        </sms_four_message>
                     </fields>
-                </sms_four>
+                </sms>
             </groups>
-        </connector_sms>
+        </connector_automation_studio>
         <connector_dynamic_content translate="label" module="ddg">
             <label><![CDATA[Dynamic Content]]></label>
             <tab>connector</tab>
             <frontend_type>text</frontend_type>
-            <sort_order>8000</sort_order>
+            <sort_order>6000</sort_order>
             <show_in_default>1</show_in_default>
             <show_in_website>1</show_in_website>
             <show_in_store>0</show_in_store>
@@ -2025,7 +2038,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
-                            <comment><![CDATA[add category_id/@CATEGORY_ID@ or category_name/@CATEGORY_NAME@ at the end of url to filter most viewed by category]]></comment>
+                            <comment><![CDATA[add category_id/@CATEGORY_ID@ at the end of url to filter best sellers by category]]></comment>
                         </best_sellers_url>
                         <most_viewed_url translate="label" module="ddg">
                             <label>Most Viewed URL</label>
@@ -2035,7 +2048,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
-                            <comment><![CDATA[add category_id/@CATEGORY_ID@ or category_name/@CATEGORY_NAME@ at the end of url to filter most viewed by category]]></comment>
+                            <comment><![CDATA[add category_id/@CATEGORY_ID@ at the end of url to filter most viewed by category]]></comment>
                         </most_viewed_url>
                         <product_push_url translate="label" module="ddg">
                             <label>Product Push URL</label>
@@ -2236,10 +2249,10 @@
             <label>Transactional Emails</label>
             <tab>connector</tab>
             <frontend_type>text</frontend_type>
+            <sort_order>7000</sort_order>
             <show_in_default>1</show_in_default>
             <show_in_website>1</show_in_website>
             <show_in_store>0</show_in_store>
-            <sort_order>9000</sort_order>
             <groups>
                 <ddg_transactional translate="label" module="ddg">
                     <label>DDG Transactional</label>
@@ -2273,89 +2286,33 @@
                 </ddg_transactional>
             </groups>
         </connector_transactional_emails>
-        <connector_automation_studio translate="label" module="ddg">
-            <label>Automation</label>
-            <tab>connector</tab>
-            <frontend_type>text</frontend_type>
-            <sort_order>4000</sort_order>
-            <show_in_default>1</show_in_default>
-            <show_in_website>1</show_in_website>
-            <show_in_store>0</show_in_store>
-            <groups>
-                <automation translate="label" module="ddg">
-                    <label>Automation</label>
-                    <frontend_type>text</frontend_type>
-                    <show_in_default>1</show_in_default>
-                    <show_in_website>1</show_in_website>
-                    <show_in_store>0</show_in_store>
-                    <expanded>1</expanded>
-                    <fields>
-                        <customer_automation translate="label" module="ddg">
-                            <label>Customer Program</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>ddg_automation/adminhtml_source_automation_programme</source_model>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                            <sort_order>100</sort_order>
-                        </customer_automation>
-                        <subscriber_automation>
-                            <label>Subscriber Program</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>ddg_automation/adminhtml_source_automation_programme</source_model>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                            <sort_order>110</sort_order>
-                        </subscriber_automation>
-                        <order_automation>
-                            <label>Customer Order</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>ddg_automation/adminhtml_source_automation_programme</source_model>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                            <sort_order>120</sort_order>
-                        </order_automation>
-                        <guest_order_automation>
-                            <label>Guest Order</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>ddg_automation/adminhtml_source_automation_programme</source_model>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                            <sort_order>130</sort_order>
-                        </guest_order_automation>
-                        <review_automation>
-                            <label>Submitted Review</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>ddg_automation/adminhtml_source_automation_programme</source_model>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                            <sort_order>140</sort_order>
-                        </review_automation>
-                        <wishlist_automation>
-                            <label>Created Wishlist</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>ddg_automation/adminhtml_source_automation_programme</source_model>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                            <sort_order>150</sort_order>
-                        </wishlist_automation>
-                    </fields>
-                </automation>
-            </groups>
-        </connector_automation_studio>
         <connector_configuration translate="label" module="ddg">
             <label>Configuration</label>
             <tab>connector</tab>
-            <sort_order>10000</sort_order>
+            <sort_order>8000</sort_order>
             <show_in_default>1</show_in_default>
             <show_in_website>1</show_in_website>
             <show_in_store>0</show_in_store>
             <groups>
+                <data_fields translate="label" module="ddg">
+                    <label>Data Fields</label>
+                    <sort_order>0</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <order_statuses translate="label comment" module="ddg">
+                            <label>Data Fields Calculations From Status</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>ddg_automation/adminhtml_source_orderstatus</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[Select multiple statuses by pressing Ctrl button while selecting]]></comment>
+                        </order_statuses>
+                    </fields>
+                </data_fields>
                 <transactional_data translate="label" module="ddg">
                     <label>Transactional Data</label>
                     <sort_order>1000</sort_order>
@@ -2393,6 +2350,25 @@
                             <show_in_store>0</show_in_store>
                             <comment><![CDATA[Select custom quote attributes that you want to import with your quote data. Select multiple by pressing Ctrl button while selecting.]]></comment>
                         </quote_custom_attributes>
+                        <order_product_attributes translate="label" module="ddg">
+                            <label>Include Products Attributes In Order Sync</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>ddg_automation/adminhtml_source_sync_catalog_attributes</source_model>
+                            <sort_order>180</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[Selected product attribute(s) will be exported]]></comment>
+                        </order_product_attributes>
+                        <order_product_custom_options translate="label" module="ddg">
+                            <label>Include Product Custom Options In Order Sync</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>190</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </order_product_custom_options>
                     </fields>
                 </transactional_data>
                 <abandoned_carts translate="label" module="ddg">
@@ -2403,7 +2379,7 @@
                     <show_in_store>0</show_in_store>
                     <fields>
                         <email_capture translate="label comment" module="ddg">
-                            <label>Easy Email Capture</label>
+                            <label>Easy Email Capture (Checkout)</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <sort_order>10</sort_order>
@@ -2413,6 +2389,16 @@
                             <comment><![CDATA[Enable this if you have a checkout process that allows the visitor to
                             enter their email address during the checkout, but it does not update quote table instantly.]]></comment>
                         </email_capture>
+                        <email_capture_newsletter translate="label comment" module="ddg">
+                            <label>Easy Email Capture (Newsletter)</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>15</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[Enable this if you would like to update update quote table with email entered in Newsletter Email Field.]]></comment>
+                        </email_capture_newsletter>
                         <limits translate="label comment" module="ddg">
                             <label>Abandoned Cart Limit</label>
                             <frontend_type>select</frontend_type>
@@ -2423,8 +2409,76 @@
                             <show_in_store>0</show_in_store>
                             <comment><![CDATA[Do not send an abandoned cart email to a contact if they have received a previous abandoned cart email in previous x hours.]]></comment>
                         </limits>
+                        <link_enabled translate="label" module="ddg">
+                            <label>Link To Cart Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </link_enabled>
+                        <link_text>
+                            <label>Link Text</label>
+                            <sort_order>40</sort_order>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends><link_enabled>1</link_enabled></depends>
+                            <comment><![CDATA[Please provide the link text. If no text provided then default text "Take Me To My Basket" will be used.]]></comment>
+                        </link_text>
+                        <cart_url>
+                            <label>Cart Url</label>
+                            <sort_order>50</sort_order>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends><link_enabled>1</link_enabled></depends>
+                            <comment><![CDATA[Please provide the cart url. If no url provided then default cart url checkout/cart will be used. Only enter the url after base url. For example for http://www.localhost.com/checkout/cart only enter checkout/cart]]></comment>
+                        </cart_url>
+                        <login_url>
+                            <label>Customer Login Url</label>
+                            <sort_order>60</sort_order>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends><link_enabled>1</link_enabled></depends>
+                            <comment><![CDATA[Please provide the customer login url. If no url provided then default login url customer/account/login will be used. Only enter the url after base url. For example for http://www.localhost.com/customer/account/login only enter customer/account/login]]></comment>
+                        </login_url>
                     </fields>
                 </abandoned_carts>
+                <tracking translate="label" module="ddg">
+                    <label>Tracking</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>20</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <expanded>1</expanded>
+                    <fields>
+                        <roi_enabled translate="label" module="ddg">
+                            <label>ROI Tracking Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </roi_enabled>
+                        <page_enabled translate="label" module="ddg">
+                            <label>Page Tracking Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </page_enabled>
+                    </fields>
+                </tracking>
                 <dynamic_content_style translate="label comment" module="ddg">
                     <label>Dynamic Content Styling</label>
                     <sort_order>2500</sort_order>
@@ -2435,12 +2489,21 @@
                         <dynamic_syling translate="label" module="ddg">
                             <label>Dynamic Styling</label>
                             <frontend_type>textarea</frontend_type>
-                            <sort_order>30</sort_order>
+                            <sort_order>10</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                             <comment><![CDATA[Styling entered here will apply to all dynamic content areas pulled from Magento. Classes References Used : 'product-table', 'product-name', 'product-price', 'product-url', 'other-text']]></comment>
                         </dynamic_syling>
+                        <link_text translate="label" module="ddg">
+                            <label>Product Link Text</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[Please provide the link text. If no text provided then default text will be used.]]></comment>
+                        </link_text>
                         <name_title title="label" module="ddg">
                             <label>Product Name</label>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
@@ -2611,6 +2674,60 @@
                             <show_in_store>0</show_in_store>
                             <frontend_class>connector-config-multiselect</frontend_class>
                         </other_style>
+                        <coupon_title title="label" module="ddg">
+                            <label>Coupon Code</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>220</sort_order>
+                            <show_in_website>1</show_in_website>
+                            <show_in_default>1</show_in_default>
+                            <show_in_store>0</show_in_store>
+                        </coupon_title>
+                        <coupon_color translate="label" module="ddg">
+                            <label>Font Color</label>
+                            <frontend_type>select</frontend_type>
+                            <frontend_model>ddg_automation/adminhtml_system_config_colorpicker</frontend_model>
+                            <sort_order>230</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </coupon_color>
+                        <coupon_font_size translate="label" module="ddg">
+                            <label>Font Size</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>ddg_automation/adminhtml_source_fontsize</source_model>
+                            <sort_order>240</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </coupon_font_size>
+                        <coupon_style translate="label" module="ddg">
+                            <label>Style</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>ddg_automation/adminhtml_source_styling</source_model>
+                            <sort_order>250</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <frontend_class>connector-config-multiselect</frontend_class>
+                        </coupon_style>
+                        <coupon_font_picker translate="label" module="ddg">
+                            <label>Font</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>ddg_automation/adminhtml_source_fontpicker</source_model>
+                            <sort_order>260</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </coupon_font_picker>
+                        <coupon_doc_color translate="label" module="ddg">
+                            <label>Background Color</label>
+                            <frontend_type>select</frontend_type>
+                            <frontend_model>ddg_automation/adminhtml_system_config_colorpicker</frontend_model>
+                            <sort_order>270</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </coupon_doc_color>
                     </fields>
                 </dynamic_content_style>
                 <admin translate="label comment" module="ddg">
@@ -2640,13 +2757,107 @@
                         </disable_customer_success>
                     </fields>
                 </admin>
+                <catalog_sync translate="label" module="ddg">
+                    <label>Catalog Sync Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>4000</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <expanded>1</expanded>
+                    <fields>
+                        <catalog_values translate="label" module="ddg">
+                            <label>Catalog Values</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>ddg_automation/adminhtml_source_sync_catalog_values</source_model>
+                            <sort_order>150</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </catalog_values>
+                        <catalog_visibility translate="label" module="ddg">
+                            <label>Include Products By Visibility</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>ddg_automation/adminhtml_source_sync_catalog_visibility</source_model>
+                            <sort_order>160</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[Selected visibility type products will be exported]]></comment>
+                        </catalog_visibility>
+                        <catalog_type translate="label" module="ddg">
+                            <label>Include Products By Type</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>ddg_automation/adminhtml_source_sync_catalog_type</source_model>
+                            <sort_order>170</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[Selected product type(s) will be exported]]></comment>
+                        </catalog_type>
+                    </fields>
+                </catalog_sync>
+                <address_book_pref>
+                    <label>Customer Address Book Preference</label>
+                    <sort_order>4500</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <expanded>1</expanded>
+                    <fields>
+                        <can_change translate="label" module="ddg">
+                            <label>Show Address Books To Customer?</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </can_change>
+                        <show_books>
+                            <label>Address Books To Show</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>ddg_automation/adminhtml_source_addressbookspref</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <can_change>1</can_change>
+                            </depends>
+                            <comment><![CDATA[ Choose additional address books to show in addition to the Magento General Subscription list.]]></comment>
+                        </show_books>
+                        <can_show_fields translate="label" module="ddg">
+                            <label>Show Data Fields To Customer?</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </can_show_fields>
+                        <fields_to_show>
+                            <label>Data Fields To Show</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>ddg_automation/adminhtml_source_publicdatafields</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <can_show_fields>1</can_show_fields>
+                            </depends>
+                            <comment><![CDATA[Only data fields with visibility public can be shown to customers. You can create more data fields within the Data Mapping section.]]></comment>
+                        </fields_to_show>
+                    </fields>
+                </address_book_pref>
             </groups>
         </connector_configuration>
         <connector_developer_settings translate="label" module="ddg">
             <label><![CDATA[Developer]]></label>
             <tab>connector</tab>
             <frontend_type>text</frontend_type>
-            <sort_order>20000</sort_order>
+            <sort_order>10000</sort_order>
             <show_in_default>1</show_in_default>
             <show_in_website>1</show_in_website>
             <show_in_store>0</show_in_store>
@@ -2687,31 +2898,6 @@
                         </orders>
                     </fields>
                 </import_settings>
-                <abandoned_cart translate="label" module="ddg">
-                    <label>Abandoned Carts</label>
-                    <sort_order>2000</sort_order>
-                    <show_in_default>1</show_in_default>
-                    <show_in_website>1</show_in_website>
-                    <show_in_store>0</show_in_store>
-                    <fields>
-                        <shell translate="label comment" module="ddg">
-                            <label>Run Abandoned Carts From Shell.</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>20</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                            <comment><![CDATA[Use the shell command to run the Abandoned baskets campaigns. Select YES to run separate cron like this :
-                            </br><div style="border: 1px solid #808080; padding: 5px">
-                            <span class="nobr">*/5 * * * * /usr/bin/php /magentoroot/shell/connector.php -action baskets -mode all</span>
-                             <span class="nobr">*/5 * * * * /usr/bin/php /magentoroot/shell/connector.php -action baskets -mode customers </span>
-                             <span class="nobr">*/5 * * * * /usr/bin/php /magentoroot/shell/connector.php -action baskets -mode guests</span>
-                             </div>
-                            ]]></comment>
-                        </shell>
-                    </fields>
-                </abandoned_cart>
                 <sync_settings tranlate="label" module="ddg">
                     <label>Sync Settings</label>
                     <frontend_type>text</frontend_type>
@@ -2720,6 +2906,14 @@
                     <show_in_website>1</show_in_website>
                     <show_in_store>0</show_in_store>
                     <fields>
+                        <admin_title translate="label" module="ddg">
+                            <label>Admin Tasks</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </admin_title>
                         <setup_data_fields translate="label comment" module="ddg">
                             <label>Automap Data Fields</label>
                             <frontend_model>ddg_automation/adminhtml_system_advanced_setupdatafields</frontend_model>
@@ -2729,6 +2923,33 @@
                             <show_in_store>0</show_in_store>
                             <comment><![CDATA[Create Datafields In Connector And Map Them. Including Customer, Address And Sales Information.]]></comment>
                         </setup_data_fields>
+                        <delete_contact translate="label comment" module="ddg">
+                            <label><![CDATA[Delete All Contact ID'S]]></label>
+                            <frontend_model>ddg_automation/adminhtml_system_advanced_deletecontactids</frontend_model>
+                            <sort_order>12</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[Remove the contact id's. When using different API username account from initial setup please click here to remove all.]]></comment>
+                        </delete_contact>
+                        <suppressed_contacts module="ddg" translate="label comment">
+                            <label>Refresh Supressions</label>
+                            <frontend_model>ddg_automation/adminhtml_system_advanced_suppressedcontacts</frontend_model>
+                            <sort_order>14</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Refresh Historically Suppressed contacts for 10years period.</comment>
+                        </suppressed_contacts>
+                        <reset_all translate="label comment" module="ddg">
+                            <label><![CDATA[Reset Tables]]></label>
+                            <frontend_model>ddg_automation/adminhtml_system_advanced_reset</frontend_model>
+                            <sort_order>16</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[All dotmailer tables will be removed, re-created and all data will be re-filled. Just like doing a fresh install.]]></comment>
+                        </reset_all>
                         <contact_title translate="label" module="ddg">
                             <label>Manually Run Sync</label>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
@@ -2791,6 +3012,15 @@
                             <show_in_store>0</show_in_store>
                             <comment><![CDATA[Run the quote sync manually.]]></comment>
                         </quote_sync>
+                        <catalog_sync tranlate="label comment" module="ddg">
+                            <label>Catalog Sync</label>
+                            <frontend_model>ddg_automation/adminhtml_system_advanced_runcatalogsync</frontend_model>
+                            <sort_order>59</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[Run the catalog sync manually.]]></comment>
+                        </catalog_sync>
                         <actions_title translate="label" module="ddg">
                             <label>Reset Sync Options</label>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
@@ -2799,15 +3029,6 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </actions_title>
-                        <delete_contact translate="label comment" module="ddg">
-                            <label><![CDATA[Delete All Contact ID'S]]></label>
-                            <frontend_model>ddg_automation/adminhtml_system_advanced_deletecontactids</frontend_model>
-                            <sort_order>70</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                            <comment><![CDATA[Remove the contact id's. When using different API username account from initial setup please click here to remove all.]]></comment>
-                        </delete_contact>
                         <reimport_customers  translate="label comment" module="ddg" >
                             <label>Refresh Customers</label>
                             <frontend_model>ddg_automation/adminhtml_system_advanced_resetcustomersimport</frontend_model>
@@ -2835,15 +3056,6 @@
                             <show_in_store>0</show_in_store>
                             <comment><![CDATA[Mark all order data to be imported.]]></comment>
                         </reimport_orders>
-                        <suppressed_contacts module="ddg" translate="label comment">
-                            <label>Refresh Supressions</label>
-                            <frontend_model>ddg_automation/adminhtml_system_advanced_suppressedcontacts</frontend_model>
-                            <sort_order>110</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                            <comment>Refresh Historically Suppressed contacts for 10years period.</comment>
-                        </suppressed_contacts>
                         <reimport_quotes module="ddg" translate="label comment">
                             <label>Refresh Quote Data</label>
                             <frontend_model>ddg_automation/adminhtml_system_advanced_reimportquotes</frontend_model>
@@ -2871,15 +3083,15 @@
                             <show_in_store>0</show_in_store>
                             <comment><![CDATA[Mark all wishlist data to be imported.]]></comment>
                         </reimport_wishlist>
-                        <reset_all translate="label comment" module="ddg">
-                            <label><![CDATA[Reset Tables]]></label>
-                            <frontend_model>ddg_automation/adminhtml_system_advanced_reset</frontend_model>
-                            <sort_order>150</sort_order>
+                        <reimport_catalog module="ddg" translate="label comment">
+                            <label>Refresh Catalog Data</label>
+                            <frontend_model>ddg_automation/adminhtml_system_advanced_reimportcatalog</frontend_model>
+                            <sort_order>145</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
+                            <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
-                            <comment><![CDATA[All dotmailer tables will be removed, re-created and all data will be re-filled. Just like doing a fresh install.]]></comment>
-                        </reset_all>
+                            <comment><![CDATA[Mark all catalog data to be imported.]]></comment>
+                        </reimport_catalog>
                     </fields>
                 </sync_settings>
                 <debug translate="label" module="ddg">
@@ -2899,17 +3111,15 @@
                             <show_in_store>0</show_in_store>
                             <comment>Log sync info into this file connector_api.log.</comment>
                         </debug_enabled>
-                        <debug_api_calls translate="label comment" module="ddg">
-                            <label>Debug All API Calls</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                        <api_request_time_limit translate="label comment" module="ddg">
+                            <label>Debug api calls time</label>
+                            <frontend_type>text</frontend_type>
                             <sort_order>20</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
-                            <comment>Log all API calls into the connector_api.log file, debug mode must be enabled.</comment>
-                            <depends><debug_enabled>1</debug_enabled></depends>
-                        </debug_api_calls>
+                            <comment>Set the number in seconds that api calls greater will be logged.</comment>
+                        </api_request_time_limit>
                         <raygun_code translate="label" module="ddg">
                             <label>Raygun Application Code</label>
                             <frontend_type>text</frontend_type>
@@ -2918,6 +3128,16 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </raygun_code>
+                        <raygun_async translate="label comment" moduel="ddg">
+                            <label>Use async mode to send.</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Some env cannot use the async mode of sending.</comment>
+                        </raygun_async>
                     </fields>
                 </debug>
                 <feed_configuration translate="label" module="ddg">
@@ -3027,6 +3247,24 @@
                         </custom_authorization>
                     </fields>
                 </oauth>
+                <ip_restriction>
+                    <label>Dynamic Pages IP Restriction</label>
+                    <sort_order>7000</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <ip_addresses>
+                            <label></label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Enter ip addresses separated by comma (,)</comment>
+                        </ip_addresses>
+                    </fields>
+                </ip_restriction>
             </groups>
         </connector_developer_settings>
     </sections>

@@ -16,4 +16,9 @@ class  Dotdigitalgroup_Email_Adminhtml_Widget_ChooserController extends Mage_Adm
             $this->getResponse()->setBody($block->toHtml());
         }
     }
+
+    protected function _isAllowed()
+    {
+        return Mage::getSingleton('admin/session')->isAllowed('system/config/connector_dynamic_content');
+    }
 }

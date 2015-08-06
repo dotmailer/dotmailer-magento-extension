@@ -45,14 +45,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs extends Mage_Adminhtm
 				'content' => $this->getLayout()->createBlock('ddg_automation/adminhtml_dashboard_tabs_analysis')->toHtml()
 			)
 		);
-		$this->addTab(
-			'config',
-			array (
-				'label' => $this->__('API Status'),
-				'title' => $this->__('API Status'),
-				'content' => $this->getLayout()->createBlock('ddg_automation/adminhtml_dashboard_tabs_config')->toHtml()
-			)
-		);
 		return parent::_beforeToHtml();
 	}
 }

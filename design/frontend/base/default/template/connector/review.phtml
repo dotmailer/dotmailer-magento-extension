@@ -104,7 +104,12 @@ $order = $this->getOrder();
                 <div class="product-name" align="center"><b><?php echo substr($_product->getName(), 0, 40);?></b></div>
                 <div align="center">
                     <a class="proudct-url" href="<?php echo Mage::getUrl('review/product/list', array('id'=> $_product->getId())).$helper->getAnchor($website);?>">
-                        <?php echo $this->__("Review Now") ?>
+                        <?php
+                        if($urlText = $this->getTextForUrl($_product->getStoreId()))
+                            echo $urlText;
+                        else
+                            echo $this->__('View Now');
+                        ?>
                     </a>
                 </div>
             </td>

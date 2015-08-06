@@ -25,7 +25,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_DashboardController extends Mage_Adm
 		$this->_title($this->__('Dashboard'));
 
 		$this->loadLayout();
-		$this->_setActiveMenu('ddg_automation');
+		$this->_setActiveMenu('email_connector');
 		$this->_addContent($this->getLayout()->createBlock('adminhtml/widget_container'))
 		     ->_addLeft($this->getLayout()->createBlock ('ddg_automation/adminhtml_dashboard_tabs'));
 		$this->renderLayout();
@@ -46,13 +46,12 @@ class Dotdigitalgroup_Email_Adminhtml_Email_DashboardController extends Mage_Adm
 	 */
 	public function emailConfigAction() {
 		$block = $this->getLayout()->createBlock('ddg_automation/adminhtml_dashboard_tabs_config');
-
 		$this->getResponse()->setBody($block->toHtml());
 	}
 
 	protected function _isAllowed()
 	{
-		return Mage::getSingleton('admin/session')->isAllowed('newsletter/ddg_automation/ddg_automation_dashboard');
+		return Mage::getSingleton('admin/session')->isAllowed('email_connector/email_connector_dashboard');
 	}
 
 

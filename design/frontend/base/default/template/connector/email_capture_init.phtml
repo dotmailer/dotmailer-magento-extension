@@ -1,8 +1,20 @@
+<!-- Easy Email Capture For Checkout -->
 <?php if(Mage::helper('ddg')->getEasyEmailCapture()): ?>
     <script type="text/javascript">
         //<![CDATA[
         document.observe("dom:loaded", function() {
             window.emailcapture = new emailCapture();
+        });
+        //]]>
+    </script>
+<?php endif; ?>
+
+<!-- Easy Email Capture For Newsletter Field -->
+<?php if(Mage::helper('ddg')->getEasyEmailCaptureForNewsletter()): ?>
+    <script type="text/javascript">
+        //<![CDATA[
+        document.observe("dom:loaded", function() {
+            window.emailcapture = new newsletterEmailCapture();
         });
         //]]>
     </script>

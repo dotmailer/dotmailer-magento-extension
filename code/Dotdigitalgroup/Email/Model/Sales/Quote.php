@@ -68,15 +68,15 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
 						    $from = Zend_Date::now( $locale )->subHour( $this->_getLostBasketCustomerInterval( $num, $storeId ) );
 					    }
 
-					    $to = clone( $from );
-					    $from->sub( '5', Zend_Date::MINUTE );
+                        $to = clone($from);
+                        $from->sub('5', Zend_Date::MINUTE);
 
 					    //active quotes
 					    $quoteCollection = $this->_getStoreQuotes( $from->toString( 'YYYY-MM-dd HH:mm' ), $to->toString( 'YYYY-MM-dd HH:mm' ), $guest = false, $storeId );
 
 					    if ( $quoteCollection->getSize() ) {
+						    Mage::helper( 'ddg' )->log( 'Customer lost baskets : ' . $num . ', from : ' . $from->toString( 'YYYY-MM-dd HH:mm' ) . ':' . $to->toString( 'YYYY-MM-dd HH:mm' ) );
 					    }
-					    Mage::helper( 'ddg' )->log( 'Customer lost baskets : ' . $num . ', from : ' . $from->toString( 'YYYY-MM-dd HH:mm' ) . ':' . $to->toString( 'YYYY-MM-dd HH:mm' ) );
 
 					    //campaign id for customers
 					    $campaignId = $this->_getLostBasketCustomerCampaignId( $num, $storeId );
@@ -84,20 +84,35 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
 
 						    $email        = $quote->getCustomerEmail();
 						    $websiteId    = $store->getWebsiteId();
+						    $quoteId      = $quote->getId();
 						    // upate last quote id for the contact
-						    Mage::helper('ddg')->updateLastQuoteId($quote->getId(), $email, $websiteId);
+						    Mage::helper('ddg')->updateLastQuoteId($quoteId, $email, $websiteId);
+
+                            // update abandoned product name for contact
+                            $items = $quote->getAllItems();
+                            $mostExpensiveItem = false;
+                            foreach ($items as $item) {
+                                /** @var $item Mage_Sales_Model_Quote_Item */
+                                if ($mostExpensiveItem == false)
+                                    $mostExpensiveItem = $item;
+                                elseif ($item->getPrice() > $mostExpensiveItem->getPrice())
+                                    $mostExpensiveItem = $item;
+                            }
+                            if ($mostExpensiveItem)
+                                Mage::helper('ddg')->updateAbandonedProductName($mostExpensiveItem->getName(), $email, $websiteId);
 
 						    //send email only if the interval limit passed, no emails during this interval
 						    $campignFound = $this->_checkCustomerCartLimit( $email, $storeId );
 
 						    //no campign found for interval pass
-						    if ( !$campignFound ) {
+                            if (!$campignFound) {
 
 							    //save lost basket for sending
 							    $sendModel = Mage::getModel('ddg_automation/campaign')
 								    ->setEmail( $email )
 								    ->setCustomerId( $quote->getCustomerId() )
 								    ->setEventName( 'Lost Basket' )
+							        ->setQuoteId($quoteId)
 								    ->setMessage('Abandoned Cart :' . $num)
 								    ->setCampaignId( $campaignId )
 								    ->setStoreId( $storeId )
@@ -120,8 +135,8 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
 					    } else {
 						    $from = Zend_Date::now( $locale )->subHour( $this->_getLostBasketGuestIterval( $num, $storeId ) );
 					    }
-					    $to = clone( $from );
-					    $from->sub( '5', Zend_Date::MINUTE );
+                        $to = clone($from);
+                        $from->sub('5', Zend_Date::MINUTE);
 					    $quoteCollection = $this->_getStoreQuotes( $from->toString( 'YYYY-MM-dd HH:mm' ), $to->toString( 'YYYY-MM-dd HH:mm' ), $guest = true, $storeId );
 
 					    if ( $quoteCollection->getSize() ) {
@@ -132,17 +147,33 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
 
 						    $email        = $quote->getCustomerEmail();
 						    $websiteId    = $store->getWebsiteId();
+						    $quoteId      = $quote->getId();
 						    // upate last quote id for the contact
-						    Mage::helper('ddg')->updateLastQuoteId($quote->getId(), $email, $websiteId);
+						    Mage::helper('ddg')->updateLastQuoteId($quoteId, $email, $websiteId);
+
+                            // update abandoned product name for contact
+                            $items = $quote->getAllItems();
+                            $mostExpensiveItem = false;
+                            foreach ($items as $item) {
+                                /** @var $item Mage_Sales_Model_Quote_Item */
+                                if ($mostExpensiveItem == false)
+                                    $mostExpensiveItem = $item;
+                                elseif ($item->getPrice() > $mostExpensiveItem->getPrice())
+                                    $mostExpensiveItem = $item;
+                            }
+                            if ($mostExpensiveItem)
+                                Mage::helper('ddg')->updateAbandonedProductName($mostExpensiveItem->getName(), $email, $websiteId);
+
 						    //send email only if the interval limit passed, no emails during this interval
 						    $campignFound = $this->_checkCustomerCartLimit( $email, $storeId );
 
 						    //no campign found for interval pass
-						    if ( !$campignFound ) {
+                            if (!$campignFound) {
 							    //save lost basket for sending
 							    $sendModel = Mage::getModel('ddg_automation/campaign')
 								    ->setEmail( $email )
 								    ->setEventName( 'Lost Basket' )
+								    ->setQuoteId($quoteId)
 								    ->setCheckoutMethod( 'Guest' )
 								    ->setMessage('Guest Abandoned Cart : ' . $num)
 								    ->setCampaignId( $guestCampaignId )
@@ -216,11 +247,17 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
             ->addFieldToFilter('updated_at', $updated);
         //guests
 	    if ($guest) {
-	        $salesCollection->addFieldToFilter( 'customer_id', array( 'null' => true ) );
+	        $salesCollection->addFieldToFilter( 'main_table.customer_id', array( 'null' => true ) );
         } else {
 		    //customers
-	        $salesCollection->addFieldToFilter( 'customer_id', array( 'notnull' => true ) );
+	        $salesCollection->addFieldToFilter( 'main_table.customer_id', array( 'notnull' => true ) );
         }
+
+        //process rules on collection
+        $ruleModel = Mage::getModel('ddg_automation/rules');
+        $salesCollection = $ruleModel->process(
+            $salesCollection, Dotdigitalgroup_Email_Model_Rules::ABANDONED, Mage::app()->getStore($storeId)->getWebsiteId()
+        );
 
 	    return $salesCollection;
     }

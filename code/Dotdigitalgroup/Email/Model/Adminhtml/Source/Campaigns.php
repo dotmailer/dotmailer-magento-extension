@@ -13,8 +13,12 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Campaigns
     {
         $fields = array();
         $websiteName = Mage::app()->getRequest()->getParam('website', false);
-        //admin
-        $website = 0;
+
+        $website = Mage::app()->getRequest()->getParam('website', false);
+        if ($website)
+            $website = Mage::app()->getWebsite($website);
+        else
+            $website = 0;
 	    $fields[] = array('value' => '0', 'label' => Mage::helper('ddg')->__('-- Please Select --'));
 
 	    if ($websiteName) {
@@ -40,10 +44,10 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Campaigns
 
 		    foreach ( $campaigns as $one ) {
 			    if ( isset( $one->id ) ) {
-				    $fields[] = array(
-					    'value' => $one->id,
-					    'label' => Mage::helper( 'ddg' )->__( addslashes( $one->name ) )
-				    );
+                    $fields[] = array(
+                        'value' => $one->id,
+                        'label' => Mage::helper('ddg')->__(addslashes($one->name))
+                    );
 			    }
 		    }
 	    }

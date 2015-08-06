@@ -1,28 +1,19 @@
 <?php
-
 class Dotdigitalgroup_Email_Model_Apiconnector_Test extends Dotdigitalgroup_Email_Model_Apiconnector_Client
 {
-    const TEST_API_USERNAME = 'apiuser-8e3b8f244ec9@apiconnector.com';
-    const TEST_API_PASSWORD = 'TWFnZW50bzIwMTM=';
-    const TEST_API_CAMPAIGN = '2643928';
-    const TEST_CONTACT_ID   = '13';
-    const TEST_CONTACT_EMAIL = 'ben.staveley@dotmailer.co.uk';
-
-
     /**
-	 * Validate apiuser on save.
-	 *
-	 * @param $apiUsername
-	 * @param $apiPassword
-	 *
-	 * @return bool|mixed
-	 */
+     * Validate apiuser on save.
+     *
+     * @param $apiUsername
+     * @param $apiPassword
+     *
+     * @return bool|mixed
+     */
     public function validate($apiUsername, $apiPassword)
     {
         if ($apiUsername && $apiPassword) {
-                $this->setApiUsername($apiUsername)
+            $this->setApiUsername($apiUsername)
                 ->setApiPassword($apiPassword);
-
             $accountInfo = $this->getAccountInfo();
             if (isset($accountInfo->message)) {
                 Mage::getSingleton('adminhtml/session')->addError($accountInfo->message);
@@ -33,15 +24,14 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Test extends Dotdigitalgroup_Emai
         }
         return false;
     }
-
     /**
-	 * Ajax validate api user.
-	 *
-	 * @param $apiUsername
-	 * @param $apiPassword
-	 *
-	 * @return bool|string
-	 */
+     * Ajax validate api user.
+     *
+     * @param $apiUsername
+     * @param $apiPassword
+     *
+     * @return bool|string
+     */
     public function ajaxvalidate($apiUsername, $apiPassword)
     {
         if ($apiUsername && $apiPassword) {
@@ -56,24 +46,5 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Test extends Dotdigitalgroup_Emai
             return $message;
         }
         return false;
-    }
-
-    /**
-	 * Confirm the installation.
-	 */
-    public function sendInstallConfirmation()
-    {
-        // set test credentials
-        $this->setApiUsername(self::TEST_API_USERNAME)
-            ->setApiPassword(
-	            base64_decode(self::TEST_API_PASSWORD));
-        $testEmail         = self::TEST_CONTACT_EMAIL;
-        $contactId         = self::TEST_CONTACT_ID;
-        $campaignId        = self::TEST_API_CAMPAIGN;
-
-        /**
-         * send initial info
-         */
-        $this->sendIntallInfo($testEmail, $contactId, $campaignId);
     }
 }

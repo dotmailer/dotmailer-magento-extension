@@ -7,6 +7,8 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Rfm extends 
 	protected $_group = 0;
 	protected $_website = 0;
 
+    protected $_resultCount;
+
 	const RECENCY       =   'Recency';
 	const FREQUENCY     =   'Frequency';
 	const MONETARY      =   'Monetary';
@@ -71,36 +73,35 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Rfm extends 
 	 * @param $array
 	 * @return array
 	 */
-	protected function calculateQuartile($array){
-		if(count($array) == 0)
-			return array(
-				"Low" => 0,
-				"Medium" => 0,
-				"High" => 0
-			);
+    protected function calculateQuartile($array)
+    {
+        $count = $this->_resultCount;
+        if ($count == 0)
+            return array(
+                "Low" => 0,
+                "Medium" => 0,
+                "High" => 0
+            );
 
-		sort($array);
-		$count = count($array);
+        $first = intval(round(.25 * ($count + 1)));
+        $second = intval(round(.50 * ($count + 1)));
+        $third = intval(round(.75 * ($count + 1)));
 
-		$first = intval(round (.25 * ( $count + 1 )));
-		$second = intval(round(.50 * ( $count + 1 )));
-		$third = intval(round(.75 * ( $count + 1 )));
+        if (!array_key_exists($first, $array))
+            $first = $this->getClosest($first, $array);
 
-		if(!array_key_exists($first, $array))
-			$first = $this->getClosest($first, $array);
+        if (!array_key_exists($second, $array))
+            $second = $this->getClosest($second, $array);
 
-		if(!array_key_exists($second, $array))
-			$second = $this->getClosest($second, $array);
+        if (!array_key_exists($third, $array))
+            $third = $this->getClosest($third, $array);
 
-		if(!array_key_exists($third, $array))
-			$third = $this->getClosest($third, $array);
-
-		return array(
-			"Low" => $array[$first],
-			"Medium" => $array[$second],
-			"High" => $array[$third]
-		);
-	}
+        return array(
+            "Low" => $array[$first],
+            "Medium" => $array[$second],
+            "High" => $array[$third]
+        );
+    }
 
 	/**
 	 * find closest index key from array
@@ -124,16 +125,42 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Rfm extends 
 	/**
 	 *  prepare rfm data
 	 */
-	protected function prepareRfm()
-	{
-		$collection = $this->getPreparedCollection();
+    protected function prepareRfm()
+    {
+        $collection = $this->getPreparedCollection();
+        $conn = Mage::getSingleton('core/resource')->getConnection('core_read');
 
-		$this->rfm[self::FREQUENCY] = $this->calculateQuartile($collection->getColumnValues('customer_total_orders'));
-		$this->rfm[self::RECENCY] = $this->calculateQuartile($collection->getColumnValues('last_order_days_ago'));
-		$this->rfm[self::MONETARY] = $this->calculateQuartile($collection->getColumnValues('customer_average_order_value'));
-	}
+        $select = $collection->getSelect()
+            ->reset(Zend_Db_Select::COLUMNS)
+            ->columns(array(
+                'customer_total_orders' => "count(*)",
+            ))->order('customer_total_orders');
+        $values = $conn->fetchCol($select);
+        $this->_resultCount = count($values);
+        $this->rfm[self::FREQUENCY] = $this->calculateQuartile($values);
 
-	protected function _getSalesAmountExpression($collection)
+        $select = $collection->getSelect()
+            ->reset(Zend_Db_Select::COLUMNS)
+            ->reset(Zend_Db_Select::ORDER)
+            ->columns(array(
+                'last_order_days_ago' => "DATEDIFF(date(NOW()) , date(MAX(created_at)))"
+            ))->order('last_order_days_ago');
+        $values = $conn->fetchCol($select);
+        $this->rfm[self::RECENCY] = $this->calculateQuartile($values);
+
+        $expr = $this->_getSalesAmountExpression($collection);
+        $select = $collection->getSelect()
+            ->reset(Zend_Db_Select::COLUMNS)
+            ->reset(Zend_Db_Select::ORDER)
+            ->columns(array(
+                'customer_average_order_value' => "SUM({$expr})/count(*)",
+            ))->order('customer_average_order_value');
+        $values = $conn->fetchCol($select);
+        $this->rfm[self::MONETARY] = $this->calculateQuartile($values);
+    }
+
+
+    protected function _getSalesAmountExpression($collection)
 	{
 		$adapter = $collection->getConnection();
 		$expressionTransferObject = new Varien_Object(array(
