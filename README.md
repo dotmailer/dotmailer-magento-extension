@@ -24,6 +24,14 @@ Compatibility
 
 ### Upgrade notice
 
+### V5.0.1
+
+## Bug fixes
+
+ - Fixed upgrade script so it does not get skipped
+ - Added ACL to required controllers
+
+
 ### V5.0.0
   
 ## Features
