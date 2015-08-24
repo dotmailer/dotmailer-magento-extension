@@ -15,6 +15,6 @@ class Dotdigitalgroup_Email_Model_Customer extends Mage_Customer_Model_Customer
         if(Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DISABLE_CUSTOMER_SUCCESS, $storeId))
             return;
 
-        parent::sendNewAccountEmail($type = 'registered', $backUrl = '', $storeId = '0');
+        parent::sendNewAccountEmail($type, $backUrl, $storeId);
     }
 }

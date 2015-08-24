@@ -21,7 +21,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Automation_Connect extends Ma
         $adminUser = Mage::getSingleton('admin/session')->getUser();
         $refreshToken = $adminUser->getRefreshToken();
         $title = ($refreshToken)? $this->__('Disconnect') : $this->__('Connect');
-        $url = ($refreshToken)? $this->getUrl('*/email_automation/disconnect') : $url;
+        $url = ($refreshToken)? $this->getUrl('*/email_studio/disconnect') : $url;
 
         return $this->getLayout()->createBlock('adminhtml/widget_button')
             ->setType('button')

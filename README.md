@@ -24,6 +24,15 @@ Compatibility
 
 ### Upgrade notice
 
+### V5.0.2
+
+## Bug fixes
+
+ - Fixed fatal error while doing single sync. Key does not exist/not an object.
+ - Fixed rewrite of sendNewAccountEmail function to call parent without default values.
+ - Fixed OAUTH disconnect link
+ - Contact sync check if manufacturer attribute exist before pulling value. 
+
 ### V5.0.1
 
 ## Bug fixes

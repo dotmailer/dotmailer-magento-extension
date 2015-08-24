@@ -144,18 +144,24 @@ class Dotdigitalgroup_Email_Model_Quote extends Mage_Core_Model_Abstract
             $limit = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT, $website);
             $collection = $this->_getQuoteToImport($website, $limit, true);
             foreach ($collection as $emailQuote) {
-                //register in queue with importer
-                $check = Mage::getModel('ddg_automation/importer')->registerQueue(
-                    Dotdigitalgroup_Email_Model_Importer::IMPORT_TYPE_QUOTE,
-                    array($emailQuote->getQuoteId()),
-                    Dotdigitalgroup_Email_Model_Importer::MODE_SINGLE,
-                    $website->getId()
-                );
-                if ($check) {
-                    $message = 'Quote updated : ' . $emailQuote->getQuoteId();
-                    Mage::helper('ddg')->log($message);
-                    $emailQuote->setModified(null)->save();
-                    $this->_count++;
+                $store = Mage::app()->getStore($emailQuote->getStoreId());
+                $quote = Mage::getModel('sales/quote')->setStore($store)->load($emailQuote->getQuoteId());
+                if($quote->getId())
+                {
+                    $connectorQuote = Mage::getModel('ddg_automation/connector_quote', $quote);
+                    //register in queue with importer
+                    $check = Mage::getModel('ddg_automation/importer')->registerQueue(
+                        Dotdigitalgroup_Email_Model_Importer::IMPORT_TYPE_QUOTE,
+                        $connectorQuote,
+                        Dotdigitalgroup_Email_Model_Importer::MODE_SINGLE,
+                        $website->getId()
+                    );
+                    if ($check) {
+                        $message = 'Quote updated : ' . $emailQuote->getQuoteId();
+                        Mage::helper('ddg')->log($message);
+                        $emailQuote->setModified(null)->save();
+                        $this->_count++;
+                    }
                 }
             }
         } catch (Exception $e) {

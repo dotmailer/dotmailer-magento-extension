@@ -24,6 +24,8 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         Mage_Newsletter_Model_Subscriber::STATUS_UNCONFIRMED => 'Unconfirmed'
     );
 
+    private $attribute_check = false;
+
 	/**
 	 * constructor, mapping hash to map.
 	 *
@@ -858,14 +860,23 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getFirstBrandPur()
     {
-        $id = $this->customer->getProductIdForFirstBrand();
-        if($id){
-            $brand = Mage::getModel('catalog/product')
-                ->setStoreId($this->customer->getStoreId())
-                ->load($id)
-                ->getAttributeText('manufacturer');
-            if($brand)
-                return $brand;
+        if(!$this->attribute_check){
+            $attribute = Mage::getModel('catalog/resource_eav_attribute')
+                ->loadByCode('catalog_product', 'manufacturer');
+            if($attribute->getId())
+                $this->attribute_check = true;
+        }
+
+        if($this->attribute_check){
+            $id = $this->customer->getProductIdForFirstBrand();
+            if($id){
+                $brand = Mage::getModel('catalog/product')
+                    ->setStoreId($this->customer->getStoreId())
+                    ->load($id)
+                    ->getAttributeText('manufacturer');
+                if($brand)
+                    return $brand;
+            }
         }
         return "";
     }
@@ -877,16 +888,25 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getLastBrandPur()
     {
-        $id = $this->customer->getProductIdForLastBrand();
-        if($id){
-            $brand = Mage::getModel('catalog/product')
-                ->setStoreId($this->customer->getStoreId())
-                ->load($id)
-                ->getAttributeText('manufacturer');
-            if($brand)
-                return $brand;
+        if(!$this->attribute_check){
+            $attribute = Mage::getModel('catalog/resource_eav_attribute')
+                ->loadByCode('catalog_product', 'manufacturer');
+            if($attribute->getId())
+                $this->attribute_check = true;
         }
-        return "";
+
+        if($this->attribute_check){
+            $id = $this->customer->getProductIdForLastBrand();
+            if($id){
+                $brand = Mage::getModel('catalog/product')
+                    ->setStoreId($this->customer->getStoreId())
+                    ->load($id)
+                    ->getAttributeText('manufacturer');
+                if($brand)
+                    return $brand;
+            }
+            return "";
+        }
     }
 
     /**
