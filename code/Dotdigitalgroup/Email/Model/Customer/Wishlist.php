@@ -30,24 +30,25 @@ class Dotdigitalgroup_Email_Model_Customer_Wishlist
      * @var string
      */
     public $updated_at;
-	/**
-	 * constructor.
-	 *
-	 * @param Mage_Customer_Model_Customer $customer
-	 */
-	public function __construct(Mage_Customer_Model_Customer $customer)
-    {
 
-        $this->setCustomerId($customer->getId());
-        $this->email = $customer->getEmail();
+    /**
+     * @param $email
+     * @return $this
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+        return $this;
     }
 
     /**
-     * @param mixed $customer_id
+     * @param $customer_id
+     * @return $this
      */
     public function setCustomerId($customer_id)
     {
         $this->customer_id = (int) $customer_id;
+        return $this;
     }
 
     /**

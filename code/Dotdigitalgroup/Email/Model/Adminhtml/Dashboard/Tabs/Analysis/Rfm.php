@@ -49,7 +49,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Rfm extends 
 			$collection->addFieldToFilter('store_id', array('in' => $storeIds));
 		}
 
-		$expr = $this->_getSalesAmountExpression($collection);
+		$expr = Mage::getResourceModel('ddg_automation/contact')->getSalesAmountExpression($collection);
 		$isFilter = $this->_store || $this->_website || $this->_group;
 		if ($isFilter == 0) {
 			$expr = '(' . $expr . ') * main_table.base_to_global_rate';
@@ -128,59 +128,19 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Rfm extends 
     protected function prepareRfm()
     {
         $collection = $this->getPreparedCollection();
-        $conn = Mage::getSingleton('core/resource')->getConnection('core_read');
+		$contactResource = Mage::getResourceModel('ddg_automation/contact');
 
-        $select = $collection->getSelect()
-            ->reset(Zend_Db_Select::COLUMNS)
-            ->columns(array(
-                'customer_total_orders' => "count(*)",
-            ))->order('customer_total_orders');
-        $values = $conn->fetchCol($select);
+        $values = $contactResource->prepareFrequency($collection);
         $this->_resultCount = count($values);
         $this->rfm[self::FREQUENCY] = $this->calculateQuartile($values);
 
-        $select = $collection->getSelect()
-            ->reset(Zend_Db_Select::COLUMNS)
-            ->reset(Zend_Db_Select::ORDER)
-            ->columns(array(
-                'last_order_days_ago' => "DATEDIFF(date(NOW()) , date(MAX(created_at)))"
-            ))->order('last_order_days_ago');
-        $values = $conn->fetchCol($select);
+
+        $values = $contactResource->prepareRecency($collection);
         $this->rfm[self::RECENCY] = $this->calculateQuartile($values);
 
-        $expr = $this->_getSalesAmountExpression($collection);
-        $select = $collection->getSelect()
-            ->reset(Zend_Db_Select::COLUMNS)
-            ->reset(Zend_Db_Select::ORDER)
-            ->columns(array(
-                'customer_average_order_value' => "SUM({$expr})/count(*)",
-            ))->order('customer_average_order_value');
-        $values = $conn->fetchCol($select);
+		$values = $contactResource->prepareMonetary($collection);
         $this->rfm[self::MONETARY] = $this->calculateQuartile($values);
     }
-
-
-    protected function _getSalesAmountExpression($collection)
-	{
-		$adapter = $collection->getConnection();
-		$expressionTransferObject = new Varien_Object(array(
-			'expression' => '%s - %s - %s - (%s - %s - %s)',
-			'arguments' => array(
-				$adapter->getIfNullSql('main_table.base_total_invoiced', 0),
-				$adapter->getIfNullSql('main_table.base_tax_invoiced', 0),
-				$adapter->getIfNullSql('main_table.base_shipping_invoiced', 0),
-				$adapter->getIfNullSql('main_table.base_total_refunded', 0),
-				$adapter->getIfNullSql('main_table.base_tax_refunded', 0),
-				$adapter->getIfNullSql('main_table.base_shipping_refunded', 0),
-			)
-		));
-
-		return vsprintf(
-			$expressionTransferObject->getExpression(),
-			$expressionTransferObject->getArguments()
-		);
-
-	}
 
 	/**
 	 * @param int $store

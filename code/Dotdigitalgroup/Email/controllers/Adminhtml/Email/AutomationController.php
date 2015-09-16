@@ -41,18 +41,13 @@ class Dotdigitalgroup_Email_Adminhtml_Email_AutomationController extends Mage_Ad
 		if (!is_array($automationIds)) {
 			$this->_getSession()->addError($this->__('Please select .'));
 		}else {
-			try {
-				foreach ($automationIds as $id) {
-					$automation = Mage::getSingleton('ddg_automation/automation')->load($id);
-					Mage::dispatchEvent('connector_controller_automation_delete', array('automation' => $automation));
-					$automation->delete();
-				}
+			$num = Mage::getResourceModel('ddg_automation/automation')->massDelete($automationIds);
+			if(is_int($num)){
 				$this->_getSession()->addSuccess(
-					Mage::helper('ddg')->__('Total of %d record(s) have been deleted.', count($automationIds))
+					Mage::helper('ddg')->__('Total of %d record(s) have been deleted.', $num)
 				);
-			} catch (Exception $e) {
-				$this->_getSession()->addError($e->getMessage());
-			}
+			}else
+				$this->_getSession()->addError($num->getMessage());
 		}
 		$this->_redirect('*/*/index');
 	}
@@ -66,25 +61,13 @@ class Dotdigitalgroup_Email_Adminhtml_Email_AutomationController extends Mage_Ad
 		if (!is_array($automationIds)) {
 			$this->_getSession()->addError($this->__('Please select .'));
 		}else {
-			try {
-
-				/** @var $coreResource Mage_Core_Model_Resource */
-				$coreResource = Mage::getSingleton('core/resource');
-
-				/** @var $conn Varien_Db_Adapter_Pdo_Mysql */
-				$conn = $coreResource->getConnection('core_write');
-
-				$num = $conn->update($coreResource->getTableName('ddg_automation/automation'),
-					array('enrolment_status' => new Zend_Db_Expr('null')),
-					array('id IN(?)' => $automationIds)
-				);
-
+			$num = Mage::getResourceModel('ddg_automation/automation')->massResend($automationIds);
+			if(is_int($num)){
 				$this->_getSession()->addSuccess(
 					Mage::helper('ddg')->__('Total of %d record(s) have been deleted.', $num)
 				);
-			} catch (Exception $e) {
-				$this->_getSession()->addError($e->getMessage());
-			}
+			}else
+				$this->_getSession()->addError($num->getMessage());
 		}
 		$this->_redirect('*/*/index');
 	}

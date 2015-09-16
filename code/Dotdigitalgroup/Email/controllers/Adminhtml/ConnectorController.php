@@ -57,9 +57,9 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
      */
     public function resetordersAction()
     {
-        $num = Mage::getModel('ddg_automation/order')->resetOrders();
-        Mage::helper('ddg')->log('-- Reset Orders for reimport : ' . $num);
-        Mage::getSingleton('adminhtml/session')->addSuccess('Done.');
+        $num = Mage::getResourceModel('ddg_automation/order')->resetOrders();
+        Mage::helper('ddg')->log('-- Reset Orders for re-import : ' . $num);
+        Mage::getSingleton('adminhtml/session')->addSuccess('Done. Refreshed '.$num);
         $this->_redirectReferer();
     }
 
@@ -68,9 +68,9 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
      */
     public function resetcustomersimportAction()
     {
-        Mage::getModel('ddg_automation/contact')->resetAllContacts();
-
-        Mage::getSingleton('adminhtml/session')->addSuccess('Done.');
+        $num = Mage::getResourceModel('ddg_automation/contact')->resetAllContacts();
+        Mage::helper('ddg')->log('-- Reset Contacts for re-import : ' . $num);
+        Mage::getSingleton('adminhtml/session')->addSuccess('Done. Refreshed '.$num);
 
         $this->_redirectReferer();
     }
@@ -91,19 +91,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
      */
     public function deletecontactidsAction()
     {
-        /** @var $coreResource Mage_Core_Model_Resource */
-        $coreResource = Mage::getSingleton('core/resource');
-
-        /** @var $conn Varien_Db_Adapter_Pdo_Mysql */
-        $conn = $coreResource->getConnection('core_write');
-        try{
-            $num = $conn->update($coreResource->getTableName('ddg_automation/contact'),
-                array('contact_id' => new Zend_Db_Expr('null')),
-                $conn->quoteInto('contact_id is ?', new Zend_Db_Expr('not null'))
-            );
-        }catch (Exception $e){
-            Mage::logException($e);
-        }
+        $num = Mage::getResourceModel('ddg_automation/contact')->deleteContactIds();
         Mage::getSingleton('adminhtml/session')->addSuccess('Number Of Contacts Id Removed: '. $num);
         $this->_redirectReferer();
     }
@@ -127,7 +115,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
      */
     public function resetcontactsajaxAction()
     {
-        $numReseted = Mage::getModel('ddg_automation/contact')->resetAllContacts();
+        $numReseted = Mage::getResourceModel('ddg_automation/contact')->resetAllContacts();
         $message = array('reseted' => $numReseted);
         $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($message));
     }
@@ -137,7 +125,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
      */
     public function ajaxresetsubscribersAction()
     {
-        $num = Mage::getModel('ddg_automation/contact')->resetSubscribers();
+        $num = Mage::getResourceModel('ddg_automation/contact')->resetSubscribers();
         $message = array('reseted' => $num);
         $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($message));
     }
@@ -147,7 +135,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
      */
     public function ajaxresetguestsAction()
     {
-        $num = Mage::getModel('ddg_automation/contact')->resetAllGuestContacts();
+        $num = Mage::getResourceModel('ddg_automation/contact')->resetAllGuestContacts();
         $message = array('reseted' => $num);
         $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($message));
     }
@@ -205,7 +193,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
 
     public function reimoprtsubscribersAction()
     {
-        $updated = Mage::getModel('ddg_automation/contact')->resetSubscribers();
+        $updated = Mage::getResourceModel('ddg_automation/contact')->resetSubscribers();
         if ($updated) {
             Mage::getSingleton('adminhtml/session')->addSuccess('Done.');
         } else {
@@ -246,33 +234,10 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
      */
     public function populatecontactsAction()
     {
+        Mage::getResourceModel('ddg_automation/contact')->populateAndCleanup();
 
-        //type of data to bring up-to-date
-        $type = $this->getRequest()->getParam('type', false);
-        $website = $this->getRequest()->getParam('website', false);
-        //required data not set
-        if (!$type && $website == false) {
-            return ;
-        }
+        Mage::getSingleton( 'adminhtml/session' )->addSuccess( "Contacts populated");
 
-        $contactTable = Mage::getSingleton('core/resource')->getTableName('ddg_automation/contact');
-
-        $customerCollection = Mage::getModel('customer/customer')->getCollection()
-            ->addFieldToFilter('website_id', $website);
-
-        $customerCollection->getSelect()
-            ->joinLeft(array('ec' => $contactTable), 'e.entity_id = ec.customer_id', array('customer_id' => 'ec.customer_id'))
-            ->where('ec.customer_id IS NULL');
-
-        //found customers t
-        if ($count = $customerCollection->getSize()) {
-            //trigger the save to update the contact table
-            foreach ( $customerCollection as $customer ) {
-                $customer->save();
-            }
-
-            Mage::getSingleton( 'adminhtml/session' )->addSuccess( "Total contacts populated : " . $count );
-        }
         $this->_redirectReferer();
     }
 
@@ -359,7 +324,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
      */
     public function resetquotesAction()
     {
-        $num = Mage::getModel('ddg_automation/quote')->resetQuotes();
+        $num = Mage::getResourceModel('ddg_automation/quote')->resetQuotes();
         Mage::helper('ddg')->log('-- Reset Quotes for reimport : ' . $num);
         Mage::getSingleton('adminhtml/session')->addSuccess('Done.');
         $this->_redirectReferer();
@@ -370,7 +335,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
      */
     public function resetreviewsAction()
     {
-        $num = Mage::getModel('ddg_automation/review')->reset();
+        $num = Mage::getResourceModel('ddg_automation/review')->reset();
         Mage::helper('ddg')->log('-- Reset Reviews for reimport : ' . $num);
         Mage::getSingleton('adminhtml/session')->addSuccess('Done.');
         $this->_redirectReferer();
@@ -381,7 +346,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
      */
     public function resetwishlistsAction()
     {
-        $num = Mage::getModel('ddg_automation/wishlist')->reset();
+        $num = Mage::getResourceModel('ddg_automation/wishlist')->reset();
         Mage::helper('ddg')->log('-- Reset Wishlist for reimport : ' . $num);
         Mage::getSingleton('adminhtml/session')->addSuccess('Done.');
         $this->_redirectReferer();
@@ -392,22 +357,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
      */
     public function resetAction()
     {
-        /** @var $coreResource Mage_Core_Model_Resource */
-        $coreResource = Mage::getSingleton('core/resource');
-
-        /** @var $conn Varien_Db_Adapter_Pdo_Mysql */
-        $conn = $coreResource->getConnection('core_write');
-        try{
-            //remove dotmailer code from core_resource table
-            $cond = $conn->quoteInto('code = ?', 'email_connector_setup');
-            $conn->delete($coreResource->getTableName('core_resource'), $cond);
-
-            //clean cache
-            Mage::app()->getCacheInstance()->flush();
-
-        }catch (Exception $e){
-            Mage::logException($e);
-        }
+        Mage::getResourceModel('ddg_automation/contact')->resetAllTables();
         Mage::getSingleton('adminhtml/session')->addSuccess('All tables successfully reset.');
         $this->_redirectReferer();
     }
@@ -417,7 +367,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
      */
     public function resetcatalogAction()
     {
-        $num = Mage::getModel('ddg_automation/catalog')->reset();
+        $num = Mage::getResourceModel('ddg_automation/catalog')->reset();
         Mage::helper('ddg')->log('-- Reset Catalog for reimport : ' . $num);
         Mage::getSingleton('adminhtml/session')->addSuccess('Done.');
         $this->_redirectReferer();

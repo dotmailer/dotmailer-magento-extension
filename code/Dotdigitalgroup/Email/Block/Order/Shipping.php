@@ -18,23 +18,14 @@ class Dotdigitalgroup_Email_Block_Order_Shipping  extends Mage_Sales_Block_Order
 	 */
     public function getOrder()
     {
-        $orderId = Mage::registry('order_id');
         $order = Mage::registry('current_order');
-        if (! $orderId) {
-            $orderId = Mage::app()->getRequest()->getParam('order_id');
-            if(!$orderId)
-                return false;
-            Mage::register('order_id', $orderId);
-        }
         if (! $order) {
-            if(!$orderId)
-                return false;
-            $order = Mage::getModel('sales/order')->load($orderId);
-            Mage::register('current_order', $order);
+            Mage::throwException('no current_order found for EDC');
         }
+
         if (! $order->hasShipments()) {
             //throw new Exception('TE - no shipments for order : '. $orderId);
-            Mage::helper('ddg')->log('TE - no shipments for order : '. $orderId);
+            Mage::helper('ddg')->log('TE - no shipments for order : '. $order->getId());
             return false;
         }
 

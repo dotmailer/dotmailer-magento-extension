@@ -32,7 +32,6 @@ class Dotdigitalgroup_Email_Model_Sales_Order
     public function sync()
     {
         $response = array('success' => true, 'message' => '');
-        $client = Mage::getModel('ddg_automation/apiconnector_client');
         // Initialise a return hash containing results of our sync attempt
         $this->_searchAccounts();
         foreach ($this->accounts as $account) {
@@ -97,8 +96,9 @@ class Dotdigitalgroup_Email_Model_Sales_Order
     private function _searchAccounts()
     {
         $helper = Mage::helper('ddg');
-        $this->_orderIds = array();
         foreach (Mage::app()->getWebsites(true) as $website) {
+            $this->_orderIds = array();
+            $this->_orderIdsForSingleSync = array();
             $apiEnabled = $helper->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED, $website);
             if ($apiEnabled && $helper->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_ORDER_ENABLED, $website)) {
 
@@ -113,11 +113,17 @@ class Dotdigitalgroup_Email_Model_Sales_Order
                         ->setApiPassword($this->_apiPassword);
                     $this->accounts[$this->_apiUsername] = $account;
                 }
+
                 $this->accounts[$this->_apiUsername]->setOrders($this->getConnectorOrders($website, $limit));
-                $this->accounts[$this->_apiUsername]->setOrderIds($this->_orderIds);
+                $orderIds = array_merge($this->accounts[$this->_apiUsername]->getOrderIds(), $this->_orderIds);
+                $this->accounts[$this->_apiUsername]->setOrderIds($orderIds);
                 $this->accounts[$this->_apiUsername]->setWebsites($website->getId());
                 $this->accounts[$this->_apiUsername]->setOrdersForSingleSync($this->getConnectorOrders($website, $limit, true));
-                $this->accounts[$this->_apiUsername]->setOrderIdsForSingleSync($this->_orderIdsForSingleSync);
+                $orderIdsForSingleSync = array_merge(
+                    $this->accounts[$this->_apiUsername]->getOrderIdsForSingleSync(),
+                    $this->_orderIdsForSingleSync
+                );
+                $this->accounts[$this->_apiUsername]->setOrderIdsForSingleSync($orderIdsForSingleSync);
             }
         }
     }

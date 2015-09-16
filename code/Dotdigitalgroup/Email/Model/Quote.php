@@ -63,7 +63,7 @@ class Dotdigitalgroup_Email_Model_Quote extends Mage_Core_Model_Abstract
                     );
                     //set imported
                     if ($check) {
-                        $this->_setImported($this->_quoteIds);
+                        $this->getResource()->setImported($this->_quoteIds);
                     }
                 }
                 $message = 'Total time for quote bulk sync : ' . gmdate("H:i:s", microtime(true) - $this->_start);
@@ -185,47 +185,5 @@ class Dotdigitalgroup_Email_Model_Quote extends Mage_Core_Model_Abstract
             return $collection->getFirstItem();
         }
         return false;
-    }
-
-    /**
-     * Reset the email quote for reimport.
-     *
-     * @return int
-     */
-    public function resetQuotes()
-    {
-        /** @var $coreResource Mage_Core_Model_Resource */
-        $coreResource = Mage::getSingleton('core/resource');
-
-        /** @var $conn Varien_Db_Adapter_Pdo_Mysql */
-        $conn = $coreResource->getConnection('core_write');
-        try{
-            $num = $conn->update($coreResource->getTableName('ddg_automation/quote'),
-                array('imported' => new Zend_Db_Expr('null'), 'modified' => new Zend_Db_Expr('null'))
-            );
-        }catch (Exception $e){
-            Mage::logException($e);
-        }
-
-        return $num;
-    }
-
-    /**
-     * set imported in bulk query
-     *
-     * @param $ids
-     */
-    private function _setImported($ids)
-    {
-        try{
-            $coreResource = Mage::getSingleton('core/resource');
-            $write = $coreResource->getConnection('core_write');
-            $tableName = $coreResource->getTableName('email_quote');
-            $ids = implode(', ', $ids);
-            $now = Mage::getSingleton('core/date')->gmtDate();
-            $write->update($tableName, array('imported' => 1, 'updated_at' => $now, 'modified' => new Zend_Db_Expr('null')), "quote_id IN ($ids)");
-        }catch (Exception $e){
-            Mage::logException($e);
-        }
     }
 }

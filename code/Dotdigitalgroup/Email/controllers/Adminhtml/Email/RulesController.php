@@ -166,7 +166,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_RulesController extends Mage_Adminht
         if ($id = $this->getRequest()->getParam('id')) {
             try {
                 $model = Mage::getModel('ddg_automation/rules');
-                $model->load($id);
+                $model->setId($id);
                 $model->delete();
                 Mage::getSingleton('adminhtml/session')->addSuccess(
                     Mage::helper('adminhtml')->__('The rule has been deleted.'));

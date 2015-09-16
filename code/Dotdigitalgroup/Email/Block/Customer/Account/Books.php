@@ -195,23 +195,20 @@ class Dotdigitalgroup_Email_Block_Customer_Account_Books extends Mage_Customer_B
     {
         $contact = $this->_getApiClient()->getContactByEmail($this->getCustomer()->getEmail());
         if($contact->id){
+            $this->_getCustomerSession()->setConnectorContactId($contact->id);
             $this->contact_id = $contact->id;
         }else{
             $contact = $this->_getApiClient()->postContacts($this->getCustomer()->getEmail());
             if($contact->id){
+                $this->_getCustomerSession()->setConnectorContactId($contact->id);
                 $this->contact_id = $contact->id;
             }
         }
         return $contact;
     }
 
-    /**
-     * getter for contact id
-     *
-     * @return mixed
-     */
-    public function getConnectorContactId()
+    private function _getCustomerSession()
     {
-        return $this->contact_id;
+        return Mage::getSingleton('customer/session');
     }
 }

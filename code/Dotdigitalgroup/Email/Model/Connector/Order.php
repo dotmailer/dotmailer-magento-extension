@@ -79,6 +79,8 @@ class Dotdigitalgroup_Email_Model_Connector_Order
      */
     public $order_status;
 
+    private $_attributeSet;
+
     /**
      * set the order information
      * @param Mage_Sales_Model_Order $orderData
@@ -111,7 +113,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
         $website = Mage::app()->getStore($orderData->getStore())->getWebsite();
         $customAttributes = $helper->getConfigSelectedCustomOrderAttributes($website);
         if($customAttributes){
-            $fields = $helper->getOrderTableDescription();
+            $fields = Mage::getResourceModel('ddg_automation/order')->getOrderTableDescription();
             foreach($customAttributes as $customAttribute){
                 if(isset($fields[$customAttribute])){
                     $field = $fields[$customAttribute];
@@ -159,6 +161,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
 
         /**
          * Order items.
+         *  @var Mage_Sales_Model_Order_Item $productItem
          */
         foreach ($orderData->getAllItems() as $productItem) {
             //product custom options
@@ -166,8 +169,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
             if ($syncCustomOption)
                 $customOptions = $this->_getOrderItemOptions($productItem);
 
-	        //load product by product id, for compatibility
-	        $product = Mage::getModel('catalog/product')->load($productItem->getProductId());
+	        $product = $productItem->getProduct();
 
 	        if ($product) {
 		        // category names
@@ -218,9 +220,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
                     }
                 }
 
-		        $attributeSetModel = Mage::getModel( "eav/entity_attribute_set" );
-		        $attributeSetModel->load( $product->getAttributeSetId() );
-		        $attributeSetName = $attributeSetModel->getAttributeSetName();
+		        $attributeSetName = $this->_getAttributeSetName($product);
 		        $this->products[] = array(
 			        'name'          => $productItem->getName(),
 			        'sku'           => $productItem->getSku(),
@@ -400,5 +400,47 @@ class Dotdigitalgroup_Email_Model_Connector_Order
 
         return $options;
 
+    }
+
+    /**
+     * get attribute set name
+     *
+     * @param Mage_Catalog_Model_Product $product
+     * @return string
+     */
+    private function _getAttributeSetName(Mage_Catalog_Model_Product $product)
+    {
+        //check if empty. on true load model and cache result
+        if(empty($this->_attributeSet)){
+            $this->_loadAttributeModel($product);
+            if(empty($this->_attributeSet))
+                return '';
+            else
+                return $this->_attributeSet->getAttributeSetName();
+        }
+
+        //if cached attribute set id equals product's attribute set id
+        if($this->_attributeSet->getId() == $product->getAttributeSetId())
+            return $this->_attributeSet->getAttributeSetName();
+
+        //if both above false. load model and cache result
+        $this->_loadAttributeModel($product);
+        if(empty($this->_attributeSet))
+            return '';
+        else
+            return $this->_attributeSet->getAttributeSetName();
+    }
+
+    /**
+     * load attribute model
+     *
+     * @param Mage_Catalog_Model_Product $product
+     */
+    private function _loadAttributeModel(Mage_Catalog_Model_Product $product)
+    {
+        $attributeSetModel = Mage::getModel( "eav/entity_attribute_set" );
+        $attributeSetModel->load( $product->getAttributeSetId() );
+        if($attributeSetModel->getId())
+            $this->_attributeSet = $attributeSetModel;
     }
 }

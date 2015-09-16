@@ -12,7 +12,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Observer
     {
         $contactModel = Mage::getModel('ddg_automation/contact');
         $numImported = $contactModel->getNumberOfImportedContacs();
-        $updated = $contactModel->resetAllContacts();
+        $updated = $contactModel->getResource()->resetAllContacts();
         Mage::helper('ddg')->log('-- Imported contacts: ' . $numImported  . ' reseted :  ' . $updated . ' --');
 
         /**

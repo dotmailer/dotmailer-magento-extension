@@ -86,7 +86,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
 
                     //set imported
                     if ($check)
-                        $this->_setImported($this->_productIds);
+                        $this->getResource()->setImported($this->_productIds);
 
                     //set number of product imported
                     $this->_countProducts += count($products);
@@ -112,7 +112,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
                         );
                         //set imported
                         if ($check)
-                            $this->_setImported($this->_productIds);
+                            $this->getResource()->setImported($this->_productIds);
 
                         //set number of product imported
                         $this->_countProducts += count($products);
@@ -184,7 +184,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
             }
 
             if(!empty($this->_productIds)){
-                $this->_setImported($this->_productIds, true);
+                $this->getResource()->setImported($this->_productIds, true);
                 $this->_countProducts += count($this->_productIds);
             }
         }
@@ -240,28 +240,6 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
             return $productCollection;
         }
         return false;
-    }
-
-    /**
-     * Reset for re-import.
-     *
-     * @return int
-     */
-    public function reset()
-    {
-        /** @var $coreResource Mage_Core_Model_Resource */
-        $coreResource = Mage::getSingleton('core/resource');
-
-        /** @var $conn Varien_Db_Adapter_Pdo_Mysql */
-        $conn = $coreResource->getConnection('core_write');
-        try{
-            $num = $conn->update($coreResource->getTableName('ddg_automation/catalog'),
-                array('imported' => new Zend_Db_Expr('null'), 'modified' => new Zend_Db_Expr('null'))
-            );
-        }catch (Exception $e){
-            Mage::logException($e);
-        }
-        return $num;
     }
 
     /**
@@ -368,29 +346,6 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
     }
 
     /**
-     * set imported in bulk query. if modified true then set modified to null in bulk query.
-     *
-     * @param $ids
-     * @param $modified
-     */
-    private function _setImported($ids, $modified = false)
-    {
-        try{
-            $coreResource = Mage::getSingleton('core/resource');
-            $write = $coreResource->getConnection('core_write');
-            $tableName = $coreResource->getTableName('email_catalog');
-            $ids = implode(', ', $ids);
-            $now = Mage::getSingleton('core/date')->gmtDate();
-            if($modified)
-                $write->update($tableName, array('modified' => new Zend_Db_Expr('null'), 'updated_at' => $now), "product_id IN ($ids)");
-            else
-                $write->update($tableName, array('imported' => 1, 'updated_at' => $now), "product_id IN ($ids)");
-        }catch (Exception $e){
-            Mage::logException($e);
-        }
-    }
-
-    /**
      * core config data save before event
      *
      * @param Varien_Event_Observer $observer
@@ -437,7 +392,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
                         $configBefore = Mage::registry('core_config_data_save_before');
                         if($configAfter != $configBefore){
                             //reset catalog to re-import
-                            $this->reset();
+                            $this->getResource()->reset();
                         }
                         Mage::register('core_config_data_save_after_done', true);
                     }
@@ -451,7 +406,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
                         $configBefore = Mage::registry('core_config_data_save_before_status');
                         if ($configAfter != $configBefore) {
                             //reset all contacts
-                            Mage::getModel('ddg_automation/contact')->resetAllContacts();
+                            Mage::getResourceModel('ddg_automation/contact')->resetAllContacts();
                         }
                         Mage::register('core_config_data_save_after_done_status', true);
                     }

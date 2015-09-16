@@ -666,9 +666,11 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
 	public function getRewardPoints() {
 		if (!$this->reward)
 			$this->_setReward();
-		$rewardPoints = $this->reward->getPointsBalance();
 
-		return $rewardPoints;
+        if($this->reward !== true){
+            return $this->reward->getPointsBalance();
+        }
+        return '';
 	}
 
 	/**
@@ -679,7 +681,10 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
 		if (!$this->reward)
 			$this->_setReward();
 
-		return $this->reward->getCurrencyAmount();
+        if($this->reward !== true){
+		    return $this->reward->getCurrencyAmount();
+        }
+        return '';
 	}
 
 	/**
@@ -692,31 +697,37 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
 		if (!$this->reward)
 			$this->_setReward();
 
+        if($this->reward !== true){
+            $expiredAt = $this->reward->getExpirationDate();
 
-		$expiredAt = $this->reward->getExpirationDate();
+            if ($expiredAt) {
+                $date = Mage::helper('core')->formatDate($expiredAt, 'short', true);
+            } else {
+                $date = '';
+            }
+            return $date;
+        }
 
-		if ($expiredAt) {
-			$date = Mage::helper('core')->formatDate($expiredAt, 'short', true);
-		} else {
-			$date = '';
-		}
-
-		return $date;
+		return '';
 	}
 
 
 	private function _setReward() {
-		$collection = Mage::getModel('enterprise_reward/reward_history')->getCollection()
-			->addCustomerFilter($this->customer->getId())
-			->addWebsiteFilter($this->customer->getWebsiteId())
-			->setExpiryConfig(Mage::helper('enterprise_reward')->getExpiryConfig())
-			->addExpirationDate($this->customer->getWebsiteId())
-			->skipExpiredDuplicates()
-			->setDefaultOrder()
-			->getFirstItem()
-		;
+        if (Mage::getModel('enterprise_reward/reward_history')){
+            $collection = Mage::getModel('enterprise_reward/reward_history')->getCollection()
+                ->addCustomerFilter($this->customer->getId())
+                ->addWebsiteFilter($this->customer->getWebsiteId())
+                ->setExpiryConfig(Mage::helper('enterprise_reward')->getExpiryConfig())
+                ->addExpirationDate($this->customer->getWebsiteId())
+                ->skipExpiredDuplicates()
+                ->setDefaultOrder();
 
-		$this->reward = $collection;
+            $item = $collection->setPageSize(1)->setCurPage(1)->getFirstItem();
+
+            $this->reward = $item;
+        }
+        else
+            $this->reward = true;
 	}
 
 
@@ -726,12 +737,14 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
 	 */
 	public function getCustomerSegments()
 	{
-		$contactModel = Mage::getModel('ddg_automation/contact')->getCollection()
+        $collection = Mage::getModel('ddg_automation/contact')->getCollection()
             ->addFieldToFilter('customer_id', $this->getCustomerId())
-            ->addFieldToFilter('website_id', $this->customer->getWebsiteId())
-			->getFirstItem();
-		if ($contactModel)
-			return $contactModel->getSegmentIds();
+            ->addFieldToFilter('website_id', $this->customer->getWebsiteId());
+
+        $item = $collection->setPageSize(1)->setCurPage(1)->getFirstItem();
+
+		if ($item)
+			return $item->getSegmentIds();
 
 		return '';
 	}
@@ -744,20 +757,21 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
 	 */
 	public function getLastUsedDate()
 	{
-		//last used from the reward history based on the points delta used
-		$lastUsed = Mage::getModel('enterprise_reward/reward_history')->getCollection()
-            ->addCustomerFilter($this->customer->getId())
-            ->addWebsiteFilter($this->customer->getWebsiteId())
-            ->addFieldToFilter('points_delta', array('lt'=> 0))
-            ->setDefaultOrder()
-            ->getFirstItem()
-            ->getCreatedAt()
-		;
+        if (Mage::getModel('enterprise_reward/reward_history')) {
+            //last used from the reward history based on the points delta used
+            $collection = Mage::getModel('enterprise_reward/reward_history')->getCollection()
+                ->addCustomerFilter($this->customer->getId())
+                ->addWebsiteFilter($this->customer->getWebsiteId())
+                ->addFieldToFilter('points_delta', array('lt' => 0))
+                ->setDefaultOrder();
 
-		//for any valid date
-		if ($lastUsed)
-			return $date = Mage::helper('core')->formatDate($lastUsed, 'short', true);
+            $item = $collection->setPageSize(1)->setCurPage(1)->getFirstItem();
+            $lastUsed = $item->getCreatedAt();
 
+            //for any valid date
+            if ($lastUsed)
+                return $date = Mage::helper('core')->formatDate($lastUsed, 'short', true);
+        }
 		return '';
 	}
 

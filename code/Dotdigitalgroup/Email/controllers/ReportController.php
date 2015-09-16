@@ -21,8 +21,8 @@ class Dotdigitalgroup_Email_ReportController extends Dotdigitalgroup_Email_Respo
     {
         $this->loadLayout();
 	    //set the content template
-        $products = $this->getLayout()->createBlock('ddg_automation/recommended_bestsellers', 'connector_customer', array(
-            'template' => 'connector/product/list.phtml'
+        $products = $this->getLayout()->createBlock('ddg_automation/edc', 'connector_customer', array(
+            'template' => 'connector/product/list.phtml', 'edc_type' => 'bestsellers'
         ));
         $this->getLayout()->getBlock('content')->append($products);
         $this->renderLayout();
@@ -36,8 +36,8 @@ class Dotdigitalgroup_Email_ReportController extends Dotdigitalgroup_Email_Respo
     {
         $this->loadLayout();
 	    //set the content template
-        $products = $this->getLayout()->createBlock('ddg_automation/recommended_mostviewed', 'connector_customer', array(
-            'template' => 'connector/product/list.phtml'
+        $products = $this->getLayout()->createBlock('ddg_automation/edc', 'connector_customer', array(
+            'template' => 'connector/product/list.phtml', 'edc_type' => 'most_viewed'
         ));
         $this->getLayout()->getBlock('content')->append($products);
         $this->renderLayout();
@@ -60,8 +60,8 @@ class Dotdigitalgroup_Email_ReportController extends Dotdigitalgroup_Email_Respo
         }
         $this->loadLayout();
 	    //set content template
-        $products = $this->getLayout()->createBlock('ddg_automation/recommended_recentlyviewed', 'connector_customer', array(
-            'template' => 'connector/product/list.phtml'
+        $products = $this->getLayout()->createBlock('ddg_automation/edc', 'connector_customer', array(
+            'template' => 'connector/product/list.phtml', 'edc_type' => 'recently_viewed'
         ));
         $this->getLayout()->getBlock('content')->append($products);
         $this->renderLayout();

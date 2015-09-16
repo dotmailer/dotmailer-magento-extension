@@ -3,16 +3,6 @@
 class Dotdigitalgroup_Email_Block_Wishlist extends Dotdigitalgroup_Email_Block_Edc
 {
     protected $_website;
-    /**
-     * Prepare layout, set template and title.
-     *
-     * @return Mage_Core_Block_Abstract|void
-     */
-    protected function _prepareLayout()
-    {
-        if ($root = $this->getLayout()->getBlock('root'))
-            $root->setTemplate('page/blank.phtml');
-    }
 
     public function getWishlistItems()
     {
@@ -38,7 +28,7 @@ class Dotdigitalgroup_Email_Block_Wishlist extends Dotdigitalgroup_Email_Block_E
                     ->setOrder('updated_at', 'DESC');
 
         if ($collection->count())
-            return $collection->getFirstItem();
+            return $collection->setPageSize(1)->setCurPage(1)->getFirstItem();
         else
             return false;
 

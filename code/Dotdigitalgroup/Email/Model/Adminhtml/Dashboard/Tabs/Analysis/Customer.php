@@ -43,6 +43,6 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Customer ext
             $storeIds = Mage::app()->getGroup($group)->getStoreIds();
             $this->storeIds = $storeIds;
         }
-        return $this->getPreparedCollection()->getFirstItem();
+        return $this->getPreparedCollection()->setPageSize(1)->setCurPage(1)->getFirstItem();
     }
 }

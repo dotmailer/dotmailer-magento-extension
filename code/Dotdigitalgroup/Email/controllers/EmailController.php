@@ -67,6 +67,26 @@ class Dotdigitalgroup_Email_EmailController extends Dotdigitalgroup_Email_Respon
     {
         //authenticate
         $this->authenticate();
+
+        $orderId = $this->getRequest()->getParam('order_id', false);
+        //check for order_id param
+        if ($orderId) {
+            $order = Mage::getModel('sales/order')->load($orderId);
+            //check if the order still exists
+            if ($order->getId()) {
+                Mage::register('current_order', $order);
+            } else {
+                Mage::helper('ddg')->log('order not found: ' . $orderId);
+                $this->sendResponse();
+                die;
+            }
+        } else {
+            Mage::helper('ddg')->log('order_id missing :' . $orderId);
+            $this->sendResponse();
+            die;
+        }
+
+
         $this->loadLayout();
         $review = $this->getLayout()->createBlock('ddg_automation/order', 'connector_review', array(
             'template' => 'connector/review.phtml'
@@ -84,12 +104,12 @@ class Dotdigitalgroup_Email_EmailController extends Dotdigitalgroup_Email_Respon
         $code = $this->getRequest()->getParam('code', false);
         $userId = $this->getRequest()->getParam('state');
         $adminUser = Mage::getModel('admin/user')->load($userId);
-        $baseUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB, true);
 
-        //callback url
-        $callback    = $baseUrl . 'connector/email/callback';
 
-        if ($code) {
+        if ($code && $adminUser->getId()) {
+            $baseUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB, true);
+            //callback url
+            $callback    = $baseUrl . 'connector/email/callback';
             $data = 'client_id='    . Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CLIENT_ID) .
                 '&client_secret='   . Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CLIENT_SECRET_ID) .
                 '&redirect_uri='    . $callback .

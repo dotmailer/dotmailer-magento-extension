@@ -7,7 +7,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Advanced_Quoteattributes
      */
     public function toOptionArray()
     {
-        $fields = Mage::helper('ddg')->getQuoteTableDescription();
+        $fields = Mage::getResourceModel('ddg_automation/quote')->getQuoteTableDescription();
 
         $customFields = array();
         foreach($fields as $key => $field){

@@ -16,7 +16,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Subscriber e
 		$collection->getSelect()->columns(array(
 			'days'  => "DATEDIFF(date(NOW()) , date(MIN(created_at)))"
 		));
-		return $collection->getFirstItem()->getDays();
+		return $collection->setPageSize(1)->setCurPage(1)->getFirstItem()->getDays();
 	}
 
 	protected function _getCollection(){

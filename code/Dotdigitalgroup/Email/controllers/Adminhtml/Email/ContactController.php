@@ -110,18 +110,13 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ContactController extends Mage_Admin
         if (!is_array($contactIds)) {
             $this->_getSession()->addError($this->__('Please select contacts.'));
         }else {
-            try {
-                foreach ($contactIds as $contactId) {
-                    $contact = Mage::getSingleton('ddg_automation/contact')->load($contactId);
-                    Mage::dispatchEvent('connector_controller_affiliate_delete', array('contact' => $contact));
-                    $contact->delete();
-                }
+            $num = Mage::getResourceModel('ddg_automation/contact')->massDelete($contactIds);
+            if(is_int($num)){
                 $this->_getSession()->addSuccess(
-                    Mage::helper('ddg')->__('Total of %d record(s) have been deleted.', count($contactIds))
+                    Mage::helper('ddg')->__('Total of %d record(s) have been deleted.', $num)
                 );
-            } catch (Exception $e) {
-                $this->_getSession()->addError($e->getMessage());
-            }
+            }else
+                $this->_getSession()->addError($num->getMessage());
         }
         $this->_redirect('*/*/index');
     }
@@ -136,17 +131,13 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ContactController extends Mage_Admin
         if (!is_array($contactIds)) {
             $this->_getSession()->addError($this->__('Please select contacts.'));
         }else {
-            try {
-                foreach ($contactIds as $contactId) {
-                    $contact = Mage::getSingleton('ddg_automation/contact')->load($contactId);
-                    $contact->setEmailImported(null)->save();
-                }
+            $num = Mage::getResourceModel('ddg_automation/contact')->massResend($contactIds);
+            if(is_int($num)){
                 $this->_getSession()->addSuccess(
-                    Mage::helper('ddg')->__('Total of %d record(s) set for resend.', count($contactIds))
+                    Mage::helper('ddg')->__('Total of %d record(s) set for resend.', $num)
                 );
-            } catch (Exception $e) {
-                $this->_getSession()->addError($e->getMessage());
-            }
+            }else
+                 $this->_getSession()->addError($num->getMessage());
         }
         $this->_redirect('*/*/index');
     }

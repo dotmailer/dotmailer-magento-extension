@@ -20,6 +20,7 @@ class Dotdigitalgroup_Email_ProductsController extends Dotdigitalgroup_Email_Res
                 //check if order still exists
 	            $order = Mage::getModel('sales/order')->load($orderId);
 	            if ($order->getId()) {
+                    Mage::register('current_order', $order);
 		            //start app emulation
 	                $storeId = $order->getStoreId();
 	                $appEmulation = Mage::getSingleton('core/app_emulation');
@@ -89,8 +90,8 @@ class Dotdigitalgroup_Email_ProductsController extends Dotdigitalgroup_Email_Res
     public function pushAction()
     {
         $this->loadLayout();
-        $products = $this->getLayout()->createBlock('ddg_automation/recommended_push', 'connector_product_push', array(
-            'template' => 'connector/product/list.phtml'
+        $products = $this->getLayout()->createBlock('ddg_automation/edc', 'connector_product_push', array(
+            'template' => 'connector/product/list.phtml', 'edc_type' => 'product_push'
         ));
 	    //append push products
         $this->getLayout()->getBlock('content')->append($products);

@@ -36,14 +36,14 @@ class Dotdigitalgroup_Email_Customer_NewsletterController extends Mage_Core_Cont
      */
     public function saveAction()
     {
-        if (!$this->_validateFormKey()) {
+        if (!$this->_validateFormKey() or !$this->_getCustomerSession()->getConnectorContactId()) {
             return $this->_redirect('customer/account/');
         }
         //params
         $additional_subscriptions = Mage::app()->getRequest()->getParam('additional_subscriptions');
         $data_fields = Mage::app()->getRequest()->getParam('data_fields');
-        $customer_id = Mage::app()->getRequest()->getParam('connector_customer_id');
-        $customer_email = Mage::app()->getRequest()->getParam('connector_customer_email');
+        $customer_id = $this->_getCustomerSession()->getConnectorContactId();
+        $customer_email = $this->_getCustomerSession()->getCustomer()->getEmail();
 
         //client
         $website = Mage::getModel('customer/session')->getCustomer()->getStore()->getWebsite();

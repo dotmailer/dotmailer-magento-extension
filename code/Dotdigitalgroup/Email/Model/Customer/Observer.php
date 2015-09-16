@@ -166,7 +166,7 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
 	{
 		$dataObject = $observer->getEvent()->getDataObject();
 
-		if($dataObject->getCustomerId() && $dataObject->getStatusId() == Mage_Review_Model_Review::STATUS_PENDING){
+		if($dataObject->getCustomerId() && $dataObject->getStatusId() == Mage_Review_Model_Review::STATUS_APPROVED){
 			$helper = Mage::helper('ddg');
 			$customerId = $dataObject->getCustomerId();
 			$helper->setConnectorContactToReImport($customerId);

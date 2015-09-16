@@ -30,32 +30,6 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
     }
 
     /**
-     * Reset the imported contacts
-     * @return int
-     */
-    public function resetAllContacts()
-    {
-
-        /** @var $coreResource Mage_Core_Model_Resource */
-        $coreResource = Mage::getSingleton('core/resource');
-
-        /** @var $conn Varien_Db_Adapter_Pdo_Mysql */
-        $conn = $coreResource->getConnection('core_write');
-
-        try{
-            $num = $conn->update($coreResource->getTableName('ddg_automation/contact'),
-                array('email_imported' => new Zend_Db_Expr('null')),
-                $conn->quoteInto('email_imported is ?', new Zend_Db_Expr('not null'))
-            );
-        }catch (Exception $e){
-            Mage::logException($e);
-            Mage::helper('ddg')->rayLog('300', $e);
-        }
-        return $num;
-    }
-
-
-    /**
      * Load contact by customer id
      * @param $customerId
      * @return mixed
@@ -177,34 +151,6 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
         return $collection->getSize();
     }
 
-
-    /**
-     * Set all imported subscribers for reimport.
-     *
-     * @return int
-     */
-    public function resetSubscribers() {
-
-        /** @var $coreResource Mage_Core_Model_Resource */
-        $coreResource = Mage::getSingleton( 'core/resource' );
-
-        /** @var $conn Varien_Db_Adapter_Pdo_Mysql */
-        $conn = $coreResource->getConnection( 'core_write' );
-
-        try {
-            $num = $conn->update(
-                $coreResource->getTableName( 'ddg_automation/contact' ),
-                array('subscriber_imported' => new Zend_Db_Expr( 'null' ) ),
-                $conn->quoteInto('subscriber_imported is ?', new Zend_Db_Expr('not null')));
-
-        } catch ( Exception $e ) {
-            Mage::logException($e);
-	        Mage::helper('ddg')->sendRaygunException($e);
-        }
-
-        return $num;
-    }
-
 	/**
 	 * Get the number of customers for a website.
 	 * @param int $websiteId
@@ -288,34 +234,5 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
             ->getSize();
 		return $countContacts;
 	}
-
-    /**
-     * Reset the imported contacts as guest
-     * @return int
-     */
-    public function resetAllGuestContacts()
-    {
-
-        /** @var $coreResource Mage_Core_Model_Resource */
-        $coreResource = Mage::getSingleton('core/resource');
-
-        /** @var $conn Varien_Db_Adapter_Pdo_Mysql */
-        $conn = $coreResource->getConnection('core_write');
-
-        try {
-            $where = array();
-            $where[] = $conn->quoteInto('email_imported is ?', new Zend_Db_Expr('not null'));
-            $where[] = $conn->quoteInto('is_guest is ?', new Zend_Db_Expr('not null'));
-
-            $num = $conn->update($coreResource->getTableName('ddg_automation/contact'),
-                array('email_imported' => new Zend_Db_Expr('null')),
-                $where
-            );
-        } catch (Exception $e) {
-            Mage::logException($e);
-            Mage::helper('ddg')->rayLog('300', $e);
-        }
-        return $num;
-    }
 
 }

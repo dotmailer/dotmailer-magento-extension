@@ -44,7 +44,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Orders exten
             $collection->setMainTable('sales/order');
             $collection->removeAllFieldsFromSelect();
 
-            $expr = $this->_getSalesAmountExpression($collection);
+            $expr = Mage::getResourceModel('ddg_automation/contact')->getSalesAmountExpression($collection);
 
             if ($isFilter == 0) {
                 $expr = '(' . $expr . ') * main_table.base_to_global_rate';
@@ -64,34 +64,6 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Orders exten
                 );
         }
         return $collection;
-    }
-
-    /**
-     * get sales amount expression
-     *
-     * @param $collection
-     * @return string
-     */
-    protected function _getSalesAmountExpression($collection)
-    {
-        $adapter = $collection->getConnection();
-        $expressionTransferObject = new Varien_Object(array(
-            'expression' => '%s - %s - %s - (%s - %s - %s)',
-            'arguments' => array(
-                $adapter->getIfNullSql('main_table.base_total_invoiced', 0),
-                $adapter->getIfNullSql('main_table.base_tax_invoiced', 0),
-                $adapter->getIfNullSql('main_table.base_shipping_invoiced', 0),
-                $adapter->getIfNullSql('main_table.base_total_refunded', 0),
-                $adapter->getIfNullSql('main_table.base_tax_refunded', 0),
-                $adapter->getIfNullSql('main_table.base_shipping_refunded', 0),
-            )
-        ));
-
-        return vsprintf(
-                $expressionTransferObject->getExpression(),
-                $expressionTransferObject->getArguments()
-            );
-
     }
 
     /**
@@ -116,7 +88,6 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Orders exten
             $collection->addFieldToFilter('store_id', array('in' => $storeIds));
         }
 
-        $collection->load();
-        return $collection->getFirstItem();
+        return $collection->setPageSize(1)->setCurPage(1)->getFirstItem();
     }
 }

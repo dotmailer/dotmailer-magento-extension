@@ -73,6 +73,8 @@ class Dotdigitalgroup_Email_Model_Connector_Quote
      */
     public  $custom = array();
 
+    private $_attributeSet;
+
     /**
      * set the quote information
      * @param Mage_Sales_Model_Quote $quoteData
@@ -106,7 +108,7 @@ class Dotdigitalgroup_Email_Model_Connector_Quote
         $website = Mage::app()->getStore($quoteData->getStore())->getWebsite();
         $customAttributes = $helper->getConfigSelectedCustomQuoteAttributes($website);
         if($customAttributes){
-            $fields = $helper->getQuoteTableDescription();
+            $fields = Mage::getResourceModel('ddg_automation/quote')->getQuoteTableDescription();
             foreach($customAttributes as $customAttribute){
                 if(isset($fields[$customAttribute])){
                     $field = $fields[$customAttribute];
@@ -149,11 +151,11 @@ class Dotdigitalgroup_Email_Model_Connector_Quote
 
         /**
          * Quote items.
+         * @var Mage_Sales_Model_Quote_Item $productItem
          */
         foreach ($quoteData->getAllItems() as $productItem) {
 
-            //load product by product id, for compatibility
-            $product = Mage::getModel('catalog/product')->load($productItem->getProductId());
+            $product = $productItem->getProduct();
 
             if ($product) {
                 // category names
@@ -166,9 +168,8 @@ class Dotdigitalgroup_Email_Model_Connector_Quote
                     $this->categories[]['Name'] = substr( implode( ', ', $categories ), 0, 244 );
                 }
 
-                $attributeSetModel = Mage::getModel( "eav/entity_attribute_set" );
-                $attributeSetModel->load( $product->getAttributeSetId() );
-                $attributeSetName = $attributeSetModel->getAttributeSetName();
+                //get attribute set name
+                $attributeSetName = $this->_getAttributeSetName($product);
                 $this->products[] = array(
                     'name'          => $productItem->getName(),
                     'sku'           => $productItem->getSku(),
@@ -280,5 +281,47 @@ class Dotdigitalgroup_Email_Model_Connector_Quote
     private function _assignCustom($field, $value)
     {
         $this->custom[$field['COLUMN_NAME']] = $value;
+    }
+
+    /**
+     * get attribute set name
+     *
+     * @param Mage_Catalog_Model_Product $product
+     * @return string
+     */
+    private function _getAttributeSetName(Mage_Catalog_Model_Product $product)
+    {
+        //check if empty. on true load model and cache result
+        if(empty($this->_attributeSet)){
+            $this->_loadAttributeModel($product);
+            if(empty($this->_attributeSet))
+                return '';
+            else
+                return $this->_attributeSet->getAttributeSetName();
+        }
+
+        //if cached attribute set id equals product's attribute set id
+        if($this->_attributeSet->getId() == $product->getAttributeSetId())
+            return $this->_attributeSet->getAttributeSetName();
+
+        //if both above false. load model and cache result
+        $this->_loadAttributeModel($product);
+        if(empty($this->_attributeSet))
+            return '';
+        else
+            return $this->_attributeSet->getAttributeSetName();
+    }
+
+    /**
+     * load attribute model
+     *
+     * @param Mage_Catalog_Model_Product $product
+     */
+    private function _loadAttributeModel(Mage_Catalog_Model_Product $product)
+    {
+        $attributeSetModel = Mage::getModel( "eav/entity_attribute_set" );
+        $attributeSetModel->load( $product->getAttributeSetId() );
+        if($attributeSetModel->getId())
+            $this->_attributeSet = $attributeSetModel;
     }
 }

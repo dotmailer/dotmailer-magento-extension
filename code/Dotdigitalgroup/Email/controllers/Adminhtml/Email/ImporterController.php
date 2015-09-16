@@ -20,21 +20,16 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ImporterController extends Mage_Admi
 	public function massResendAction()
 	{
 		$ids = $this->getRequest()->getParam('importer');
-
 		if (!is_array($ids)) {
 			$this->_getSession()->addError($this->__('Please select import.'));
 		}else {
-			try {
-				foreach ($ids as $id) {
-					$import = Mage::getSingleton('ddg_automation/importer')->load($id);
-					$import->setImportStatus(Dotdigitalgroup_Email_Model_Importer::NOT_IMPORTED)->save();
-				}
+			$num = Mage::getResourceModel('ddg_automation/importer')->massResend($ids);
+			if(is_int($num)) {
 				$this->_getSession()->addSuccess(
-					Mage::helper('ddg')->__('Total of %d record(s) set for reset.', count($ids))
+					Mage::helper('ddg')->__('Total of %d record(s) set for reset.', $num)
 				);
-			} catch (Exception $e) {
-				$this->_getSession()->addError($e->getMessage());
-			}
+			}else
+				$this->_getSession()->addError($num->getMessage());
 		}
 		$this->_redirect('*/*/index');
 	}
@@ -49,17 +44,13 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ImporterController extends Mage_Admi
 		if (!is_array($ids)) {
 			$this->_getSession()->addError($this->__('Please select import.'));
 		}else {
-			try {
-				foreach ($ids as $id) {
-					$import = Mage::getSingleton('ddg_automation/importer')->load($id);
-					$import->delete();
-				}
+			$num = Mage::getResourceModel('ddg_automation/importer')->massDelete($ids);
+			if (is_int($num)){
 				$this->_getSession()->addSuccess(
-                    Mage::helper('ddg')->__('Total of %d record(s) have been deleted.', count($ids))
+					Mage::helper('ddg')->__('Total of %d record(s) have been deleted.', $num)
 				);
-			} catch (Exception $e) {
-				$this->_getSession()->addError($e->getMessage());
-			}
+			}else
+				$this->_getSession()->addError($num->getMessage());
 		}
 		$this->_redirect('*/*/index');
 	}

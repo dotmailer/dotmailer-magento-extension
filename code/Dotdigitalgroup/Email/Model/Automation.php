@@ -91,27 +91,9 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
 				$this->programStatus = 'Deactivated';
 			}
 			//update contacts with the new status, and log the error message if failes
-			/** @var $coreResource Mage_Core_Model_Resource */
-			$coreResource = Mage::getSingleton( 'core/resource' );
-			/** @var $conn Varien_Db_Adapter_Pdo_Mysql */
-			$conn = $coreResource->getConnection( 'core_write' );
-			try {
-				$contactIds = array_keys($contacts);
-				$bind = array(
-					'enrolment_status' => $this->programStatus,
-					'message'          => $this->programMessage,
-					'updated_at'       => Mage::getSingleton('core/date')->gmtDate()
-				);
-				$where = array('id IN(?)' => $contactIds);
-				$num = $conn->update( $coreResource->getTableName( 'ddg_automation/automation' ),
-					$bind,
-					$where
-				);
-				if ($num)
-					Mage::helper('ddg')->log('Automation type : ' . $type . ', updated no : ' . $num);
-			} catch ( Exception $e ) {
-				Mage::logException($e);
-			}
+			$num = $this->getResource()->updateContacts($contacts, $this->programStatus, $this->programMessage);
+			if ($num)
+				Mage::helper('ddg')->log('Automation type : ' . $type . ', updated no : ' . $num);
 		}
 	}
 	/**

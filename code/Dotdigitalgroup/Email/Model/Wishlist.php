@@ -76,7 +76,7 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
 
                     //set imported
                     if ($check) {
-                        $this->_setImported($this->_wishlistIds);
+                        $this->getResource()->setImported($this->_wishlistIds);
                     }
                 }
                 $message = 'Total time for wishlist bulk sync : ' . gmdate("H:i:s", microtime(true) - $this->_start);
@@ -96,29 +96,44 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
         $this->_wishlists = array();
         $this->_wishlistIds = array();
         $limit = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT, $website);
-        $collection = $this->_getWishlistToImport($website, $limit);
-        foreach($collection as $emailWishlist){
-            $customer = Mage::getModel('customer/customer')->load($emailWishlist->getCustomerId());
-            $wishlist = Mage::getModel('wishlist/wishlist')->load($emailWishlist->getWishlistId());
-            /** @var  $connectorWishlist */
-            $connectorWishlist = Mage::getModel('ddg_automation/customer_wishlist', $customer);
-            $connectorWishlist->setId($wishlist->getId())
-                ->setUpdatedAt($wishlist->getUpdatedAt());
-            $wishListItemCollection = $wishlist->getItemCollection();
-            if ($wishListItemCollection->getSize()) {
-                foreach ($wishListItemCollection as $item) {
-                    /* @var $product Mage_Catalog_Model_Product */
-                    $product = $item->getProduct();
-                    $wishlistItem = Mage::getModel('ddg_automation/customer_wishlist_item', $product)
-                        ->setQty($item->getQty())
-                        ->setPrice($product);
-                    //store for wishlists
-                    $connectorWishlist->setItem($wishlistItem);
-                    $this->_count++;
+        $emailWishlist = $this->_getWishlistToImport($website, $limit);
+        $this->_wishlistIds = $emailWishlist->getColumnValues('wishlist_id');
+
+        if(!empty($this->_wishlistIds)){
+            $collection = Mage::getModel('wishlist/wishlist')
+                ->getCollection()
+                ->addFieldToFilter('main_table.wishlist_id', array('in' => $this->_wishlistIds))
+                ->addFieldToFilter('customer_id', array('notnull' => 'true'));
+
+            $collection->getSelect()
+                ->joinLeft(
+                    array('c' => 'customer_entity'),
+                    'c.entity_id = customer_id',
+                    array('email','store_id')
+                );
+
+            foreach($collection as $wishlist){
+                $connectorWishlist = Mage::getModel('ddg_automation/customer_wishlist');
+                $connectorWishlist
+                    ->setId($wishlist->getId())
+                    ->setUpdatedAt($wishlist->getUpdatedAt())
+                    ->setCustomerId($wishlist->getCustomerId())
+                    ->setEmail($wishlist->getEmail());
+                $wishListItemCollection = $wishlist->getItemCollection();
+                if ($wishListItemCollection->getSize()) {
+                    foreach ($wishListItemCollection as $item) {
+                        /* @var $product Mage_Catalog_Model_Product */
+                        $product = $item->getProduct();
+                        $wishlistItem = Mage::getModel('ddg_automation/customer_wishlist_item', $product)
+                            ->setQty($item->getQty())
+                            ->setPrice($product);
+                        //store for wishlists
+                        $connectorWishlist->setItem($wishlistItem);
+                        $this->_count++;
+                    }
+                    //set wishlists for later use
+                    $this->_wishlists[$website->getId()][] = $connectorWishlist;
                 }
-                //set wishlists for later use
-                $this->_wishlists[$website->getId()][] = $connectorWishlist;
-                $this->_wishlistIds[] = $emailWishlist->getWishlistId();
             }
         }
     }
@@ -190,7 +205,7 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
             }
         }
         if(!empty($this->_wishlistIds))
-            $this->_setImported($this->_wishlistIds, true);
+            $this->getResource()->setImported($this->_wishlistIds, true);
     }
 
     private function _getModifiedWishlistToImport(Mage_Core_Model_Website $website, $limit = 100)
@@ -201,51 +216,5 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
 
         $collection->getSelect()->limit($limit);
         return $collection;
-    }
-
-    /**
-     * Reset the email reviews for reimport.
-     *
-     * @return int
-     */
-    public function reset()
-    {
-        /** @var $coreResource Mage_Core_Model_Resource */
-        $coreResource = Mage::getSingleton('core/resource');
-
-        /** @var $conn Varien_Db_Adapter_Pdo_Mysql */
-        $conn = $coreResource->getConnection('core_write');
-        try{
-            $num = $conn->update($coreResource->getTableName('ddg_automation/wishlist'),
-                array('wishlist_imported' => new Zend_Db_Expr('null'), 'wishlist_modified' => new Zend_Db_Expr('null'))
-            );
-        }catch (Exception $e){
-            Mage::logException($e);
-        }
-
-        return $num;
-    }
-
-    /**
-     * set imported in bulk query
-     *
-     * @param $ids
-     * @param $modified
-     */
-    private function _setImported($ids, $modified = false)
-    {
-        try{
-            $coreResource = Mage::getSingleton('core/resource');
-            $write = $coreResource->getConnection('core_write');
-            $tableName = $coreResource->getTableName('email_wishlist');
-            $ids = implode(', ', $ids);
-            $now = Mage::getSingleton('core/date')->gmtDate();
-            if($modified)
-                $write->update($tableName, array('wishlist_modified' => new Zend_Db_Expr('null'), 'updated_at' => $now), "wishlist_id IN ($ids)");
-            else
-                $write->update($tableName, array('wishlist_imported' => 1, 'updated_at' => $now), "wishlist_id IN ($ids)");
-        }catch (Exception $e){
-            Mage::logException($e);
-        }
     }
 }

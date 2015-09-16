@@ -14,9 +14,9 @@ class Dotdigitalgroup_Email_Model_Connector_Account
     private  $_mapping_hash;
     private  $_contacts = array();
     private  $_orders = array();
-    private  $_orderIds;
+    private  $_orderIds = array();
     private $_ordersForSingleSync = array();
-    private $_orderIdsForSingleSync;
+    private $_orderIdsForSingleSync = array();
 
     /**
      * @param $api_password

@@ -338,15 +338,11 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
         if(empty($this->_productAttribute) or !$collection->getSize())
             return $collection;
 
-        $productModel = Mage::getModel('catalog/product');
         foreach($collection as $collectionItem){
             $items = $collectionItem->getAllItems();
             foreach($items as $item){
-                $productId = $item->getProductId();
                 //loaded product
-                $product = $productModel
-                    ->setStoreId($item->getStoreId())
-                    ->load($productId);
+                $product = $item->getProduct();
 
                 //attributes array from loaded product
                 $attributes = Mage::getModel('eav/config')->getEntityAttributeCodes(

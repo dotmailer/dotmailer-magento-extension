@@ -146,7 +146,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Campaign_Grid extends Mage_Adminhtml
         );
 
         $this->getMassactionBlock()->addItem('resend', array('label'=>Mage::helper('ddg')->__('Resend'),'url'=>$this->getUrl('*/*/massResend')));
-        $this->getMassactionBlock()->addItem('re-create', array('label'=>Mage::helper('ddg')->__('Recreate'),'url'=>$this->getUrl('*/*/massRecreate')));
         return $this;
     }
 

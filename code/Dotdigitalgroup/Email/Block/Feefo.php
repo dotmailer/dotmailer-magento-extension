@@ -55,10 +55,10 @@ class Dotdigitalgroup_Email_Block_Feefo extends Mage_Core_Block_Template
         if(count($quoteItems) == 0)
             return array();
 
+        /** @var Mage_Sales_Model_Quote_Item $item */
         foreach($quoteItems as $item)
         {
-            $productId = $item->getProductId();
-            $productModel = Mage::getModel('catalog/product')->load($productId);
+            $productModel = $item->getProduct();
             if ($productModel->getId())
                 $products[$productModel->getSku()] = $productModel->getName();
         }

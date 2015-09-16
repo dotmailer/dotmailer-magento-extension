@@ -165,7 +165,7 @@ class Dotdigitalgroup_Email_Helper_Config
     const XML_PATH_CONNECTOR_DYNAMIC_OTHER_STYLE            = 'connector_configuration/dynamic_content_style/other_style';
     const XML_PATH_CONNECTOR_DYNAMIC_COUPON_COLOR           = 'connector_configuration/dynamic_content_style/coupon_color';
     const XML_PATH_CONNECTOR_DYNAMIC_COUPON_FONT_SIZE       = 'connector_configuration/dynamic_content_style/coupon_font_size';
-    const XML_PATH_CONNECTOR_DYNAMIC_COUPON_STYLE           = 'connector_configuration/dynamic_content_style/coupon_styles';
+    const XML_PATH_CONNECTOR_DYNAMIC_COUPON_STYLE           = 'connector_configuration/dynamic_content_style/coupon_style';
     const XML_PATH_CONNECTOR_DYNAMIC_COUPON_FONT            = 'connector_configuration/dynamic_content_style/coupon_font_picker';
     const XML_PATH_CONNECTOR_DYNAMIC_COUPON_BG_COLOR        = 'connector_configuration/dynamic_content_style/coupon_doc_color';
 
@@ -205,7 +205,7 @@ class Dotdigitalgroup_Email_Helper_Config
      * ROI SECTION.
      */
     const XML_PATH_CONNECTOR_ROI_TRACKING_ENABLED           = 'connector_configuration/tracking/roi_enabled';
-    const XML_PATH_CONNECTOR_PAGE_TRACKING_ENABLED          = 'connector_roi_tracking/tracking/page_enabled';
+    const XML_PATH_CONNECTOR_PAGE_TRACKING_ENABLED          = 'connector_configuration/tracking/page_enabled';
 
     /**
      * OAUTH

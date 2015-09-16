@@ -370,11 +370,17 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
 
     public function setConnectorContactToReImport($customerId)
     {
-        $contactModel = Mage::getModel('ddg_automation/contact');
-        $contactModel
-            ->loadByCustomerId($customerId)
-            ->setEmailImported(Dotdigitalgroup_Email_Model_Contact::EMAIL_CONTACT_NOT_IMPORTED)
-            ->save();
+        try {
+            $coreResource = Mage::getSingleton('core/resource');
+            $con = $coreResource->getConnection('core_write');
+            $con->update(
+                $coreResource->getTableName('ddg_automation/contact'),
+                array('email_imported' => new Zend_Db_Expr('null')),
+                array("customer_id = ?" => $customerId)
+            );
+        } catch (Exception $e) {
+           Mage::logException($e);
+        }
     }
 
     /**
@@ -529,33 +535,6 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
     public function isNewsletterSuccessDisabled($store = 0)
     {
         return Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DISABLE_NEWSLETTER_SUCCESS, $store);
-    }
-
-    /**
-     * get sales_flat_order table description
-     *
-     * @return array
-     */
-    public function getOrderTableDescription()
-    {
-        $resource = Mage::getSingleton('core/resource');
-        $readConnection = $resource->getConnection('core_read');
-        $salesTable = $resource->getTableName('sales/order');
-
-        return $readConnection->describeTable($salesTable);
-    }
-
-    /**
-     * get sales_flat_quote table description
-     *
-     * @return array
-     */
-    public function getQuoteTableDescription()
-    {
-        $resource = Mage::getSingleton('core/resource');
-        $readConnection = $resource->getConnection('core_read');
-        $table = $resource->getTableName('sales/quote');
-        return $readConnection->describeTable($table);
     }
 
     /**

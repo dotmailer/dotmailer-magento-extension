@@ -42,25 +42,24 @@ class Dotdigitalgroup_Email_Model_Customer_Review
      */
     public $store_name;
 
-
     /**
-     * constructor.
-     *
-     * @param Mage_Customer_Model_Customer $customer
+     * @param $email
+     * @return $this
      */
-    public function __construct(Mage_Customer_Model_Customer $customer)
+    public function setEmail($email)
     {
-
-        $this->setCustomerId($customer->getId());
-        $this->email = $customer->getEmail();
+        $this->email = $email;
+        return $this;
     }
 
     /**
-     * @param mixed $customer_id
+     * @param $customer_id
+     * @return $this
      */
     public function setCustomerId($customer_id)
     {
         $this->customer_id = (int) $customer_id;
+        return $this;
     }
 
     /**
@@ -149,7 +148,9 @@ class Dotdigitalgroup_Email_Model_Customer_Review
         $this->setId($review->getReviewId())
             ->setWebsiteName($websiteName)
             ->setStoreName($storeName)
-            ->setReviewDate($review->getCreatedAt());
+            ->setReviewDate($review->getCreatedAt())
+            ->setCustomerId($review->getCustomerId())
+            ->setEmail($review->getEmail());
 
         return $this;
     }
