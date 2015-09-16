@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Dotdigitalgroup_Email>
-            <version>5.0.3</version>
+            <version>5.0.4</version>
         </Dotdigitalgroup_Email>
     </modules>
     <frontend>
@@ -374,7 +374,7 @@
             <ddg_automation_customer_subscriber_guest_sync>
                 <run><model>ddg_automation/cron::contactSync</model></run>
                 <schedule>
-                    <cron_expr>*/5 * * * *</cron_expr>
+                    <cron_expr>*/15 * * * *</cron_expr>
                 </schedule>
             </ddg_automation_customer_subscriber_guest_sync>
             <ddg_automation_status>
@@ -394,7 +394,7 @@
                     <model>ddg_automation/cron::reviewsAndWishlist</model>
                 </run>
                 <schedule>
-                    <cron_expr>*/5 * * * *</cron_expr>
+                    <cron_expr>*/15 * * * *</cron_expr>
                 </schedule>
             </ddg_automation_reviews_and_wishlist>
             <ddg_automation_campaign>
@@ -408,7 +408,7 @@
             <ddg_automation_order_and_quote_sync>
                 <run><model>ddg_automation/cron::orderAndQuoteSync</model></run>
                 <schedule>
-                    <cron_expr>*/5 * * * *</cron_expr>
+                    <cron_expr>*/15 * * * *</cron_expr>
                 </schedule>
             </ddg_automation_order_and_quote_sync>
             <ddg_automation_cleaner>
@@ -420,7 +420,7 @@
             <ddg_automation_catalog_sync>
                 <run><model>ddg_automation/cron::catalogSync</model></run>
                 <schedule>
-                    <cron_expr>*/5 * * * *</cron_expr>
+                    <cron_expr>*/15 * * * *</cron_expr>
                 </schedule>
             </ddg_automation_catalog_sync>
             <ddg_automation_importer>
