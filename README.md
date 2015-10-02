@@ -199,7 +199,7 @@ Compatibility
 - Transactional Emails.
 - Auto create data fields needs total refund amount added.
 - Add 240 hours onto lost basket 3 both guest and customer.
-- 
+
 ## Bugs fixed
 - Dynamic URLS with no value.
 - Transactional data missing product data.
