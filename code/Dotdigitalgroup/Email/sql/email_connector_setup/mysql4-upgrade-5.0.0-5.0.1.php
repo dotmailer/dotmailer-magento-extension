@@ -5,7 +5,7 @@
 $installer = $this;
 $installer->startSetup();
 
-$automationTable = $this->getTable('ddg_automation/automation');
+$automationTable = $installer->getTable('ddg_automation/automation');
 
 //drop table if exist
 if ($installer->getConnection()->isTableExists($automationTable)) {
@@ -47,9 +47,9 @@ $table->addColumn('id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
     ), 'Creation Time')
     ->addColumn('updated_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(
     ), 'Update Time')
-    ->addIndex($this->getIdxName($automationTable, array('automation_type')),
+    ->addIndex($installer->getIdxName($automationTable, array('automation_type')),
         array('automation_type'))
-    ->addIndex($this->getIdxName($automationTable, array('enrolment_status')),
+    ->addIndex($installer->getIdxName($automationTable, array('enrolment_status')),
         array('enrolment_status'))
     ->setComment('Automation Status');
 $installer->getConnection()->createTable($table);

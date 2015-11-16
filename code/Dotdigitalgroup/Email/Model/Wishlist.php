@@ -57,7 +57,8 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
         foreach (Mage::app()->getWebsites(true) as $website) {
             $enabled = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_WISHLIST_ENABLED, $website);
             $apiEnabled = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED, $website);
-            if ($enabled && $apiEnabled) {
+            $storeIds = $website->getStoreIds();
+            if ($enabled && $apiEnabled && !empty($storeIds)) {
                 //using bulk api
                 $helper->log('---------- Start wishlist bulk sync ----------');
                 $this->_start = microtime(true);

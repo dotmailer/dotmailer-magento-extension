@@ -11,6 +11,8 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
     protected $acceptType;
     protected $responseBody;
     protected $responseInfo;
+    protected $curlError;
+    protected $isNotJson = false;
 
     public function __construct($website = 0) // ($url = null, $verb = 'GET', $requestBody = null)
     {
@@ -182,8 +184,8 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
 			    //check for slow queries
 			    if ( $time >  $limit) {
 				    //log the slow queries
-				    Mage::helper('ddg')->rayLog('100', $message);
-				    Mage::helper( 'ddg' )->log( $message );
+				    Mage::helper( 'ddg' )->log( $message )
+				        ->rayLog($message);
 			    }
 		    }
 	    }
@@ -289,8 +291,20 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
 	protected function doExecute(&$ch)
     {
         $this->setCurlOpts($ch);
-        $this->responseBody = json_decode(curl_exec($ch));
+
+        if($this->isNotJson)
+            $this->responseBody = curl_exec($ch);
+        else
+            $this->responseBody = json_decode(curl_exec($ch));
+
         $this->responseInfo	= curl_getinfo($ch);
+
+        //if curl error found
+        if(curl_errno($ch))
+        {
+            //save the error
+            $this->curlError = curl_error($ch);
+        }
 
         curl_close($ch);
     }
@@ -452,6 +466,27 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
 	public function setVerb ($verb)
     {
         $this->verb = $verb;
+        return $this;
+    }
+
+    public function getCurlError()
+    {
+        //if curl error
+        if(!empty($this->curlError)){
+            //log curl error
+            $message = 'CURL ERROR '. $this->curlError;
+            Mage::helper('ddg')->log($message)
+                ->rayLog($message, 'apiconnector/rest.php', __LINE__);
+
+            return $this->curlError;
+        }
+
+        return false;
+    }
+
+    public function setIsNotJsonTrue()
+    {
+        $this->isNotJson = true;
         return $this;
     }
 }

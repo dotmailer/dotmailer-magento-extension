@@ -61,7 +61,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
                     array('c.product_id')
                 )
                 ->joinLeft(
-                    array('e' => $coreResource->getTableName('catalog_product_entity')),
+                    array('e' => $coreResource->getTableName('catalog/product')),
                     "c.product_id = e.entity_id"
                 )
                 ->where('e.entity_id is NULL');

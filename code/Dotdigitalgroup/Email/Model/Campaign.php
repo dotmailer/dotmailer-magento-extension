@@ -62,8 +62,9 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
 	public function loadByQuoteId($quoteId, $storeId)
 	{
 		$collection = $this->getCollection()
-		                   ->addFieldToFilter('quote_id', $quoteId)
-		                   ->addFieldToFilter('store_id', $storeId);
+            ->addFieldToFilter('quote_id', $quoteId)
+            ->addFieldToFilter('store_id', $storeId);
+		$collection->getSelect()->limit(1);
 
 		if ($collection->getSize()) {
 			return $collection->getFirstItem();

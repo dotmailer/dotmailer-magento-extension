@@ -6,10 +6,11 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
 
     protected function _construct()
     {
+
         parent::_construct();
 
-        if ($this->hasData('edc_type')) {
-            $this->_edc_type = $this->getData('edc_type');
+        if ($this->getRequest()->getControllerName() == 'quoteproducts') {
+            $this->_edc_type = 'quote_products';
         }
     }
 
@@ -32,7 +33,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
      *
      * @return array
      */
-    protected function _getRecommendedProduct(Mage_Catalog_Model_Product $productModel, $mode)
+    private function _getRecommendedProduct(Mage_Catalog_Model_Product $productModel, $mode)
     {
         //array of products to display
         $products = array();
@@ -107,18 +108,20 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
     {
         $mode = $this->getRequest()->getActionName();
         $limit = Mage::helper('ddg/recommended')->getDisplayLimitByMode($mode);
+		if (! $this->_edc_type)
+			$this->_edc_type = $mode;
 
         switch ($this->_edc_type) {
-            case 'recently_viewed':
+            case 'recentlyviewed':
                 return $this->_getRecentlyViewedCollection($limit);
                 break;
-            case 'product_push':
+            case 'push':
                 return $this->_getProductPushCollection($limit);
                 break;
             case 'bestsellers':
                 return $this->_getBestSellersCollection($mode, $limit);
                 break;
-            case 'most_viewed':
+            case 'mostviewed':
                 return $this->_getMostViewedCollection($mode, $limit);
                 break;
             case 'quote_products':
@@ -145,16 +148,23 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
 
         /** @var Mage_Reports_Block_Product_Viewed $collection */
         $collection = Mage::getSingleton('Mage_Reports_Block_Product_Viewed');
-        $items = $collection->getItemsCollection()
-            ->setPageSize($limit);
-        Mage::helper('ddg')->log('Recentlyviewed customer  : ' . $customerId . ', mode ' . $mode . ', limit : ' . $limit .
-            ', items found : ' . count($items) . ', is customer logged in : ' . $isLoggedIn . ', products :' . count($productsToDisplay));
-        foreach ($items as $product) {
-            $product = Mage::getModel('catalog/product')->load($product->getId());
-            if($product->isSalable())
-                $productsToDisplay[$product->getId()] = $product;
+	    $productItems = $collection->getItemsCollection()
+		    ->setPageSize($limit);
 
-        }
+        Mage::helper('ddg')->log('Recentlyviewed customer  : ' . $customerId . ', limit : ' . $limit .
+            ', items found : ' . count($productItems) . ', is customer logged in : ' . $isLoggedIn . ', products :' . count($productsToDisplay));
+		//get the product ids from items collection
+	    $productIds = $productItems->getColumnValues('product_id');
+		//get product collection to check for salable
+	    $productCollection = Mage::getModel('catalog/product')->getCollection()
+		    ->addFieldToFilter('entity_id', array('in' => $productIds))
+	    ;
+		//show products only if is salable
+	    foreach ($productCollection as $product) {
+		    if($product->isSalable())
+			    $productsToDisplay[$product->getId()] = $product;
+
+	    }
         $session->logout();
 
         return $productsToDisplay;
@@ -177,7 +187,8 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
             ->setPageSize($limit);
 
         foreach ($productCollection as $product) {
-            if($product->isSaleable())
+            //add only salable products
+	        if($product->isSaleable())
                 $productsToDisplay[] = $product;
         }
 
@@ -206,14 +217,18 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
         Mage::getSingleton('cataloginventory/stock')->addInStockFilterToCollection($productCollection);
         $productCollection->addAttributeToFilter('is_saleable', TRUE);
 
-        $cat_id = Mage::app()->getRequest()->getParam('category_id');
-        $cat_name = Mage::app()->getRequest()->getParam('category_name');
-        if($cat_id or $cat_name){
-            if($cat_id)
-                $category = Mage::getModel('catalog/category')->load($cat_id);
+        $cat_id = Mage::app()->getRequest()->getParam('category_id', false);
+        $cat_name = Mage::app()->getRequest()->getParam('category_name', false);
 
+	    //check for params
+	    if ($cat_id or $cat_name){
+	        $category = Mage::getModel('catalog/category');
+            //load by category id
+	        if($cat_id)
+                $category->load($cat_id);
+			//load by the category name
             if($cat_name)
-                $category = Mage::getModel('catalog/category')->loadByAttribute('name', $cat_name);
+                $category->loadByAttribute('name', $cat_name);
 
             $productCollection = $this->_joinCategoryOnCollection($productCollection, $category);
         }
@@ -241,27 +256,27 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
         $cat_id = Mage::app()->getRequest()->getParam('category_id');
         $cat_name = Mage::app()->getRequest()->getParam('category_name');
         if($cat_id or $cat_name){
-            if($cat_id)
-                $category = Mage::getModel('catalog/category')->load($cat_id);
+	        $category = Mage::getModel('catalog/category');
+
+	        if($cat_id)
+                $category->load($cat_id);
 
             if($cat_name)
-                $category = Mage::getModel('catalog/category')->loadByAttribute('name', $cat_name);
+                $category->loadByAttribute('name', $cat_name);
 
             $productCollection = $this->_joinCategoryOnCollection($productCollection, $category);
         }
 
         $productIds = $productCollection->getColumnValues('entity_id');
         $productCollection->clear();
-        $productCollection = Mage::getModel('catalog/product')
-            ->getCollection()
+        $productCollection = Mage::getResourceModel('catalog/product_collection')
             ->addIdFilter($productIds)
             ->addAttributeToSelect(array('product_url', 'name', 'store_id', 'small_image', 'price'));
 
         foreach ($productCollection as $_product) {
-            $productId = $_product->getId();
-            $product = Mage::getModel('catalog/product')->load($productId);
-            if($product->isSalable())
-                $productsToDisplay[] = $product;
+            //add only salable products
+	        if($_product->isSalable())
+                $productsToDisplay[] = $_product;
         }
 
         return $productsToDisplay;
@@ -276,7 +291,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
      */
     private function _joinCategoryOnCollection($productCollection, $category)
     {
-        if($category->getId()){
+        if ($category->getId()){
             $productCollection->getSelect()
                 ->joinLeft(
                     array("ccpi" => 'catalog_category_product_index'),
@@ -302,12 +317,13 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
     private function _getQuoteProductCollection($mode, $limit)
     {
         $quoteModel = Mage::registry('current_quote');
+
         if (! $quoteModel) {
             Mage::throwException('no current_quote found for EDC');
         }
-        
-        $quoteItems = $quoteModel->getAllItems();
-        $productsToDisplay = $this->getProductsToDisplay($quoteItems, $limit, $mode, 'QUOTE');
+		$quoteItems = $quoteModel->getAllItems();
+
+	    $productsToDisplay = $this->getProductsToDisplay($quoteItems, $limit, $mode, 'QUOTE');
 
         return $productsToDisplay;
     }
@@ -345,26 +361,27 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
             //parent product
             $product = $item->getProduct();
             //check for product exists
-            if ($product->getId()) {
-                //get single product for current mode
-                $recommendedProducts = $this->_getRecommendedProduct($product, $mode);
-                if(!empty($recommendedProducts)){
-                    $recommendedProducts = Mage::getModel('catalog/product')
-                        ->getCollection()
-                        ->addIdFilter($recommendedProducts)
-                        ->addAttributeToSelect(array('product_url', 'name', 'store_id', 'small_image', 'price'));
 
-                    foreach ($recommendedProducts as $product) {
-                        //check if still exists
-                        if ($product->getId() && $productsToDisplayCounter < $limit && $i <= $maxPerChild && $product->isSaleable() && !$product->getParentId()) {
-                            //we have a product to display
-                            $productsToDisplay[$product->getId()] = $product;
-                            $i++;
-                            $productsToDisplayCounter++;
-                        }
+            //get single product for current mode
+            $recommendedProducts = $this->_getRecommendedProduct($product, $mode);
+            if (! empty($recommendedProducts)) {
+
+                $recommendedProducts = Mage::getModel('catalog/product')
+                    ->getCollection()
+                    ->addIdFilter($recommendedProducts)
+                    ->addAttributeToSelect(array('product_url', 'name', 'store_id', 'small_image', 'price'));
+
+                foreach ($recommendedProducts as $product) {
+                    //check if still exists
+                    if ($product->getId() && $productsToDisplayCounter < $limit && $i <= $maxPerChild && $product->isSaleable() && !$product->getParentId()) {
+                        //we have a product to display
+                        $productsToDisplay[$product->getId()] = $product;
+                        $i++;
+                        $productsToDisplayCounter++;
                     }
                 }
             }
+
             //have reached the limit don't loop for more
             if ($productsToDisplayCounter == $limit) {
                 break;

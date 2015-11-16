@@ -25,13 +25,6 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
 			return $this;
 		try{
 
-			// fix for a multiple hit of the observer
-			$emailReg =  Mage::registry($email . '_subscriber_save');
-			if ($emailReg){
-				return $this;
-			}
-			Mage::register($email . '_subscriber_save', $email);
-
 			$contactEmail = Mage::getModel('ddg_automation/contact')->loadByCustomerEmail($email, $websiteId);
 
 			// only for subsribers
@@ -46,6 +39,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
 
 					//resubscribe suppressed contacts
 					if (isset($apiContact->message) && $apiContact->message == Dotdigitalgroup_Email_Model_Apiconnector_Client::API_ERROR_CONTACT_SUPPRESSED) {
+						$apiContact = $client->getContactByEmail($email);
 						$client->postContactsResubscribe( $apiContact );
 					}
 				}
@@ -82,6 +76,13 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
 					->setSubscriberStatus(Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED);
 			}
 
+			// fix for a multiple hit of the observer
+			$emailReg =  Mage::registry($email . '_subscriber_save');
+			if ($emailReg){
+				return $this;
+			}
+			Mage::register($email . '_subscriber_save', $email);
+
 			//add subscriber to automation
 			$this->_addSubscriberToAutomation($email, $subscriber, $websiteId);
 
@@ -109,11 +110,12 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
 			return;
 		try {
 			//check the subscriber alredy exists
-			$enrolment = Mage::getModel('ddg_automation/automation')->getCollection()
+			$enrolmentCollection = Mage::getModel('ddg_automation/automation')->getCollection()
 				->addFieldToFilter('email', $email)
 				->addFieldToFilter('automation_type', Dotdigitalgroup_Email_Model_Automation::AUTOMATION_TYPE_NEW_SUBSCRIBER)
-				->addFieldToFilter('website_id', $websiteId)
-				->getFirstItem();
+				->addFieldToFilter('website_id', $websiteId);
+			$enrolmentCollection->getSelect()->limit(1);
+			$enrolment = $enrolmentCollection->getFirstItem();
 
 			//add new subscriber to automation
 			if (! $enrolment->getId()) {

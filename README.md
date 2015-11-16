@@ -27,12 +27,14 @@ Compatibility
 ### V5.0.4
 
 ## Bug fixes
+
  - Increased the cron sync times to 15 minutes.
 
 
 ### V5.0.3
 
 ## Bug fixes
+
  - Magento code audit. Brins a lot of performance and architectural imrovements.
  - Fixed fatal error on quote single sync
  - Fixed oAuth redirect
@@ -53,15 +55,16 @@ Compatibility
 ### V5.0.2
 
 ## Bug fixes
+
  - Fixed fatal error while doing single sync. Key does not exist/not an object.
  - Fixed rewrite of sendNewAccountEmail function to call parent without default values.
  - Fixed OAUTH disconnect link
  - Contact sync check if manufacturer attribute exist before pulling value. 
 
-
 ### V5.0.1
 
 ## Bug fixes
+
  - Fixed upgrade script so it does not get skipped
  - Added ACL to required controllers
 
@@ -69,6 +72,7 @@ Compatibility
 ### V5.0.0
   
 ## Features
+ 
  -  New Data Importer
  -  Abandoned cart exclusion rules
  -  Review request exclusion rules
@@ -92,6 +96,7 @@ Compatibility
  -  IP restrictions on EDC pages
 
 ## Bug fixes
+ 
  -  Reduced default batch size and more frequent batching
  -  Custom order attributes not syncing
  -  Performance improvements to all data syncs
@@ -111,7 +116,6 @@ Compatibility
  -  Automation enrollment per website level
  -  Fix for rec's per item logic for EDC pages
 
-
 ### V4.0.0
 
 ## Features
@@ -128,14 +132,15 @@ Compatibility
  - Customer trend data.
  
 ## Bug fixes
+
  - Sync limits lowered to 5000 contacts and 200 orders.
  - Review is submited before it's approved.
  - Abandoned Carts triggered from the "LAST_QUOTE_ID".
 
-
 ### V3.3.0
 
 ## Features
+
 - Nosto Integration.
 - Easy Email Capture(trademark).
 - Reviews.
@@ -146,6 +151,7 @@ Compatibility
 
 
 ## Bug fixed
+
 - Cleaning phpspecs standards.
 - Checkout awareness for abandoned carts.
 - Compatibility with the older versions 1.6.2(full compatibility).
@@ -154,11 +160,15 @@ Compatibility
 - Not enough coupons generated.
 
 
+
+
 ### V3.2.0
+
 - Transactional Emails Refactor.
 - System Status Dashboard
 
 ## Features
+
 - System Status Dashboard.
 - RFM Analisys.
 - Api Status.
@@ -171,6 +181,7 @@ Compatibility
 - Mailcheck integration
 
 ## Bug fixed
+
 - Magor Refactoring.
 - Cover all the code with testing.
 - Automation when subscriber is not imported yet.
@@ -193,31 +204,38 @@ Compatibility
 
 ### V3.1.0
 
-## Features
+## Automation
+
 - Automation Enrolment.
+
+## Features
+
 - Sweet Tooth Integration.
 - Transactional Emails.
 - Auto create data fields needs total refund amount added.
 - Add 240 hours onto lost basket 3 both guest and customer.
 
 ## Bugs fixed
+ 
 - Dynamic URLS with no value.
 - Transactional data missing product data.
 - Orders over 1000 showing 1.
 - Automap on website level.
 
 
+
 ### V.3.0.3
 
 ## Single customer sync.
+
 * Single Customer Sync Button
 * ROI fix
 * Code standards refactoring
 
-
 ### V.3.0.2
 
 ## Automation Studio.
+
 * OAUTH & Menu
 * Map product attribute-set to transactional data
 * Tracking code SSL fix
@@ -226,16 +244,17 @@ Compatibility
 ### V.3.0.1
 
 ## Transactional Emails Post Release Update.
+
 * Translations update
 * Default values update
 * Transactional emails enabled fix
 * Manully map the customer ID field
 * Emails Reports enchase with website id field
 
-
 ### V.3.0.0 : 
 
 ## Transactional Emails.
+
 * New Order
 * New Order for Guest
 * Order Update
@@ -256,6 +275,7 @@ Compatibility
 * New Customer Account 
 
 ## Features 
+
 * Newsletter Dashboard.
 * Newsletter Contact.
 * Newsletter Orders.
@@ -266,7 +286,9 @@ Compatibility
 * Custom datafields.
 * New Lost Baskets.
 
+
 ## Fixes
+
 * New SMS Fixes.
 * Sync Orders by store.
 * Subscribers multiwebsite fix.
@@ -279,9 +301,9 @@ Compatibility
 * Naming convention for connector compatibility.
 
 
+
 #### V.2.0.5 : 
 * Use the Order statuses to send the SMS.
-
 
 #### V.2.0.4 :
 
@@ -300,3 +322,5 @@ Compatibility
 * Subscriber Sync - fix the contact id when to unsubscribe.
 * Subscriber Sync Empty Request.
 * Change the time format for filenames.
+
+

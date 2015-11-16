@@ -20,11 +20,6 @@ class Dotdigitalgroup_Email_ReportController extends Dotdigitalgroup_Email_Respo
 	public function bestsellersAction()
     {
         $this->loadLayout();
-	    //set the content template
-        $products = $this->getLayout()->createBlock('ddg_automation/edc', 'connector_customer', array(
-            'template' => 'connector/product/list.phtml', 'edc_type' => 'bestsellers'
-        ));
-        $this->getLayout()->getBlock('content')->append($products);
         $this->renderLayout();
         $this->checkContentNotEmpty($this->getLayout()->getOutput());
     }
@@ -35,11 +30,6 @@ class Dotdigitalgroup_Email_ReportController extends Dotdigitalgroup_Email_Respo
 	public function mostviewedAction()
     {
         $this->loadLayout();
-	    //set the content template
-        $products = $this->getLayout()->createBlock('ddg_automation/edc', 'connector_customer', array(
-            'template' => 'connector/product/list.phtml', 'edc_type' => 'most_viewed'
-        ));
-        $this->getLayout()->getBlock('content')->append($products);
         $this->renderLayout();
         $this->checkContentNotEmpty($this->getLayout()->getOutput());
     }
@@ -50,20 +40,15 @@ class Dotdigitalgroup_Email_ReportController extends Dotdigitalgroup_Email_Respo
 	public function recentlyviewedAction()
     {
 	    //customer id param
-        $customerId = $this->getRequest()->getParam('customer_id');
+        $customerId = $this->getRequest()->getParam('customer_id', false);
 	    //no customer was found
         if (! $customerId) {
-            //throw new Exception('Recentlyviewed : no customer id : ' . $customerId);
+
             Mage::helper('ddg')->log('Recentlyviewed : no customer id : ' . $customerId);
             $this->sendResponse();
-            die;
+            Mage::throwException('Recentlyviewed, customer not set');
         }
         $this->loadLayout();
-	    //set content template
-        $products = $this->getLayout()->createBlock('ddg_automation/edc', 'connector_customer', array(
-            'template' => 'connector/product/list.phtml', 'edc_type' => 'recently_viewed'
-        ));
-        $this->getLayout()->getBlock('content')->append($products);
         $this->renderLayout();
         $this->checkContentNotEmpty($this->getLayout()->getOutput());
     }

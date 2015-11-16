@@ -12,14 +12,10 @@ controllers:
   - Adminhtml#Email#WishlistController.php
   - Adminhtml#Widget#ChooserController.php
   - Adminhtml#ConnectorController.php
-  - CreditmemoController.php
   - DynamicContentController.php
   - EmailController.php
-  - InvoiceController.php
-  - OrderController.php
   - ProductsController.php
   - ReportController.php
-  - ShippingController.php
   - AjaxController.php
   - QuoteproductsController.php
 sql:
@@ -57,7 +53,6 @@ block:
   - Adminhtml#Dashboard#Tabs#Analysis#Subscriber.php
   - Adminhtml#Dashboard#Tabs#General#Data.php
   - Adminhtml#Dashboard#Tabs#Analysis.php
-  - Adminhtml#Dashboard#Tabs#Config.php
   - Adminhtml#Dashboard#Tabs#General.php
   - Adminhtml#Dashboard#Tabs#Status.php
   - Adminhtml#Dashboard#Switcher.php
@@ -181,7 +176,6 @@ model:
   - Adminhtml#Source#Dynamic#Gridview.php
   - Adminhtml#Source#Lostbaskets#Interval.php
   - Adminhtml#Source#Lostbaskets#Intervalminute.php
-  - Adminhtml#Source#Reviews#Campaigns.php
   - Adminhtml#Source#Reviews#Delay.php
   - Adminhtml#Source#Sweettooth#Yesno.php
   - Adminhtml#Source#Addressbooks.php

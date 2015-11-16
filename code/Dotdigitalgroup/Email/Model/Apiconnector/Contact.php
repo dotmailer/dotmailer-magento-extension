@@ -4,7 +4,6 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
 {
     private $_start;
     private $_countCustomers = 0;
-    private $_sqlExecuted = false;
 
 	/**
 	 * Contact sync.
@@ -98,13 +97,6 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
         /**
          * END HEADERS.
          */
-
-        //only execute once despite number of websites
-        if(!$this->_sqlExecuted){
-            Mage::getResourceModel('ddg_automation/contact')->populateAndCleanupRecords();
-            //set flag
-            $this->_sqlExecuted = true;
-        }
 
         //customer data
         foreach ($customerCollection as $customer) {
@@ -215,14 +207,6 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
          * END HEADERS.
          */
 
-        //only execute once despite number of websites
-        if(!$this->_sqlExecuted){
-            Mage::getResourceModel('ddg_automation/contact')->populateAndCleanupRecords();
-            //set flag
-            $this->_sqlExecuted = true;
-        }
-
-
         $customerCollection = $this->getCollection(array($customerId), $website->getId());
 
         foreach ($customerCollection as $customer) {
@@ -330,13 +314,14 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
             ->where("status in (?)", $statuses)
             ->group('customer_id')
         ;
-        $customerCollection->getSelect()->columns(array(
-                'last_order_date' => new Zend_Db_Expr("(SELECT created_at FROM $sales_flat_order_grid WHERE customer_id =e.entity_id ORDER BY created_at DESC LIMIT 1)"),
-                'last_order_id' => new Zend_Db_Expr("(SELECT entity_id FROM $sales_flat_order_grid WHERE customer_id =e.entity_id ORDER BY created_at DESC LIMIT 1)"),
-                'last_increment_id' => new Zend_Db_Expr("(SELECT increment_id FROM $sales_flat_order_grid WHERE customer_id =e.entity_id ORDER BY created_at DESC LIMIT 1)"),
-                'last_quote_id' => new Zend_Db_Expr("(SELECT entity_id FROM $sales_flat_quote WHERE customer_id = e.entity_id ORDER BY created_at DESC LIMIT 1)"),
-                'first_category_id' => new Zend_Db_Expr(
-                    "(
+
+        $columns = array(
+            'last_order_date' => new Zend_Db_Expr("(SELECT created_at FROM $sales_flat_order_grid WHERE customer_id =e.entity_id ORDER BY created_at DESC LIMIT 1)"),
+            'last_order_id' => new Zend_Db_Expr("(SELECT entity_id FROM $sales_flat_order_grid WHERE customer_id =e.entity_id ORDER BY created_at DESC LIMIT 1)"),
+            'last_increment_id' => new Zend_Db_Expr("(SELECT increment_id FROM $sales_flat_order_grid WHERE customer_id =e.entity_id ORDER BY created_at DESC LIMIT 1)"),
+            'last_quote_id' => new Zend_Db_Expr("(SELECT entity_id FROM $sales_flat_quote WHERE customer_id = e.entity_id ORDER BY created_at DESC LIMIT 1)"),
+            'first_category_id' => new Zend_Db_Expr(
+                "(
                         SELECT ccpi.category_id FROM $sales_flat_order as sfo
                         left join $sales_flat_order_item as sfoi on sfoi.order_id = sfo.entity_id
                         left join $catalog_category_product_index as ccpi on ccpi.product_id = sfoi.product_id
@@ -344,9 +329,9 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
                         ORDER BY sfo.created_at ASC, sfoi.price DESC
                         LIMIT 1
                     )"
-                ),
-                'last_category_id' => new Zend_Db_Expr(
-                    "(
+            ),
+            'last_category_id' => new Zend_Db_Expr(
+                "(
                         SELECT ccpi.category_id FROM $sales_flat_order as sfo
                         left join $sales_flat_order_item as sfoi on sfoi.order_id = sfo.entity_id
                         left join $catalog_category_product_index as ccpi on ccpi.product_id = sfoi.product_id
@@ -354,27 +339,27 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
                         ORDER BY sfo.created_at DESC, sfoi.price DESC
                         LIMIT 1
                     )"
-                ),
-                'product_id_for_first_brand' => new Zend_Db_Expr(
-                    "(
+            ),
+            'product_id_for_first_brand' => new Zend_Db_Expr(
+                "(
                         SELECT sfoi.product_id FROM $sales_flat_order as sfo
                         left join $sales_flat_order_item as sfoi on sfoi.order_id = sfo.entity_id
                         WHERE sfo.customer_id = e.entity_id and sfoi.product_type = 'simple'
                         ORDER BY sfo.created_at ASC, sfoi.price DESC
                         LIMIT 1
                     )"
-                ),
-                'product_id_for_last_brand' => new Zend_Db_Expr(
-                    "(
+            ),
+            'product_id_for_last_brand' => new Zend_Db_Expr(
+                "(
                         SELECT sfoi.product_id FROM $sales_flat_order as sfo
                         left join $sales_flat_order_item as sfoi on sfoi.order_id = sfo.entity_id
                         WHERE sfo.customer_id = e.entity_id and sfoi.product_type = 'simple'
                         ORDER BY sfo.created_at DESC, sfoi.price DESC
                         LIMIT 1
                     )"
-                ),
-                'week_day' => new Zend_Db_Expr(
-                    "(
+            ),
+            'week_day' => new Zend_Db_Expr(
+                "(
                         SELECT dayname(created_at) as week_day
                         FROM $sales_flat_order
                         WHERE customer_id = e.entity_id
@@ -383,9 +368,9 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
                         ORDER BY (COUNT(*)) DESC
                         LIMIT 1
                     )"
-                ),
-                'month_day' => new Zend_Db_Expr(
-                    "(
+            ),
+            'month_day' => new Zend_Db_Expr(
+                "(
                         SELECT monthname(created_at) as month_day
                         FROM $sales_flat_order
                         WHERE customer_id = e.entity_id
@@ -394,9 +379,9 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
                         ORDER BY (COUNT(*)) DESC
                         LIMIT 1
                     )"
-                ),
-                'most_category_id' => new Zend_Db_Expr(
-                    "(
+            ),
+            'most_category_id' => new Zend_Db_Expr(
+                "(
                         SELECT ccpi.category_id FROM $sales_flat_order as sfo
                         LEFT JOIN $sales_flat_order_item as sfoi on sfoi.order_id = sfo.entity_id
                         LEFT JOIN $catalog_category_product_index as ccpi on ccpi.product_id = sfoi.product_id
@@ -406,25 +391,37 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
                         ORDER BY COUNT(sfoi.product_id) DESC
                         LIMIT 1
                     )"
-                ),
-                'most_brand' => new Zend_Db_Expr(
-                    "(
-                        SELECT eaov.value from $sales_flat_order sfo
-                        LEFT JOIN $sales_flat_order_item as sfoi on sfoi.order_id = sfo.entity_id
-                        LEFT JOIN $catalog_product_entity_int pei on pei.entity_id = sfoi.product_id
-                        LEFT JOIN $eav_attribute ea ON pei.attribute_id = ea.attribute_id
-                        LEFT JOIN $eav_attribute_option_value as eaov on pei.value = eaov.option_id
-                        WHERE sfo.customer_id = e.entity_id AND ea.attribute_code = 'manufacturer' AND eaov.value is not null
-                        GROUP BY eaov.value
-                        HAVING count(*) > 0
-                        ORDER BY count(*) DESC
-                        LIMIT 1
-                    )"
-                ),
-            )
+            ),
+
+            'most_brand' => new Zend_Db_Expr('NULL')
         );
+
+        $brand = Mage::helper('ddg')->getWebsiteConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_DATA_FIELDS_BRAND_ATTRIBUTE, $websiteId
+        );
+
+        if($brand){
+            $columns['most_brand'] = new Zend_Db_Expr(
+                "(
+                    SELECT eaov.value from $sales_flat_order sfo
+                    LEFT JOIN $sales_flat_order_item as sfoi on sfoi.order_id = sfo.entity_id
+                    LEFT JOIN $catalog_product_entity_int pei on pei.entity_id = sfoi.product_id
+                    LEFT JOIN $eav_attribute ea ON pei.attribute_id = ea.attribute_id
+                    LEFT JOIN $eav_attribute_option_value as eaov on pei.value = eaov.option_id
+                    WHERE sfo.customer_id = e.entity_id AND ea.attribute_code = '$brand' AND eaov.value is not null
+                    GROUP BY eaov.value
+                    HAVING count(*) > 0
+                    ORDER BY count(*) DESC
+                    LIMIT 1
+                )"
+            );
+        }
+
+        $customerCollection->getSelect()->columns($columns);
+
         $customerCollection->getSelect()
             ->joinLeft(array($alias => $subselect), "{$alias}.s_customer_id = e.entity_id");
+
         return $customerCollection;
     }
 }

@@ -11,7 +11,7 @@
                 <?php foreach($reviews as $name => $review): ?>
                     <tr>
                         <td style="border-bottom: 2px #d3d3d3 dotted; padding-top: 5px; padding-bottom: 5px">
-                            <?php echo $review; ?>
+                            <?php echo $this->escapeHtml($review); ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>

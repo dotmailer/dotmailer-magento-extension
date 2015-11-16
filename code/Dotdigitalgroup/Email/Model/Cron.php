@@ -114,9 +114,6 @@ class Dotdigitalgroup_Email_Model_Cron
 	    $subscriberModel = Mage::getModel('ddg_automation/newsletter_subscriber');
         $result = $subscriberModel->sync();
 
-	    //unsubscribe suppressed contacts
-	    $subscriberModel->unsubscribe();
-
         //sync guests
         Mage::getModel('ddg_automation/customer_guest')->sync();
 	    return $result;
@@ -142,7 +139,7 @@ class Dotdigitalgroup_Email_Model_Cron
 	    $result = $helper->deleteDir($archivedFolder);
 	    $message = 'Cleaning cronjob result : ' . $result;
 	    $helper->log($message);
-	    Mage::helper('ddg')->rayLog('10', $message, 'model/cron.php');
+	    Mage::helper('ddg')->rayLog($message, 'model/cron.php');
         return $result;
     }
 
@@ -156,14 +153,14 @@ class Dotdigitalgroup_Email_Model_Cron
 		$schedules = Mage::getModel('cron/schedule')->getCollection();
 		$schedules->getSelect()->limit(1)->order('executed_at DESC');
 		$schedules->addFieldToFilter('status', Mage_Cron_Model_Schedule::STATUS_SUCCESS)
-            ->addFieldToFilter('job_code', 'ddg_automation_customer_subscriber_guest_sync')
-			->getSize();
+            ->addFieldToFilter('job_code', 'ddg_automation_customer_subscriber_guest_sync');
 
 
 		if ($schedules->getSize() == 0) {
 			return false;
 		}
 		$executedAt = $schedules->getFirstItem()->getExecutedAt();
+
 		return Mage::getModel('core/date')->date(NULL, $executedAt);
 	}
 

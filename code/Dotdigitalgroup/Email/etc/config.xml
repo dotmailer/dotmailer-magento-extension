@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Dotdigitalgroup_Email>
-            <version>5.0.4</version>
+            <version>5.1.0</version>
         </Dotdigitalgroup_Email>
     </modules>
     <frontend>
@@ -16,7 +16,7 @@
             </ddg_automation>
         </routers>
         <secure_url>
-            <connector_customer_newsletter_save>/ddg/customer_newsletter/save</connector_customer_newsletter_save>
+            <connector_customer_newsletter_save>/connector/customer_newsletter/save</connector_customer_newsletter_save>
         </secure_url>
         <layout>
             <updates>
@@ -29,7 +29,7 @@
             <controller_action_postdispatch>
                 <observers>
                     <ddg_switcher>
-                        <class>Dotdigitalgroup_Email_Model_Controller_Observer</class>
+                        <class>ddg_automation/controller_observer</class>
                         <method>controllerActionPostdispatch</method>
                     </ddg_switcher>
                 </observers>
@@ -41,7 +41,7 @@
             <email_connector_setup>
                 <setup>
                     <module>Dotdigitalgroup_Email</module>
-                    <class>Dotdigitalgroup_Email_Model_Resource_Setup</class>
+                    <class>ddg_automation/resource_setup</class>
                 </setup>
             </email_connector_setup>
         </resources>
@@ -49,7 +49,7 @@
             <enterprise_customersegment_ids_changed>
                 <observers>
                     <ddg_customersegment_changed>
-                        <class>Dotdigitalgroup_Email_Model_Adminhtml_Observer</class>
+                        <class>ddg_automation/adminhtml_observer</class>
                         <method>connectorCustomerSegmentChanged</method>
                     </ddg_customersegment_changed>
                 </observers>
@@ -116,6 +116,12 @@
                     <segment>Dotdigitalgroup_Email_Model_Resource_Segment</segment>
                 </rewrite>
             </enterprise_customersegment_resource>
+            <core>
+                <rewrite>
+                    <email_template>Dotdigitalgroup_Email_Model_Email_Template</email_template>
+                    <email>Dotdigitalgroup_Email_Model_Email</email>
+                </rewrite>
+            </core>
         </models>
         <helpers>
             <ddg>
@@ -128,7 +134,7 @@
             </ddg_automation>
             <adminhtml>
                 <rewrite>
-                    <system_email_template_edit>Dotdigitalgroup_Email_Block_System_Email_Template_Edit</system_email_template_edit>
+                    <system_email_template_edit>ddg_automation/system_email_template_edit</system_email_template_edit>
                 </rewrite>
             </adminhtml>
         </blocks>
@@ -136,7 +142,7 @@
             <admin_system_config_changed_section_connector_api_credentials>
                 <observers>
                     <ddg_api_save>
-                        <class>Dotdigitalgroup_Email_Model_Adminhtml_Observer</class>
+                        <class>ddg_automation/adminhtml_observer</class>
                         <method>actionConfigSaveApi</method>
                     </ddg_api_save>
                 </observers>
@@ -144,7 +150,7 @@
             <admin_system_config_changed_section_connector_data_mapping>
                 <observers>
                     <ddg_data_mapping_reset>
-                        <class>Dotdigitalgroup_Email_Model_Adminhtml_Observer</class>
+                        <class>ddg_automation/adminhtml_observer</class>
                         <method>actionConfigResetContacts</method>
                     </ddg_data_mapping_reset>
                 </observers>
@@ -152,7 +158,7 @@
             <admin_system_config_changed_section_connector_sync_settings>
                 <observers>
                     <ddg_sys_check_feature_active>
-                        <class>Dotdigitalgroup_Email_Model_Adminhtml_Observer</class>
+                        <class>ddg_automation/adminhtml_observer</class>
                         <method>checkFeatureActive</method>
                     </ddg_sys_check_feature_active>
                 </observers>
@@ -160,7 +166,7 @@
             <customer_save_after>
                 <observers>
                     <ddg_customer_save_after>
-                        <class>Dotdigitalgroup_Email_Model_Customer_Observer</class>
+                        <class>ddg_automation/customer_observer</class>
                         <method>handleCustomerSaveAfter</method>
                     </ddg_customer_save_after>
                 </observers>
@@ -169,7 +175,7 @@
                 <observers>
                     <ddg_customer_register_success>
                         <type>singleton</type>
-                        <class>Dotdigitalgroup_Email_Model_Customer_Observer</class>
+                        <class>ddg_automation/customer_observer</class>
                         <method>handleCustomerRegiterSuccess</method>
                     </ddg_customer_register_success>
                 </observers>
@@ -177,7 +183,7 @@
             <customer_delete_after>
                 <observers>
                     <ddg_customer_delete_after>
-                        <class>Dotdigitalgroup_Email_Model_Customer_Observer</class>
+                        <class>ddg_automation/customer_observer</class>
                         <method>handleCustomerDeleteAfter</method>
                     </ddg_customer_delete_after>
                 </observers>
@@ -185,7 +191,7 @@
             <newsletter_subscriber_save_before>
                 <observers>
                     <ddg_newsletter_subscriber_save_before>
-                        <class>Dotdigitalgroup_Email_Model_Newsletter_Observer</class>
+                        <class>ddg_automation/newsletter_observer</class>
                         <method>handleNewsletterSubscriberSave</method>
                     </ddg_newsletter_subscriber_save_before>
                 </observers>
@@ -194,23 +200,15 @@
                 <observers>
                     <ddg_record_sale>
                         <type>singleton</type>
-                        <class>Dotdigitalgroup_Email_Model_Sales_Observer</class>
+                        <class>ddg_automation/sales_observer</class>
                         <method>handleSalesOrderPlaceAfter</method>
                     </ddg_record_sale>
                 </observers>
             </sales_order_place_after>
-            <sales_order_save_before>
-                <observers>
-                    <ddg_sales_save_before>
-                        <class>Dotdigitalgroup_Email_Model_Sales_Observer</class>
-                        <method>handleSalesOrderSaveBefore</method>
-                    </ddg_sales_save_before>
-                </observers>
-            </sales_order_save_before>
             <sales_order_save_after>
                 <observers>
                     <ddg_checkout_type_onepage_save_order_after>
-                        <class>Dotdigitalgroup_Email_Model_Sales_Observer</class>
+                        <class>ddg_automation/sales_observer</class>
                         <method>handleSalesOrderSaveAfter</method>
                     </ddg_checkout_type_onepage_save_order_after>
                 </observers>
@@ -218,7 +216,7 @@
             <sales_order_creditmemo_save_after>
                 <observers>
                     <ddg_sales_order_payment_refund>
-                        <class>Dotdigitalgroup_Email_Model_Sales_Observer</class>
+                        <class>ddg_automation/sales_observer</class>
                         <method>handleSalesOrderRefund</method>
                     </ddg_sales_order_payment_refund>
                 </observers>
@@ -226,7 +224,7 @@
             <order_cancel_after>
                 <observers>
                     <ddg_sales_order_cancel>
-                        <class>Dotdigitalgroup_Email_Model_Sales_Observer</class>
+                        <class>ddg_automation/sales_observer</class>
                         <method>hangleSalesOrderCancel</method>
                     </ddg_sales_order_cancel>
                 </observers>
@@ -234,7 +232,7 @@
             <rewards_points_indexer_update>
                 <observers>
                     <ddg_rewards_points_indexer_update>
-                        <class>Dotdigitalgroup_Email_Model_Sweettooth_Observer</class>
+                        <class>ddg_automation/sweettooth_observer</class>
                         <method>ConnectorRewardsPointsIndexerUpdate</method>
                     </ddg_rewards_points_indexer_update>
                 </observers>
@@ -242,7 +240,7 @@
             <review_save_after>
                 <observers>
                     <ddg_review_save_after>
-                        <class>Dotdigitalgroup_Email_Model_Customer_Observer</class>
+                        <class>ddg_automation/customer_observer</class>
                         <method>reviewSaveAfter</method>
                     </ddg_review_save_after>
                 </observers>
@@ -250,7 +248,7 @@
             <model_save_after>
                 <observers>
                     <ddg_wishlist_save_after>
-                        <class>Dotdigitalgroup_Email_Model_Customer_Observer</class>
+                        <class>ddg_automation/customer_observer</class>
                         <method>wishlistSaveAfter</method>
                     </ddg_wishlist_save_after>
                 </observers>
@@ -258,7 +256,7 @@
             <wishlist_item_save_after>
                 <observers>
                     <ddg_wishlist_item_save_after>
-                        <class>Dotdigitalgroup_Email_Model_Customer_Observer</class>
+                        <class>ddg_automation/customer_observer</class>
                         <method>wishlistItemSaveAfter</method>
                     </ddg_wishlist_item_save_after>
                 </observers>
@@ -266,7 +264,7 @@
             <wishlist_delete_after>
                 <observers>
                     <ddg_wishlist_delete_after>
-                        <class>Dotdigitalgroup_Email_Model_Customer_Observer</class>
+                        <class>ddg_automation/customer_observer</class>
                         <method>wishlistDeleteAfter</method>
                     </ddg_wishlist_delete_after>
                 </observers>
@@ -274,7 +272,7 @@
             <wishlist_item_delete_after>
                 <observers>
                     <ddg_wishlist_item_delete_after>
-                        <class>Dotdigitalgroup_Email_Model_Customer_Observer</class>
+                        <class>ddg_automation/customer_observer</class>
                         <method>wishlistItemSaveAfter</method>
                     </ddg_wishlist_item_delete_after>
                 </observers>
@@ -282,7 +280,7 @@
             <sales_convert_quote_to_order>
                 <observers>
                     <ddg_quote_to_order>
-                        <class>Dotdigitalgroup_Email_Model_Sales_Observer</class>
+                        <class>ddg_automation/sales_observer</class>
                         <method>handleQuoteToOrder</method>
                     </ddg_quote_to_order>
                 </observers>
@@ -290,7 +288,7 @@
             <sales_quote_save_after>
                 <observers>
                     <ddg_sales_quote_save_after>
-                        <class>Dotdigitalgroup_Email_Model_Sales_Observer</class>
+                        <class>ddg_automation/sales_observer</class>
                         <method>handleQuoteSaveAfter</method>
                     </ddg_sales_quote_save_after>
                 </observers>
@@ -298,7 +296,7 @@
             <catalog_product_save_after>
                 <observers>
                     <ddg_catalog_product_save_after>
-                        <class>Dotdigitalgroup_Email_Model_Catalog</class>
+                        <class>ddg_automation/catalog</class>
                         <method>handleProductSaveAfter</method>
                     </ddg_catalog_product_save_after>
                 </observers>
@@ -306,7 +304,7 @@
             <catalog_product_delete_after>
                 <observers>
                     <ddg_catalog_product_delete_after>
-                        <class>Dotdigitalgroup_Email_Model_Catalog</class>
+                        <class>ddg_automation/catalog</class>
                         <method>handleProductDeleteAfter</method>
                     </ddg_catalog_product_delete_after>
                 </observers>
@@ -314,7 +312,7 @@
             <core_config_data_save_before>
                 <observers>
                     <ddg_core_config_data_save_before>
-                        <class>Dotdigitalgroup_Email_Model_Catalog</class>
+                        <class>ddg_automation/catalog</class>
                         <method>handleConfigSaveBefore</method>
                     </ddg_core_config_data_save_before>
                 </observers>
@@ -322,7 +320,7 @@
             <core_config_data_save_after>
                 <observers>
                     <ddg_core_config_data_save_after>
-                        <class>Dotdigitalgroup_Email_Model_Catalog</class>
+                        <class>ddg_automation/catalog</class>
                         <method>handleConfigSaveAfter</method>
                     </ddg_core_config_data_save_after>
                 </observers>
@@ -342,7 +340,7 @@
                 <observers>
                     <ddg_feed>
                         <type>singleton</type>
-                        <class>Dotdigitalgroup_Email_Model_Adminhtml_Observer</class>
+                        <class>ddg_automation/adminhtml_observer</class>
                         <method>updateFeed</method>
                     </ddg_feed>
                 </observers>
@@ -374,7 +372,7 @@
             <ddg_automation_customer_subscriber_guest_sync>
                 <run><model>ddg_automation/cron::contactSync</model></run>
                 <schedule>
-                    <cron_expr>*/15 * * * *</cron_expr>
+                    <config_path>connector_developer_settings/cron_schedules/contact</config_path>
                 </schedule>
             </ddg_automation_customer_subscriber_guest_sync>
             <ddg_automation_status>
@@ -394,7 +392,7 @@
                     <model>ddg_automation/cron::reviewsAndWishlist</model>
                 </run>
                 <schedule>
-                    <cron_expr>*/15 * * * *</cron_expr>
+                    <config_path>connector_developer_settings/cron_schedules/review_wishlist</config_path>
                 </schedule>
             </ddg_automation_reviews_and_wishlist>
             <ddg_automation_campaign>
@@ -408,7 +406,7 @@
             <ddg_automation_order_and_quote_sync>
                 <run><model>ddg_automation/cron::orderAndQuoteSync</model></run>
                 <schedule>
-                    <cron_expr>*/15 * * * *</cron_expr>
+                    <config_path>connector_developer_settings/cron_schedules/order_quote</config_path>
                 </schedule>
             </ddg_automation_order_and_quote_sync>
             <ddg_automation_cleaner>
@@ -420,7 +418,7 @@
             <ddg_automation_catalog_sync>
                 <run><model>ddg_automation/cron::catalogSync</model></run>
                 <schedule>
-                    <cron_expr>*/15 * * * *</cron_expr>
+                    <config_path>connector_developer_settings/cron_schedules/catalog</config_path>
                 </schedule>
             </ddg_automation_catalog_sync>
             <ddg_automation_importer>
@@ -428,7 +426,7 @@
                     <model>ddg_automation/cron::emailImporter</model>
                 </run>
                 <schedule>
-                    <cron_expr>*/5 * * * *</cron_expr>
+                    <config_path>connector_developer_settings/cron_schedules/importer</config_path>
                 </schedule>
             </ddg_automation_importer>
         </jobs>
@@ -771,6 +769,13 @@
             <ip_restriction>
                 <ip_addresses>94.143.111.2, 94.143.111.3</ip_addresses>
             </ip_restriction>
+            <cron_schedules>
+                <importer>*/5 * * * *</importer>
+                <contact>*/15 * * * *</contact>
+                <order_quote>*/15 * * * *</order_quote>
+                <catalog>*/15 * * * *</catalog>
+                <review_wishlist>*/15 * * * *</review_wishlist>
+            </cron_schedules>
         </connector_developer_settings>
     </default>
 </config>

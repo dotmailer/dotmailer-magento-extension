@@ -25,6 +25,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs extends Mage_Adminhtm
 				'label' => $this->__('Account Information'),
 				'title' => $this->__('Account Information'),
 				'content' => $this->getLayout()->createBlock('ddg_automation/adminhtml_dashboard_tabs_general')->toHtml(),
+				'active' => true
 			)
 		);
 		$this->addTab(
@@ -34,7 +35,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs extends Mage_Adminhtm
 				'title' => $this->__('Connector Status'),
 				'url'   => $this->getUrl('*/*/statusGrid'),
 				'class' => 'ajax',
-				'active' => true
 			)
 		);
 		$this->addTab(
@@ -43,6 +43,15 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs extends Mage_Adminhtm
 				'label' => $this->__('Data Analysis'),
 				'title' => $this->__('Data Analysis'),
 				'content' => $this->getLayout()->createBlock('ddg_automation/adminhtml_dashboard_tabs_analysis')->toHtml()
+			)
+		);
+		$this->addTab(
+			'logs',
+			array (
+				'label' => $this->__('Connector Logs'),
+				'title' => $this->__('Connector Logs'),
+				'url'   => $this->getUrl('*/*/logs'),
+				'class' => 'ajax',
 			)
 		);
 		return parent::_beforeToHtml();

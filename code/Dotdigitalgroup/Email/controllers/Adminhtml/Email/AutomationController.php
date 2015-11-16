@@ -40,14 +40,16 @@ class Dotdigitalgroup_Email_Adminhtml_Email_AutomationController extends Mage_Ad
 		$automationIds = $this->getRequest()->getParam('automation');
 		if (!is_array($automationIds)) {
 			$this->_getSession()->addError($this->__('Please select .'));
-		}else {
+		} else {
 			$num = Mage::getResourceModel('ddg_automation/automation')->massDelete($automationIds);
-			if(is_int($num)){
+
+			if (is_int($num)){
 				$this->_getSession()->addSuccess(
 					Mage::helper('ddg')->__('Total of %d record(s) have been deleted.', $num)
 				);
-			}else
-				$this->_getSession()->addError($num->getMessage());
+			} else {
+				$this->_getSession()->addError( $num->getMessage() );
+			}
 		}
 		$this->_redirect('*/*/index');
 	}
@@ -58,16 +60,19 @@ class Dotdigitalgroup_Email_Adminhtml_Email_AutomationController extends Mage_Ad
 	public function massResendAction()
 	{
 		$automationIds = $this->getRequest()->getParam('automation');
+
 		if (!is_array($automationIds)) {
 			$this->_getSession()->addError($this->__('Please select .'));
-		}else {
+		} else {
 			$num = Mage::getResourceModel('ddg_automation/automation')->massResend($automationIds);
-			if(is_int($num)){
+
+			if (is_int($num)) {
 				$this->_getSession()->addSuccess(
 					Mage::helper('ddg')->__('Total of %d record(s) have been deleted.', $num)
 				);
-			}else
-				$this->_getSession()->addError($num->getMessage());
+			} else {
+				$this->_getSession()->addError( $num->getMessage() );
+			}
 		}
 		$this->_redirect('*/*/index');
 	}

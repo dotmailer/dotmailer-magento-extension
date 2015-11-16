@@ -2,21 +2,6 @@
 
 class Dotdigitalgroup_Email_Model_Sales_Observer
 {
-
-    /**
-     * Register the order status.
-     * @param $observer
-     * @return $this
-     */
-    public function handleSalesOrderSaveBefore($observer)
-    {
-        $order = $observer->getEvent()->getOrder();
-        // the reloaded status
-        $reloaded = Mage::getModel('sales/order')->load($order->getId());
-        if (! Mage::registry('sales_order_status_before'))
-            Mage::register('sales_order_status_before', $reloaded->getStatus());
-        return $this;
-    }
     /**
      * save/reset the order as transactional data.
      *
@@ -51,8 +36,9 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
                 return $this;
 
             // check for order status change
-            $statusBefore = Mage::registry('sales_order_status_before');
-            if ( $status!= $statusBefore) {
+	        $statusBefore = $order->getOrigData('status');
+            //check if order status changed
+	        if ( $status!= $statusBefore) {
                 //If order status has changed and order is already imported then set modified to 1
                 if($emailOrder->getEmailImported() == Dotdigitalgroup_Email_Model_Contact::EMAIL_CONTACT_IMPORTED) {
                     $emailOrder->setModified(Dotdigitalgroup_Email_Model_Contact::EMAIL_CONTACT_IMPORTED);
@@ -87,9 +73,6 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
                     }
                 }
             }
-
-            //admin oder when editing the first one is canceled
-            Mage::unregister('sales_order_status_before');
 
         }catch(Exception $e){
             Mage::logException($e);

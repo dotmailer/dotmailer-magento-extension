@@ -24,7 +24,8 @@ class Dotdigitalgroup_Email_Block_Recommended_Wishlistproducts extends Dotdigita
 
         $collection = Mage::getModel('wishlist/wishlist')->getCollection();
         $collection->addFieldToFilter('customer_id', $customerId)
-            ->setOrder('updated_at', 'DESC');
+            ->setOrder('updated_at', 'DESC')
+	        ->getSelect()->limit(1);
 
         if ($collection->count())
             return $collection->getFirstItem();

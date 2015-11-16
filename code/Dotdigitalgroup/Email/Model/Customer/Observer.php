@@ -24,10 +24,13 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
 			}
 
 			Mage::register($email . '_customer_save', $email);
-			$emailBefore = Mage::getModel('customer/customer')->load($customer->getId())->getEmail();
+
+			$emailBefore = $customer->getOrigData('email');
+
 			$contactModel = Mage::getModel('ddg_automation/contact')->loadByCustomerEmail($emailBefore, $websiteId);
+
 			//email change detection
-			if ($email != $emailBefore) {
+			if ($emailBefore && $email != $emailBefore) {
 				Mage::helper('ddg')->log('email change detected : '  . $email . ', after : ' . $emailBefore .  ', website id : ' . $websiteId);
 				$enabled = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED, $websiteId);
 
@@ -53,9 +56,11 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
 						Mage::helper('ddg')->log('Email change error : ' . $response->message);
 					}
 				}
-				$contactModel->setEmail($email);
-			}
 
+			} elseif (!$emailBefore) {
+				//for new contacts update email
+				$contactModel->setEmail( $email );
+			}
 			$contactModel->setEmailImported(Dotdigitalgroup_Email_Model_Contact::EMAIL_CONTACT_NOT_IMPORTED)
 				->setCustomerId($customerId)
 				->save();
@@ -175,8 +180,10 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
 			$store = Mage::app()->getStore($dataObject->getStoreId());
 			$storeName = $store->getName();
 			$website = Mage::app()->getStore($store)->getWebsite();
-			$customer = Mage::getModel('customer/customer')->load($customerId);
-
+			$customer = Mage::getModel('customer/customer')->getCollection()
+                ->addAttributeToSelect('email')
+                ->addAttributeToFilter('entity_id', $customerId)
+                ->getFirstItem();
 
 			//if api is not enabled
 			if (!$website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED))
@@ -246,8 +253,13 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
 			$customer = Mage::getModel('customer/customer');
 
 			//if wishlist exist not to save again
-			if(!$emailWishlist->getWishlist($wishlist['wishlist_id'])){
+			if (!$emailWishlist->getWishlist($wishlist['wishlist_id'])) {
+
 				$customer->load($wishlist['customer_id']);
+				//customer not found
+				if (! $customer->getId()) {
+					return false;
+				}
 				$email      = $customer->getEmail();
 				$wishlistId = $wishlist['wishlist_id'];
 				$websiteId  = $customer->getWebsiteId();
@@ -296,7 +308,7 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
 		$emailWishlist = Mage::getModel( 'ddg_automation/wishlist' );
 		try {
 			if ( $object->getWishlistId() ) {
-				$itemCount = count( $wishlist->getItemCollection() );
+				$itemCount = $wishlist->getItemsCount();
 				$item      = $emailWishlist->getWishlist( $object->getWishlistId() );
 
 				if ( $item && $item->getId() ) {

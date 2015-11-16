@@ -66,7 +66,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Observer
                     Mage::getSingleton('adminhtml/session')->addError($message);
 
                     //send raygun message for trans data
-                    Mage::helper('ddg')->rayLog('100', $message);
+                    Mage::helper('ddg')->rayLog($message);
                     //disable the config for wishlist and order sync
                     $config = Mage::getConfig();
                     $config->saveConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_WISHLIST_ENABLED, 0, $scope, $scopeId);

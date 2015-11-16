@@ -67,24 +67,26 @@ $table->addColumn('email_contact_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, a
         'unsigned' => true,
         'nullable' => true,
     ), 'Is Suppressed')
-    ->addIndex($this->getIdxName($contactTable, array('email_contact_id')),
+    ->addIndex($installer->getIdxName($contactTable, array('email_contact_id')),
         array('email_contact_id'))
-    ->addIndex($this->getIdxName($contactTable, array('is_guest')),
+    ->addIndex($installer->getIdxName($contactTable, array('is_guest')),
         array('is_guest'))
-    ->addIndex($this->getIdxName($contactTable, array('customer_id')),
+    ->addIndex($installer->getIdxName($contactTable, array('customer_id')),
         array('customer_id'))
-    ->addIndex($this->getIdxName($contactTable, array('website_id')),
+    ->addIndex($installer->getIdxName($contactTable, array('website_id')),
         array('website_id'))
-    ->addIndex($this->getIdxName($contactTable, array('is_subscriber')),
+    ->addIndex($installer->getIdxName($contactTable, array('is_subscriber')),
         array('is_subscriber'))
-    ->addIndex($this->getIdxName($contactTable, array('subscriber_status')),
+    ->addIndex($installer->getIdxName($contactTable, array('subscriber_status')),
         array('subscriber_status'))
-    ->addIndex($this->getIdxName($contactTable, array('email_imported')),
+    ->addIndex($installer->getIdxName($contactTable, array('email_imported')),
         array('email_imported'))
-    ->addIndex($this->getIdxName($contactTable, array('subscriber_imported')),
+    ->addIndex($installer->getIdxName($contactTable, array('subscriber_imported')),
         array('subscriber_imported'))
-    ->addIndex($this->getIdxName($contactTable, array('suppressed')),
+    ->addIndex($installer->getIdxName($contactTable, array('suppressed')),
         array('suppressed'))
+    ->addIndex($installer->getIdxName($contactTable, array('email')),
+        array('email'))
     ->addForeignKey(
         $installer->getFkName($contactTable, 'website_id', 'core/website', 'website_id'),
         'website_id', $installer->getTable('core/website'), 'website_id',
@@ -135,16 +137,20 @@ $table->addColumn('email_order_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, arr
     ), 'Is Order Modified')
     ->addColumn('created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(), 'Creation Time')
     ->addColumn('updated_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(), 'Update Time')
-    ->addIndex($this->getIdxName($orderTable, array('store_id')),
+    ->addIndex($installer->getIdxName($orderTable, array('store_id')),
         array('store_id'))
-    ->addIndex($this->getIdxName($orderTable, array('quote_id')),
+    ->addIndex($installer->getIdxName($orderTable, array('quote_id')),
         array('quote_id'))
-    ->addIndex($this->getIdxName($orderTable, array('email_imported')),
+    ->addIndex($installer->getIdxName($orderTable, array('email_imported')),
         array('email_imported'))
-    ->addIndex($this->getIdxName($orderTable, array('order_status')),
+    ->addIndex($installer->getIdxName($orderTable, array('order_status')),
         array('order_status'))
-    ->addIndex($this->getIdxName($orderTable, array('modified')),
+    ->addIndex($installer->getIdxName($orderTable, array('modified')),
         array('modified'))
+    ->addIndex($installer->getIdxName($orderTable, array('updated_at')),
+        array('updated_at'))
+    ->addIndex($installer->getIdxName($orderTable, array('created_at')),
+        array('created_at'))
     ->addForeignKey(
         $installer->getFkName($orderTable, 'store_id', 'core/store', 'store_id'),
         'store_id', $installer->getTable('core/store'), 'store_id',
@@ -212,14 +218,28 @@ $table->addColumn('id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
     ), 'Event Name')
     ->addColumn('created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(), 'Creation Time')
     ->addColumn('updated_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(), 'Update Time')
-    ->addIndex($this->getIdxName($campaignTable, array('store_id')),
+    ->addIndex($installer->getIdxName($campaignTable, array('store_id')),
         array('store_id'))
-    ->addIndex($this->getIdxName($campaignTable, array('campaign_id')),
+    ->addIndex($installer->getIdxName($campaignTable, array('campaign_id')),
         array('campaign_id'))
-    ->addIndex($this->getIdxName($campaignTable, array('email')),
+    ->addIndex($installer->getIdxName($campaignTable, array('email')),
         array('email'))
-    ->addIndex($this->getIdxName($campaignTable, array('is_sent')),
+    ->addIndex($installer->getIdxName($campaignTable, array('is_sent')),
         array('is_sent'))
+    ->addIndex($installer->getIdxName($campaignTable, array('created_at')),
+        array('created_at'))
+    ->addIndex($installer->getIdxName($campaignTable, array('updated_at')),
+        array('updated_at'))
+    ->addIndex($installer->getIdxName($campaignTable, array('sent_at')),
+        array('sent_at'))
+    ->addIndex($installer->getIdxName($campaignTable, array('quote_id')),
+        array('quote_id'))
+    ->addIndex($installer->getIdxName($campaignTable, array('event_name')),
+        array('event_name'))
+    ->addIndex($installer->getIdxName($campaignTable, array('message')),
+        array('message'))
+    ->addIndex($installer->getIdxName($campaignTable, array('customer_id')),
+        array('customer_id'))
     ->addForeignKey(
         $installer->getFkName($campaignTable, 'store_id', 'core/store', 'store_id'),
         'store_id', $installer->getTable('core/store'), 'store_id',
@@ -257,7 +277,7 @@ $installer->getConnection()->query($sqlQuery);
 // subscribers that are not customers
 $select = $installer->getConnection()->select()
     ->from(
-        array('subscriber' => $this->getTable('newsletter_subscriber')),
+        array('subscriber' => $installer->getTable('newsletter/subscriber')),
         array(
             'email' => 'subscriber_email',
             'col2' => new Zend_Db_Expr('1'),
@@ -274,7 +294,7 @@ $installer->getConnection()->query($sqlQuery);
 //Insert and populate email order the table
 $select = $installer->getConnection()->select()
     ->from(
-        $this->getTable('sales/order'),
+        $installer->getTable('sales/order'),
         array('order_id' => 'entity_id', 'quote_id', 'store_id', 'created_at', 'updated_at', 'order_status' => 'status')
     );
 $insertArray =
@@ -299,7 +319,7 @@ $statusString = implode(',', $options);
 $configModel = Mage::getModel('core/config');
 $configModel->saveConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_ORDER_STATUS, $statusString);
 
-$admin = $this->getTable('admin/user');
+$admin = $installer->getTable('admin/user');
 $installer->getConnection()->addColumn($installer->getTable('admin/user'), 'refresh_token', array(
     'type' => Varien_Db_Ddl_Table::TYPE_TEXT,
     'length' => 256,
@@ -308,7 +328,7 @@ $installer->getConnection()->addColumn($installer->getTable('admin/user'), 'refr
     'comment' => 'Email connector refresh token'
 ));
 
-$campaignTable = $this->getTable('ddg_automation/campaign');
+$campaignTable = $installer->getTable('ddg_automation/campaign');
 $installer->getConnection()->modifyColumn($campaignTable, 'order_increment_id', 'VARCHAR(50)');
 
 //Insert status column to email_order table
@@ -496,14 +516,18 @@ $table->addColumn('id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
     ), 'Review Imported')
     ->addColumn('created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(), 'Creation Time')
     ->addColumn('updated_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(), 'Update Time')
-    ->addIndex($this->getIdxName($reviewTable, array('review_id')),
+    ->addIndex($installer->getIdxName($reviewTable, array('review_id')),
         array('review_id'))
-    ->addIndex($this->getIdxName($reviewTable, array('customer_id')),
+    ->addIndex($installer->getIdxName($reviewTable, array('customer_id')),
         array('customer_id'))
-    ->addIndex($this->getIdxName($reviewTable, array('store_id')),
+    ->addIndex($installer->getIdxName($reviewTable, array('store_id')),
         array('store_id'))
-    ->addIndex($this->getIdxName($reviewTable, array('review_imported')),
+    ->addIndex($installer->getIdxName($reviewTable, array('review_imported')),
         array('review_imported'))
+    ->addIndex($installer->getIdxName($reviewTable, array('created_at')),
+        array('created_at'))
+    ->addIndex($installer->getIdxName($reviewTable, array('updated_at')),
+        array('updated_at'))
     ->setComment('Connector Reviews');
 $installer->getConnection()->createTable($table);
 
@@ -511,7 +535,7 @@ $installer->getConnection()->createTable($table);
 $inCond = $installer->getConnection()->prepareSqlCondition('review_detail.customer_id', array('notnull' => true));
 $select = $installer->getConnection()->select()
     ->from(
-        array('review' => $this->getTable('review/review')),
+        array('review' => $installer->getTable('review/review')),
         array('review_id' => 'review.review_id', 'created_at' => 'review.created_at')
     )
     ->joinLeft(
@@ -584,16 +608,20 @@ $table->addColumn('id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
     ), 'Wishlist Modified')
     ->addColumn('created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(), 'Creation Time')
     ->addColumn('updated_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(), 'Update Time')
-    ->addIndex($this->getIdxName($wishlistTable, array('wishlist_id')),
+    ->addIndex($installer->getIdxName($wishlistTable, array('wishlist_id')),
         array('wishlist_id'))
-    ->addIndex($this->getIdxName($wishlistTable, array('item_count')),
+    ->addIndex($installer->getIdxName($wishlistTable, array('item_count')),
         array('item_count'))
-    ->addIndex($this->getIdxName($wishlistTable, array('customer_id')),
+    ->addIndex($installer->getIdxName($wishlistTable, array('customer_id')),
         array('customer_id'))
-    ->addIndex($this->getIdxName($wishlistTable, array('wishlist_modified')),
+    ->addIndex($installer->getIdxName($wishlistTable, array('wishlist_modified')),
         array('wishlist_modified'))
-    ->addIndex($this->getIdxName($wishlistTable, array('wishlist_imported')),
+    ->addIndex($installer->getIdxName($wishlistTable, array('wishlist_imported')),
         array('wishlist_imported'))
+    ->addIndex($installer->getIdxName($wishlistTable, array('created_at')),
+        array('created_at'))
+    ->addIndex($installer->getIdxName($wishlistTable, array('updated_at')),
+        array('updated_at'))
     ->setComment('Connector Wishlist');
 $installer->getConnection()->createTable($table);
 
@@ -607,7 +635,7 @@ $select = $installer->getConnection()->select()
         "wishlist.customer_id = ce.entity_id",
         array('store_id')
     )->joinInner(
-        array('wi' => $installer->getTable('wishlist_item')),
+        array('wi' => $installer->getTable('wishlist/item')),
         "wishlist.wishlist_id = wi.wishlist_id",
         array('item_count' => 'count(wi.wishlist_id)')
     )->group('wi.wishlist_id');
@@ -659,16 +687,20 @@ $table->addColumn('id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
     ), 'Quote Converted To Order')
     ->addColumn('created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(), 'Creation Time')
     ->addColumn('updated_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(), 'Update Time')
-    ->addIndex($this->getIdxName($quoteTable, array('quote_id')),
+    ->addIndex($installer->getIdxName($quoteTable, array('quote_id')),
         array('quote_id'))
-    ->addIndex($this->getIdxName($quoteTable, array('customer_id')),
+    ->addIndex($installer->getIdxName($quoteTable, array('customer_id')),
         array('customer_id'))
-    ->addIndex($this->getIdxName($quoteTable, array('store_id')),
+    ->addIndex($installer->getIdxName($quoteTable, array('store_id')),
         array('store_id'))
-    ->addIndex($this->getIdxName($quoteTable, array('imported')),
+    ->addIndex($installer->getIdxName($quoteTable, array('imported')),
         array('imported'))
-    ->addIndex($this->getIdxName($quoteTable, array('modified')),
+    ->addIndex($installer->getIdxName($quoteTable, array('modified')),
         array('modified'))
+    ->addIndex($installer->getIdxName($quoteTable, array('created_at')),
+        array('created_at'))
+    ->addIndex($installer->getIdxName($quoteTable, array('updated_at')),
+        array('updated_at'))
     ->setComment('Connector Quotes');
 $installer->getConnection()->createTable($table);
 
@@ -708,7 +740,7 @@ from `{$segmentTable}` group by customer_id) as s set c.segment_ids = segmentids
 
 }
 
-$campaignTable = $this->getTable('ddg_automation/campaign');
+$campaignTable = $installer->getTable('ddg_automation/campaign');
 
 $installer->getConnection()->dropColumn($campaignTable, 'from_address');
 $installer->getConnection()->dropColumn($campaignTable, 'attachment_id');
@@ -752,12 +784,16 @@ $table->addColumn('id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
     ), 'Product Modified')
     ->addColumn('created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(), 'Creation Time')
     ->addColumn('updated_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(), 'Update Time')
-    ->addIndex($this->getIdxName($catalogTable, array('product_id')),
+    ->addIndex($installer->getIdxName($catalogTable, array('product_id')),
         array('product_id'))
-    ->addIndex($this->getIdxName($catalogTable, array('imported')),
+    ->addIndex($installer->getIdxName($catalogTable, array('imported')),
         array('imported'))
-    ->addIndex($this->getIdxName($catalogTable, array('modified')),
+    ->addIndex($installer->getIdxName($catalogTable, array('modified')),
         array('modified'))
+    ->addIndex($installer->getIdxName($catalogTable, array('created_at')),
+        array('created_at'))
+    ->addIndex($installer->getIdxName($catalogTable, array('updated_at')),
+        array('updated_at'))
     ->setComment('Connector Catalog');
 $installer->getConnection()->createTable($table);
 
@@ -766,7 +802,7 @@ $installer->getConnection()->createTable($table);
  */
 $select = $installer->getConnection()->select()
     ->from(
-        array('catalog' => $this->getTable('catalog_product_entity')),
+        array('catalog' => $installer->getTable('catalog/product')),
         array('product_id' => 'catalog.entity_id', 'created_at' => 'catalog.created_at')
     );
 $insertArray = array('product_id', 'created_at');
@@ -890,21 +926,31 @@ $table->addColumn('id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
     ->addColumn('updated_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(), 'Update Time')
     ->addColumn('import_started', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(), 'Import Started')
     ->addColumn('import_finished', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(), 'Import Finished')
-    ->addIndex($this->getIdxName($importerTable, array('import_type')),
+    ->addIndex($installer->getIdxName($importerTable, array('import_type')),
         array('import_type'))
-    ->addIndex($this->getIdxName($importerTable, array('website_id')),
+    ->addIndex($installer->getIdxName($importerTable, array('website_id')),
         array('website_id'))
-    ->addIndex($this->getIdxName($importerTable, array('import_status')),
+    ->addIndex($installer->getIdxName($importerTable, array('import_status')),
         array('import_status'))
-    ->addIndex($this->getIdxName($importerTable, array('import_mode')),
+    ->addIndex($installer->getIdxName($importerTable, array('import_mode')),
         array('import_mode'))
+    ->addIndex($installer->getIdxName($importerTable, array('created_at')),
+        array('created_at'))
+    ->addIndex($installer->getIdxName($importerTable, array('updated_at')),
+        array('updated_at'))
+    ->addIndex($installer->getIdxName($importerTable, array('message')),
+        array('message'))
+    ->addIndex($installer->getIdxName($importerTable, array('import_started')),
+        array('import_started'))
+    ->addIndex($installer->getIdxName($importerTable, array('import_finished')),
+        array('import_finished'))
     ->setComment('Email Importer');
 $installer->getConnection()->createTable($table);
 
 /**
  * drop config table
  */
-$configTable = $this->getTable('ddg_automation/config');
+$configTable = $installer->getTable('ddg_automation/config');
 
 //drop config table if exist
 if ($installer->getConnection()->isTableExists($configTable)) {
@@ -919,7 +965,7 @@ $quoteTable = $installer->getTable('ddg_automation/quote');
 $installer->getConnection()->dropColumn($quoteTable, 'converted_to_order');
 
 
-$automationTable = $this->getTable('ddg_automation/automation');
+$automationTable = $installer->getTable('ddg_automation/automation');
 
 //drop table if exist
 if ($installer->getConnection()->isTableExists($automationTable)) {
@@ -961,10 +1007,24 @@ $table->addColumn('id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
       ), 'Creation Time')
       ->addColumn('updated_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(
       ), 'Update Time')
-      ->addIndex($this->getIdxName($automationTable, array('automation_type')),
+      ->addIndex($installer->getIdxName($automationTable, array('automation_type')),
           array('automation_type'))
-      ->addIndex($this->getIdxName($automationTable, array('enrolment_status')),
+      ->addIndex($installer->getIdxName($automationTable, array('enrolment_status')),
           array('enrolment_status'))
+      ->addIndex($installer->getIdxName($automationTable, array('type_id')),
+        array('type_id'))
+      ->addIndex($installer->getIdxName($automationTable, array('email')),
+        array('email'))
+       ->addIndex($installer->getIdxName($automationTable, array('program_id')),
+        array('program_id'))
+       ->addIndex($installer->getIdxName($automationTable, array('message')),
+        array('message'))
+       ->addIndex($installer->getIdxName($automationTable, array('created_at')),
+        array('created_at'))
+       ->addIndex($installer->getIdxName($automationTable, array('updated_at')),
+        array('updated_at'))
+       ->addIndex($installer->getIdxName($automationTable, array('website_id')),
+        array('website_id'))
       ->setComment('Automation Status');
 $installer->getConnection()->createTable($table);
 

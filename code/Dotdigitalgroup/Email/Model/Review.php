@@ -46,8 +46,8 @@ class Dotdigitalgroup_Email_Model_Review extends Mage_Core_Model_Abstract
 
 	        $enabled = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED, $website);
             $sync = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_REVIEW_ENABLED, $website);
-
-	        if ($enabled && $sync) {
+            $storeIds = $website->getStoreIds();
+	        if ($enabled && $sync && !empty($storeIds)) {
 				//start the sync
 	            if (! $this->_countReviews)
 	                $helper->log('---------- Start reviews sync ----------');

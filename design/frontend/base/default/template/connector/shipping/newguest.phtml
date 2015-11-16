@@ -70,7 +70,7 @@
                                 <br/>
                                 <?php echo $this->getChildHtml('connector_shipping_items');?>
                                 <?php echo $this->getChildHtml('connector_shipping_track');?>
-                                <p style="font-size:12px; margin:0 10px 10px 0"><?php echo $comment;?></p>
+                                <p style="font-size:12px; margin:0 10px 10px 0"><?php echo $this->escapeHtml($comment);?></p>
                             </td>
                         </tr>
                     </table>

@@ -9,7 +9,6 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ReviewController extends Mage_Adminh
     {
         $this->loadLayout();
         $this->_setActiveMenu('ddg_automation');
-        $this->_addContent($this->getLayout()->createBlock('ddg_automation/adminhtml_review'));
         $this->getLayout()->getBlock('head')->setTitle('Connector Reviews');
         $this->renderLayout();
     }

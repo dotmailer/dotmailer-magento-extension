@@ -21,6 +21,11 @@ class Dotdigitalgroup_Email_Block_Coupon extends Mage_Core_Block_Template
         if ($couponCodeId) {
 
             $rule = Mage::getModel('salesrule/rule')->load($couponCodeId);
+	        //coupon code id not found
+	        if (! $rule->getId()) {
+		        Mage::helper('ddg')->log('Rule with couponId model not found : ' . $couponCodeId);
+		        return false;
+	        }
             $generator = Mage::getModel('salesrule/coupon_massgenerator');
             $generator->setFormat( Mage_SalesRule_Helper_Coupon::COUPON_FORMAT_ALPHANUMERIC );
             $generator->setRuleId($couponCodeId);

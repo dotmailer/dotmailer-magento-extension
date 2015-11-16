@@ -85,6 +85,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         $collection = Mage::getModel('review/review')->getCollection()
             ->addCustomerFilter($customer_id)
             ->setOrder('review_id','DESC');
+
         $this->reviewCollection = $collection;
     }
 
@@ -94,8 +95,11 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     public function getLastReviewDate(){
-        if(count($this->reviewCollection))
-            return $this->reviewCollection->getFirstItem()->getCreatedAt();
+
+	    if(count($this->reviewCollection)){
+		    $this->reviewCollection->getSelect()->limit(1);
+	        return $this->reviewCollection->getFirstItem()->getCreatedAt();
+        }
         return '';
     }
 
@@ -578,9 +582,11 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     private function _getCustomerGroup(){
-        $groupId = $this->customer->getGroupId();
+
+	    $groupId = $this->customer->getGroupId();
         $group = Mage::getModel('customer/group')->load($groupId);
-        if($group){
+
+        if ($group->getId()) {
             return $group->getCode();
         }
         return '';
@@ -874,25 +880,8 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getFirstBrandPur()
     {
-        if(!$this->attribute_check){
-            $attribute = Mage::getModel('catalog/resource_eav_attribute')
-                ->loadByCode('catalog_product', 'manufacturer');
-            if($attribute->getId())
-                $this->attribute_check = true;
-        }
-
-        if($this->attribute_check){
-            $id = $this->customer->getProductIdForFirstBrand();
-            if($id){
-                $brand = Mage::getModel('catalog/product')
-                    ->setStoreId($this->customer->getStoreId())
-                    ->load($id)
-                    ->getAttributeText('manufacturer');
-                if($brand)
-                    return $brand;
-            }
-        }
-        return "";
+        $id = $this->customer->getProductIdForFirstBrand();
+        return $this->_getBrandValue($id);
     }
 
     /**
@@ -902,25 +891,25 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getLastBrandPur()
     {
-        if(!$this->attribute_check){
-            $attribute = Mage::getModel('catalog/resource_eav_attribute')
-                ->loadByCode('catalog_product', 'manufacturer');
-            if($attribute->getId())
-                $this->attribute_check = true;
-        }
+        $id = $this->customer->getProductIdForLastBrand();
+        return $this->_getBrandValue($id);
+    }
 
-        if($this->attribute_check){
-            $id = $this->customer->getProductIdForLastBrand();
-            if($id){
-                $brand = Mage::getModel('catalog/product')
-                    ->setStoreId($this->customer->getStoreId())
-                    ->load($id)
-                    ->getAttributeText('manufacturer');
-                if($brand)
-                    return $brand;
-            }
-            return "";
+    private function _getBrandValue($id)
+    {
+        $attribute = Mage::helper('ddg')->getWebsiteConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_DATA_FIELDS_BRAND_ATTRIBUTE,
+            $this->customer->getWebsiteId()
+        );
+        if($id && $attribute){
+            $brand = Mage::getModel('catalog/product')
+                ->setStoreId($this->customer->getStoreId())
+                ->load($id)
+                ->getAttributeText($attribute);
+            if($brand)
+                return $brand;
         }
+        return "";
     }
 
     /**

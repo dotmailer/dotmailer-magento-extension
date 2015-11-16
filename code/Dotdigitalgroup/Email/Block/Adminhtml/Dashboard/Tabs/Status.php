@@ -40,7 +40,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
      */
     public function __construct()
     {
-        parent::_construct();
+        parent::__construct();
 
 	    $this->setTemplate('connector/dashboard/status.phtml');
     }
@@ -1064,6 +1064,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
 			$websiteName  = $website->getName();
 			$storeIds = $website->getStoreIds();
 
+			if(empty($storeIds))
+				continue;
+
 			//numbser of orders marked as imported
 			$numOrders = Mage::getModel('ddg_automation/order')->getCollection()
 				->addFieldToFilter('email_imported', 1)
@@ -1165,6 +1168,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
             $websiteName  = $website->getName();
             $storeIds = $website->getStoreIds();
 
+			if(empty($storeIds))
+				continue;
+
             //number of quote marked as imported
             $numQuotes = Mage::getModel('ddg_automation/quote')->getCollection()
                 ->addFieldToFilter('imported', 1)
@@ -1230,6 +1236,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
         foreach ( Mage::app()->getWebsites() as $website ) {
             $websiteName  = $website->getName();
             $storeIds = $website->getStoreIds();
+
+			if(empty($storeIds))
+				continue;
 
             //number of reviews marked as imported
             $numReview = Mage::getModel('ddg_automation/review')->getCollection()
@@ -1475,7 +1484,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
 	protected function _isInheritanceConflict($classes)
 	{
 		$classes = array_reverse($classes);
-		for ($i = 0; $i < count($classes) - 1; $i++) {
+		$numClases = count($classes);
+
+		for ($i = 0; $i < $numClases - 1; $i++) {
 			try {
 				if (class_exists($classes[$i])
 				    && class_exists($classes[$i + 1])
@@ -1524,7 +1535,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
 		if ($mem > 0) {
 			$mem = $mem / 1024 . 'M';
 		} else {
-			$mem = $this->_getTopMemoryInfo();
+			$mem = 'Not available';
 		}
 
 		//check for php version
@@ -1537,23 +1548,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
 		return $resultContent;
 	}
 
-
-	/**
-	 * Returns memory size. Alternative way
-	 *
-	 * @return string|null
-	 */
-	public function _getTopMemoryInfo()
-	{
-		$memInfo = exec('top -l 1 | head -n 10 | grep PhysMem');
-		$memInfo = str_ireplace('PhysMem: ', '', $memInfo);
-
-		if (!empty($memInfo)) {
-			return $memInfo;
-		} else {
-			return null;
-		}
-	}
 
 	/**
 	 * Check if the mapped program is active.
@@ -1719,6 +1713,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
         foreach ( Mage::app()->getWebsites() as $website ) {
             $websiteName  = $website->getName();
             $storeIds = $website->getStoreIds();
+
+			if(empty($storeIds))
+				continue;
 
             //number of wishlist marked as imported
             $numWishlist = Mage::getModel('ddg_automation/wishlist')->getCollection()

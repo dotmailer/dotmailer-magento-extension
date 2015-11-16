@@ -17,13 +17,12 @@ class Dotdigitalgroup_Email_Adminhtml_Email_StudioController extends Mage_Adminh
         $baseUrl = Mage::helper('ddg/config')->getLogUserUrl();
         $loginuserUrl = $baseUrl  . $token . '&suppressfooter=true';
 
-        $block = $this->getLayout()
-            ->createBlock('core/text', 'connector_iframe')
+	    $this->getLayout()->getBlock('connector_iframe')
             ->setText(
                "<iframe src=" . $loginuserUrl . " width=100% height=1650 frameborder='0' scrolling='no' style='margin:0;padding: 0;display:block;'></iframe>"
             );
 
-        $this->_addContent($block);
+
         $this->renderLayout();
     }
 

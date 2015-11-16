@@ -61,7 +61,7 @@
                                         </td>
                                         <td>&nbsp;</td>
                                         <td valign="top" style="font-size:12px; padding:7px 9px 9px 9px; border-left:1px solid #EAEAEA; border-bottom:1px solid #EAEAEA; border-right:1px solid #EAEAEA;">
-                                            <?php echo $order->getShippingDescription();?>
+                                            <?php echo $this->escapeHtml($order->getShippingDescription());?>
                                             &nbsp;
                                         </td>
                                     </tr>

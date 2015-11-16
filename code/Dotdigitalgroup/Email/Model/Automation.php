@@ -40,43 +40,35 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
 		}
 		return $this;
 	}
+
 	public function enrollment()
 	{
-		//automation statuses to filter
 		$automationCollection = $this->getCollection()
-			->addFieldToSelect( 'automation_type' )
-			->addFieldToFilter( 'enrolment_status', self::AUTOMATION_STATUS_PENDING );
+             ->addFieldToFilter( 'enrolment_status', self::AUTOMATION_STATUS_PENDING )
+        ;
 		$automationCollection->getSelect()->group( 'automation_type' );
-		//active types
-		$automationTypes = $automationCollection->getColumnValues( 'automation_type' );
-		//send the campaign by each types
-		foreach ( $automationTypes as $type ) {
-			$contacts = array();
-			//reset the collection
-			$automationCollection->clear();
-			$automationCollection = $this->getCollection()
-				->addFieldToFilter( 'enrolment_status', self::AUTOMATION_STATUS_PENDING )
-				->addFieldToFilter( 'automation_type', $type );
-			//limit because of the each contact request to get the id
-			$automationCollection->getSelect()->limit( $this->limit );
-			foreach ( $automationCollection as $automation ) {
-				$type = $automation->getAutomationType();
-				//customerid, subscriberid, wishlistid..
-				$email           = $automation->getEmail();
-				$this->typeId    = $automation->getTypeId();
-				$this->websiteId = $automation->getWebsiteId();
-				$this->programId = $automation->getProgramId();
-				$this->storeName = $automation->getStoreName();
-				$contactId = Mage::helper( 'ddg' )->getContactId( $email, $this->websiteId );
-				//contact id is valid, can update datafields
-				if ( $contactId ) {
-					//need to update datafields
-					$this->updateDatafieldsByType( $this->automationType, $email );
-					$contacts[ $automation->getId() ] = $contactId;
-				} else {
-					// the contact is suppressed or the request failed
-					$automation->setStatus('Suppressed')->save();
-				}
+		//limit because of the each contact request to get the id
+		$automationCollection->getSelect()->limit( $this->limit );
+
+		$contacts = array();
+
+		foreach ( $automationCollection as $automation ) {
+			$type = $automation->getAutomationType();
+			//customerid, subscriberid, wishlistid..
+			$email           = $automation->getEmail();
+			$this->typeId    = $automation->getTypeId();
+			$this->websiteId = $automation->getWebsiteId();
+			$this->programId = $automation->getProgramId();
+			$this->storeName = $automation->getStoreName();
+			$contactId = Mage::helper( 'ddg' )->getContactId( $email, $this->websiteId );
+			//contact id is valid, can update datafields
+			if ( $contactId ) {
+				//need to update datafields
+				$this->updateDatafieldsByType( $this->automationType, $email );
+				$contacts[ $automation->getId() ] = $contactId;
+			} else {
+				// the contact is suppressed or the request failed
+				$automation->setEnrolmentStatus('Suppressed')->save();
 			}
 			//only for subscribed contacts
 			if ( ! empty( $contacts ) && $type != '' && $this->_checkCampignEnrolmentActive( $this->programId ) ) {
@@ -90,11 +82,11 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
 			} elseif ( $this->programMessage == 'Error: ERROR_PROGRAM_NOT_ACTIVE ' ) {
 				$this->programStatus = 'Deactivated';
 			}
-			//update contacts with the new status, and log the error message if failes
-			$num = $this->getResource()->updateContacts($contacts, $this->programStatus, $this->programMessage);
-			if ($num)
-				Mage::helper('ddg')->log('Automation type : ' . $type . ', updated no : ' . $num);
 		}
+
+		//update contacts with the new status, and log the error message if failes
+		$this->getResource()->updateContacts($contacts, $this->programStatus, $this->programMessage);
+
 	}
 	/**
 	 * update single contact datafields for this automation type.

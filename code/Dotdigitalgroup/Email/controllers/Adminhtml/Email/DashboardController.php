@@ -26,8 +26,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_DashboardController extends Mage_Adm
 
 		$this->loadLayout();
 		$this->_setActiveMenu('email_connector');
-		$this->_addContent($this->getLayout()->createBlock('adminhtml/widget_container'))
-		     ->_addLeft($this->getLayout()->createBlock ('ddg_automation/adminhtml_dashboard_tabs'));
+
 		$this->renderLayout();
 	}
 
@@ -38,7 +37,6 @@ class Dotdigitalgroup_Email_Adminhtml_Email_DashboardController extends Mage_Adm
 
 		$block = $this->getLayout()->createBlock('ddg_automation/adminhtml_dashboard_tabs_status');
 		$this->getResponse()->setBody($block->toHtml());
-
 	}
 
 	/**
@@ -86,5 +84,12 @@ class Dotdigitalgroup_Email_Adminhtml_Email_DashboardController extends Mage_Adm
 		return true;
 	}
 
-
+	/**
+	 * ajax tab for view connector logs
+	 */
+	public function logsAction()
+	{
+		$block = $this->getLayout()->createBlock('ddg_automation/adminhtml_dashboard_tabs_logs');
+		$this->getResponse()->setBody($block->toHtml());
+	}
 }

@@ -1,6 +1,6 @@
 <?php
 
-class Dotdigitalgroup_Email_RulesController extends Mage_Core_Controller_Front_Action
+class Dotdigitalgroup_Email_Adminhtml_RulesController extends Mage_Adminhtml_Controller_Action
 {
     /**
      * ajax action for actions and value update without selection
@@ -57,8 +57,14 @@ class Dotdigitalgroup_Email_RulesController extends Mage_Core_Controller_Front_A
         $arrayKey = $this->getRequest()->getParam('arraykey');
         $conditionName = $this->getRequest()->getParam('condition');
         $valueName = $this->getRequest()->getParam('value');
-        if($arrayKey && $id && $attribute && $conditionName && $valueName){
+
+	    if ($arrayKey && $id && $attribute && $conditionName && $valueName) {
+
             $rule = Mage::getModel('ddg_automation/rules')->load($id);
+		    //rule not found
+		    if (! $rule->getId()) {
+			    return $this->getResponse()->clearHeaders()->setHeader('Content-Type', 'application/json')->setBody('Rule not found!');
+		    }
             $conditions = $rule->getCondition();
             $condition = $conditions[$arrayKey];
             $selectedConditions = $condition['conditions'];
@@ -74,9 +80,10 @@ class Dotdigitalgroup_Email_RulesController extends Mage_Core_Controller_Front_A
                 );
 
             $elmType = Mage::getModel('ddg_automation/adminhtml_source_rules_value')->getValueElementType($attribute);
-            if($elmType == 'select' or $selectedConditions == 'null'){
+            if ($elmType == 'select' or $selectedConditions == 'null') {
                 $is_empty = false;
-                if($selectedConditions == 'null')
+
+	            if ($selectedConditions == 'null')
                     $is_empty = true;
                 $valueOptions = Mage::getModel('ddg_automation/adminhtml_source_rules_value')->getValueSelectOptions($attribute, $is_empty);
                 $response['cvalue'] =
@@ -85,7 +92,7 @@ class Dotdigitalgroup_Email_RulesController extends Mage_Core_Controller_Front_A
                         'value="'.$selectedValues.'"'.'selected="selected"',
                         $this->_getOptionHtml('cvalue', $valueName, $valueOptions)
                     );
-            }elseif($elmType == 'text'){
+            } elseif ($elmType == 'text') {
                 $html = "<input style='width:160px' title='cvalue' class='' id='' name='$valueName' value='$selectedValues' />";
                 $response['cvalue'] = $html;
             }

@@ -11,8 +11,37 @@
         </reference>
         <reference name="left">
             <block type="ddg_automation/adminhtml_dashboard_switcher" name="store_switcher" as="store_switcher" />
+            <block type="ddg_automation/adminhtml_dashboard_tabs" name="tabs" as="ddg_tabs" />
+        </reference>
+        <reference name="content">
+            <block type="adminhtml/widget_container"/>
         </reference>
     </adminhtml_email_dashboard_index>
+    <adminhtml_email_importer_index>
+        <reference name="content">
+            <block type="ddg_automation/adminhtml_importer" name="ddg_importer_index"/>
+        </reference>
+    </adminhtml_email_importer_index>
+    <adminhtml_email_order_index>
+        <reference name="content">
+            <block type="ddg_automation/adminhtml_order" name="ddg_order_index"/>
+        </reference>
+    </adminhtml_email_order_index>
+    <adminhtml_email_quote_index>
+        <reference name="content">
+            <block type="ddg_automation/adminhtml_quote" name="ddg_quote_index"/>
+        </reference>
+    </adminhtml_email_quote_index>
+    <adminhtml_email_review_index>
+        <reference name="content">
+            <block type="ddg_automation/adminhtml_review" name="ddg_review_index"/>
+        </reference>
+    </adminhtml_email_review_index>
+    <adminhtml_email_studio_index>
+        <reference name="content">
+            <block type="core/text" name="connector_iframe" as="connector_iframe"/>
+        </reference>
+    </adminhtml_email_studio_index>
     <adminhtml_email_contact_index>
         <reference name="menu">
             <action method="setActive">
@@ -27,22 +56,16 @@
             </block>
         </reference>
     </adminhtml_email_contact_index>
+    <adminhtml_email_wishlist_index>
+        <reference name="content">
+            <block type="ddg_automation/adminhtml_wishlist" name="ddg_automation_wishlist"/>
+        </reference>
+    </adminhtml_email_wishlist_index>
     <adminhtml_email_contact_grid>
         <block type="core/text_list" name="root" output="toHtml">
             <block type="ddg_automation/adminhtml_contact_grid" name="contact_grid"/>
         </block>
     </adminhtml_email_contact_grid>
-    <adminhtml_email_contact_edit>
-        <reference name="menu">
-            <action method="setActive">
-                <menupath>email_contact</menupath>
-            </action>
-        </reference>
-        <reference name="content">
-            <block type="ddg_automation/adminhtml_contact_edit" name="email_contact_edit">
-            </block>
-        </reference>
-    </adminhtml_email_contact_edit>
     <adminhtml_email_campaign_index>
         <reference name="menu">
             <action method="setActive">
@@ -62,17 +85,6 @@
             <block type="ddg_automation/adminhtml_campaign_grid" name="campaign_grid"/>
         </block>
     </adminhtml_email_campaign_grid>
-    <adminhtml_email_campaign_edit>
-        <reference name="menu">
-            <action method="setActive">
-                <menupath>email_contact/email_conector_campaign</menupath>
-            </action>
-        </reference>
-        <reference name="content">
-            <block type="ddg_automation/adminhtml_campaign_edit" name="email_campaign_edit">
-            </block>
-        </reference>
-    </adminhtml_email_campaign_edit>
     <adminhtml_email_automation_index>
         <reference name="menu">
             <action method="setActive">
@@ -106,6 +118,11 @@
             </block>
         </reference>
     </adminhtml_email_automation_edit>
+    <adminhtml_email_catalog_index>
+        <reference name="content">
+            <block type="ddg_automation/adminhtml_catalog" name="catalog_grid"/>
+        </reference>
+    </adminhtml_email_catalog_index>
     <adminhtml_system_config_edit>
         <reference name="head">
             <action method="addJs">

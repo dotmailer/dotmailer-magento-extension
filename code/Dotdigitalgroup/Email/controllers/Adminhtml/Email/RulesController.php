@@ -50,27 +50,29 @@ class Dotdigitalgroup_Email_Adminhtml_Email_RulesController extends Mage_Adminht
     public function editAction()
     {
         $id = $this->getRequest()->getParam('id');
-        $model = Mage::getModel('ddg_automation/rules');
+        $emailRules = Mage::getModel('ddg_automation/rules');
 
-        if ($id) {
-            $model->load($id);
-            if (!$model->getId()) {
-                Mage::getSingleton('adminhtml/session')->addError(
-                    Mage::helper('adminhtml')->__('This rule no longer exists.'));
-                $this->_redirect('*/*');
-                return;
-            }
-            //$model->setCondition(unserialize($model->getCondition()));
-        }
-        $this->_title($model->getId() ? $model->getName() : $this->__('New Rule'));
+	    if ($id) {
+		    $emailRules->load( $id );
+
+		    if ( ! $emailRules->getId() ) {
+			    Mage::getSingleton( 'adminhtml/session' )->addError(
+				    Mage::helper( 'adminhtml' )->__( 'This rule no longer exists.' ) );
+			    $this->_redirect( '*/*' );
+			    return;
+		    }
+		    //$emailRules->setCondition(unserialize($model->getCondition()));
+	    }
+        $this->_title($emailRules->getId() ? $emailRules->getName() : $this->__('New Rule'));
 
         // set entered data if was error when we do save
         $data = Mage::getSingleton('adminhtml/session')->getPageData(true);
-        if (!empty($data)) {
-            $model->addData($data);
+        if (! empty($data)) {
+            $emailRules->addData($data);
         }
 
-        Mage::register('current_ddg_rule', $model);
+
+        Mage::register('current_ddg_rule', $emailRules);
 
         $this->_initAction()->getLayout()->getBlock('ddg_rule_edit')
             ->setData('action', $this->getUrl('*/*/save'));
@@ -108,12 +110,11 @@ class Dotdigitalgroup_Email_Adminhtml_Email_RulesController extends Mage_Adminht
                     }
                 }
 
-                if ($id) {
-                    $model->load($id);
-                    if ($id != $model->getId()) {
-                        Mage::throwException(Mage::helper('ddg')->__('Wrong rule specified.'));
-                    }
+                $model->load($id);
+                if ($id != $model->getId()) {
+                    Mage::throwException(Mage::helper('ddg')->__('Wrong rule specified.'));
                 }
+
 
                 foreach($data as $key => $value){
                     if($key != 'form_key'){

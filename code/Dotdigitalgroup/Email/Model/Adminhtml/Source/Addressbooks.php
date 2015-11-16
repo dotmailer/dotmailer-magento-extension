@@ -34,7 +34,8 @@
 
 			//set up fields with book id and label
 			foreach ( $addressBooks as $book ) {
-				if ( isset( $book->id ) ) {
+				//check for address book id before displaying, IMPORTANT :Test address book cannot be used through api
+				if ( isset( $book->id ) && $book->name != 'Test') {
 					$fields[] = array( 'value' => $book->id, 'label' => $book->name );
 				}
 			}

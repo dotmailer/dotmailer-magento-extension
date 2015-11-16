@@ -9,7 +9,6 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ImporterController extends Mage_Admi
     {
         $this->loadLayout();
         $this->_setActiveMenu('email_connector');
-        $this->_addContent($this->getLayout()->createBlock('ddg_automation/adminhtml_importer'));
         $this->getLayout()->getBlock('head')->setTitle('Importer Status');
         $this->renderLayout();
     }

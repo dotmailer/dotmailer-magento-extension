@@ -9,7 +9,6 @@ class Dotdigitalgroup_Email_Adminhtml_Email_WishlistController extends Mage_Admi
     {
         $this->loadLayout();
         $this->_setActiveMenu('ddg_automation');
-        $this->_addContent($this->getLayout()->createBlock('ddg_automation/adminhtml_wishlist'));
         $this->getLayout()->getBlock('head')->setTitle('Connector Wishlist(s)');
         $this->renderLayout();
     }

@@ -115,7 +115,7 @@ class Dotdigitalgroup_Email_Helper_File extends Dotdigitalgroup_Email_Helper_Dat
     public function pathExists($path)
     {
         if (!is_dir($path)) {
-            mkdir($path, 0660, true);
+            mkdir($path, 0775, true);
         } // end
 
         return;
@@ -165,6 +165,7 @@ class Dotdigitalgroup_Email_Helper_File extends Dotdigitalgroup_Email_Helper_Dat
         $store = $website->getDefaultStore();
         $mappedData = Mage::getStoreConfig('connector_data_mapping/customer_data', $store);
         unset($mappedData['custom_attributes']);
+        unset($mappedData['abandoned_prod_name']);
 
 	    //enterprise datafields
 	    if (Mage::helper('ddg')->isEnterprise()) {

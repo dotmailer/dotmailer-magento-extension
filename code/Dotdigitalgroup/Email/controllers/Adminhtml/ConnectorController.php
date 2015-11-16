@@ -36,7 +36,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
                     /**
                      * map the succesful created datafield
                      */
-                    $config = new Mage_Core_Model_Config();
+                    $config = Mage::getModel('core/config');
                     $config->saveConfig('connector_data_mapping/customer_data/' . $key, strtoupper($datafield['name']), $scope, $scopeId);
                     Mage::helper('ddg')->log('successfully connected : ' . $datafield['name']);
                 }
@@ -58,8 +58,12 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
     public function resetordersAction()
     {
         $num = Mage::getResourceModel('ddg_automation/order')->resetOrders();
-        Mage::helper('ddg')->log('-- Reset Orders for re-import : ' . $num);
-        Mage::getSingleton('adminhtml/session')->addSuccess('Done. Refreshed '.$num);
+	    $message = '-- Reset Orders for Reimport : ' . $num;
+        Mage::helper('ddg')->log($message);
+	    if (!$num)
+            $message = 'Done.';
+	    Mage::getSingleton('adminhtml/session')->addSuccess($message);
+
         $this->_redirectReferer();
     }
 
@@ -69,30 +73,24 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
     public function resetcustomersimportAction()
     {
         $num = Mage::getResourceModel('ddg_automation/contact')->resetAllContacts();
-        Mage::helper('ddg')->log('-- Reset Contacts for re-import : ' . $num);
-        Mage::getSingleton('adminhtml/session')->addSuccess('Done. Refreshed '.$num);
-
+	    $message  = '-- Reset Contacts for re-import : ' . $num;
+        Mage::helper('ddg')->log($message);
+	    if (!$num)
+		    $message = 'Done.';
+        Mage::getSingleton('adminhtml/session')->addSuccess($message);
         $this->_redirectReferer();
     }
 
-    /**
-     * Refresh suppressed contacts.
-     */
-    public function suppresscontactsAction()
-    {
-        Mage::getModel('ddg_automation/newsletter_subscriber')
-            ->unsubscribe(true);
-        Mage::getSingleton('adminhtml/session')->addSuccess('Done.');
-        $this->_redirectReferer();
-
-    }
     /**
      * Remove contact id's.
      */
     public function deletecontactidsAction()
     {
         $num = Mage::getResourceModel('ddg_automation/contact')->deleteContactIds();
-        Mage::getSingleton('adminhtml/session')->addSuccess('Number Of Contacts Id Removed: '. $num);
+	    $message = 'Number of Contacts Id\'s Removed: '. $num;
+	    if (!$num)
+		    $message = 'Done.';
+        Mage::getSingleton('adminhtml/session')->addSuccess($message);
         $this->_redirectReferer();
     }
 
@@ -168,7 +166,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
         } else {
             $message = 'Name ' . $name . ', type ' . $type . ' default ' . $default . 'access ' . $access;
             Mage::getSingleton('adminhtml/session')->addError('Datafield cannot be empty.');
-            Mage::helper('ddg')->rayLog('100', $message);
+            Mage::helper('ddg')->rayLog($message);
         }
     }
 

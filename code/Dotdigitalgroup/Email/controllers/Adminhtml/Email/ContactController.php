@@ -20,68 +20,26 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ContactController extends Mage_Admin
         $this->_setActiveMenu('email_connector');
         $this->renderLayout();
     }
-
 	/**
-	 * Edit contact.
+	 * Edit action. Sync contact and redirect back.
 	 */
 	public function editAction()
-    {
-        $contactId  = (int) $this->getRequest()->getParam('id');
-        $contact = $this->_initAction();
-        if ($contactId && !$contact->getId()) {
-            $this->_getSession()->addError(Mage::helper('ddg')->__('This contact no longer exists.'));
-            $this->_redirect('*/*/');
-            return;
-        }
-        $contactEmail = Mage::getModel('ddg_automation/apiconnector_contact')->syncContact();
-        if ($contactEmail)
-            Mage::getSingleton('adminhtml/session')->addSuccess('Successfully synced : ' . $contactEmail);
+	{
+		$contactId  = (int) $this->getRequest()->getParam('id');
+		$contact = $this->_initAction();
+		if ($contactId && !$contact->getId()) {
+			$this->_getSession()->addError(Mage::helper('ddg')->__('This contact no longer exists.'));
+			$this->_redirect('*/*/');
+			return;
+		}
+		$contactEmail = Mage::getModel('ddg_automation/apiconnector_contact')->syncContact();
+		if ($contactEmail)
+			Mage::getSingleton('adminhtml/session')->addSuccess('Successfully synced : ' . $contactEmail);
 
-        Mage::dispatchEvent('email_contact_controller_edit_action', array('contact' => $contact));
+		Mage::dispatchEvent('email_contact_controller_edit_action', array('contact' => $contact));
 
-        $this->_redirect('*/*');
-    }
-
-	/**
-	 * Save contact.
-	 */
-	public function saveAction(){
-        $storeId        = $this->getRequest()->getParam('store');
-        $redirectBack   = $this->getRequest()->getParam('back', false);
-        $contactId      = $this->getRequest()->getParam('id');
-
-        $data = $this->getRequest()->getPost();
-        if ($data) {
-            $contact    = $this->_initAction();
-
-            $contactData = $this->getRequest()->getPost('contact', array());
-            $contact->addData($contactData);
-
-            try {
-                $contact->save();
-                $contactId = $contact->getId();
-                $this->_getSession()->addSuccess(Mage::helper('ddg')->__('Contact was saved.'));
-            }catch (Mage_Core_Exception $e) {
-                Mage::logException($e);
-                $this->_getSession()->addError($e->getMessage())
-                    ->setContactData($contactData);
-                $redirectBack = true;
-            }catch (Exception $e){
-                Mage::logException($e);
-                $this->_getSession()->addError(Mage::helper('ddg')->__('Error saving contact'))
-                    ->setContactData($contactData);
-                $redirectBack = true;
-            }
-        }
-        if ($redirectBack) {
-            $this->_redirect('*/*/edit', array(
-                'id'    => $contactId,
-                '_current'=>true
-            ));
-        } else {
-            $this->_redirect('*/*/', array('store'=>$storeId));
-        }
-    }
+		$this->_redirect('*/*');
+	}
 
 	/**
 	 * Delete a contact.
@@ -151,21 +109,6 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ContactController extends Mage_Admin
         $this->renderLayout();
     }
 
-    protected function _initAction()
-    {
-        $this->_title($this->__('Newsletter'))
-            ->_title($this->__('Manage Contacts'));
-
-        $contactId  = (int) $this->getRequest()->getParam('id');
-        $contact    = Mage::getModel('ddg_automation/contact')
-            ->setStoreId($this->getRequest()->getParam('store', 0));
-
-        if ($contactId) {
-            $contact->load($contactId);
-        }
-        Mage::register('current_contact', $contact);
-        return $contact;
-    }
 
     public function exportCsvAction()
     {
@@ -180,4 +123,16 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ContactController extends Mage_Admin
         return Mage::getSingleton('admin/session')->isAllowed('email_connector/reports/email_connector_contact');
     }
 
+	protected function _initAction()
+	{
+		$contactId  = (int) $this->getRequest()->getParam('id');
+		$contact    = Mage::getModel('ddg_automation/contact')
+		                  ->setStoreId($this->getRequest()->getParam('store', 0));
+
+		if ($contactId) {
+			$contact->load($contactId);
+		}
+		Mage::register('current_contact', $contact);
+		return $contact;
+	}
 }

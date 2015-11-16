@@ -25,7 +25,7 @@ $order = $this->getOrder();
                                     Your order # <?php echo $order->getIncrementId();?> has been <br/>
                                     <strong><?php echo $order->getStatusLabel();?></strong>.
                                 </p>
-                                <p style="font-size:12px; line-height:16px; margin:0 0 10px 0;"><?php echo $comment;?></p>
+                                <p style="font-size:12px; line-height:16px; margin:0 0 10px 0;"><?php echo $this->escapeHtml($comment);?></p>
                             </td>
                         </tr>
                     </table>

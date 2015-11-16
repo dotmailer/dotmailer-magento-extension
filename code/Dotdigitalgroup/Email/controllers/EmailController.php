@@ -78,12 +78,12 @@ class Dotdigitalgroup_Email_EmailController extends Dotdigitalgroup_Email_Respon
             } else {
                 Mage::helper('ddg')->log('order not found: ' . $orderId);
                 $this->sendResponse();
-                die;
+                Mage::throwException('Order not found');
             }
         } else {
             Mage::helper('ddg')->log('order_id missing :' . $orderId);
             $this->sendResponse();
-            die;
+            Mage::throwException('Order id is missing');
         }
 
 
@@ -132,15 +132,15 @@ class Dotdigitalgroup_Email_EmailController extends Dotdigitalgroup_Email_Respon
 
             $response = json_decode(curl_exec($ch));
             if ($response === false) {
-                Mage::helper('ddg')->rayLog('100', 'Automaion studio number not found : ' . serialize($response));
-                Mage::helper('ddg')->log("Error Number: " . curl_errno($ch));
+	            Mage::helper('ddg')->log("Error Number: " . curl_errno($ch))
+	                ->rayLog('Automaion studio number not found : ' . serialize($response));
             }
 
             //save the refresh token to the admin user
             $adminUser->setRefreshToken($response->refresh_token)->save();
         }
         //redirect to automation index page
-        $this->_redirectReferer(Mage::helper('adminhtml')->getUrl('adminhtml/email_automation/index'));
+        $this->_redirectReferer(Mage::helper('adminhtml')->getUrl('adminhtml/email_studio/index'));
     }
 
     /**

@@ -28,7 +28,7 @@ class Dotdigitalgroup_Email_Model_Resource_Contact extends Mage_Core_Model_Mysql
             return $num;
         }catch (Exception $e){
             Mage::logException($e);
-            Mage::helper('ddg')->rayLog('300', $e);
+            Mage::helper('ddg')->rayLog($e);
         }
     }
 
@@ -47,7 +47,7 @@ class Dotdigitalgroup_Email_Model_Resource_Contact extends Mage_Core_Model_Mysql
             return $num;
         }catch (Exception $e){
             Mage::logException($e);
-            Mage::helper('ddg')->rayLog('300', $e);
+            Mage::helper('ddg')->rayLog($e);
         }
     }
 
@@ -90,7 +90,7 @@ class Dotdigitalgroup_Email_Model_Resource_Contact extends Mage_Core_Model_Mysql
             return $num;
         } catch (Exception $e) {
             Mage::logException($e);
-            Mage::helper('ddg')->rayLog('300', $e);
+            Mage::helper('ddg')->rayLog($e);
         }
     }
 
@@ -111,7 +111,7 @@ class Dotdigitalgroup_Email_Model_Resource_Contact extends Mage_Core_Model_Mysql
 
         $select
             ->from(
-                array('customer' => $this->getReadConnection()->getTableName('customer_entity')),
+                array('customer' => $this->getReadConnection()->getTableName('customer/customer')),
                 array('customer_id' => 'entity_id','email','website_id','store_id')
             )
             ->where("entity_id not in ($emailContacts)");
@@ -127,7 +127,7 @@ class Dotdigitalgroup_Email_Model_Resource_Contact extends Mage_Core_Model_Mysql
                 array('c.customer_id')
             )
             ->joinLeft(
-                array('e' => $this->getReadConnection()->getTableName('customer_entity')),
+                array('e' => $this->getReadConnection()->getTableName('customer/customer')),
                 "c.customer_id = e.entity_id"
             )
             ->where('e.entity_id is NULL');
@@ -163,43 +163,6 @@ class Dotdigitalgroup_Email_Model_Resource_Contact extends Mage_Core_Model_Mysql
         }
         else
             $write->update($this->getMainTable(), array('email_imported' => 1), "customer_id = $customer");
-    }
-
-    public function populateAndCleanupRecords()
-    {
-        $write = $this->_getWriteAdapter();
-        $contactTable = $this->getMainTable();
-        $select = $write->select();
-
-        //check subscriber and update in one query
-        $select->joinLeft(
-            array('s' => $this->getReadConnection()->getTableName('newsletter_subscriber')),
-            "c.customer_id = s.customer_id",
-            array('subscriber_status' => 's.subscriber_status')
-        );
-        //update sql statement
-        $updateSql = $select->crossUpdateFromSelect(array('c' => $contactTable));
-        //run query and update subscriber_status column
-        $write->query($updateSql);
-        //update is_subscriber column if subscriber_status is not null
-        $write->update($contactTable, array('is_subscriber' => 1), "subscriber_status is not null");
-
-
-        //remove contact with customer id set and no customer
-        $select->reset()
-            ->from(
-                array('c' => $contactTable),
-                array('c.customer_id')
-            )
-            ->joinLeft(
-                array('e' => $this->getReadConnection()->getTableName('customer_entity')),
-                "c.customer_id = e.entity_id"
-            )
-            ->where('e.entity_id is NULL');
-        //delete sql statement
-        $deleteSql = $select->deleteFromSelect('c');
-        //run query
-        $write->query($deleteSql);
     }
 
     /**
@@ -320,5 +283,33 @@ class Dotdigitalgroup_Email_Model_Resource_Contact extends Mage_Core_Model_Mysql
             $expressionTransferObject->getArguments()
         );
 
+    }
+
+    public function unsubscribe($data)
+    {
+        $write = $this->_getWriteAdapter();
+        $emails = '"' . implode('","', $data) . '"';
+
+        try{
+            //un-subscribe from the email contact table.
+            $write->update(
+                $this->getMainTable(),
+                array(
+                    'is_subscriber' => new Zend_Db_Expr('null'),
+                    'suppressed' => '1'
+                ),
+                "email IN ($emails)"
+            );
+
+            // un-subscribe newsletter subscribers
+            $write->update(
+                $this->getTable('newsletter/subscriber'),
+                array('subscriber_status' => Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED),
+                "subscriber_email IN ($emails)"
+            );
+        }catch (Exception $e){
+            Mage::throwException($e->getMessage());
+            Mage::logException($e);
+        }
     }
 }

@@ -9,7 +9,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Importer_Grid extends Mage_Adminhtml
         // Set some defaults for our grid
         $this->setDefaultSort('id');
         $this->setId('id');
-        $this->setDefaultDir('asc');
+        $this->setDefaultDir('desc');
     }
 
     /**

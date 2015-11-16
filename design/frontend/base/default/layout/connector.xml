@@ -2,14 +2,110 @@
 <layout version="0.1.0">
     <default>
         <reference name="head">
-            <block type="core/template" name="checkout.tag" as="connector.tag" template="connector/tracking_code.phtml"/>
-            <block type="core/template" name="easy.email.capture.head" as="easy.email.capture.head" template="connector/email_capture.phtml"/>
-            <block type="core/template" name="easy.email.capture" as="easy.email.capture" template="connector/email_capture_init.phtml"/>
+            <block type="core/template" name="checkout.tag" as="connector.tag"
+                   template="connector/tracking_code.phtml"/>
+            <block type="core/template" name="easy.email.capture.head" as="easy.email.capture.head"
+                   template="connector/email_capture.phtml"/>
+            <block type="core/template" name="easy.email.capture" as="easy.email.capture"
+                   template="connector/email_capture_init.phtml"/>
         </reference>
     </default>
+    <ddg_automation_feefo_score>
+        <reference name="content">
+            <block type="ddg_automation/feefo" name="connector_feefo_service_score"
+                   template="connector/feefo/score.phtml"/>
+        </reference>
+    </ddg_automation_feefo_score>
+    <ddg_automation_feefo_reviews>
+        <reference name="content">
+            <block type="ddg_automation/feefo" name="connector_feefo_product_reviews"
+                   template="connector/feefo/reviews.phtml"/>
+        </reference>
+    </ddg_automation_feefo_reviews>
+    <ddg_automation_products_related>
+        <reference name="content">
+            <block type="ddg_automation/recommended_products" name="connector_recommended_related"
+                   template="connector/product/list.phtml"/>
+        </reference>
+    </ddg_automation_products_related>
+    <ddg_automation_products_crosssell>
+        <reference name="content">
+            <block type="ddg_automation/recommended_products" name="connector_recommended_crosssell"
+                   template="connector/product/list.phtml"/>
+        </reference>
+    </ddg_automation_products_crosssell>
+    <ddg_automation_products_upsell>
+        <reference type="content">
+            <block type="ddg_automation/recommended_products" name="connector_recommended_upsell"
+                   template="connector/product/list.phtml"/>
+        </reference>
+    </ddg_automation_products_upsell>
+    <ddg_automation_quoteproducts_related>
+        <reference name="content">
+            <block type="ddg_automation/edc" name="connector_recommended_quote_related"
+                   template="connector/product/list.phtml"/>
+        </reference>
+    </ddg_automation_quoteproducts_related>
+    <ddg_automation_report_bestsellers>
+        <reference name="content">
+            <block type="ddg_automation/edc" name="connector_customer" template="connector/product/list.phtml"/>
+        </reference>
+    </ddg_automation_report_bestsellers>
+    <ddg_automation_report_mostviewed>
+        <reference name="content">
+            <block type="ddg_automation/edc" name="connector_customer" template="connector/product/list.phtml"/>
+        </reference>
+    </ddg_automation_report_mostviewed>
+    <ddg_automation_quoteproducts_crosssell>
+        <reference name="content">
+            <block type="ddg_automation/edc" name="connector_recommended_quote_crosssell"
+                   template="connector/product/list.phtml"/>
+        </reference>
+    </ddg_automation_quoteproducts_crosssell>
+    <ddg_automation_report_recentlyviewed>
+        <reference name="content">
+            <block type="ddg_automation/edc" name="connector_customer_recentlyviewed"
+                   template="connector/product/list.phtml"/>
+        </reference>
+    </ddg_automation_report_recentlyviewed>
+    <ddg_automation_wishlist_related>
+        <reference name="content">
+            <block type="ddg_automation/recommended_wishlistproducts" name="connector_recommended_wishlist_related"
+                   template="connector/product/list.phtml"/>
+        </reference>
+    </ddg_automation_wishlist_related>
+    <ddg_automation_wishlist_crosssell>
+        <reference name="content">
+            <block type="ddg_automation/recommended_wishlistproducts" name="connector_recommended_wishlist_crosssell"
+                   template="connector/product/list.phtml"/>
+        </reference>
+    </ddg_automation_wishlist_crosssell>
+    <ddg_automation_wishlist_upsell>
+        <reference name="content">
+            <block type="ddg_automation/recommended_wishlistproducts" name="connector_recommended_wishlist_upsell" template="connector/product/list.phtml"/>
+        </reference>
+    </ddg_automation_wishlist_upsell>
+    <ddg_automation_quoteproducts_upsell>
+        <reference name="content">
+            <block type="ddg_automation/edc" name="connector_recommended_quote_upsell"
+                   template="connector/product/list.phtml"/>
+        </reference>
+    </ddg_automation_quoteproducts_upsell>
+    <ddg_automation_products_push>
+        <reference name="content">
+            <block type="ddg_automation/edc" name="connector_product_push" template="connector/product/list.phtml"/>
+        </reference>
+    </ddg_automation_products_push>
+    <ddg_automation_products_nosto>
+        <reference name="content">
+            <block type="ddg_automation/recommended_products" name="connector_nosto_recommended"
+                   template="connector/product/nosto.phtml"/>
+        </reference>
+    </ddg_automation_products_nosto>
     <checkout_onepage_success>
         <reference name="content">
-            <block type="checkout/onepage_success" name="checkout.roi" as="connector.roi" template="connector/roi_code.phtml"/>
+            <block type="checkout/onepage_success" name="checkout.roi" as="connector.roi"
+                   template="connector/roi_code.phtml"/>
         </reference>
     </checkout_onepage_success>
     <!--Customer's Manage Subscription-->
@@ -32,11 +128,14 @@
         </reference>
         <!--Additional Books And Data Fields -->
         <reference name="my.account.wrapper">
-            <block type="ddg_automation/customer_account_books" name="connector_additional_books" template="connector/additional-newsletter-pref.phtml">
-                <block type="core/html_calendar" name="html_calendar" as="html_calendar" template="page/js/calendar.phtml"/>
+            <block type="ddg_automation/customer_account_books" name="connector_additional_books"
+                   template="connector/additional-newsletter-pref.phtml">
+                <block type="core/html_calendar" name="html_calendar" as="html_calendar"
+                       template="page/js/calendar.phtml"/>
             </block>
             <!--Back button -->
-            <block type="customer/account_dashboard" name="customer.account.link.back" template="customer/account/link/back.phtml"/>
+            <block type="customer/account_dashboard" name="customer.account.link.back"
+                   template="customer/account/link/back.phtml"/>
         </reference>
     </newsletter_manage_index>
 </layout>

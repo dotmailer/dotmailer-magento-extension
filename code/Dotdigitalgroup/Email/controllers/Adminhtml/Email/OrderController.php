@@ -9,7 +9,6 @@ class Dotdigitalgroup_Email_Adminhtml_Email_OrderController extends Mage_Adminht
     {
         $this->loadLayout();
         $this->_setActiveMenu('ddg_automation');
-        $this->_addContent($this->getLayout()->createBlock('ddg_automation/adminhtml_order'));
         $this->getLayout()->getBlock('head')->setTitle('Connector Orders');
         $this->renderLayout();
     }

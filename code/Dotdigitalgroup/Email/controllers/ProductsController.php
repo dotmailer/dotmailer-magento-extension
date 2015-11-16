@@ -27,8 +27,8 @@ class Dotdigitalgroup_Email_ProductsController extends Dotdigitalgroup_Email_Res
 	                $appEmulation->startEnvironmentEmulation($storeId);
                 } else {
 		            $message = 'Dynamic : order not found: ' . $orderId;
-                    Mage::helper('ddg')->log($message);
-		            Mage::helper('ddg')->rayLog('100', $message);
+                    Mage::helper('ddg')->log($message)
+		                ->rayLog($message);
                 }
             } else {
                 Mage::helper('ddg')->log('Dynamic : order_id missing :' . $orderId);
@@ -44,14 +44,8 @@ class Dotdigitalgroup_Email_ProductsController extends Dotdigitalgroup_Email_Res
     public function relatedAction()
     {
         $this->loadLayout();
-        $products = $this->getLayout()->createBlock('ddg_automation/recommended_products', 'connector_recommended_related', array(
-            'template' => 'connector/product/list.phtml'
-        ));
-	    //append related products
-        $this->getLayout()->getBlock('content')->append($products);
 
         $this->renderLayout();
-
     }
 
 	/**
@@ -60,11 +54,6 @@ class Dotdigitalgroup_Email_ProductsController extends Dotdigitalgroup_Email_Res
     public function crosssellAction()
     {
         $this->loadLayout();
-        $products = $this->getLayout()->createBlock('ddg_automation/recommended_products', 'connector_recommended_crosssell', array(
-            'template' => 'connector/product/list.phtml'
-        ));
-	    //append crosssell products.
-        $this->getLayout()->getBlock('content')->append($products);
 
         $this->renderLayout();
     }
@@ -75,11 +64,6 @@ class Dotdigitalgroup_Email_ProductsController extends Dotdigitalgroup_Email_Res
     public function upsellAction()
     {
         $this->loadLayout();
-        $products = $this->getLayout()->createBlock('ddg_automation/recommended_products', 'connector_recommended_upsell', array(
-            'template' => 'connector/product/list.phtml'
-        ));
-	    //append upsell products
-        $this->getLayout()->getBlock('content')->append($products);
 
         $this->renderLayout();
     }
@@ -90,12 +74,8 @@ class Dotdigitalgroup_Email_ProductsController extends Dotdigitalgroup_Email_Res
     public function pushAction()
     {
         $this->loadLayout();
-        $products = $this->getLayout()->createBlock('ddg_automation/edc', 'connector_product_push', array(
-            'template' => 'connector/product/list.phtml', 'edc_type' => 'product_push'
-        ));
-	    //append push products
-        $this->getLayout()->getBlock('content')->append($products);
-        $this->renderLayout();
+
+	    $this->renderLayout();
     }
 
 	/**
@@ -105,17 +85,13 @@ class Dotdigitalgroup_Email_ProductsController extends Dotdigitalgroup_Email_Res
 	{
 		$this->loadLayout();
 
-		$products = $this->getLayout()->createBlock('ddg_automation/recommended_products', 'connector_nosto_recommended', array(
-			'template' => 'connector/product/nosto.phtml'
-		));
-        $html = $products->toHtml();
+        $html = $this->getLayout()->getBlock('connector_nosto_recommended')->toHtml();
 
         //if empty than display our fallback products instead.
         if (empty($html)) {
             Mage::app()->getRequest()->setActionName('push');
             $this->pushAction();
         } else {
-            $this->getLayout()->getBlock('content')->append($products);
             $this->renderLayout();
         }
 	}

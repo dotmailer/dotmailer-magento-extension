@@ -147,7 +147,6 @@ class Dotdigitalgroup_Email_Model_Connector_Product
                 $this->$label = $options;
             }
         }
-        return true;
     }
 
     /**

@@ -174,7 +174,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Config_Rules_Customdatafields  exten
                     });
 
                     function doUpdate(item){
-                        var url = '". Mage::getUrl('connector/rules/ajax')."';
+                        var url = '". Mage::helper('adminhtml')->getUrl('adminhtml/rules/ajax') ."';
                         var cond = item.up(1).down().next();
                         var condName = cond.down().readAttribute('name');
                         var value = item.up(1).down().next(1);
@@ -204,7 +204,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Config_Rules_Customdatafields  exten
                     }
 
                     function doUpdateWithValues(item){
-                        var url = '". Mage::getUrl('connector/rules/selected')."';
+                        var url = '". Mage::helper('adminhtml')->getUrl('adminhtml/rules/selected') ."';
                         var arrayKey = item.up(1).readAttribute('id');
                         var cond = item.up(1).down().next();
                         var condName = cond.down().readAttribute('name');
@@ -238,7 +238,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Config_Rules_Customdatafields  exten
                     }
 
                     function doUpdateForCondition(item){
-                        var url = '". Mage::getUrl('connector/rules/value')."';
+                        var url = '". Mage::helper('adminhtml')->getUrl('adminhtml/rules/value') ."';
                         var attribute = item.up(1).down();
                         var attributeValue = attribute.down().value;
                         var value = item.up().next();

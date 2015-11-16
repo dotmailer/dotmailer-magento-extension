@@ -89,6 +89,8 @@ class Dotdigitalgroup_Email_Model_Resource_Segment extends Enterprise_CustomerSe
 		                  ->addFieldToFilter('customer_id', $customerId);
 		if ($websiteId)
 			$collection->addFieldToFilter('website_id', $websiteId);
+		$collection->getSelect()->limit(1);
+
 		$contact = $collection->getFirstItem();
 		$existing = $contact->getSegmentIds();
 

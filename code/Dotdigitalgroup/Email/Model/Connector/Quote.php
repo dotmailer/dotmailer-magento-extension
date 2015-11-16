@@ -81,9 +81,6 @@ class Dotdigitalgroup_Email_Model_Connector_Quote
      */
     public function __construct(Mage_Sales_Model_Quote $quoteData)
     {
-        $customerModel = Mage::getModel('customer/customer');
-        $customerModel->load($quoteData->getCustomerId());
-
         $this->id           = $quoteData->getId();
         $this->email        = $quoteData->getCustomerEmail();
         $this->store_name   = $quoteData->getStore()->getName();
@@ -193,7 +190,6 @@ class Dotdigitalgroup_Email_Model_Connector_Quote
         $this->discount_amount = (float)number_format($discountAmount, 2 , '.', '');
         $this->quote_total      = (float)number_format($quoteData->getData('grand_total'), 2 , '.', '');
 
-        return true;
     }
     /**
      * get the street name by line number

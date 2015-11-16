@@ -148,24 +148,6 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </gender>
-                        <website_name translate="label" module="ddg">
-                            <label>Website Created On</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>ddg_automation/adminhtml_source_datafields</source_model>
-                            <sort_order>80</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </website_name>
-                        <store_name translate="label" module="ddg">
-                            <label>Store Created On</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>ddg_automation/adminhtml_source_datafields</source_model>
-                            <sort_order>90</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </store_name>
                         <created_at translate="label" module="ddg">
                             <label>Account Created Date</label>
                             <frontend_type>select</frontend_type>
@@ -398,15 +380,6 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </last_order_date>
-                        <last_order_id translate="label" module="ddg">
-                            <label>Last Order ID</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>ddg_automation/adminhtml_source_datafields</source_model>
-                            <sort_order>310</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </last_order_id>
                         <last_increment_id translate="label" module="ddg">
                             <label>Last Increment ID</label>
                             <frontend_type>select</frontend_type>
@@ -416,15 +389,6 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </last_increment_id>
-                        <last_quote_id translate="label" module="ddg">
-                            <label>Last Quote ID</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>ddg_automation/adminhtml_source_datafields</source_model>
-                            <sort_order>315</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </last_quote_id>
                         <total_refund translate="label">
                             <label>Total Refund</label>
                             <frontend_type>select</frontend_type>
@@ -506,6 +470,50 @@
                             <show_in_store>0</show_in_store>
                             <sort_order>328</sort_order>
                         </last_brand_pur>
+                        <system_value_title translate="label" module="ddg">
+                            <label>System Values</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>330</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </system_value_title>
+                        <website_name translate="label" module="ddg">
+                            <label>Website Name</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>ddg_automation/adminhtml_source_datafields</source_model>
+                            <sort_order>340</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </website_name>
+                        <store_name translate="label" module="ddg">
+                            <label>Store Name</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>ddg_automation/adminhtml_source_datafields</source_model>
+                            <sort_order>350</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </store_name>
+                        <last_order_id translate="label" module="ddg">
+                            <label>Last Order ID</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>ddg_automation/adminhtml_source_datafields</source_model>
+                            <sort_order>360</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </last_order_id>
+                        <last_quote_id translate="label" module="ddg">
+                            <label>Last Quote ID</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>ddg_automation/adminhtml_source_datafields</source_model>
+                            <sort_order>370</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </last_quote_id>
                         <abandoned_prod_name translate="label">
                             <label>Abandoned Product Name</label>
                             <frontend_type>select</frontend_type>
@@ -513,12 +521,12 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
-                            <sort_order>329</sort_order>
+                            <sort_order>380</sort_order>
                         </abandoned_prod_name>
                         <custom_title translate="label" module="ddg">
                             <label>Custom Attributes</label>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
-                            <sort_order>330</sort_order>
+                            <sort_order>390</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -528,7 +536,7 @@
                             <frontend_model>ddg_automation/adminhtml_config_customdatafields</frontend_model>
                             <backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
                             <source_model>ddg_automation/adminhtml_source_customer_attributes_select</source_model>
-                            <sort_order>340</sort_order>
+                            <sort_order>400</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -913,7 +921,7 @@
                         <order_enabled translate="label" module="ddg">
                             <label>Enabled</label>
                             <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <source_model>ddg_automation/adminhtml_source_sync_yesno</source_model>
                             <sort_order>80</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -930,7 +938,7 @@
                         <quote_enabled translate="label" module="ddg">
                             <label>Enabled</label>
                             <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <source_model>ddg_automation/adminhtml_source_sync_yesno</source_model>
                             <sort_order>86</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -947,7 +955,7 @@
                         <wishlist_enabled translate="label" module="ddg">
                             <label>Enabled</label>
                             <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <source_model>ddg_automation/adminhtml_source_sync_yesno</source_model>
                             <sort_order>100</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -964,7 +972,7 @@
                         <review_enabled translate="label" module="ddg">
                             <label>Enabled</label>
                             <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <source_model>ddg_automation/adminhtml_source_sync_yesno</source_model>
                             <sort_order>120</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -981,7 +989,7 @@
                         <catalog_enabled translate="label" module="ddg">
                             <label>Enabled</label>
                             <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <source_model>ddg_automation/adminhtml_source_sync_yesno</source_model>
                             <sort_order>140</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>0</show_in_website>
@@ -2261,27 +2269,68 @@
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>0</show_in_store>
-                    <expanded>1</expanded>
                     <fields>
                         <enabled translate="label" module="ddg">
                             <label>Enabled</label>
                             <frontend_type>select</frontend_type>
-                            <source_model>ddg_automation/adminhtml_source_transactional_yesno</source_model>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
                             <sort_order>10</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                            <comment><![CDATA[<p id="smtp-warning" style="display:none;" class="notice">DOTMAILER TRANSACTIONAL EMAIL EXTENSION HAS TO BE INSTALLED AND ENABLED IN ORDER TO USE THIS FEATURE.</p>]]></comment>
+                            <show_in_store>1</show_in_store>
                         </enabled>
-                        <validator module="ddg">
-                            <frontend_type>hidden</frontend_type>
-                            <frontend_model>ddg_automation/adminhtml_system_config_smtpvalidator</frontend_model>
+                        <send_mode translate="label" module="ddg">
+                            <label>Send Mode</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>ddg_automation/adminhtml_source_transactional_mode</source_model>
+                            <sort_order>15</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </send_mode>
+                        <host translate="label" module="ddg">
+                            <label>Host</label>
                             <sort_order>20</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                            <can_be_empty>1</can_be_empty>
-                        </validator>
+                            <show_in_store>1</show_in_store>
+                            <depends><send_mode>smtp</send_mode></depends>
+                        </host>
+                        <username translate="label" module="ddg">
+                            <label>Username</label>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </username>
+                        <password translate="label" module="ddg">
+                            <label>Password</label>
+                            <frontend_type>password</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </password>
+                        <port translate="label" module="ddg">
+                            <label>Port</label>
+                            <sort_order>50</sort_order>
+                            <frontend_type>select</frontend_type>
+                            <source_model>ddg_automation/adminhtml_source_transactional_port</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><send_mode>smtp</send_mode></depends>
+                        </port>
+                        <debug_mode translate="label comment" module="ddg">
+                            <label>Debug Mode</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Debug information in system.log file.</comment>
+                        </debug_mode>
                     </fields>
                 </ddg_transactional>
             </groups>
@@ -2311,6 +2360,16 @@
                             <show_in_store>0</show_in_store>
                             <comment><![CDATA[Select multiple statuses by pressing Ctrl button while selecting]]></comment>
                         </order_statuses>
+                        <brand_attribute translate="label comment" module="ddg">
+                            <label>Brand Attribute</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>ddg_automation/adminhtml_source_attributes</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[Select your brand attribute. If default attribute 'manufacturer' exist than will be selected automatically.]]></comment>
+                        </brand_attribute>
                     </fields>
                 </data_fields>
                 <transactional_data translate="label" module="ddg">
@@ -2932,15 +2991,6 @@
                             <show_in_store>0</show_in_store>
                             <comment><![CDATA[Remove the contact id's. When using different API username account from initial setup please click here to remove all.]]></comment>
                         </delete_contact>
-                        <suppressed_contacts module="ddg" translate="label comment">
-                            <label>Refresh Supressions</label>
-                            <frontend_model>ddg_automation/adminhtml_system_advanced_suppressedcontacts</frontend_model>
-                            <sort_order>14</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                            <comment>Refresh Historically Suppressed contacts for 10years period.</comment>
-                        </suppressed_contacts>
                         <reset_all translate="label comment" module="ddg">
                             <label><![CDATA[Reset Tables]]></label>
                             <frontend_model>ddg_automation/adminhtml_system_advanced_reset</frontend_model>
@@ -3265,6 +3315,60 @@
                         </ip_addresses>
                     </fields>
                 </ip_restriction>
+                <cron_schedules>
+                    <label>Manage Cron Timings</label>
+                    <sort_order>8000</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <importer translate="label comment" module="ddg">
+                            <label>Importer</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>ddg_automation/adminhtml_source_advanced_cronexpressionsone</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </importer>
+                        <contact translate="label comment" module="ddg">
+                            <label>Contact</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>ddg_automation/adminhtml_source_advanced_cronexpressionstwo</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </contact>
+                        <order_quote translate="label comment" module="ddg">
+                            <label>Order And Quote</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>ddg_automation/adminhtml_source_advanced_cronexpressionstwo</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </order_quote>
+                        <catalog translate="label comment" module="ddg">
+                            <label>Catalog</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>ddg_automation/adminhtml_source_advanced_cronexpressionstwo</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </catalog>
+                        <review_wishlist translate="label comment" module="ddg">
+                            <label>Review And Wishlist</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>ddg_automation/adminhtml_source_advanced_cronexpressionstwo</source_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </review_wishlist>
+                    </fields>
+                </cron_schedules>
             </groups>
         </connector_developer_settings>
     </sections>

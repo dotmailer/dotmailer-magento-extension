@@ -9,7 +9,6 @@ class Dotdigitalgroup_Email_Adminhtml_Email_CatalogController extends Mage_Admin
     {
         $this->loadLayout();
         $this->_setActiveMenu('email_connector');
-        $this->_addContent($this->getLayout()->createBlock('ddg_automation/adminhtml_catalog'));
         $this->getLayout()->getBlock('head')->setTitle('Connector Catalog');
         $this->renderLayout();
     }

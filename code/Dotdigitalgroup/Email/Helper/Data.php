@@ -71,6 +71,8 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
 
             Mage::log($data, $level, $filename, $force = true);
         }
+
+	    return $this;
     }
 
     public function getDebugEnabled()
@@ -225,12 +227,15 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         $website = Mage::app()->getWebsite($website);
         $result = array();
         $attrs = $website->getConfig('connector_data_mapping/enterprise_data');
-        //get individual mapped keys
-        foreach ( $attrs as $key => $one ) {
-            $config = $website->getConfig('connector_data_mapping/enterprise_data/' . $key);
-            //check for the mapped field
-            if ($config)
-                $result[$key] = $config;
+
+        if(is_array($attrs)){
+            //get individual mapped keys
+            foreach ( $attrs as $key => $one ) {
+                $config = $website->getConfig('connector_data_mapping/enterprise_data/' . $key);
+                //check for the mapped field
+                if ($config)
+                    $result[$key] = $config;
+            }
         }
 
         if (empty($result))
@@ -457,7 +462,6 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
 
     /**
      * Raygun logs.
-     * @param int $errno
      * @param $message
      * @param string $filename
      * @param int $line
@@ -465,12 +469,15 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      *
      * @return int|null
      */
-    public function rayLog($errno = 100, $message, $filename = 'helper/data.php', $line = 1, $tags = array())
+    public function rayLog($message, $filename = 'apiconnector/client.php', $line = 1, $tags = array())
     {
+	    //check if raygun has code enabled
         if (!$this->raygunEnabled())
             return;
-        $baseUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);
-        if (empty($tags)) {
+
+	    $baseUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);
+
+	    if (empty($tags)) {
             $tags = array(
                 $baseUrl,
                 Mage::getVersion()
@@ -481,7 +488,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         //user, firstname, lastname, email, annonim, uuid
         $client->SetUser($baseUrl, null, null, $this->getApiUsername());
         $client->SetVersion($this->getConnectorVersion());
-        $client->SendError($errno, $message, $filename,$line, $tags);
+        $client->SendError(100, $message, $filename,$line, $tags);
     }
 
 
@@ -674,7 +681,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function disableRaygun()
     {
-        $config = new Mage_Core_Model_Config();
+        $config = Mage::getModel('core/config');
         $config->saveConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_RAYGUN_APPLICATION_CODE, '');
         Mage::getConfig()->cleanCache();
     }
@@ -702,7 +709,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         if (!$raygunCode)
             return;
 
-        $config = new Mage_Core_Model_Config();
+        $config = Mage::getModel('core/config');
         $config->saveConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_RAYGUN_APPLICATION_CODE, $raygunCode);
     }
 
@@ -896,5 +903,35 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
             return false;
         }
         return false;
+    }
+
+	/**
+	 * get log file content.
+	 *
+	 * @param string $filename
+	 *
+	 * @return string
+	 */
+    public function getLogFileContent($filename = 'connector_api.log')
+    {
+        $path_to_log_file = Mage::getBaseDir('var') . DS . 'log' . DS . $filename;;
+		//tail the length file content
+		$lengthBefore = 500000;
+
+	    $handle = fopen($path_to_log_file, 'r');
+	    fseek($handle, -$lengthBefore, SEEK_END);
+
+        if (!$handle) {
+            return "Log file is not readable or does not exist at this moment. File path is ".$path_to_log_file;
+        }
+
+	    $contents = fread($handle, filesize($path_to_log_file));
+
+        if (!$contents) {
+            return "Log file is not readable or does not exist at this moment. File path is ".$path_to_log_file;
+        }
+        fclose($handle);
+
+        return $contents;
     }
 }

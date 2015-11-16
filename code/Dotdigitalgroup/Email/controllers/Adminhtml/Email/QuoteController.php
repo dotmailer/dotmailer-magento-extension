@@ -9,7 +9,6 @@ class Dotdigitalgroup_Email_Adminhtml_Email_QuoteController extends Mage_Adminht
     {
         $this->loadLayout();
         $this->_setActiveMenu('email_connector');
-        $this->_addContent($this->getLayout()->createBlock('ddg_automation/adminhtml_quote'));
         $this->getLayout()->getBlock('head')->setTitle('Connector Quote(s)');
         $this->renderLayout();
     }

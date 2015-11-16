@@ -97,7 +97,7 @@
                 <a class="proudct-url" href="<?php echo $_product->getProductUrl();?>">
                     <?php
                         if($urlText = $this->getTextForUrl($_product->getStoreId()))
-                            echo $urlText;
+                            echo $this->escapeHtml($urlText);
                         else
                             echo $this->__('View Now');
                     ?>

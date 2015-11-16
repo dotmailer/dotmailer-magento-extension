@@ -24,8 +24,8 @@ class Dotdigitalgroup_Email_QuoteproductsController extends Dotdigitalgroup_Emai
                     $appEmulation->startEnvironmentEmulation($storeId);
                 } else {
                     $message = 'Dynamic : Quote not found: ' . $quoteId;
-                    Mage::helper('ddg')->log($message);
-                    Mage::helper('ddg')->rayLog('100', $message);
+                    Mage::helper('ddg')->log($message)
+                        ->rayLog($message);
                 }
             } else {
                 Mage::helper('ddg')->log('Dynamic : order_id missing :' . $quoteId);
@@ -41,12 +41,8 @@ class Dotdigitalgroup_Email_QuoteproductsController extends Dotdigitalgroup_Emai
     public function relatedAction()
     {
         $this->loadLayout();
-        $products = $this->getLayout()->createBlock('ddg_automation/edc', 'connector_recommended_quote_related', array(
-            'template' => 'connector/product/list.phtml' , 'edc_type' => 'quote_products'
-        ));
-        //append related products
-        $this->getLayout()->getBlock('content')->append($products);
-        $this->renderLayout();
+
+	    $this->renderLayout();
         $this->checkContentNotEmpty($this->getLayout()->getOutput());
     }
 
@@ -56,11 +52,7 @@ class Dotdigitalgroup_Email_QuoteproductsController extends Dotdigitalgroup_Emai
     public function crosssellAction()
     {
         $this->loadLayout();
-        $products = $this->getLayout()->createBlock('ddg_automation/edc', 'connector_recommended_quote_crosssell', array(
-            'template' => 'connector/product/list.phtml' , 'edc_type' => 'quote_products'
-        ));
-        //append crosssell products.
-        $this->getLayout()->getBlock('content')->append($products);
+
         $this->renderLayout();
         $this->checkContentNotEmpty($this->getLayout()->getOutput());
     }
@@ -71,11 +63,6 @@ class Dotdigitalgroup_Email_QuoteproductsController extends Dotdigitalgroup_Emai
     public function upsellAction()
     {
         $this->loadLayout();
-        $products = $this->getLayout()->createBlock('ddg_automation/edc', 'connector_recommended_quote_upsell', array(
-            'template' => 'connector/product/list.phtml' , 'edc_type' => 'quote_products'
-        ));
-        //append upsell products
-        $this->getLayout()->getBlock('content')->append($products);
         $this->renderLayout();
         $this->checkContentNotEmpty($this->getLayout()->getOutput());
     }

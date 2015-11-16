@@ -47,8 +47,9 @@ class Dotdigitalgroup_Email_Block_Feefo extends Mage_Core_Block_Template
         $products = array();
         $quoteId = Mage::app()->getRequest()->getParam('quote_id');
         $quoteModel = Mage::getModel('sales/quote')->load($quoteId);
-        if(!$quoteModel->getId())
-            die;
+        //quote
+	    if (! $quoteModel->getId())
+            Mage::throwException('die');
 
         $quoteItems = $quoteModel->getAllItems();
 
@@ -92,7 +93,7 @@ class Dotdigitalgroup_Email_Block_Feefo extends Mage_Core_Block_Template
             $xsl->importStyleSheet($doc);
             $doc->load($url);
             $productReview = $xsl->transformToXML($doc);
-            if(strpos($productReview, '<td'))
+            if (strpos($productReview, '<td') !== false)
                 $reviews[$name] = $xsl->transformToXML($doc);
             $check = false;
         }

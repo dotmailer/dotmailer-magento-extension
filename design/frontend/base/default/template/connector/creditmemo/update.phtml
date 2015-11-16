@@ -22,7 +22,7 @@
                                     <strong><?php echo $order->getStatusLabel();?></strong>.
                                 </p>
                                 <p style="font-size:12px; line-height:16px; margin:0 0 10px 0;">You can check the status of your order by <a href="<?php echo $this->getBaseUrl();?>customer/account/" style="color:#1E7EC8;">logging into your account</a>.</p>
-                                <p style="font-size:12px; line-height:16px; margin:0 0 10px 0;"><?php echo $comment;?></p>
+                                <p style="font-size:12px; line-height:16px; margin:0 0 10px 0;"><?php echo $this->escapeHtml($comment);?></p>
                             </td>
                         </tr>
                     </table>

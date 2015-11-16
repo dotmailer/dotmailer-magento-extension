@@ -44,9 +44,11 @@ class Dotdigitalgroup_Email_Model_Quote extends Mage_Core_Model_Abstract
         $helper->allowResourceFullExecution();
 
         foreach (Mage::app()->getWebsites(true) as $website) {
+
             $apiEnabled = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED, $website);
             $enabled = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_QUOTE_ENABLED, $website);
-            if ($enabled && $apiEnabled) {
+            $storeIds = $website->getStoreIds();
+            if ($enabled && $apiEnabled && !empty($storeIds)) {
                 //using bulk api
                 $helper->log('---------- Start quote bulk sync ----------');
                 $this->_start = microtime(true);
@@ -91,11 +93,13 @@ class Dotdigitalgroup_Email_Model_Quote extends Mage_Core_Model_Abstract
             $this->_quoteIds = array();
             $limit = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT, $website);
             $collection = $this->_getQuoteToImport($website, $limit);
-            foreach($collection as $emailQuote){
-                $store = Mage::app()->getStore($emailQuote->getStoreId());
-                $quote = Mage::getModel('sales/quote')->setStore($store)->load($emailQuote->getQuoteId());
-                if($quote->getId())
-                {
+
+	        foreach ($collection as $emailQuote) {
+
+                $quote = Mage::getModel('sales/quote')->load($emailQuote->getQuoteId());
+
+		        if ($quote->getId()) {
+
                     $connectorQuote = Mage::getModel('ddg_automation/connector_quote', $quote);
                     $this->_quotes[$website->getId()][] = $connectorQuote;
                 }
@@ -143,11 +147,11 @@ class Dotdigitalgroup_Email_Model_Quote extends Mage_Core_Model_Abstract
         try {
             $limit = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT, $website);
             $collection = $this->_getQuoteToImport($website, $limit, true);
-            foreach ($collection as $emailQuote) {
-                $store = Mage::app()->getStore($emailQuote->getStoreId());
-                $quote = Mage::getModel('sales/quote')->setStore($store)->load($emailQuote->getQuoteId());
-                if($quote->getId())
-                {
+
+	        foreach ($collection as $emailQuote) {
+	            $quote = Mage::getModel('sales/quote')->load($emailQuote->getQuoteId());
+		        if($quote->getId()) {
+
                     $connectorQuote = Mage::getModel('ddg_automation/connector_quote', $quote);
                     //register in queue with importer
                     $check = Mage::getModel('ddg_automation/importer')->registerQueue(
