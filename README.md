@@ -14,7 +14,7 @@ Don't forget to enable symlinks in:
 Facts
 -----
 - community & enterprise version.
-- current version - V.5.0.0 [config.xml](https://github.com/dotagency/dotmailer_magento/blob/master/code/Dotdigitalgroup/Email/etc/config.xml)
+- current version - V.5.1.0 [config.xml](https://github.com/dotagency/dotmailer_magento/blob/master/code/Dotdigitalgroup/Email/etc/config.xml)
 - also available on Magento Connect [link](http://www.magentocommerce.com/magento-connect/dotmailer-truly-integrated-email-marketing.html)
 
 Compatibility
@@ -23,6 +23,25 @@ Compatibility
 
 
 ### Upgrade notice
+
+### V5.1.0
+
+## Bug fixes
+ - Audit changes A1 - A14
+ - Skip website if no store assigned
+ - Manufacturer attribute
+ - Raygun - change the title message to non unique
+ - Exclusion rules ajax call protocol fix
+
+## Features
+ - Abandoned Product Name
+ - Importer API Enchased
+ - Add indexes to tables
+ - Transactional email merged to core
+ - Order status option source changed
+ - System log viewer
+ - Single deletes for importer
+
 
 ### V5.0.4
 
