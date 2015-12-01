@@ -10,18 +10,20 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
      */
     public function handleSalesOrderSaveAfter(Varien_Event_Observer $observer)
     {
+        /** @var $order Mage_Sales_Model_Order */
+        $order = $observer->getEvent()->getOrder();
+        $status  = $order->getStatus();
+        $storeId = $order->getStoreId();
+
+        $appEmulation = Mage::getSingleton('core/app_emulation');
+        $initialEnvironmentInfo = $appEmulation->startEnvironmentEmulation($storeId);
+
         try{
-            /** @var $order Mage_Sales_Model_Order */
-            $order = $observer->getEvent()->getOrder();
-            $status  = $order->getStatus();
-            $storeId = $order->getStoreId();
             $store = Mage::app()->getStore($storeId);
             $storeName = $store->getName();
             $websiteId = $store->getWebsiteId();
             $customerEmail = $order->getCustomerEmail();
             // start app emulation
-            $appEmulation = Mage::getSingleton('core/app_emulation');
-            $initialEnvironmentInfo = $appEmulation->startEnvironmentEmulation($storeId);
             $emailOrder = Mage::getModel('ddg_automation/order')->loadByOrderId($order->getEntityId(), $order->getQuoteId());
             //reimport email order
             $emailOrder->setUpdatedAt($order->getUpdatedAt())
@@ -32,8 +34,10 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
             }
 
             //if api is not enabled
-            if (!$store->getWebsite()->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED))
+            if (!$store->getWebsite()->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED)) {
+                $appEmulation->stopEnvironmentEmulation($initialEnvironmentInfo);
                 return $this;
+            }
 
             // check for order status change
 	        $statusBefore = $order->getOrigData('status');
@@ -76,6 +80,7 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
 
         }catch(Exception $e){
             Mage::logException($e);
+            $appEmulation->stopEnvironmentEmulation($initialEnvironmentInfo);
         }
         return $this;
     }
