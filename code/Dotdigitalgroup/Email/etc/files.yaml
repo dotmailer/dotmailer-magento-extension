@@ -35,8 +35,6 @@ sql:
 locale:
   - en_US#Dotdigitalgroup_Email.csv
 block:
-  - Adminhtml#Campaign#Edit#Form.php
-  - Adminhtml#Campaign#Edit.php
   - Adminhtml#Campaign#Grid.php
   - Adminhtml#Column#Renderer#Imported.php
   - Adminhtml#Column#Renderer#Status.php
@@ -71,7 +69,6 @@ block:
   - Adminhtml#System#Advanced#Runsubscribersync.php
   - Adminhtml#System#Advanced#Runwishlistsync.php
   - Adminhtml#System#Advanced#Setupdatafields.php
-  - Adminhtml#System#Advanced#Suppressedcontacts.php
   - Adminhtml#System#Automation#Connect.php
   - Adminhtml#System#Config#Addressbook.php
   - Adminhtml#System#Config#Datafield.php
@@ -139,12 +136,8 @@ block:
   - Order#Creditmemo.php
   - Order#Invoice.php
   - Order#Shipping.php
-  - Recommended#Bestsellers.php
   - Recommended#Mostviewed.php
   - Recommended#Products.php
-  - Recommended#Push.php
-  - Recommended#Quoteproducts.php
-  - Recommended#Recentlyviewed.php
   - Basket.php
   - Coupon.php
   - Order.php
