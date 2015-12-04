@@ -134,7 +134,7 @@
             </ddg_automation>
             <adminhtml>
                 <rewrite>
-                    <system_email_template_edit>ddg_automation/system_email_template_edit</system_email_template_edit>
+                    <system_email_template_edit>Dotdigitalgroup_Email_Block_System_Email_Template_Edit</system_email_template_edit>
                 </rewrite>
             </adminhtml>
         </blocks>

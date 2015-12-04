@@ -6,7 +6,7 @@ This module uses modman
 First ensure you have modman installed (see here: https://github.com/colinmollenhour/modman#installation)
 ...and run the following in your magento root:
 `modman init`
-`modman clone https://github.com/dotagency/dotmailer_magento.git`
+`modman clone https://github.com/dotmailer/dotmailer-magento-extension.git`
 
 Don't forget to enable symlinks in:
 `System->Configuration->Advanced->Developer->Template Settings`
@@ -14,7 +14,7 @@ Don't forget to enable symlinks in:
 Facts
 -----
 - community & enterprise version.
-- current version - V.5.1.0 [config.xml](https://github.com/dotagency/dotmailer_magento/blob/master/code/Dotdigitalgroup/Email/etc/config.xml)
+- current version - V.5.1.0 [config.xml](https://github.com/dotmailer/dotmailer-magento-extension/blob/master/code/Dotdigitalgroup/Email/etc/config.xml)
 - also available on Magento Connect [link](http://www.magentocommerce.com/magento-connect/dotmailer-truly-integrated-email-marketing.html)
 
 Compatibility
