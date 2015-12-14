@@ -33,7 +33,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
      *
      * @return array
      */
-    private function _getRecommendedProduct(Mage_Catalog_Model_Product $productModel, $mode)
+    protected function _getRecommendedProduct(Mage_Catalog_Model_Product $productModel, $mode)
     {
         //array of products to display
         $products = array();
@@ -137,7 +137,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
      * @return array
      * @throws Exception
      */
-    private function _getRecentlyViewedCollection($limit)
+    protected function _getRecentlyViewedCollection($limit)
     {
         $productsToDisplay = array();
         $customerId = $this->getRequest()->getParam('customer_id');
@@ -176,7 +176,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
      * @param $limit
      * @return array
      */
-    private function _getProductPushCollection($limit)
+    protected function _getProductPushCollection($limit)
     {
         $productsToDisplay = array();
         $productIds = Mage::helper('ddg/recommended')->getProductPushIds();
@@ -202,7 +202,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
      * @param $limit
      * @return Varien_Data_Collection
      */
-    private function _getBestSellersCollection($mode, $limit)
+    protected function _getBestSellersCollection($mode, $limit)
     {
         $from  =  Mage::helper('ddg/recommended')->getTimeFromConfig($mode);
         $locale = Mage::app()->getLocale()->getLocale();
@@ -242,7 +242,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
      * @param $limit
      * @return array
      */
-    private function _getMostViewedCollection($mode, $limit)
+    protected function _getMostViewedCollection($mode, $limit)
     {
         $productsToDisplay = array();
         $from  = Mage::helper('ddg/recommended')->getTimeFromConfig($mode);
@@ -289,7 +289,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
      * @param $category
      * @return mixed
      */
-    private function _joinCategoryOnCollection($productCollection, $category)
+    protected function _joinCategoryOnCollection($productCollection, $category)
     {
         if ($category->getId()){
             $productCollection->getSelect()
@@ -314,12 +314,12 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
      * @return array
      * @throws Exception
      */
-    private function _getQuoteProductCollection($mode, $limit)
+    protected function _getQuoteProductCollection($mode, $limit)
     {
         $quoteModel = Mage::registry('current_quote');
 
         if (! $quoteModel) {
-            Mage::throwException('no current_quote found for EDC');
+            Mage::throwException(Mage::helper('ddg')->__('no current_quote found for EDC'));
         }
 		$quoteItems = $quoteModel->getAllItems();
 

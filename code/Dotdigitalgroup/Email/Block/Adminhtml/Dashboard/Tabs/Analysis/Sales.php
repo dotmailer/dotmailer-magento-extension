@@ -11,7 +11,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Analysis_Sales extend
      *
      * @throws Exception
      */
-    public function __construct()
+    public function _construct()
     {
         parent::_construct();
 

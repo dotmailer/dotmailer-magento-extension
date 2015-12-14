@@ -7,7 +7,7 @@ class Dotdigitalgroup_Email_Model_Connector_Campaign
     public $contacts = array();
     public $emails = array();
     public $emailSendId = array();
-    private $_storeId;
+    protected $_storeId;
 
     /**
      * @param mixed $storeId

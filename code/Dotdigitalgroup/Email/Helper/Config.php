@@ -128,23 +128,25 @@ class Dotdigitalgroup_Email_Helper_Config
 	/**
      * Dynamic Content
      */
-    const XML_PATH_CONNECTOR_DYNAMIC_CONTENT_PASSCODE                   = 'connector_dynamic_content/external_dynamic_content_urls/passcode';
-    const XML_PATH_CONNECTOR_DYNAMIC_CONTENT_NOSTO                      = 'connector_dynamic_content/nosto_recommendation/api';
-    const XML_PATH_CONNECTOR_DYNAMIC_CONTENT_WIHSLIST_DISPLAY           = 'connector_dynamic_content/products/wishlist_display_type';
+    const XML_PATH_CONNECTOR_DYNAMIC_CONTENT_PASSCODE               = 'connector_dynamic_content/external_dynamic_content_urls/passcode';
+    const XML_PATH_CONNECTOR_DYNAMIC_CONTENT_NOSTO                  = 'connector_dynamic_content/nosto_recommendation/api';
+    const XML_PATH_CONNECTOR_DYNAMIC_CONTENT_WIHSLIST_DISPLAY       = 'connector_dynamic_content/products/wishlist_display_type';
+	const XML_PATH_CONNECTOR_DYNAMIC_CONTENT_REVIEW_DISPLAY_TYPE    = 'connector_dynamic_content/products/review_display_type';
 
-    /**
+
+	/**
      * CONFIGURATION SECTION.
      */
     //Data Fields
-    const XML_PATH_CONNECTOR_SYNC_DATA_FIELDS_STATUS                    = 'connector_configuration/data_fields/order_statuses';
-    const XML_PATH_CONNECTOR_SYNC_DATA_FIELDS_BRAND_ATTRIBUTE           = 'connector_configuration/data_fields/brand_attribute';
+    const XML_PATH_CONNECTOR_SYNC_DATA_FIELDS_STATUS            = 'connector_configuration/data_fields/order_statuses';
+    const XML_PATH_CONNECTOR_SYNC_DATA_FIELDS_BRAND_ATTRIBUTE   = 'connector_configuration/data_fields/brand_attribute';
 
     //Transactional Data
-    const XML_PATH_CONNECTOR_SYNC_ORDER_STATUS              = 'connector_configuration/transactional_data/order_statuses';
-    const XML_PATH_CONNECTOR_CUSTOM_ORDER_ATTRIBUTES        = 'connector_configuration/transactional_data/order_custom_attributes';
-    const XML_PATH_CONNECTOR_CUSTOM_QUOTE_ATTRIBUTES        = 'connector_configuration/transactional_data/quote_custom_attributes';
-    const XML_PATH_CONNECTOR_SYNC_ORDER_PRODUCT_ATTRIBUTES = 'connector_configuration/transactional_data/order_product_attributes';
-    const XML_PATH_CONNECTOR_SYNC_ORDER_PRODUCT_CUSTOM_OPTIONS = 'connector_configuration/transactional_data/order_product_custom_options';
+    const XML_PATH_CONNECTOR_SYNC_ORDER_STATUS                  = 'connector_configuration/transactional_data/order_statuses';
+    const XML_PATH_CONNECTOR_CUSTOM_ORDER_ATTRIBUTES            = 'connector_configuration/transactional_data/order_custom_attributes';
+    const XML_PATH_CONNECTOR_CUSTOM_QUOTE_ATTRIBUTES            = 'connector_configuration/transactional_data/quote_custom_attributes';
+    const XML_PATH_CONNECTOR_SYNC_ORDER_PRODUCT_ATTRIBUTES      = 'connector_configuration/transactional_data/order_product_attributes';
+    const XML_PATH_CONNECTOR_SYNC_ORDER_PRODUCT_CUSTOM_OPTIONS  = 'connector_configuration/transactional_data/order_product_custom_options';
     //Admin
     const XML_PATH_CONNECTOR_DISABLE_NEWSLETTER_SUCCESS     = 'connector_configuration/admin/disable_newsletter_success';
     const XML_PATH_CONNECTOR_DISABLE_CUSTOMER_SUCCESS       = 'connector_configuration/admin/disable_customer_success';
@@ -200,6 +202,12 @@ class Dotdigitalgroup_Email_Helper_Config
     const XML_PATH_CONNECTOR_AUTOMATION_STUDIO_REVIEW        = 'connector_automation_studio/visitor_automation/review_automation';
     const XML_PATH_CONNECTOR_AUTOMATION_STUDIO_WISHLIST      = 'connector_automation_studio/visitor_automation/wishlist_automation';
     const XML_PATH_CONNECTOR_AUTOMATION_STUDIO_ORDER_STATUS  = 'connector_automation_studio/order_status_automation/status_to_automation';
+
+	//PRODUCT REVIEW REMINDER.
+	const XML_PATH_AUTOMATION_REVIEW_STATUS                  = 'connector_automation_studio/review_settings/status';
+	const XML_PATH_AUTOMATION_REVIEW_DELAY                   = 'connector_automation_studio/review_settings/delay';
+	const XML_PATH_AUTOMATION_REVIEW_CAMPAIGN                = 'connector_automation_studio/review_settings/campaign';
+	const XML_PATH_AUTOMATION_REVIEW_ANCHOR                  = 'connector_automation_studio/review_settings/anchor';
 
 
     /**

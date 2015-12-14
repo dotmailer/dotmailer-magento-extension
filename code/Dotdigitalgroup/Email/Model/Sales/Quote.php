@@ -72,10 +72,11 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
                         $from->sub('5', Zend_Date::MINUTE);
 
 					    //active quotes
-					    $quoteCollection = $this->_getStoreQuotes( $from->toString( 'YYYY-MM-dd HH:mm' ), $to->toString( 'YYYY-MM-dd HH:mm' ), $guest = false, $storeId );
-
+					    $quoteCollection = $this->_getStoreQuotes( $from->toString( 'YYYY-MM-dd HH:mm' ), $to->toString( 'YYYY-MM-dd HH:mm' ),
+						    $guest = false, $storeId );
 					    if ( $quoteCollection->getSize() ) {
-						    Mage::helper( 'ddg' )->log( 'Customer lost baskets : ' . $num . ', from : ' . $from->toString( 'YYYY-MM-dd HH:mm' ) . ':' . $to->toString( 'YYYY-MM-dd HH:mm' ) );
+						    Mage::helper( 'ddg' )->log( 'Customer lost baskets : ' . $num . ', from : ' . $from->toString( 'YYYY-MM-dd HH:mm' ) .
+								':' . $to->toString( 'YYYY-MM-dd HH:mm' ) );
 					    }
 
 					    //campaign id for customers
@@ -121,7 +122,6 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
 						    }
 					    }
 				    }
-
 			    }
 		    }
 		    if ($mode == 'all' || $mode == 'guests') {
@@ -188,24 +188,24 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
         }
     }
 
-    private function _getLostBasketCustomerCampaignId($num, $storeId)
+    protected function _getLostBasketCustomerCampaignId($num, $storeId)
     {
         $store = Mage::app()->getStore($storeId);
         return $store->getConfig(constant('self::XML_PATH_LOSTBASKET_CUSTOMER_CAMPAIGN_' . $num));
     }
-    private function _getLostBasketGuestCampaignId($num, $storeId)
+    protected function _getLostBasketGuestCampaignId($num, $storeId)
     {
         $store = Mage::app()->getStore($storeId);
         return $store->getConfig(constant('self::XML_PATH_LOSTBASKET_GUEST_CAMPAIGN_'. $num));
     }
 
-    private function _getLostBasketCustomerInterval($num, $storeId)
+    protected function _getLostBasketCustomerInterval($num, $storeId)
     {
         $store = Mage::app()->getstore($storeId);
         return $store->getConfig(constant('self::XML_PATH_LOSTBASKET_CUSTOMER_INTERVAL_' . $num));
     }
 
-    private function _getLostBasketGuestIterval($num, $storeId)
+    protected function _getLostBasketGuestIterval($num, $storeId)
     {
         $store = Mage::app()->getStore($storeId);
         return $store->getConfig(constant('self::XML_PATH_LOSTBASKET_GUEST_INTERVAL_' . $num));
@@ -232,7 +232,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
      * @param int $storeId
      * @return Mage_Eav_Model_Entity_Collection_Abstract
      */
-    private function _getStoreQuotes($from = null, $to = null, $guest = false, $storeId = 0)
+    protected function _getStoreQuotes($from = null, $to = null, $guest = false, $storeId = 0)
     {
 	    $updated = array(
             'from' => $from,
@@ -243,8 +243,8 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
             ->addFieldToFilter('is_active', 1)
             ->addFieldToFilter('items_count', array('gt' => 0))
             ->addFieldToFilter('customer_email', array('neq' => ''))
-            ->addFieldToFilter('store_id', $storeId)
-            ->addFieldToFilter('updated_at', $updated);
+            ->addFieldToFilter('store_id', $storeId);
+
         //guests
 	    if ($guest) {
 	        $salesCollection->addFieldToFilter( 'main_table.customer_id', array( 'null' => true ) );
@@ -258,6 +258,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
         $salesCollection = $ruleModel->process(
             $salesCollection, Dotdigitalgroup_Email_Model_Rules::ABANDONED, Mage::app()->getStore($storeId)->getWebsiteId()
         );
+	    $salesCollection->addFieldToFilter('main_table.updated_at', $updated);
 
 	    return $salesCollection;
     }
@@ -271,7 +272,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
 	 *
 	 * @return bool
 	 */
-	private function _checkCustomerCartLimit($email, $storeId) {
+	protected function _checkCustomerCartLimit($email, $storeId) {
 
 		$cartLimit = Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_ABANDONED_CART_LIMIT, $storeId);
 		$locale = Mage::app()->getLocale()->getLocale();

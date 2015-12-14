@@ -14,7 +14,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
 	    $redirectUrl = Mage::helper('adminhtml')->getUrl('adminhtml/system_config/edit', array('section' => 'connector_data_mapping'));
 
         if(!$apiModel){
-            Mage::getSingleton('adminhtml/session')->addNotice('Please enable api first.');
+            Mage::getSingleton('adminhtml/session')->addNotice(Mage::helper('ddg')->__('Please enable api first.'));
         }else{
             // get all possible datatifileds
             $datafields = Mage::getModel('ddg_automation/connector_datafield')->getContactDatafields();
@@ -45,7 +45,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
                 Mage::getSingleton('adminhtml/session')->addNotice($result['message']);
             } else {
                 Mage::getConfig()->cleanCache();
-                Mage::getSingleton('adminhtml/session')->addSuccess('All Datafields Created And Mapped.');
+                Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('ddg')->__('All Datafields Created And Mapped.'));
             }
         }
 
@@ -383,6 +383,19 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
 
         $this->_redirectReferer();
     }
+
+	/**
+	 * Run Email importer sync.
+	 */
+	public function runimportersyncAction()
+	{
+		$result = Mage::getModel('ddg_automation/cron')->emailImporter();
+		if ($result['message'])
+			Mage::getSingleton('adminhtml/session')->addSuccess($result['message']);
+
+		$this->_redirectReferer();
+
+	}
 
     protected function _isAllowed()
     {

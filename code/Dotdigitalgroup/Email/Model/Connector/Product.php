@@ -35,7 +35,7 @@ class Dotdigitalgroup_Email_Model_Connector_Product
     /**
      * @var float
      */
-    public $special_price = 0;
+    public $specialPrice = 0;
 
     /**
      * @var array
@@ -50,7 +50,7 @@ class Dotdigitalgroup_Email_Model_Connector_Product
     /**
      * @var string
      */
-    public $image_path = '';
+    public $imagePath = '';
 
     /**
      * @var string
@@ -77,15 +77,15 @@ class Dotdigitalgroup_Email_Model_Connector_Product
         $options = Mage::getModel('catalog/product_visibility')->getOptionArray();
         $this->visibility           = $options[$product->getVisibility()];
         $this->price                = (float) number_format($product->getPrice(), 2, '.', '' );
-        $this->special_price        = (float) number_format($product->getSpecialPrice(), 2, '.', '' );
+        $this->specialPrice         = (float) number_format($product->getSpecialPrice(), 2, '.', '' );
         $this->url                  = $product->getProductUrl();
-        $this->image_path           = Mage::getModel('catalog/product_media_config')->getMediaUrl( $product->getSmallImage());
+        $this->imagePath            = Mage::getModel('catalog/product_media_config')->getMediaUrl( $product->getSmallImage());
         $stock = Mage::getModel('cataloginventory/stock_item')->loadByProduct($product);
         $this->stock                = (float) number_format($stock->getQty(), 2, '.', '' );
 
         $short_description = $product->getShortDescription();
         //limit short description
-        if(strlen($short_description) > 250)
+        if (strlen($short_description) > 250)
             $short_description = substr($short_description, 0 , 250);
 
         $this->short_description    = $short_description;
@@ -110,7 +110,7 @@ class Dotdigitalgroup_Email_Model_Connector_Product
         }
 
         //bundle product options
-        if ($product->getTypeId() == Mage_Catalog_Model_Product_Type::TYPE_BUNDLE){
+        if ($product->getTypeId() == Mage_Catalog_Model_Product_Type::TYPE_BUNDLE) {
             $optionCollection = $product->getTypeInstance()->getOptionsCollection();
             $selectionCollection = $product->getTypeInstance()->getSelectionsCollection($product->getTypeInstance()->getOptionsIds());
             $options = $optionCollection->appendSelections($selectionCollection);
@@ -133,7 +133,7 @@ class Dotdigitalgroup_Email_Model_Connector_Product
         }
 
         //configurable product options
-        if ($product->getTypeId() == Mage_Catalog_Model_Product_Type::TYPE_CONFIGURABLE){
+        if ($product->getTypeId() == Mage_Catalog_Model_Product_Type::TYPE_CONFIGURABLE) {
             $productAttributeOptions = $product->getTypeInstance(true)->getConfigurableAttributesAsArray($product);
             foreach ($productAttributeOptions as $productAttribute) {
                 $count = 0;

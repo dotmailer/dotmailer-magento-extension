@@ -16,7 +16,7 @@ class Dotdigitalgroup_Email_ResponseController extends Mage_Core_Controller_Fron
         $auth = Mage::helper('ddg')->auth($this->getRequest()->getParam('code'));
         if (!$auth){
             $this->sendResponse();
-            Mage::throwException('Authentication failed!');
+            Mage::throwException(Mage::helper('ddg')->__('Authentication failed!'));
         }
     }
 

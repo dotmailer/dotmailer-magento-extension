@@ -131,10 +131,10 @@ $installer->getConnection()->createTable($table);
 
 //wishlist populate
 $select = $installer->getConnection()->select()
-                    ->from(
-	                    array('wishlist' => $installer->getTable('wishlist/wishlist')),
-	                    array('wishlist_id', 'customer_id', 'created_at' => 'updated_at')
-                    )->joinLeft(
+	->from(
+	    array('wishlist' => $installer->getTable('wishlist/wishlist')),
+	    array('wishlist_id', 'customer_id', 'created_at' => 'updated_at')
+	)->joinLeft(
 		array('ce' => $installer->getTable('customer_entity')),
 		"wishlist.customer_id = ce.entity_id",
 		array('store_id')

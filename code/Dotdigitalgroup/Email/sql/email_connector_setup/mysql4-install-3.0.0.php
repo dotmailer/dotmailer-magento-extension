@@ -69,7 +69,7 @@ $table->addColumn('email_contact_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, a
         'nullable' => true,
     ), 'Is Suppressed')
     ->addIndex($this->getIdxName($contactTable, array('email_contact_id')),
-        array('email_contact_id'))
+	    array('email_contact_id'))
     ->addIndex($this->getIdxName($contactTable, array('is_guest')),
         array('is_guest'))
     ->addIndex($this->getIdxName($contactTable, array('customer_id')),
@@ -86,7 +86,6 @@ $table->addColumn('email_contact_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, a
         array('subscriber_imported'))
     ->addIndex($this->getIdxName($contactTable, array('suppressed')),
         array('suppressed'))
-
     ->addForeignKey(
         $installer->getFkName($contactTable, 'website_id', 'core/website', 'website_id'),
         'website_id', $installer->getTable('core/website'), 'website_id',

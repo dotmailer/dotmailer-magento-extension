@@ -11,7 +11,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Analysis_Abandonedcar
      *
      * @throws Exception
      */
-    public function __construct()
+    public function _construct()
     {
         parent::_construct();
 
@@ -52,6 +52,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Analysis_Abandonedcar
      */
     public function getTitle()
     {
-        return "Abandoned Carts";
+        return Mage::helper('ddg')->__("Abandoned Carts");
     }
 }

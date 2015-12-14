@@ -2,7 +2,7 @@
 
 class Dotdigitalgroup_Email_Model_Adminhtml_Source_Publicdatafields
 {
-	private function getWebsite()
+	protected function getWebsite()
 	{
 		$website = Mage::app()->getWebsite();
 		$websiteParam = Mage::app()->getRequest()->getParam('website');
@@ -16,7 +16,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Publicdatafields
 	 *
 	 * @return mixed
 	 */
-	private function getDataFields()
+	protected function getDataFields()
 	{
 		$helper = Mage::helper('ddg');
 		$website = $this->getWebsite();

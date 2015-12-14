@@ -120,7 +120,8 @@ class Dotdigitalgroup_Email_Model_Order extends Mage_Core_Model_Abstract
             ->addFieldToFilter('store_id', array('in' => $storeIds));
 
         $collection->getSelect()->limit($limit);
-        return $collection->load();
+
+	    return $collection;
     }
 
 }

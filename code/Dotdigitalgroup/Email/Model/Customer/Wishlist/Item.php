@@ -2,11 +2,11 @@
 
 class Dotdigitalgroup_Email_Model_Customer_Wishlist_Item
 {
-	protected   $sku;
-	protected   $qty;
-	protected   $name;
-	protected   $price;
-    protected   $total_value_of_product;
+	protected   $_sku;
+	protected   $_qty;
+	protected   $_name;
+	protected   $_price;
+    protected   $_totalValueOfProduct;
 
 
 	/**
@@ -26,7 +26,7 @@ class Dotdigitalgroup_Email_Model_Customer_Wishlist_Item
      */
     public function setName($name)
     {
-        $this->name = $name;
+        $this->_name = $name;
         return $this;
     }
 
@@ -35,7 +35,7 @@ class Dotdigitalgroup_Email_Model_Customer_Wishlist_Item
      */
     public function getName()
     {
-        return $this->name;
+        return $this->_name;
     }
 
     /**
@@ -44,7 +44,7 @@ class Dotdigitalgroup_Email_Model_Customer_Wishlist_Item
      */
     public function setQty($qty)
     {
-        $this->qty = (int)$qty;
+        $this->_qty = (int)$qty;
         return $this;
     }
 
@@ -53,7 +53,7 @@ class Dotdigitalgroup_Email_Model_Customer_Wishlist_Item
      */
     public function getQty()
     {
-        return $this->qty;
+        return $this->_qty;
     }
 
     /**
@@ -61,7 +61,7 @@ class Dotdigitalgroup_Email_Model_Customer_Wishlist_Item
      */
     public function getTotalValueOfProduct()
     {
-        return $this->total_value_of_product;
+        return $this->_totalValueOfProduct;
     }
 
     /**
@@ -70,10 +70,10 @@ class Dotdigitalgroup_Email_Model_Customer_Wishlist_Item
      */
     public function setPrice($product)
     {
-        $this->price = $product->getFinalPrice();
-        $total = $this->price * $this->qty;
+        $this->_price = $product->getFinalPrice();
+        $total = $this->_price * $this->_qty;
 
-        $this->total_value_of_product = number_format($total, 2, '.', ',');
+        $this->_totalValueOfProduct = number_format($total, 2, '.', ',');
         return $this;
     }
 
@@ -82,7 +82,7 @@ class Dotdigitalgroup_Email_Model_Customer_Wishlist_Item
      */
     public function getPrice()
     {
-        return $this->price;
+        return $this->_price;
     }
 
     /**
@@ -91,7 +91,7 @@ class Dotdigitalgroup_Email_Model_Customer_Wishlist_Item
      */
     public function setSku($sku)
     {
-        $this->sku = $sku;
+        $this->_sku = $sku;
         return $this;
     }
 
@@ -100,7 +100,7 @@ class Dotdigitalgroup_Email_Model_Customer_Wishlist_Item
      */
     public function getSku()
     {
-        return $this->sku;
+        return $this->_sku;
     }
 
     /**

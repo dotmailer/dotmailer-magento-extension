@@ -667,7 +667,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
         }
         $apiData = array(
             'Key' => $data->id,
-            'ContactIdentifier' => $data->connector_id,
+            'ContactIdentifier' => $data->email,
             'Json' => json_encode($data->expose())
         );
 

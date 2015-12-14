@@ -181,7 +181,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
     public function convert($size)
     {
         $unit=array('b','kb','mb','gb','tb','pb');
-        return @round($size/pow(1024,($i=floor(log($size,1024)))),2).' '.$unit[$i];
+        return round($size/pow(1024,($i=floor(log($size,1024)))),2).' '.$unit[$i];
     }
 
     /**
@@ -589,6 +589,15 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         return $this->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_REVIEWS_FEEFO_TEMPLATE);
     }
 
+	/**
+	 * @param $website
+	 * @return string
+	 */
+	public function getReviewDisplayType($website)
+	{
+		return $this->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_CONTENT_REVIEW_DISPLAY_TYPE, $website);
+	}
+
     /**
      * update data fields
      *
@@ -635,25 +644,6 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
     {
         return Mage::getConfig ()->getModuleConfig ( 'Enterprise_Enterprise' ) && Mage::getConfig ()->getModuleConfig ( 'Enterprise_AdminGws' ) && Mage::getConfig ()->getModuleConfig ( 'Enterprise_Checkout' ) && Mage::getConfig ()->getModuleConfig ( 'Enterprise_Customer' );
 
-    }
-
-    public function getTemplateList()
-    {
-        $client = $this->getWebsiteApiClient(Mage::app()->getWebsite());
-        if(!$client)
-            return array();
-
-        $templates = $client->getApiTemplateList();
-        $fields[] = array('value' => '', 'label' => '');
-        foreach ( $templates as $one ) {
-            if ( isset( $one->id ) ) {
-                $fields[] = array(
-                    'value' => $one->id,
-                    'label' => $this->__( addslashes( $one->name ) )
-                );
-            }
-        }
-        return $fields;
     }
 
     /**
@@ -934,4 +924,50 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
 
         return $contents;
     }
+
+
+	/**
+	 * PRODUCT REVIEW REMINDER.
+	 */
+	public function isReviewReminderEnabled($website)
+	{
+		return $this->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_REVIEWS_ENABLED, $website);
+	}
+
+	/**
+	 * @param $website
+	 * @return string
+	 */
+	public function getReviewReminderOrderStatus($website)
+	{
+		return $this->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_AUTOMATION_REVIEW_STATUS, $website);
+	}
+
+	/**
+	 * @param $website
+	 * @return int
+	 */
+	public function getReviewReminderDelay($website)
+	{
+		return $this->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_AUTOMATION_REVIEW_DELAY, $website);
+	}
+
+	/**
+	 * @param $website
+	 * @return int
+	 */
+	public function getReviewReminderCampaign($website)
+	{
+		return $this->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_AUTOMATION_REVIEW_CAMPAIGN, $website);
+	}
+
+	/**
+	 * @param $website
+	 * @return string
+	 */
+	public function getReviewReminderAnchor($website)
+	{
+		return $this->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_AUTOMATION_REVIEW_ANCHOR, $website);
+	}
+
 }

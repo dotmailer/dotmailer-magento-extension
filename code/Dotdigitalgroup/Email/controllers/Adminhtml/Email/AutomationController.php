@@ -19,11 +19,6 @@ class Dotdigitalgroup_Email_Adminhtml_Email_AutomationController extends Mage_Ad
 		$this->renderLayout();
 	}
 
-	public function editAction()
-	{
-		$this->_redirect('*/*');
-	}
-
 	/**
 	 * main grid.
 	 */

@@ -16,7 +16,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_General_Data extends 
         unset($info['Title']);
         $this->data = $info;
 
-        parent::_construct();
+        parent::__construct();
         $this->setTemplate('connector/dashboard/tabs/data.phtml');
     }
 

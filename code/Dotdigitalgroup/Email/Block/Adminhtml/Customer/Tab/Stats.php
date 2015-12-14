@@ -2,14 +2,14 @@
 
 class Dotdigitalgroup_Email_Block_Adminhtml_Customer_Tab_Stats extends Mage_Adminhtml_Block_Template
 {
-    private $_stat = array();
+    protected $_stat = array();
 
     public function _construct()
     {
         $this->setTemplate('connector/customer/stats.phtml');
     }
 
-    private function _getCampaignStatsForCustomer()
+    protected function _getCampaignStatsForCustomer()
     {
         $id = Mage::app()->getRequest()->getParam('id');
         $customer = Mage::getModel('customer/customer')->load($id);

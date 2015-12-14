@@ -15,7 +15,8 @@ class Dotdigitalgroup_Email_Block_Recommended_Products extends Dotdigitalgroup_E
     {
         $orderModel = Mage::registry('current_order');
 		if (! $orderModel) {
-			Mage::throwException('no current_order found for EDC');
+			Mage::log('no current_order found for EDC');
+			return array();
 		}
 
 		//display mode based on the action name
@@ -23,9 +24,9 @@ class Dotdigitalgroup_Email_Block_Recommended_Products extends Dotdigitalgroup_E
 	    //number of product items to be displayed
         $limit      = Mage::helper('ddg/recommended')->getDisplayLimitByMode($mode);
         $orderItems = $orderModel->getAllItems();
-
         $productsToDisplay = $this->getProductsToDisplay($orderItems, $limit, $mode, 'PRODUCT');
-        return $productsToDisplay;
+
+	    return $productsToDisplay;
     }
 
 	/**

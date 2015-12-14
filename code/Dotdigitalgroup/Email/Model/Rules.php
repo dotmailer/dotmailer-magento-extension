@@ -5,12 +5,12 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
     const ABANDONED  = 1;
     const REVIEW     = 2;
 
-    private $_defaultOptions;
-    private $_conditionMap;
-    private $_attributeMapForQuote;
-    private $_attributeMapForOrder;
-    private $_productAttribute;
-    private $_used = array();
+    protected $_defaultOptions;
+    protected $_conditionMap;
+    protected $_attributeMapForQuote;
+    protected $_attributeMapForOrder;
+    protected $_productAttribute;
+    protected $_used = array();
 
     /**
      * constructor
@@ -149,16 +149,16 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
     {
         $rule = $this->getActiveRuleForWebsite($type, $websiteId);
         //if no rule then return the collection untouched
-        if(empty($rule))
+        if (empty($rule))
             return $collection;
 
         //if rule has no conditions then return the collection untouched
         $condition = unserialize($rule->getCondition());
-        if(empty($condition))
+        if (empty($condition))
             return $collection;
 
         //join tables to collection according to type
-        if($type == self::ABANDONED){
+        if ($type == self::ABANDONED){
             $collection->getSelect()
                 ->joinLeft(
                     array('quote_address' => 'sales_flat_quote_address'),
@@ -169,7 +169,7 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
                     "main_table.entity_id = quote_payment.quote_id",
                     array('method')
                 )->where('address_type = ?', 'shipping');
-        }elseif($type == self::REVIEW){
+        } elseif($type == self::REVIEW) {
             $collection->getSelect()
                 ->join(
                     array('order_address' => 'sales_flat_order_address'),
@@ -206,7 +206,7 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
      * @param $type
      * @return mixed
      */
-    private function _processAndCombination($collection, $conditions, $type)
+    protected function _processAndCombination($collection, $conditions, $type)
     {
         foreach($conditions as $condition){
             $attribute = $condition['attribute'];
@@ -254,7 +254,7 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
      * @param $type
      * @return mixed
      */
-    private function _processOrCombination($collection, $conditions, $type)
+    protected function _processOrCombination($collection, $conditions, $type)
     {
         $fieldsConditions = array();
         $multiFieldsConditions = array();
@@ -332,13 +332,14 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
      * @param $collection
      * @return mixed
      */
-    private function _processProductAttributes($collection)
+    protected function _processProductAttributes($collection)
     {
+
         //if no product attribute or collection empty return collection
-        if(empty($this->_productAttribute) or !$collection->getSize())
+        if (empty($this->_productAttribute) or !$collection->getSize())
             return $collection;
 
-        foreach($collection as $collectionItem){
+        foreach ($collection as $collectionItem) {
             $items = $collectionItem->getAllItems();
             foreach($items as $item){
                 //loaded product
@@ -350,7 +351,7 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
                     $product
                 );
 
-                foreach($this->_productAttribute as $productAttribute){
+                foreach ($this->_productAttribute as $productAttribute) {
                     $attribute = $productAttribute['attribute'];
                     $cond = $productAttribute['conditions'];
                     $value = $productAttribute['cvalue'];
@@ -364,7 +365,7 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
                     }
 
                     //if attribute is in product's attributes array
-                    if(in_array($attribute,$attributes)){
+                    if (in_array($attribute,$attributes)) {
                         $attr = Mage::getSingleton('eav/config')->getAttribute('catalog_product', $attribute);
                         //frontend type
                         $frontType = $attr->getFrontend()->getInputType();
@@ -376,7 +377,7 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
                                 $collection->removeItemByKey($collectionItem->getId());
                                 continue 3;
                             }
-                        }else{
+                        } else {
                             $getter = 'get';
                             $exploded = explode('_', $attribute);
                             foreach ($exploded as $one) {
@@ -384,10 +385,10 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
                             }
                             $attributeValue = call_user_func(array($product, $getter));
                             //if retrieved value is an array then loop through all array values. example can be categories
-                            if(is_array($attributeValue)){
-                                foreach($attributeValue as $attrValue){
+                            if (is_array($attributeValue)) {
+                                foreach ($attributeValue as $attrValue) {
                                     //evaluate conditions on values. if true then unset item from collection
-                                    if($this->_evaluate($value, $cond, $attrValue)){
+                                    if ($this->_evaluate($value, $cond, $attrValue)) {
                                         $collection->removeItemByKey($collectionItem->getId());
                                         continue 3;
                                     }
@@ -395,7 +396,7 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
                             }
                             else{
                                 //evaluate conditions on values. if true then unset item from collection
-                                if($this->_evaluate($value, $cond, $attributeValue)){
+                                if ($this->_evaluate($value, $cond, $attributeValue)) {
                                     $collection->removeItemByKey($collectionItem->getId());
                                     continue 3;
                                 }
@@ -416,7 +417,7 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
      * @param $var2
      * @return bool
      */
-    private function _evaluate($var1, $op, $var2)
+    protected function _evaluate($var1, $op, $var2)
     {
         switch ($op) {
             case "eq":

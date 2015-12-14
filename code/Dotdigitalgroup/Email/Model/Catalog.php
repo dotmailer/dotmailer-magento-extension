@@ -2,9 +2,9 @@
 
 class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
 {
-    private $_start;
-    private $_countProducts = 0;
-    private $_productIds;
+    protected $_start;
+    protected $_countProducts = 0;
+    protected $_productIds;
 
     /**
      * constructor
@@ -137,7 +137,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
      * @param $store
      * @return array|bool
      */
-    private function _exportCatalog($store)
+    protected function _exportCatalog($store)
     {
         $products = $this->_getProductsToExport($store);
         if($products){
@@ -159,7 +159,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
      * @param $collectionName
      * @param $websiteId
      */
-    private function _exportInSingle($store, $collectionName, $websiteId)
+    protected function _exportInSingle($store, $collectionName, $websiteId)
     {
         $helper = Mage::helper('ddg');
         $this->_productIds = array();
@@ -197,7 +197,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
      * @param $modified
      * @return bool|Mage_Catalog_Model_Resource_Product_Collection
      */
-    private function _getProductsToExport($store, $modified = false)
+    protected function _getProductsToExport($store, $modified = false)
     {
         $limit = Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT);
         $connectorCollection = $this->getCollection();
@@ -291,7 +291,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
      *
      * @param $key
      */
-    private function _deleteFromAccount($key)
+    protected function _deleteFromAccount($key)
     {
         $enabled = Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED);
         $sync = Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_CATALOG_ENABLED);
@@ -331,7 +331,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
      * @param $productId
      * @return bool|Varien_Object
      */
-    private function _loadProduct($productId)
+    protected function _loadProduct($productId)
     {
         $collection = $this->getCollection()
             ->addFieldToFilter('product_id', $productId)

@@ -3,19 +3,19 @@
         <h4 style="text-align: center">
             <?php echo $this->getTitle() ?>
         </h4>
-        <?php foreach( $this->getTotals() as $_total ): ?>
+        <?php foreach( $this->getTotals() as $total ): ?>
             <div class="entry-edit" style="width: <?php echo $this->getColumnWidth() ?>">
-                <div class="entry-edit-head"><h4><?php echo $_total['label'] ?></h4></div>
+                <div class="entry-edit-head"><h4><?php echo $total['label'] ?></h4></div>
                 <fieldset class="a-center bold">
                     <span class="nowrap" style="font-size:18px;color:#EA7601;">
                         <?php
-                            if($_total['value'] == '')
+                            if($total['value'] == '')
                                 echo '0';
                             else
-                                echo $_total['value'];
+                                echo $total['value'];
                         ?>
                         <span style="font-size:14px; color:#686868;">
-                            <?php echo $_total['decimals'] ?>
+                            <?php echo $total['decimals'] ?>
                         </span>
                     </span>
                 </fieldset>

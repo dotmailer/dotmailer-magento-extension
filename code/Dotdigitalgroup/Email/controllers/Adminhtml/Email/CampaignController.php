@@ -28,7 +28,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_CampaignController extends Mage_Admi
     public function deleteAction()
 	{
         if ($id = $this->getRequest()->getParam('id')) {
-            $campaign = Mage::getModel('ddg_automation/campaign')->load($id);
+            $campaign = Mage::getModel('ddg_automation/campaign')->setId($id);
             try {
                 $campaign->delete();
                 $this->_getSession()->addSuccess(Mage::helper('ddg')->__('The campaign has been deleted.'));

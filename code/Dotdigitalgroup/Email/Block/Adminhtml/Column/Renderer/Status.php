@@ -11,8 +11,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Column_Renderer_Status extends Mage_
     public function render(Varien_Object $row)
     {
         if($this->getValue($row) == '1')
-            return 'Subscribed';
-        return 'Unsubscribed';
+            return  $this->__('Subscribed');
+        return $this->__('Unsubscribed');
     }
 
 }

@@ -11,7 +11,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Analysis_Subscriber e
      *
      * @throws Exception
      */
-    public function __construct()
+    public function _construct()
     {
         parent::_construct();
 
@@ -51,6 +51,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Analysis_Subscriber e
      */
     public function getTitle()
     {
-        return "Subscribers";
+        return Mage::helper('ddg')->__("Subscribers");
     }
 }

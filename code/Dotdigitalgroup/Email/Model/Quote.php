@@ -2,10 +2,10 @@
 
 class Dotdigitalgroup_Email_Model_Quote extends Mage_Core_Model_Abstract
 {
-    private $_start;
-    private $_quotes;
-    private $_count = 0;
-    private $_quoteIds;
+    protected $_start;
+    protected $_quotes;
+    protected $_count = 0;
+    protected $_quoteIds;
 
     /**
      * constructor
@@ -46,13 +46,18 @@ class Dotdigitalgroup_Email_Model_Quote extends Mage_Core_Model_Abstract
         foreach (Mage::app()->getWebsites(true) as $website) {
 
             $apiEnabled = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED, $website);
-            $enabled = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_QUOTE_ENABLED, $website);
+            $enabled    = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_QUOTE_ENABLED, $website);
             $storeIds = $website->getStoreIds();
-            if ($enabled && $apiEnabled && !empty($storeIds)) {
+			//api and sync enabled, also the should have stores created for this website
+	        if ($enabled && $apiEnabled && !empty($storeIds)) {
                 //using bulk api
                 $helper->log('---------- Start quote bulk sync ----------');
                 $this->_start = microtime(true);
+		        /**
+		         * get quotes for website to import.
+		         */
                 $this->_exportQuoteForWebsite($website);
+
                 //send quote as transactional data
                 if (isset($this->_quotes[$website->getId()])) {
                     $websiteQuotes = $this->_quotes[$website->getId()];
@@ -63,6 +68,7 @@ class Dotdigitalgroup_Email_Model_Quote extends Mage_Core_Model_Abstract
                         Dotdigitalgroup_Email_Model_Importer::MODE_BULK,
                         $website->getId()
                     );
+
                     //set imported
                     if ($check) {
                         $this->getResource()->setImported($this->_quoteIds);
@@ -85,30 +91,30 @@ class Dotdigitalgroup_Email_Model_Quote extends Mage_Core_Model_Abstract
      *
      * @param Mage_Core_Model_Website $website
      */
-    private function _exportQuoteForWebsite(Mage_Core_Model_Website $website)
+    protected function _exportQuoteForWebsite(Mage_Core_Model_Website $website)
     {
-        try{
-            //reset quotes
-            $this->_quotes = array();
-            $this->_quoteIds = array();
-            $limit = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT, $website);
-            $collection = $this->_getQuoteToImport($website, $limit);
+	    try{
+		    //reset quotes
+		    $this->_quotes = array();
+		    $this->_quoteIds = array();
+		    $limit = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT, $website);
+		    $collection = $this->_getQuoteToImport($website, $limit);
 
-	        foreach ($collection as $emailQuote) {
+		    foreach ($collection as $emailQuote) {
+			    $store = Mage::app()->getStore($emailQuote->getStoreId());
+			    $quote = Mage::getModel('sales/quote')->setStore($store)->load($emailQuote->getQuoteId());
 
-                $quote = Mage::getModel('sales/quote')->load($emailQuote->getQuoteId());
+			    if ($quote->getId()) {
 
-		        if ($quote->getId()) {
-
-                    $connectorQuote = Mage::getModel('ddg_automation/connector_quote', $quote);
-                    $this->_quotes[$website->getId()][] = $connectorQuote;
-                }
-                $this->_quoteIds[] = $emailQuote->getQuoteId();
-                $this->_count++;
-            }
-        }catch(Exception $e){
-            Mage::logException($e);
-        }
+				    $connectorQuote = Mage::getModel('ddg_automation/connector_quote', $quote);
+				    $this->_quotes[$website->getId()][] = $connectorQuote;
+			    }
+			    $this->_quoteIds[] = $emailQuote->getQuoteId();
+			    $this->_count++;
+		    }
+	    }catch(Exception $e){
+		    Mage::logException($e);
+	    }
     }
 
     /**
@@ -120,7 +126,7 @@ class Dotdigitalgroup_Email_Model_Quote extends Mage_Core_Model_Abstract
      *
      * @return mixed
      */
-    private function _getQuoteToImport(Mage_Core_Model_Website $website, $limit = 100, $modified = false)
+    protected function _getQuoteToImport(Mage_Core_Model_Website $website, $limit = 100, $modified = false)
     {
         $collection = $this->getCollection()
             ->addFieldToFilter('store_id', array('in' => $website->getStoreIds()))
@@ -132,9 +138,9 @@ class Dotdigitalgroup_Email_Model_Quote extends Mage_Core_Model_Abstract
         } else {
             $collection->addFieldToFilter('imported', array('null' => true));
         }
-
         $collection->getSelect()->limit($limit);
-        return $collection;
+
+	    return $collection;
     }
 
     /**
@@ -142,14 +148,16 @@ class Dotdigitalgroup_Email_Model_Quote extends Mage_Core_Model_Abstract
      *
      * @param Mage_Core_Model_Website $website
      */
-    private function _exportQuoteForWebsiteInSingle(Mage_Core_Model_Website $website)
+    protected function _exportQuoteForWebsiteInSingle(Mage_Core_Model_Website $website)
     {
         try {
             $limit = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT, $website);
             $collection = $this->_getQuoteToImport($website, $limit, true);
 
+
 	        foreach ($collection as $emailQuote) {
-	            $quote = Mage::getModel('sales/quote')->load($emailQuote->getQuoteId());
+		        $store = Mage::app()->getStore($emailQuote->getStoreId());
+		        $quote = Mage::getModel('sales/quote')->setStore($store)->load($emailQuote->getQuoteId());
 		        if($quote->getId()) {
 
                     $connectorQuote = Mage::getModel('ddg_automation/connector_quote', $quote);

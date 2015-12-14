@@ -17,14 +17,13 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
 
     protected $_mapping_hash;
 
-    private $subscriber_status = array(
+    protected $subscriber_status = array(
         Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED => 'Subscribed',
         Mage_Newsletter_Model_Subscriber::STATUS_NOT_ACTIVE => 'Not Active',
         Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED => 'Unsubscribed',
         Mage_Newsletter_Model_Subscriber::STATUS_UNCONFIRMED => 'Unconfirmed'
     );
 
-    private $attribute_check = false;
 
 	/**
 	 * constructor, mapping hash to map.
@@ -91,7 +90,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
 
     public function getReviewCount()
     {
-        return count($this->reviewCollection);
+        return $this->reviewCollection->getSize();
     }
 
     public function getLastReviewDate(){
@@ -524,7 +523,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
 	 * @return bool|string
 	 * @throws Mage_Core_Exception
 	 */
-	private function _getCustomerGender()
+	protected function _getCustomerGender()
     {
         $genderId = $this->customer->getGender();
         if (is_numeric($genderId)) {
@@ -539,14 +538,14 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         return '';
     }
 
-    private function _getStreet($street, $line){
+    protected function _getStreet($street, $line){
         $street = explode("\n", $street);
         if(isset($street[$line - 1]))
             return $street[$line - 1];
         return '';
     }
 
-    private function _getWebsiteName(){
+    protected function _getWebsiteName(){
         $websiteId = $this->customer->getWebsiteId();
         $website = Mage::app()->getWebsite($websiteId);
         if($website)
@@ -555,7 +554,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         return '';
     }
 
-    private  function _getStoreName()
+    protected  function _getStoreName()
     {
         $storeId = $this->customer->getStoreId();
         $store = Mage::app()->getStore($storeId);
@@ -581,7 +580,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         return $this->_mapping_hash;
     }
 
-    private function _getCustomerGroup(){
+    protected function _getCustomerGroup(){
 
 	    $groupId = $this->customer->getGroupId();
         $group = Mage::getModel('customer/group')->load($groupId);
@@ -718,7 +717,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
 	}
 
 
-	private function _setReward() {
+	protected function _setReward() {
         if (Mage::getModel('enterprise_reward/reward_history')){
             $collection = Mage::getModel('enterprise_reward/reward_history')->getCollection()
                 ->addCustomerFilter($this->customer->getId())
@@ -895,7 +894,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         return $this->_getBrandValue($id);
     }
 
-    private function _getBrandValue($id)
+    protected function _getBrandValue($id)
     {
         $attribute = Mage::helper('ddg')->getWebsiteConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_DATA_FIELDS_BRAND_ATTRIBUTE,

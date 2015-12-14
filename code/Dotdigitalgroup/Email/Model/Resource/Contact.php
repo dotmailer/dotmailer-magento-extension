@@ -292,21 +292,26 @@ class Dotdigitalgroup_Email_Model_Resource_Contact extends Mage_Core_Model_Mysql
 
         try{
             //un-subscribe from the email contact table.
-            $write->update(
+	        $whereCondition = $write->quoteInto('email IN (?)', $emails);
+
+	        $write->update(
                 $this->getMainTable(),
                 array(
                     'is_subscriber' => new Zend_Db_Expr('null'),
                     'suppressed' => '1'
                 ),
-                "email IN ($emails)"
+	            $whereCondition
             );
 
-            // un-subscribe newsletter subscribers
-            $write->update(
-                $this->getTable('newsletter/subscriber'),
-                array('subscriber_status' => Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED),
-                "subscriber_email IN ($emails)"
-            );
+	        // un-subscribe newsletter subscribers
+			$newsletterCollection = Mage::getModel('newsletter/subscriber')->getCollection()
+				->addFieldToFilter('subscriber_email', array('in' => $emails));
+
+	        foreach ( $newsletterCollection as $subscriber ) {
+		        $subscriber->setSubscriberStatus( Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED)
+			        ->save();
+			}
+
         }catch (Exception $e){
             Mage::throwException($e->getMessage());
             Mage::logException($e);

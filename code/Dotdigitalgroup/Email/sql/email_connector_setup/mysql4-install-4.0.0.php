@@ -585,10 +585,10 @@ $installer->getConnection()->createTable($table);
 
 //wishlist populate
 $select = $installer->getConnection()->select()
-                    ->from(
-	                    array('wishlist' => $installer->getTable('wishlist/wishlist')),
-	                    array('wishlist_id', 'customer_id', 'created_at' => 'updated_at')
-                    )->joinLeft(
+    ->from(
+		array('wishlist' => $installer->getTable('wishlist/wishlist')),
+	    array('wishlist_id', 'customer_id', 'created_at' => 'updated_at')
+    )->joinLeft(
 		array('ce' => $installer->getTable('customer_entity')),
 		"wishlist.customer_id = ce.entity_id",
 		array('store_id')
@@ -652,13 +652,13 @@ $installer->getConnection()->createTable($table);
 
 //populate quote table
 $select = $installer->getConnection()->select()
-                    ->from(
-	                    $installer->getTable('sales/quote'),
-	                    array('quote_id' => 'entity_id', 'store_id', 'customer_id', 'created_at')
-                    )
-                    ->where('customer_id !=?',  NULL )
-                    ->where('is_active =?',  1 )
-                    ->where('items_count >?',  0 );
+	->from(
+	    $installer->getTable('sales/quote'),
+	    array('quote_id' => 'entity_id', 'store_id', 'customer_id', 'created_at')
+	)
+	->where('customer_id !=?',  NULL )
+	->where('is_active =?',  1 )
+	->where('items_count >?',  0 );
 
 $insertArray = array('quote_id', 'store_id', 'customer_id', 'created_at');
 $sqlQuery = $select->insertFromSelect($quoteTable, $insertArray, false);

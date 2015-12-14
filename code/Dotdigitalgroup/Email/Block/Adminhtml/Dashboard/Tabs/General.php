@@ -7,7 +7,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_General extends  Mage
 	/**
 	 * Set the template.
 	 */
-	public function __construct()
+	public function _construct()
 	{
 		$this->initiateGroupArray();
 		parent::_construct();
@@ -91,7 +91,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_General extends  Mage
 	 */
 	public function getTitle()
 	{
-		return "Connector Account Information";
+		return Mage::helper('ddg')->__("Connector Account Information");
 	}
 
 	/**

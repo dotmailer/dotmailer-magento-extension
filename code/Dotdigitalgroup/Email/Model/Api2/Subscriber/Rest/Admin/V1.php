@@ -1,7 +1,7 @@
 <?php
+
 class Dotdigitalgroup_Email_Model_Api2_Subscriber_Rest_Admin_V1 extends Mage_Api2_Model_Resource
 {
-
 	/**
 	 * Create a subscriber
 	 * @return array
@@ -38,7 +38,7 @@ class Dotdigitalgroup_Email_Model_Api2_Subscriber_Rest_Admin_V1 extends Mage_Api
 			}
 
 			$json = array('email' => $email);
-			echo json_encode($json);
+			return json_encode($json);
 		}
 
 	}
@@ -93,14 +93,14 @@ class Dotdigitalgroup_Email_Model_Api2_Subscriber_Rest_Admin_V1 extends Mage_Api
 				$subscriber = Mage::getModel( 'newsletter/subscriber' )->loadByEmail( $email );
 				if ( $subscriber->getId() ) {
 					$subscriber->setCustomerId( $customerId )
-					           ->setSubscriberStatus( $status )
-					           ->setStoreId( $storeId )
-					           ->save();
+			           ->setSubscriberStatus( $status )
+			           ->setStoreId( $storeId )
+			           ->save();
 				} else {
 					Mage::helper( 'ddg' )->log( "REST Subscriber not found : " . $email);
 				}
 
-				echo json_encode( $data );
+				return json_encode( $data );
 			}catch (Mage_Api2_Exception $e){
 				Mage::helper('ddg')->log($e->getMessage());
 			}catch (Exception $e){

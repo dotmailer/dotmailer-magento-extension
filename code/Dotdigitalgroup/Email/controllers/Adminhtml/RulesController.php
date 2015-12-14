@@ -35,7 +35,7 @@ class Dotdigitalgroup_Email_Adminhtml_RulesController extends Mage_Adminhtml_Con
      * @param $options
      * @return string
      */
-    private function _getOptionHtml($title, $name, $options)
+    protected function _getOptionHtml($title, $name, $options)
     {
         $block = $this->getLayout()->createBlock('core/html_select');
         $block->setOptions($options)
@@ -126,5 +126,10 @@ class Dotdigitalgroup_Email_Adminhtml_RulesController extends Mage_Adminhtml_Con
             }
             $this->getResponse()->clearHeaders()->setHeader('Content-Type', 'application/json')->setBody(Mage::helper('core')->jsonEncode($response));
         }
+    }
+
+    protected function _isAllowed()
+    {
+        return Mage::getSingleton('admin/session')->isAllowed('email_connector/automation_rules');
     }
 }

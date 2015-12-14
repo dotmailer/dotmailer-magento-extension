@@ -36,7 +36,8 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
 
 				if ($enabled) {
 					$client = Mage::helper('ddg')->getWebsiteApiClient($websiteId);
-					$subscribersAddressBook = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SUBSCRIBERS_ADDRESS_BOOK_ID, $websiteId);
+					$subscribersAddressBook = Mage::helper('ddg')->getWebsiteConfig(
+						Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SUBSCRIBERS_ADDRESS_BOOK_ID, $websiteId);
 					$response = $client->postContacts($emailBefore);
 					//check for matching email
 					if (isset($response->id)) {
@@ -210,7 +211,7 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
 	 *
 	 * @param $review
 	 */
-	private function _registerReview($review)
+	protected function _registerReview($review)
 	{
 		try{
 			$emailReview = Mage::getModel('ddg_automation/review');
@@ -246,7 +247,7 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
 	 * @param $wishlist
 	 * @return $this
 	 */
-	private function _registerWishlist($wishlist)
+	protected function _registerWishlist($wishlist)
 	{
 		try{
 			$emailWishlist = Mage::getModel('ddg_automation/wishlist');

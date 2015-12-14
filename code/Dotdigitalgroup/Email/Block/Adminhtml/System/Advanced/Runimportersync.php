@@ -1,5 +1,6 @@
 <?php
-class Dotdigitalgroup_Email_Block_Adminhtml_System_Advanced_Reimportreviews extends Mage_Adminhtml_Block_System_Config_Form_Field
+
+class Dotdigitalgroup_Email_Block_Adminhtml_System_Advanced_Runimportersync extends Mage_Adminhtml_Block_System_Config_Form_Field
 {
 
     protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element)
@@ -10,7 +11,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Advanced_Reimportreviews exte
 
     protected function _getAddRowButtonHtml($title)
     {
-        $url = $this->getUrl("*/connector/resetreviews");
+        $url = Mage::helper('adminhtml')->getUrl("*/connector/runimportersync");
 
         return $this->getLayout()->createBlock('adminhtml/widget_button')
             ->setType('button')
@@ -18,5 +19,4 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Advanced_Reimportreviews exte
             ->setOnClick("window.location.href='" . $url . "'")
             ->toHtml();
     }
-
 }

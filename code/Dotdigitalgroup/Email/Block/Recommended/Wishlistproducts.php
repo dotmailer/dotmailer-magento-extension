@@ -12,26 +12,19 @@ class Dotdigitalgroup_Email_Block_Recommended_Wishlistproducts extends Dotdigita
             return array();
     }
 
-    protected function _getWishlist()
-    {
-        $customerId = Mage::app()->getRequest()->getParam('customer_id');
-        if(!$customerId)
+    protected function _getWishlist() {
+
+        //customer id param
+	    $customerId = Mage::app()->getRequest()->getParam('customer_id');
+
+	    if (! $customerId)
             return array();
 
-        $customer = Mage::getModel('customer/customer')->load($customerId);
-        if(!$customer->getId())
-            return array();
+        //load customer wishlist collection
+        $wishlistModel = Mage::getModel('wishlist/wishlist')
+	        ->loadByCustomer($customerId);
 
-        $collection = Mage::getModel('wishlist/wishlist')->getCollection();
-        $collection->addFieldToFilter('customer_id', $customerId)
-            ->setOrder('updated_at', 'DESC')
-	        ->getSelect()->limit(1);
-
-        if ($collection->count())
-            return $collection->getFirstItem();
-        else
-            return array();
-
+	    return $wishlistModel;
     }
 
     /**

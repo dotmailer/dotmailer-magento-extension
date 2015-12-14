@@ -7,7 +7,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Analysis extends  Mag
 	 *
 	 * @throws Exception
 	 */
-	public function __construct()
+	public function _construct()
 	{
 		parent::_construct();
 		$this->setTemplate('connector/dashboard/tabs/analysis/index.phtml');
@@ -46,7 +46,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Analysis extends  Mag
 	 */
 	public function getTitle()
 	{
-		return "Marketing Automation Data Analysis";
+		return Mage::helper('ddg')->__("Marketing Automation Data Analysis");
 	}
 
 	/**

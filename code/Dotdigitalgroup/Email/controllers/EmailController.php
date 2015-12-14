@@ -78,12 +78,12 @@ class Dotdigitalgroup_Email_EmailController extends Dotdigitalgroup_Email_Respon
             } else {
                 Mage::helper('ddg')->log('order not found: ' . $orderId);
                 $this->sendResponse();
-                Mage::throwException('Order not found');
+                Mage::throwException(Mage::helper('ddg')->__('Order not found'));
             }
         } else {
             Mage::helper('ddg')->log('order_id missing :' . $orderId);
             $this->sendResponse();
-            Mage::throwException('Order id is missing');
+            Mage::throwException(Mage::helper('ddg')->__('Order id is missing'));
         }
 
 
@@ -171,7 +171,7 @@ class Dotdigitalgroup_Email_EmailController extends Dotdigitalgroup_Email_Respon
     /**
      * process customer basket
      */
-    private function _handleCustomerBasket()
+    protected function _handleCustomerBasket()
     {
         $customerSession = Mage::getSingleton('customer/session');
         $configCartUrl = $this->_quote->getStore()->getWebsite()->getConfig(
@@ -220,7 +220,7 @@ class Dotdigitalgroup_Email_EmailController extends Dotdigitalgroup_Email_Respon
     /**
      * process guest basket
      */
-    private function _handleGuestBasket()
+    protected function _handleGuestBasket()
     {
         $checkoutSession = Mage::getSingleton('checkout/session');
         if($checkoutSession->getQuote() && $checkoutSession->getQuote()->hasItems()){
@@ -244,7 +244,7 @@ class Dotdigitalgroup_Email_EmailController extends Dotdigitalgroup_Email_Respon
     /**
      * check missing items from current quote and add
      */
-    private function _checkMissingAndAdd()
+    protected function _checkMissingAndAdd()
     {
         $checkoutSession = Mage::getSingleton('checkout/session');
         $currentQuote = $checkoutSession->getQuote();
@@ -268,7 +268,7 @@ class Dotdigitalgroup_Email_EmailController extends Dotdigitalgroup_Email_Respon
     /**
      * load quote and replace in session#1114
      */
-    private function _loadAndReplace()
+    protected function _loadAndReplace()
     {
         $checkoutSession = Mage::getSingleton('checkout/session');
         $quote = Mage::getSingleton('sales/quote')->load($this->_quote->getId());

@@ -5,17 +5,14 @@ class Dotdigitalgroup_Email_Model_Email_Template extends Mage_Core_Model_Email_T
 
     public function send($email, $name = null, array $variables = array())
     {
-
         $_helper = Mage::helper('ddg/transactional');
         // If it's not enabled, just return the parent result.
-        if (!$_helper->isEnabled()) {
-            Mage::log('DDG Transactional is not enabled, fall back to parent class');
+        if (! $_helper->isEnabled()) {
             return parent::send($email, $name, $variables);
         }
 
 
         // As per parent class - except addition of before and after send events
-
         if (!$this->isValidForSend()) {
             Mage::log('Email is not valid for sending, this is a core error that often means there\'s a problem with your email templates.');
             Mage::logException(new Exception('This letter cannot be sent.')); // translation is intentionally omitted

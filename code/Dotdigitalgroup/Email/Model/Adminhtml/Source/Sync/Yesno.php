@@ -9,17 +9,18 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Sync_Yesno
      */
     public function toOptionArray()
     {
-        //get current scope website code
-        $websiteCode = Mage::getSingleton('adminhtml/config_data')->getWebsite();
+        //get current scope website code, set the code to admin if empty
+        $websiteCode = (Mage::getSingleton('adminhtml/config_data')->getWebsite())? Mage::getSingleton('adminhtml/config_data')->getWebsite() : 'admin';
 
         //for current scope website check if entry exist in registry. if not than
         //than get account data and store it in registry to re-use
-        if(!Mage::registry('ddg-account-info-'.$websiteCode)){
-            //load website by code
-            $website = Mage::getModel('core/website')->load($websiteCode, 'code');
+        if (! Mage::registry('ddg-account-info-'.$websiteCode)) {
+            //websites with code as key
+			$websites = Mage::app()->getWebsites(true, true);
+			$website = $websites[$websiteCode];
 
             //if scope is empty or no id than load default
-            if(empty($website) or !$website->getId())
+            if (empty($website) or !$website->getId())
                 $website = 0;
 
             $apiUsername = Mage::helper('ddg')->getApiUsername($website);
@@ -36,7 +37,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Sync_Yesno
         //get from registry
         $data = Mage::registry('ddg-account-info-'.$websiteCode);
         //if properties property exist
-        if(isset($data->properties)){
+        if (isset($data->properties)) {
             $propertyNames = array();
             //loop all and save property names
             foreach ($data->properties as $one) {

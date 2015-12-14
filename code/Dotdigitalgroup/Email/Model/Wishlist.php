@@ -2,10 +2,10 @@
 
 class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
 {
-    private $_start;
-    private $_wishlists;
-    private $_count = 0;
-    private $_wishlistIds;
+    protected $_start;
+    protected $_wishlists;
+    protected $_count = 0;
+    protected $_wishlistIds;
 
     /**
      * constructor
@@ -91,7 +91,7 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
         return $response;
     }
 
-    private function _exportWishlistForWebsite(Mage_Core_Model_Website $website)
+    protected function _exportWishlistForWebsite(Mage_Core_Model_Website $website)
     {
         //reset wishlists
         $this->_wishlists = array();
@@ -139,7 +139,7 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
         }
     }
 
-    private function _getWishlistToImport(Mage_Core_Model_Website $website, $limit = 100)
+    protected function _getWishlistToImport(Mage_Core_Model_Website $website, $limit = 100)
     {
         $collection = $this->getCollection()
             ->addFieldToFilter('wishlist_imported', array('null' => true))
@@ -150,7 +150,7 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
         return $collection;
     }
 
-    private function _exportWishlistForWebsiteInSingle(Mage_Core_Model_Website $website)
+    protected function _exportWishlistForWebsiteInSingle(Mage_Core_Model_Website $website)
     {
         $helper = Mage::helper('ddg');
         $client = $helper->getWebsiteApiClient($website);
@@ -209,7 +209,7 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
             $this->getResource()->setImported($this->_wishlistIds, true);
     }
 
-    private function _getModifiedWishlistToImport(Mage_Core_Model_Website $website, $limit = 100)
+    protected function _getModifiedWishlistToImport(Mage_Core_Model_Website $website, $limit = 100)
     {
         $collection = $this->getCollection()
             ->addFieldToFilter('wishlist_modified', 1)

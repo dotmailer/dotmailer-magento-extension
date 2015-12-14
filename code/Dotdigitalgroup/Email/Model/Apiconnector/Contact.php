@@ -2,8 +2,8 @@
 
 class Dotdigitalgroup_Email_Model_Apiconnector_Contact
 {
-    private $_start;
-    private $_countCustomers = 0;
+    protected $_start;
+    protected $_countCustomers = 0;
 
 	/**
 	 * Contact sync.

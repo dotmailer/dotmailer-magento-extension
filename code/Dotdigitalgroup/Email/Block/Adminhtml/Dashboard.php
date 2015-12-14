@@ -6,7 +6,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard extends  Mage_Adminhtml_Bl
 	/**
 	 * Set the template.
 	 */
-	public function __construct()
+	public function _construct()
 	{
 		parent::_construct();
 

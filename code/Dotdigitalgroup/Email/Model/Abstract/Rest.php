@@ -31,7 +31,7 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
         }
     }
 
-    private function prettyPrint($json)
+    protected function prettyPrint($json)
     {
         $result = '';
         $level = 0;

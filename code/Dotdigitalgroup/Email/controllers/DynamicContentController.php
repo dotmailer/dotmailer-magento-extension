@@ -27,13 +27,13 @@ class Dotdigitalgroup_Email_DynamicContentController extends Dotdigitalgroup_Ema
 				//throw new Exception('TE invoice : order not found: ' . $orderId);
 				Mage::helper('ddg')->log('order not found: ' . $orderId);
 				$this->sendResponse();
-				Mage::throwException('Order not found');
+				Mage::throwException(Mage::helper('ddg')->__('Order not found'));
 			}
 		} else {
 			//throw new Exception('TE invoice : order_id missing :' . $orderId);
 			Mage::helper('ddg')->log('order_id missing :' . $orderId);
 			$this->sendResponse();
-			Mage::throwException('Order id is missing');
+			Mage::throwException(Mage::helper('ddg')->__('Order id is missing'));
 		}
 		parent::preDispatch();
 	}

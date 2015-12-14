@@ -136,17 +136,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Automation_Grid extends Mage_Adminht
 	}
 
 	/**
-	 * Edit the row.
-	 * @param $row
-	 *
-	 * @return string
-	 */
-	public function getRowUrl($row)
-	{
-		return $this->getUrl('*/*/edit', array('id' => $row->getEmailContactId()));
-	}
-
-	/**
 	 * Grid url.
 	 * @return string
 	 */

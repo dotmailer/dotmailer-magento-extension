@@ -73,7 +73,7 @@ class Dotdigitalgroup_Email_Model_Connector_Quote
      */
     public  $custom = array();
 
-    private $_attributeSet;
+    protected $_attributeSet;
 
     /**
      * set the quote information
@@ -197,7 +197,7 @@ class Dotdigitalgroup_Email_Model_Connector_Quote
      * @param $line
      * @return string
      */
-    private  function _getStreet($street, $line)
+    protected  function _getStreet($street, $line)
     {
         $street = explode("\n", $street);
         if ($line == 1) {
@@ -229,7 +229,7 @@ class Dotdigitalgroup_Email_Model_Connector_Quote
      * @param $quoteData
      * @return float|int|null|string
      */
-    private function _getCustomAttributeValue($field, $quoteData)
+    protected function _getCustomAttributeValue($field, $quoteData)
     {
         $type = $field['DATA_TYPE'];
 
@@ -274,7 +274,7 @@ class Dotdigitalgroup_Email_Model_Connector_Quote
      * @param $field
      * @param $value
      */
-    private function _assignCustom($field, $value)
+    protected function _assignCustom($field, $value)
     {
         $this->custom[$field['COLUMN_NAME']] = $value;
     }
@@ -285,7 +285,7 @@ class Dotdigitalgroup_Email_Model_Connector_Quote
      * @param Mage_Catalog_Model_Product $product
      * @return string
      */
-    private function _getAttributeSetName(Mage_Catalog_Model_Product $product)
+    protected function _getAttributeSetName(Mage_Catalog_Model_Product $product)
     {
         //check if empty. on true load model and cache result
         if(empty($this->_attributeSet)){
@@ -313,7 +313,7 @@ class Dotdigitalgroup_Email_Model_Connector_Quote
      *
      * @param Mage_Catalog_Model_Product $product
      */
-    private function _loadAttributeModel(Mage_Catalog_Model_Product $product)
+    protected function _loadAttributeModel(Mage_Catalog_Model_Product $product)
     {
         $attributeSetModel = Mage::getModel( "eav/entity_attribute_set" );
         $attributeSetModel->load( $product->getAttributeSetId() );

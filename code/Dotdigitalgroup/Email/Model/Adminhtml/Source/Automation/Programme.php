@@ -23,12 +23,16 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Automation_Programme
 
 			$client = Mage::helper( 'ddg' )->getWebsiteApiClient( $website );
 			$programmes = $client->getPrograms();
-
-			foreach ( $programmes as $one ) {
-				if ( isset( $one->id ) ) {
-                    if($one->status == 'Active'){
-					    $fields[] = array( 'value' => $one->id, 'label' => Mage::helper( 'ddg' )->__( $one->name ) );
-                    }
+			if ($programmes) {
+				foreach ( $programmes as $one ) {
+					if ( isset( $one->id ) ) {
+						if ( $one->status == 'Active' ) {
+							$fields[] = array(
+								'value' => $one->id,
+								'label' => Mage::helper( 'ddg' )->__( $one->name )
+							);
+						}
+					}
 				}
 			}
 		}

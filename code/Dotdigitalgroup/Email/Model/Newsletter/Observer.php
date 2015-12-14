@@ -100,7 +100,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
 		return $this;
 	}
 
-	private function _addSubscriberToAutomation($email, $subscriber, $websiteId){
+	protected function _addSubscriberToAutomation($email, $subscriber, $websiteId){
 
 		$storeId            = $subscriber->getStoreId();
 		$store = Mage::app()->getStore($storeId);

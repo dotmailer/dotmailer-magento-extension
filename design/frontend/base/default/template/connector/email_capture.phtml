@@ -1,5 +1,5 @@
 
-<?php $base_url = Mage::app()->getStore()->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK, true); ?>
+<?php $baseUrl = Mage::app()->getStore()->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK, true); ?>
 
 <script type="text/javascript">
     //Email Capture For Quote
@@ -23,7 +23,7 @@
             //validate email
             if(el.value && this.validateEmail(el.value)){
                 //ajax call
-                new Ajax.Request('<?php echo $base_url; ?>' + 'connector/ajax/emailcapture', {
+                new Ajax.Request('<?php echo $baseUrl; ?>' + 'connector/ajax/emailcapture', {
                     method: 'post',
                     parameters:{
                         email:el.value
@@ -60,7 +60,7 @@
             //validate email
             if(el.value && this.validateEmail(el.value)){
                 //ajax call
-                new Ajax.Request('<?php echo $base_url; ?>' + 'connector/ajax/emailcapture', {
+                new Ajax.Request('<?php echo $baseUrl; ?>' + 'connector/ajax/emailcapture', {
                     method: 'post',
                     parameters:{
                         email:el.value

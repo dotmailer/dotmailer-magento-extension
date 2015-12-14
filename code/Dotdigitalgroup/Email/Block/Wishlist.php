@@ -13,25 +13,17 @@ class Dotdigitalgroup_Email_Block_Wishlist extends Dotdigitalgroup_Email_Block_E
             return false;
     }
 
-    protected function _getWishlist()
-    {
-        $customerId = Mage::app()->getRequest()->getParam('customer_id');
-        if(!$customerId)
+    protected function _getWishlist() {
+
+	    //customer id param
+	    $customerId = Mage::app()->getRequest()->getParam('customer_id', false);
+
+	    if (! $customerId)
             return false;
 
-        $customer = Mage::getModel('customer/customer')->load($customerId);
-        if(!$customer->getId())
-            return false;
+        $wishlistModel = Mage::getModel('wishlist/wishlist')->loadByCustomer($customerId);
 
-        $collection = Mage::getModel('wishlist/wishlist')->getCollection();
-        $collection->addFieldToFilter('customer_id', $customerId)
-                    ->setOrder('updated_at', 'DESC');
-
-        if ($collection->count())
-            return $collection->setPageSize(1)->setCurPage(1)->getFirstItem();
-        else
-            return false;
-
+	    return $wishlistModel;
     }
 
     public function getMode()

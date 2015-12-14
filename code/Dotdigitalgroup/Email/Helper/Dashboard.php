@@ -90,7 +90,8 @@ class Dotdigitalgroup_Email_Helper_Dashboard extends Mage_Core_Helper_Abstract
 	protected function _isInheritanceConflict($classes)
 	{
 		$classes = array_reverse($classes);
-		for ($i = 0; $i < count($classes) - 1; $i++) {
+		$count = count($classes) - 1;
+		for ($i = 0; $i < $count; $i++) {
 			try {
 				if (class_exists($classes[$i]) && class_exists($classes[$i + 1])) {
 					if (!is_a($classes[$i], $classes[$i + 1], true)) {

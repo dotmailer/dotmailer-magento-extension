@@ -79,7 +79,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
      */
     public $order_status;
 
-    private $_attributeSet;
+    protected $_attributeSet;
 
     /**
      * set the order information
@@ -122,7 +122,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
 	/**
 	 * Shipping address.
 	 */
-	private function _setShippingData( $orderData ) {
+	protected function _setShippingData( $orderData ) {
 
 		if ($orderData->getShippingAddress()) {
 			$shippingData = $orderData->getShippingAddress()->getData();
@@ -140,7 +140,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
 	/**
 	 * Billing address.
 	 */
-	private function _setBillingData($orderData) {
+	protected function _setBillingData($orderData) {
 
 		if ($orderData->getBillingAddress()) {
 			$billingData  = $orderData->getBillingAddress()->getData();
@@ -158,7 +158,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
 	/**
 	 * custom order attributes
 	 */
-	private function _setOrderCustomAttributes( $orderData ) {
+	protected function _setOrderCustomAttributes( $orderData ) {
 
 		$helper = Mage::helper('ddg');
 		$website = Mage::app()->getStore($orderData->getStore())->getWebsite();
@@ -182,7 +182,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
      * @param $line
      * @return string
      */
-    private  function _getStreet($street, $line)
+    protected  function _getStreet($street, $line)
     {
         $street = explode("\n", $street);
         if ($line == 1) {
@@ -207,7 +207,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
 
     }
 
-    private function _getCustomAttributeValue($field, $orderData)
+    protected function _getCustomAttributeValue($field, $orderData)
     {
         $type = $field['DATA_TYPE'];
 
@@ -252,7 +252,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
      * @param $field
      * @param $value
      */
-    private function _assignCustom($field, $value)
+    protected function _assignCustom($field, $value)
     {
         $this->custom[$field['COLUMN_NAME']] = $value;
     }
@@ -263,7 +263,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
      * @param $attributeSetId
      * @return array
      */
-    private function _getAttributesArray($attributeSetId)
+    protected function _getAttributesArray($attributeSetId)
     {
         $result = array();
         $attributes = Mage::getResourceModel('catalog/product_attribute_collection')
@@ -283,7 +283,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
      * @param $value
      * @return string
      */
-    private function _limitLength($value)
+    protected function _limitLength($value)
     {
         if (strlen($value) > 250)
             $value = substr($value, 0, 250);
@@ -295,7 +295,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
      * @param Mage_Sales_Model_Order_Item $orderItem
      * @return array
      */
-    private function _getOrderItemOptions($orderItem)
+    protected function _getOrderItemOptions($orderItem)
     {
         $orderItemOptions = $orderItem->getProductOptions();
 
@@ -330,7 +330,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
      * @param Mage_Catalog_Model_Product $product
      * @return string
      */
-    private function _getAttributeSetName(Mage_Catalog_Model_Product $product)
+    protected function _getAttributeSetName(Mage_Catalog_Model_Product $product)
     {
         //check if empty. on true load model and cache result
         if(empty($this->_attributeSet)){
@@ -358,7 +358,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
      *
      * @param Mage_Catalog_Model_Product $product
      */
-    private function _loadAttributeModel(Mage_Catalog_Model_Product $product)
+    protected function _loadAttributeModel(Mage_Catalog_Model_Product $product)
     {
         $attributeSetModel = Mage::getModel( "eav/entity_attribute_set" );
         $attributeSetModel->load( $product->getAttributeSetId() );
@@ -366,7 +366,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
             $this->_attributeSet = $attributeSetModel;
     }
 
-	private function _setOrderItems( $orderData ) {
+	protected function _setOrderItems( $orderData ) {
 
 		$website = Mage::app()->getStore($orderData->getStore())->getWebsite();
 
@@ -412,7 +412,6 @@ class Dotdigitalgroup_Email_Model_Connector_Order
 					foreach ($configAttributes as $attribute_code) {
 						//if config attribute is in attribute set
 						if (in_array($attribute_code, $attributesFromAttributeSet)) {
-
 							//attribute input type
 							$inputType = $product->getResource()
 			                     ->getAttribute($attribute_code)

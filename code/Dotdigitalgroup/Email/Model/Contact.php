@@ -82,7 +82,7 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
 
         $collection->getSelect()->limit($pageSize);
 
-        return $collection->load();
+        return $collection;
     }
 
     /**
@@ -140,7 +140,8 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
             ->addFieldToFilter('is_guest', array('notnull' => true))
             ->addFieldToFilter('email_imported', array('null' => true))
             ->addFieldToFilter('website_id', $website->getId());
-        return $guestCollection->load();
+
+	    return $guestCollection;
     }
 
     public function getNumberOfImportedContacs()

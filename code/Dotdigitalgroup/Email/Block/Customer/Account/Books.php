@@ -2,8 +2,8 @@
 
 class Dotdigitalgroup_Email_Block_Customer_Account_Books extends Mage_Customer_Block_Account_Dashboard
 {
-    private $_client;
-    private $contact_id;
+    protected $_client;
+    protected $contact_id;
 
     /**
      * subscription pref save url
@@ -22,7 +22,7 @@ class Dotdigitalgroup_Email_Block_Customer_Account_Books extends Mage_Customer_B
      * @param $website
      * @return mixed
      */
-    private function _getWebsiteConfigFromHelper($path, $website)
+    protected function _getWebsiteConfigFromHelper($path, $website)
     {
         return Mage::helper('ddg')->getWebsiteConfig($path, $website);
     }
@@ -32,7 +32,7 @@ class Dotdigitalgroup_Email_Block_Customer_Account_Books extends Mage_Customer_B
      *
      * @return Dotdigitalgroup_Email_Model_Apiconnector_Client
      */
-    private function _getApiClient()
+    protected function _getApiClient()
     {
         if(empty($this->_client)) {
             $website = $this->getCustomer()->getStore()->getWebsite();
@@ -207,7 +207,7 @@ class Dotdigitalgroup_Email_Block_Customer_Account_Books extends Mage_Customer_B
         return $contact;
     }
 
-    private function _getCustomerSession()
+    protected function _getCustomerSession()
     {
         return Mage::getSingleton('customer/session');
     }

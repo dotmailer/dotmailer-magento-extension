@@ -118,7 +118,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Observer
         return $this;
     }
 
-    private function _checkAddressBookMapping( $website ) {
+    protected function _checkAddressBookMapping( $website ) {
 
         $helper = Mage::helper('ddg');
         $customerAddressBook = $helper->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMERS_ADDRESS_BOOK_ID, $website);
@@ -144,7 +144,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Observer
      *
      * @return bool
      */
-    private function _checkForOption($name, $data) {
+    protected function _checkForOption($name, $data) {
         //loop for all options
         foreach ( $data as $one ) {
 
@@ -197,18 +197,19 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Observer
 	protected function addContactsFromWebsiteSegments($customerId, $segmentIds, $websiteId){
 
 		if (empty($segmentIds) || ! $customerId)
-			return;
+			return $this;
 		$segmentIds = implode(',', $segmentIds);
 
 		$contact = Mage::getModel('ddg_automation/contact')->getCollection()
 			->addFieldToFilter('customer_id', $customerId)
 			->addFieldToFilter('website_id', $websiteId)
+			->setPageSize(1)
 			->getFirstItem();
 		try {
 
 			$contact->setSegmentIds($segmentIds)
-			        ->setEmailImported()
-			        ->save();
+		        ->setEmailImported()
+		        ->save();
 
 		}catch (Exception $e){
 			Mage::logException($e);

@@ -9,11 +9,11 @@ class Dotdigitalgroup_Email_Helper_File extends Dotdigitalgroup_Email_Helper_Dat
      * Location of files we are building
      */
 
-    private $_output_folder; // set in _construct
-    private $_output_archive_folder; // set in _construct
+    protected $_output_folder; // set in _construct
+    protected $_output_archive_folder; // set in _construct
 
-    private $delimiter; // set in _construct
-    private $enclosure; // set in _construct
+    protected $delimiter; // set in _construct
+    protected $enclosure; // set in _construct
 
     public function __construct()
     {
@@ -80,7 +80,7 @@ class Dotdigitalgroup_Email_Helper_File extends Dotdigitalgroup_Email_Helper_Dat
         // for some reason passing the preset delimiter/enclosure variables results in error
 	    // $this->delimiter $this->enclosure
         if (fwrite($fp, $fqCsv) == 0 ) {
-            Mage::throwException('Problem writing CSV file');
+            Mage::throwException(Mage::helper('ddg')->__('Problem writing CSV file'));
         }
         fclose($fp);
 
@@ -100,7 +100,7 @@ class Dotdigitalgroup_Email_Helper_File extends Dotdigitalgroup_Email_Helper_Dat
         // for some reason passing the preset delimiter/enclosure variables results in error
 	    //$this->delimiter $this->enclosure
         if (fputcsv($handle, $csv, ',', '"') == 0 ) {
-            Mage::throwException('Problem writing CSV file');
+            Mage::throwException(Mage::helper('ddg')->__('Problem writing CSV file'));
         }
 
         fclose($handle);
@@ -155,8 +155,8 @@ class Dotdigitalgroup_Email_Helper_File extends Dotdigitalgroup_Email_Helper_Dat
     {
         $class_func = array(__CLASS__, __FUNCTION__);
         return is_file($path) ?
-            @unlink($path) :
-            array_map($class_func, glob($path.'/*')) == @rmdir($path);
+            unlink($path) :
+            array_map($class_func, glob($path.'/*')) == rmdir($path);
     }
 
 

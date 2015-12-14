@@ -9,7 +9,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
 
 	const FAST_FIX_MESSAGE = 'Fast Fix Available, Click To Enable The Mapping And Redirect Back.';
 
-	private $_checkpoints = array(
+	protected $_checkpoints = array(
 		'valid_api_credentials' => 'API Credentials',
 		'cron_running' => 'Cron running',
 		'conflict_check' => 'Conflict Check',
@@ -1270,49 +1270,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
         return $resultContent;
     }
 
-    /**
-     * review campaign enabled.
-     * @return Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Content
-     */
-    public function reviewCampaignStatus()
-    {
-        $resultContent = Mage::getModel('ddg_automation/adminhtml_dashboard_content');
-
-        $resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
-            ->setTitle('Review Status : ')
-            ->setMessage('Looks Great.');
-
-        foreach ( Mage::app()->getWebsites() as $website ) {
-            $websiteName  = $website->getName();
-            $enabled = ($website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_REVIEWS_ENABLED))? true :
-                'Disabled ';
-            $orderStatus = ($website->getConfig(Dotdigitalgroup_Email_Helper_Review::XML_PATH_REVIEW_STATUS))? true :
-                'Disabled ';
-            $delayPeriod = ($website->getConfig(Dotdigitalgroup_Email_Helper_Review::XML_PATH_REVIEW_DELAY))? true :
-                'Disabled ';
-            $newProduct = ($website->getConfig(Dotdigitalgroup_Email_Helper_Review::XML_PATH_REVIEW_NEW_PRODUCT))? true :
-                'Disabled ';
-            $campaign = ($website->getConfig(Dotdigitalgroup_Email_Helper_Review::XML_PATH_REVIEW_CAMPAIGN))? true :
-                'Disabled ';
-
-            if ($enabled !== true || $orderStatus !== true || $delayPeriod !== true || $newProduct !== true || $campaign !== true){
-                $enabledUrl = Mage::helper('adminhtml')->getUrl('*/connector/enablewebsiteconfiguration', array('path' => 'XML_PATH_REVIEWS_ENABLED', 'website' => $website->getId()));
-
-                $resultContent->setStyle( self::CONNECTOR_DASHBOARD_FAILED)
-                    ->setMessage('Don\'t forget to map')
-                    ->setTable(array(
-                        'Website' => $websiteName,
-                        'Enabled' => ($enabled !== true)? $enabled . '<a href="' . $enabledUrl . '">Click to enable</a>' : 'Enabled',
-                        'Order Status' => ($orderStatus !== true)? 'Not Set' : 'Enabled',
-                        'Delay Period' => ($delayPeriod !== true)? 'Not Set' : 'Enabled',
-                        'New Product Only' => ($newProduct !== true)? 'Not Set' : 'Enabled',
-                        'Campaign To Select' => ($campaign !== true)? 'Not Set' : 'Enabled',
-                    ));
-            }
-        }
-        return $resultContent;
-    }
-
 	/**
 	 * Get the last date for abandaned carts.
 	 * @return Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Content
@@ -1551,9 +1508,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
 
 	/**
 	 * Check if the mapped program is active.
-
 	 */
 	protected function _getWebisteProgram($program, $website) {
+
 		$client = Mage::helper('ddg')->getWebsiteApiClient($website);
 
 		if (! $client || !$program){

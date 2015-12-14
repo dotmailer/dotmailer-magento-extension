@@ -134,7 +134,7 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
 	/**
 	 * @return mixed
 	 */
-	private function _getEmailCampaigns()
+	protected function _getEmailCampaigns()
 	{
 		$emailCollection = $this->getCollection();
 		$emailCollection->addFieldToFilter('is_sent', array('null' => true))

@@ -48,22 +48,24 @@ class Dotdigitalgroup_Email_Model_Cron
      */
     public function reviewsAndWishlist()
     {
-        //sync reviews
-        $this->reviewSync();
+        //sync reviews and product reminders
+        $this->reviewAndProductReminderSync();
         //sync wishlist
         Mage::getModel('ddg_automation/wishlist')->sync();
     }
 
     /**
-     * review sync
+     * review sync and product reminder.
      */
-    public function reviewSync()
+    public function reviewAndProductReminderSync()
     {
-        //find orders to review and register campaign
-        Mage::getModel('ddg_automation/sales_order')->createReviewCampaigns();
+        //create product reminder campaigns
+        Mage::getModel('ddg_automation/sales_order')->createProductReminderReviewCampaigns();
+
         //sync reviews
         $result = Mage::getModel('ddg_automation/review')->sync();
-        return $result;
+
+	    return $result;
     }
 
     /**
@@ -75,7 +77,8 @@ class Dotdigitalgroup_Email_Model_Cron
     {
         // send order
         $orderResult = Mage::getModel('ddg_automation/sales_order')->sync();
-        return $orderResult;
+
+	    return $orderResult;
     }
 
     /**
@@ -140,7 +143,8 @@ class Dotdigitalgroup_Email_Model_Cron
 	    $message = 'Cleaning cronjob result : ' . $result;
 	    $helper->log($message);
 	    Mage::helper('ddg')->rayLog($message, 'model/cron.php');
-        return $result;
+
+	    return $result;
     }
 
 

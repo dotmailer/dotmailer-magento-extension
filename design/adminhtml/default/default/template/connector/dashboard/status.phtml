@@ -1,7 +1,7 @@
 <div class="content-header">
 	<h3 class="icon-head head-newsletter-report"><?php echo $this->getTabTitle(); ?></h3>
 </div>
-<?php foreach ( $this->getCheckpoints() as $key =>  $_checkpoint ) :?>
+<?php foreach ( $this->getCheckpoints() as $key =>  $checkpoint ) :?>
 	<?php $method = $this->getFormatedMethodName($key);
 
 	if (is_callable(array($this, $method))) {
@@ -19,15 +19,15 @@
 <div class="entry-edit connector-fieldset-entry">
 		<div class="entry-edit-head collapseable ">
 
-			<a id="<?php echo $key;?>-head" class="<?php echo $data->getStyle();?>"  href="#" onclick="Fieldset.toggleCollapse('<?php echo $key;?>', '<?php echo $this->getUrl('*/*/state') ;?>');return false;">
-					<?php echo Mage::helper('ddg')->__($_checkpoint) ?> </a>
+			<a id="<?php echo $key;?>-head" class="<?php echo $data->getStyle();?>"  href="#" onclick="Fieldset.toggleCollapse('<?php echo $key;?>',
+				'<?php echo $this->getUrl('*/*/state') ;?>');return false;"><?php echo Mage::helper('ddg')->__($checkpoint) ?> </a>
 
 		</div>
 		<input id="<?php echo $key;?>-state" name="config_state[<?php echo $key ;?>]" type="hidden" value="<?php echo $collapsable;?>">
 
 		<fieldset class="collapseable" id="<?php echo $key;?>">
 
-			<legend><?php echo Mage::helper('ddg')->__($_checkpoint); ?></legend>
+			<legend><?php echo Mage::helper('ddg')->__($checkpoint); ?></legend>
 			<span><?php echo $data->getTitle();?></span><span class="<?php echo $data->getStyle();?>"><?php echo $data->getMessage();?></span>
 			<div class="<?php echo $showHowTo?>">
 				<ul class="howto">

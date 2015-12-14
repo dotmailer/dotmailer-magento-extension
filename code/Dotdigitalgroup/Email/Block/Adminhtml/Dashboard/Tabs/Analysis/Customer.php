@@ -11,7 +11,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Analysis_Customer ext
      *
      * @throws Exception
      */
-    public function __construct()
+    public function _construct()
     {
         parent::_construct();
 
@@ -50,6 +50,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Analysis_Customer ext
      */
     public function getTitle()
     {
-        return "Customers";
+        return Mage::helper('ddg')->__("Customers");
     }
 }

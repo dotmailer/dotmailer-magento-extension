@@ -1,9 +1,9 @@
 <?php if( sizeof($this->getTotals()) > 0 ): ?>
-    <?php foreach( $this->getTotals() as $_total ): ?>
+    <?php foreach( $this->getTotals() as $total ): ?>
         <div class="entry-edit" style="width: 400px">
-            <div class="entry-edit-head"><h4><?php echo $_total['label'] ?></h4></div>
+            <div class="entry-edit-head"><h4><?php echo $total['label'] ?></h4></div>
             <fieldset class="a-center bold">
-                <span class="nowrap" style="font-size:18px;color:#EA7601;"><?php echo $_total['value'] ?><span style="font-size:14px; color:#686868;"><?php echo $_total['decimals'] ?></span></span>
+                <span class="nowrap" style="font-size:18px;color:#EA7601;"><?php echo $total['value'] ?><span style="font-size:14px; color:#686868;"><?php echo $total['decimals'] ?></span></span>
             </fieldset>
         </div>
     <?php endforeach; ?>

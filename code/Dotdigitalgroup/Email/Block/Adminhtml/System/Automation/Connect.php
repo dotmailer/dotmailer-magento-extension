@@ -31,7 +31,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Automation_Connect extends Ma
             ->toHtml();
     }
 
-    private function _checkForSecureUrl() {
+    protected function _checkForSecureUrl() {
+
         $baseUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB, true);
         if (!preg_match('/https/',$baseUrl)) {
             return false;

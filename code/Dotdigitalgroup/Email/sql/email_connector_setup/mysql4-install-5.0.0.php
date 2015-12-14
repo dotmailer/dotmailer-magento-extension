@@ -977,55 +977,54 @@ $table->addColumn('id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
     'identity' => true,
     'unsigned' => true,
     'nullable' => false
-), 'Primary Key')
-      ->addColumn('automation_type', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
-          'nullable' => true,
-      ), 'Automation Type')
-      ->addColumn('store_name', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
-          'nullable' => true,
-      ), 'Automation Type')
-      ->addColumn('enrolment_status', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
-          'nullable'  => false,
-      ), 'Entrolment Status')
-      ->addColumn('email', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
-          'nullable'  => true,
-      ), 'Email')
-      ->addColumn('type_id', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
-          'nullable'  => true,
-      ), 'Type ID')
-      ->addColumn('program_id', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
-          'nullable'  => true,
-      ), 'Program ID')
-      ->addColumn('website_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
-          'unsigned'  => true,
-          'nullable' => false,
-      ), 'Website Id')
-      ->addColumn('message', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
-          'nullable'  => false,
-      ), 'Message')
-      ->addColumn('created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(
-      ), 'Creation Time')
-      ->addColumn('updated_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(
-      ), 'Update Time')
-      ->addIndex($installer->getIdxName($automationTable, array('automation_type')),
-          array('automation_type'))
-      ->addIndex($installer->getIdxName($automationTable, array('enrolment_status')),
-          array('enrolment_status'))
-      ->addIndex($installer->getIdxName($automationTable, array('type_id')),
-        array('type_id'))
-      ->addIndex($installer->getIdxName($automationTable, array('email')),
-        array('email'))
-       ->addIndex($installer->getIdxName($automationTable, array('program_id')),
-        array('program_id'))
-       ->addIndex($installer->getIdxName($automationTable, array('message')),
-        array('message'))
-       ->addIndex($installer->getIdxName($automationTable, array('created_at')),
-        array('created_at'))
-       ->addIndex($installer->getIdxName($automationTable, array('updated_at')),
-        array('updated_at'))
-       ->addIndex($installer->getIdxName($automationTable, array('website_id')),
-        array('website_id'))
-      ->setComment('Automation Status');
+	), 'Primary Key')
+	->addColumn('automation_type', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
+	  'nullable' => true,
+	), 'Automation Type')
+	->addColumn('store_name', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
+	  'nullable' => true,
+	), 'Automation Type')
+	->addColumn('enrolment_status', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
+	  'nullable'  => false,
+	), 'Entrolment Status')
+	->addColumn('email', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
+	  'nullable'  => true,
+	), 'Email')
+	->addColumn('type_id', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
+	  'nullable'  => true,
+	), 'Type ID')
+	->addColumn('program_id', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
+	  'nullable'  => true,
+	), 'Program ID')
+	->addColumn('website_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
+	  'unsigned'  => true,
+	  'nullable' => false,
+	), 'Website Id')
+	->addColumn('message', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
+	  'nullable'  => false,
+	), 'Message')
+	->addColumn('created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(
+	), 'Creation Time')
+	->addColumn('updated_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(
+	), 'Update Time')
+	->addIndex($installer->getIdxName($automationTable, array('automation_type')),
+	array('automation_type'))->addIndex($installer->getIdxName($automationTable, array('enrolment_status')),
+	array('enrolment_status'))
+	->addIndex($installer->getIdxName($automationTable, array('type_id')),
+	array('type_id'))
+	->addIndex($installer->getIdxName($automationTable, array('email')),
+	array('email'))
+	->addIndex($installer->getIdxName($automationTable, array('program_id')),
+	array('program_id'))
+	->addIndex($installer->getIdxName($automationTable, array('message')),
+	array('message'))
+	->addIndex($installer->getIdxName($automationTable, array('created_at')),
+	array('created_at'))
+	->addIndex($installer->getIdxName($automationTable, array('updated_at')),
+	array('updated_at'))
+	->addIndex($installer->getIdxName($automationTable, array('website_id')),
+	array('website_id'))
+	->setComment('Automation Status');
 $installer->getConnection()->createTable($table);
 
 

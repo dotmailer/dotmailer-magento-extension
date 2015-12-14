@@ -3,18 +3,23 @@
 <?php endif ?>
 <?php if(!empty($tabs)): ?>
 	<ul id="<?php echo $this->getId() ?>" class="tabs">
-		<?php foreach ($tabs as $_tab): ?>
-			<?php if (!$this->canShowTab($_tab)): continue;  endif; ?>
-			<li <?php if($this->getTabIsHidden($_tab)): ?> style="display:none"<?php endif; ?>>
-				<a href="<?php echo $this->getTabUrl($_tab) ?>" id="<?php echo $this->getTabId($_tab) ?>" name="<?php echo $this->getTabId($_tab, false) ?>" title="<?php echo $this->getTabTitle($_tab) ?>" class="tab-item-link <?php echo $this->getTabClass($_tab) ?><?php if (preg_match('/\s?ajax\s?/', $_tab->getClass())) {?> notloaded<?php }?>">
-					<span><span class="changed" title="<?php echo $this->__('The information in this tab has been changed.') ?>"></span><span class="error" title="<?php echo $this->__('This tab contains invalid data. Please solve the problem before saving.') ?>"></span><?php echo $this->getTabLabel($_tab); ?></span>
+		<?php foreach ($tabs as $tab): ?>
+			<?php if (!$this->canShowTab($tab)): continue;  endif; ?>
+			<li <?php if($this->getTabIsHidden($tab)): ?> style="display:none"<?php endif; ?>>
+				<a href="<?php echo $this->getTabUrl($tab) ?>" id="<?php echo $this->getTabId($tab) ?>" name="<?php echo $this->getTabId($tab, false) ?>"
+				   title="<?php echo $this->getTabTitle($tab) ?>" class="tab-item-link <?php echo $this->getTabClass($tab) ?>
+					<?php if (preg_match('/\s?ajax\s?/', $tab->getClass())):?> notloaded<?php endif;?>">
+					<span><span class="changed" title="<?php echo $this->__('The information in this tab has been changed.') ?>"></span><span class="error"
+					title="<?php echo $this->__('This tab contains invalid data. Please solve the problem before saving.') ?>"></span>
+						<?php echo $this->getTabLabel($tab); ?></span>
 				</a>
-				<div id="<?php echo $this->getTabId($_tab) ?>_content" style="display:none; float: left; width: 100%;"><?php echo $this->getTabContent($_tab) ?></div>
+				<div id="<?php echo $this->getTabId($tab) ?>_content" style="display:none; float: left; width: 100%;"><?php echo $this->getTabContent($tab) ?></div>
 			</li>
 		<?php endforeach; ?>
 	</ul>
 	<script type="text/javascript">
-		<?php echo $this->getJsObjectName() ?> = new varienTabs('<?php echo $this->getId() ?>', '<?php echo $this->getDestElementId() ?>', '<?php echo $this->getActiveTabId() ?>', <?php echo $this->getAllShadowTabs()?>);
+		<?php echo $this->getJsObjectName() ?> = new varienTabs('<?php echo $this->getId() ?>', '<?php echo $this->getDestElementId() ?>',
+			'<?php echo $this->getActiveTabId() ?>', <?php echo $this->getAllShadowTabs()?>);
 	</script>
 <?php endif;
 

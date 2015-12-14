@@ -10,7 +10,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Column_Renderer_Sync extends Mage_Ad
 	 */
     public function render(Varien_Object $row)
     {
-        return '<button title="Connect" type="button" style=""><span><span><span>Sync Now</span></span></span></button>';
+	    $title = '<button title="Connect" type="button" style=""><span><span><span>' .  $this->__('Sync Now') . '</span></span></span></button>';
+
+	    return $title;
     }
 
 }

@@ -24,7 +24,7 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
     const IMPORT_TYPE_SUBSCRIBERS = 'Subscriber';
     const IMPORT_TYPE_GUEST = 'Guest';
 
-    private $_reasons = array(
+    protected $_reasons = array(
         'Globally Suppressed',
         'Blocked',
         'Unsubscribed',
@@ -33,10 +33,11 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
         'Domain Suppressed',
         'Failures',
         'Invalid Entries',
-        'Mail Blocked'
+        'Mail Blocked',
+        'Suppressed by you'
     );
 
-    private $import_statuses = array(
+    protected $import_statuses = array(
         'RejectedByWatchdog', 'InvalidFileFormat', 'Unknown',
         'Failed', 'ExceedsAllowedContactLimit', 'NotAvailableInThisVersion'
     );
@@ -122,11 +123,10 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
                 }
                 //if curl error 28
                 $curlError = $client->getCurlError();
-                if($curlError) {
+                if ($curlError) {
                     $item->setMessage($curlError)
                         ->save();
-                }
-                else{
+                } else {
                     if ($response && !isset($response->message)) {
                         if ($response->status == 'Finished') {
                             $now = Mage::getSingleton('core/date')->gmtDate();
@@ -169,22 +169,23 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
         return true;
     }
 
-    private function _processContactImportReportFaults($id, $websiteId)
+    protected function _processContactImportReportFaults($id, $websiteId)
     {
         $helper = Mage::helper('ddg');
         $client = $helper->getWebsiteApiClient($websiteId);
         $data = $client->getContactImportReportFaults($id);
 
-        if($data){
+        if ($data) {
             $data = $this->_remove_utf8_bom($data);
             $fileName = Mage::getBaseDir('var') . DS . 'DmTempCsvFromApi.csv';
             $io = new Varien_Io_File();
+            $io->open();
             $check = $io->write($fileName, $data);
-            if($check){
+            if ($check) {
                 $csvArray = $this->_csv_to_array($fileName);
                 $io->rm($fileName);
                 Mage::getResourceModel('ddg_automation/contact')->unsubscribe($csvArray);
-            }else{
+            } else {
                 $helper->log('_processContactImportReportFaults: cannot save data to CSV file.');
             }
         }
@@ -193,8 +194,7 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
     /**
      * actual importer queue processor
      */
-    private function _processQueue()
-    {
+    protected function _processQueue() {
         if ($item = $this->_getQueue()) {
             $helper = Mage::helper('ddg');
             $websiteId = $item->getWebsiteId();
@@ -269,11 +269,11 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
             }
             //if curl error 28
             $curlError = $client->getCurlError();
-            if($curlError) {
+            if ($curlError) {
                 $item->setMessage($curlError)
                     ->setImportStatus(self::FAILED)
                     ->save();
-            } else{
+            } else {
                 if (!$error) {
                     if ($item->getImportMode() == self::MODE_SINGLE_DELETE or
                         $item->getImportMode() == self::MODE_SINGLE or
@@ -287,17 +287,16 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
 
                         //process again next item in queue
                         $this->_processQueue();
-                    }
-                    elseif(isset($result->id) && !isset($result->message)){
+                    } elseif (isset($result->id) && !isset($result->message)) {
                         $item->setImportStatus(self::IMPORTING)
                             ->setImportId($result->id)
                             ->setImportStarted($now)
                             ->setMessage('')
                             ->save();
-                    }
-                    else{
+                    } else {
+	                    $message = (isset($result->message))? $result->message : 'Error unknown';
                         $item->setImportStatus(self::FAILED)
-                            ->setMessage($result->message);
+                            ->setMessage($message);
 
                         if(isset($result->id))
                             $item->setImportId($result->id);
@@ -305,13 +304,15 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
                         $item->save();
                     }
                 } elseif ($error) {
-                    $item->setImportStatus(self::FAILED)
-                            ->setMessage($result->message);
 
-                        if(isset($result->id))
-                            $item->setImportId($result->id);
+	                $message = (isset($result->message))? $result->message : 'Error unknown';
 
-                        $item->save();
+	                $item->setImportStatus(self::FAILED)
+                            ->setMessage($message);
+                    if (isset($result->id))
+                        $item->setImportId($result->id);
+
+	                $item->save();
                 }
             }
         }
@@ -323,7 +324,7 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
      * @param bool $importing
      * @return bool|Varien_Object
      */
-    private function _getQueue($importing = false)
+    protected function _getQueue($importing = false)
     {
         $collection = $this->getCollection();
 
@@ -340,18 +341,18 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
         return false;
     }
 
-    private function _csv_to_array($filename)
+    protected function _csv_to_array($filename)
     {
         if(!file_exists($filename) || !is_readable($filename))
             return FALSE;
 
         $header = NULL;
         $data = array();
-        if (($handle = fopen($filename, 'r')) !== FALSE)
-        {
-            while (($row = fgetcsv($handle)) !== FALSE)
-            {
-                if(!$header)
+        if (($handle = fopen($filename, 'r')) !== FALSE) {
+
+            while (($row = fgetcsv($handle)) !== FALSE) {
+
+	            if (!$header)
                     $header = $row;
                 else
                     $data[] = array_combine($header, $row);
@@ -360,15 +361,15 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
         }
 
         $contacts = array();
-        foreach($data as $item){
-            if(in_array($item['Reason'], $this->_reasons))
+        foreach ($data as $item) {
+            if (in_array($item['Reason'], $this->_reasons))
                 $contacts[] = $item['email'];
         }
 
         return $contacts;
     }
 
-    private function _remove_utf8_bom($text)
+    protected function _remove_utf8_bom($text)
     {
         $bom = pack('H*','EFBBBF');
         $text = preg_replace("/^$bom/", '', $text);

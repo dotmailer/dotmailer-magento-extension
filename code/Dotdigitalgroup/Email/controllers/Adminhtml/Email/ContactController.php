@@ -47,7 +47,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ContactController extends Mage_Admin
 	public function deleteAction()
     {
         if ($id = $this->getRequest()->getParam('id')) {
-            $contact = Mage::getModel('ddg_automation/contact')->load($id);
+            $contact = Mage::getModel('ddg_automation/contact')->setId($id);
             try {
                 $contact->delete();
                 $this->_getSession()->addSuccess(Mage::helper('ddg')->__('The contact has been deleted.'));

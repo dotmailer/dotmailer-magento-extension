@@ -8,82 +8,76 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
      * @param Varien_Event_Observer $observer
      * @return $this
      */
-    public function handleSalesOrderSaveAfter(Varien_Event_Observer $observer)
-    {
-        /** @var $order Mage_Sales_Model_Order */
-        $order = $observer->getEvent()->getOrder();
-        $status  = $order->getStatus();
-        $storeId = $order->getStoreId();
-
-        $appEmulation = Mage::getSingleton('core/app_emulation');
-        $initialEnvironmentInfo = $appEmulation->startEnvironmentEmulation($storeId);
-
-        try{
-            $store = Mage::app()->getStore($storeId);
-            $storeName = $store->getName();
-            $websiteId = $store->getWebsiteId();
-            $customerEmail = $order->getCustomerEmail();
-            // start app emulation
-            $emailOrder = Mage::getModel('ddg_automation/order')->loadByOrderId($order->getEntityId(), $order->getQuoteId());
-            //reimport email order
-            $emailOrder->setUpdatedAt($order->getUpdatedAt())
-                ->setStoreId($storeId)
-                ->setOrderStatus($status);
-            if($emailOrder->getEmailImported() != Dotdigitalgroup_Email_Model_Contact::EMAIL_CONTACT_IMPORTED) {
-                $emailOrder->setEmailImported(null);
-            }
-
-            //if api is not enabled
-            if (!$store->getWebsite()->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED)) {
-                $appEmulation->stopEnvironmentEmulation($initialEnvironmentInfo);
-                return $this;
-            }
-
-            // check for order status change
-	        $statusBefore = $order->getOrigData('status');
-            //check if order status changed
-	        if ( $status!= $statusBefore) {
-                //If order status has changed and order is already imported then set modified to 1
-                if($emailOrder->getEmailImported() == Dotdigitalgroup_Email_Model_Contact::EMAIL_CONTACT_IMPORTED) {
-                    $emailOrder->setModified(Dotdigitalgroup_Email_Model_Contact::EMAIL_CONTACT_IMPORTED);
-                }
-                $smsCampaign = Mage::getModel('ddg_automation/sms_campaign', $order);
-                $smsCampaign->setStatus($status);
-                $smsCampaign->sendSms();
-            }
-            // set back the current store
-            $appEmulation->stopEnvironmentEmulation($initialEnvironmentInfo);
-            $emailOrder->save();
-
-            //Status check automation enrolment
-            $configStatusAutomationMap = unserialize(Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_ORDER_STATUS, $order->getStore()));
-            if(!empty($configStatusAutomationMap)){
-                foreach($configStatusAutomationMap as $configMap){
-                    if($configMap['status'] == $status) {
-                        try {
-                            $programId  = $configMap['automation'];
-                            $automation = Mage::getModel( 'ddg_automation/automation' );
-                            $automation->setEmail( $customerEmail )
-                                ->setAutomationType( 'order_automation_' . $status )
-                                ->setEnrolmentStatus( Dotdigitalgroup_Email_Model_Automation::AUTOMATION_STATUS_PENDING )
-                                ->setTypeId( $order->getId() )
-                                ->setWebsiteId( $websiteId )
-                                ->setStoreName( $storeName )
-                                ->setProgramId( $programId );
-                            $automation->save();
-                        }catch(Exception $e){
-                            Mage::logException($e);
-                        }
-                    }
-                }
-            }
-
-        }catch(Exception $e){
-            Mage::logException($e);
-            $appEmulation->stopEnvironmentEmulation($initialEnvironmentInfo);
-        }
-        return $this;
-    }
+	public function handleSalesOrderSaveAfter(Varien_Event_Observer $observer)
+	{
+		/** @var $order Mage_Sales_Model_Order */
+		$order = $observer->getEvent()->getOrder();
+		$status  = $order->getStatus();
+		$storeId = $order->getStoreId();
+		$appEmulation = Mage::getSingleton('core/app_emulation');
+		$initialEnvironmentInfo = $appEmulation->startEnvironmentEmulation($storeId);
+		try{
+			$store = Mage::app()->getStore($storeId);
+			$storeName = $store->getName();
+			$websiteId = $store->getWebsiteId();
+			$customerEmail = $order->getCustomerEmail();
+			// start app emulation
+			$emailOrder = Mage::getModel('ddg_automation/order')->loadByOrderId($order->getEntityId(), $order->getQuoteId());
+			//reimport email order
+			$emailOrder->setUpdatedAt($order->getUpdatedAt())
+			           ->setStoreId($storeId)
+			           ->setOrderStatus($status);
+			if($emailOrder->getEmailImported() != Dotdigitalgroup_Email_Model_Contact::EMAIL_CONTACT_IMPORTED) {
+				$emailOrder->setEmailImported(null);
+			}
+			//if api is not enabled
+			if (!$store->getWebsite()->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED)) {
+				$appEmulation->stopEnvironmentEmulation($initialEnvironmentInfo);
+				return $this;
+			}
+			// check for order status change
+			$statusBefore = $order->getOrigData('status');
+			//check if order status changed
+			if ( $status!= $statusBefore) {
+				//If order status has changed and order is already imported then set modified to 1
+				if($emailOrder->getEmailImported() == Dotdigitalgroup_Email_Model_Contact::EMAIL_CONTACT_IMPORTED) {
+					$emailOrder->setModified(Dotdigitalgroup_Email_Model_Contact::EMAIL_CONTACT_IMPORTED);
+				}
+				$smsCampaign = Mage::getModel('ddg_automation/sms_campaign', $order);
+				$smsCampaign->setStatus($status);
+				$smsCampaign->sendSms();
+			}
+			// set back the current store
+			$appEmulation->stopEnvironmentEmulation($initialEnvironmentInfo);
+			$emailOrder->save();
+			//Status check automation enrolment
+			$configStatusAutomationMap = unserialize(Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_ORDER_STATUS, $order->getStore()));
+			if(!empty($configStatusAutomationMap)){
+				foreach($configStatusAutomationMap as $configMap){
+					if($configMap['status'] == $status) {
+						try {
+							$programId  = $configMap['automation'];
+							$automation = Mage::getModel( 'ddg_automation/automation' );
+							$automation->setEmail( $customerEmail )
+							           ->setAutomationType( 'order_automation_' . $status )
+							           ->setEnrolmentStatus( Dotdigitalgroup_Email_Model_Automation::AUTOMATION_STATUS_PENDING )
+							           ->setTypeId( $order->getId() )
+							           ->setWebsiteId( $websiteId )
+							           ->setStoreName( $storeName )
+							           ->setProgramId( $programId );
+							$automation->save();
+						}catch(Exception $e){
+							Mage::logException($e);
+						}
+					}
+				}
+			}
+		}catch(Exception $e){
+			Mage::logException($e);
+			$appEmulation->stopEnvironmentEmulation($initialEnvironmentInfo);
+		}
+		return $this;
+	}
 
 
     /**
@@ -292,7 +286,7 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
      *
      * @param Mage_Sales_Model_Quote $quote
      */
-    private function _registerQuote(Mage_Sales_Model_Quote $quote)
+    protected function _registerQuote(Mage_Sales_Model_Quote $quote)
     {
         try {
             $connectorQuote = Mage::getModel('ddg_automation/quote');

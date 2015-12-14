@@ -2,10 +2,10 @@
 
 class Dotdigitalgroup_Email_Model_Review extends Mage_Core_Model_Abstract
 {
-    private $_start;
-    private $_countReviews;
-    private $_reviews;
-    private $_reviewIds;
+    protected $_start;
+    protected $_countReviews;
+    protected $_reviews;
+    protected $_reviewIds;
 
     const EMAIL_REVIEW_IMPORTED = 1;
 
@@ -80,7 +80,7 @@ class Dotdigitalgroup_Email_Model_Review extends Mage_Core_Model_Abstract
         return $response;
     }
 
-    private function _exportReviewsForWebsite(Mage_Core_Model_Website $website)
+    protected function _exportReviewsForWebsite(Mage_Core_Model_Website $website)
     {
         $limit = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT, $website);
         $emailReviews = $this->_getReviewsToExport($website, $limit);
@@ -136,7 +136,7 @@ class Dotdigitalgroup_Email_Model_Review extends Mage_Core_Model_Abstract
         }
     }
 
-    private function _getReviewsToExport(Mage_Core_Model_Website $website, $limit = 100)
+    protected function _getReviewsToExport(Mage_Core_Model_Website $website, $limit = 100)
     {
         return $this->getCollection()
             ->addFieldToFilter('review_imported', array('null' => 'true'))

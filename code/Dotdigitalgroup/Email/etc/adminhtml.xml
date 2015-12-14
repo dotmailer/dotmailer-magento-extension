@@ -60,7 +60,7 @@
                             <action>adminhtml/email_importer</action>
                         </email_connector_importer>
                         <email_connector_campaign translate="title">
-                            <title>Email Send Status</title>
+                            <title>Email Status</title>
                             <sort_order>80</sort_order>
                             <action>adminhtml/email_campaign</action>
                         </email_connector_campaign>

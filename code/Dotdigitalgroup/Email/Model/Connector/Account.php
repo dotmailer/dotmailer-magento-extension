@@ -2,21 +2,21 @@
 
 class Dotdigitalgroup_Email_Model_Connector_Account
 {
-    private  $_api_username;
-    private  $_api_password;
-    private  $_limit;
-    private  $_contactBookId;
-    private  $_subscriberBookId;
-    private  $_websites = array();
-    private  $_csv_headers;
-    private  $_customers_filename;
-    private  $_subscribers_filename;
-    private  $_mapping_hash;
-    private  $_contacts = array();
-    private  $_orders = array();
-    private  $_orderIds = array();
-    private $_ordersForSingleSync = array();
-    private $_orderIdsForSingleSync = array();
+    protected  $_api_username;
+    protected  $_api_password;
+    protected  $_limit;
+    protected  $_contactBookId;
+    protected  $_subscriberBookId;
+    protected  $_websites = array();
+    protected  $_csv_headers;
+    protected  $_customers_filename;
+    protected  $_subscribers_filename;
+    protected  $_mapping_hash;
+    protected  $_contacts = array();
+    protected  $_orders = array();
+    protected  $_orderIds = array();
+    protected $_ordersForSingleSync = array();
+    protected $_orderIdsForSingleSync = array();
 
     /**
      * @param $api_password

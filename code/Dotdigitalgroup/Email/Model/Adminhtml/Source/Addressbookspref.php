@@ -2,7 +2,7 @@
 
 class Dotdigitalgroup_Email_Model_Adminhtml_Source_Addressbookspref
 {
-	private function getWebsite()
+	protected function getWebsite()
 	{
 		$website = Mage::app()->getWebsite();
 		$websiteParam = Mage::app()->getRequest()->getParam('website');
@@ -16,7 +16,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Addressbookspref
 	 *
 	 * @return null
 	 */
-	private function getAddressBooks()
+	protected function getAddressBooks()
 	{
 		$website = $this->getWebsite();
 		$client = Mage::getModel( 'ddg_automation/apiconnector_client' );
@@ -59,9 +59,11 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Addressbookspref
 			$subscriberAddressBook = Mage::helper('ddg')->getSubscriberAddressBook(Mage::app()->getWebsite());
 
 			//set up fields with book id and label
-			foreach ( $addressBooks as $book ) {
-				if (isset($book->id) &&  $book->visibility == 'Public' &&  $book->id != $subscriberAddressBook) {
-					$fields[] = array( 'value' => $book->id, 'label' => $book->name );
+			if ($addressBooks) {
+				foreach ( $addressBooks as $book ) {
+					if ( isset( $book->id ) && $book->visibility == 'Public' && $book->id != $subscriberAddressBook ) {
+						$fields[] = array( 'value' => $book->id, 'label' => $book->name );
+					}
 				}
 			}
 		}

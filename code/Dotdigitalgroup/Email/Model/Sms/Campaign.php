@@ -7,34 +7,34 @@ class Dotdigitalgroup_Email_Model_Sms_Campaign
 	/**
 	 * @var int
 	 */
-	private $_storeId;
+	protected $_storeId;
 	/**
 	 * @var string
 	 */
-	private $_status;
+	protected $_status;
 	/**
 	 * @var string
 	 */
-	private $_customerFirstName;
+	protected $_customerFirstName;
 	/**
 	 * @var string
 	 */
-	private $_customerTelephone;
+	protected $_customerTelephone;
 
 	/**
 	 * @var int
 	 */
-	private $_incrementId;
+	protected $_incrementId;
 
 	/**
 	 * @var array
 	 */
-	private $_allsms = array(1, 2, 3, 4);
+	protected $_allsms = array(1, 2, 3, 4);
 	/**
 	 * filter for the variables
 	 * @var array
 	 */
-	private $_vars = array('/customer_name/', '/order_number/', '/{{var /', '/}}/');
+	protected $_vars = array('/customer_name/', '/order_number/', '/{{var /', '/}}/');
 
 
 	/**

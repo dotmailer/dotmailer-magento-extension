@@ -49,13 +49,11 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Importer_Grid extends Mage_Adminhtml
             'escape' => true
         ))->addColumn('import_type', array(
             'header' => Mage::helper('ddg')->__('Import Type'),
-            'width' => '50px',
             'index' => 'import_type',
             'type' => 'text',
             'escape' => true
         ))->addColumn('import_status', array(
             'header' => Mage::helper('ddg')->__('Import Status'),
-            'width' => '50px',
             'index' => 'import_status',
             'type' => 'options',
             'escape' => true,
@@ -67,14 +65,12 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Importer_Grid extends Mage_Adminhtml
             'escape' => true
         ))->addColumn('import_mode', array(
             'header' => Mage::helper('ddg')->__('Import Mode'),
-            'width' => '50px',
             'index' => 'import_mode',
             'type' => 'options',
             'escape' => true,
             'options' => Mage::getModel('ddg_automation/adminhtml_source_importer_mode')->getOptions(),
         ))->addColumn('import_id', array(
             'header' => Mage::helper('ddg')->__('Import ID'),
-            'width' => '50px',
             'index' => 'import_id',
             'type' => 'text',
             'escape' => true
@@ -87,7 +83,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Importer_Grid extends Mage_Adminhtml
             'escape' => true
         ))->addColumn('import_finished', array(
             'header' => Mage::helper('ddg')->__('Last Import Check Time'),
-            'width' => '50px',
             'align' => 'center',
             'index' => 'import_finished',
             'type' => 'datetime',
@@ -99,14 +94,12 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Importer_Grid extends Mage_Adminhtml
             'header_css_class' => 'no-display'
         ))->addColumn('created_at', array(
 	        'header' => Mage::helper('ddg')->__('Created At'),
-	        'width' => '50px',
 	        'align' => 'center',
 	        'index' => 'created_at',
 	        'type' => 'datetime',
 	        'escape' => true
         ))->addColumn('updated_at', array(
 	        'header' => Mage::helper('ddg')->__('Updated At'),
-	        'width' => '50px',
 	        'align' => 'center',
 	        'index' => 'updated_at',
 	        'type' => 'datetime',
@@ -117,7 +110,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Importer_Grid extends Mage_Adminhtml
 		    $this->addColumn('website_id', array(
 			    'header'    => Mage::helper('customer')->__('Website'),
 			    'align'     => 'center',
-			    'width'     => '80px',
 			    'type'      => 'options',
 			    'options'   => Mage::getSingleton('adminhtml/system_store')->getWebsiteOptionHash(true),
 			    'index'     => 'website_id',

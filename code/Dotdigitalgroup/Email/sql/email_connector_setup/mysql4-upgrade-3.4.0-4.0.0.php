@@ -15,15 +15,16 @@ if (Mage::helper('ddg')->isEnterprise()) {
 	//customer segment table
 	$segmentTable = $installer->getTable( 'enterprise_customersegment/customer' );
 	//add additional column with segment ids
-	$installer->getConnection()->addColumn(
-		$contactTable,
-		'segment_ids',
-		'mediumtext'
-	);
-
+	$installer->getConnection()
+		->addColumn(
+			$contactTable,
+			'segment_ids',
+			'mediumtext'
+		);
 	//update contact table with customer segment ids
 	$result  = $installer->run( "update`{$contactTable}` c,(select customer_id, website_id, group_concat(`segment_id` separator ',') as segmentids
-from `{$segmentTable}` group by customer_id) as s set c.segment_ids = segmentids, c.email_imported = null WHERE s.customer_id= c.customer_id and s.website_id = c.website_id");
+from `{$segmentTable}` group by customer_id) as s set c.segment_ids = segmentids, c.email_imported = null
+WHERE s.customer_id= c.customer_id and s.website_id = c.website_id");
 
 }
 
