@@ -40,7 +40,32 @@ class Dotdigitalgroup_Email_Block_Basket extends Mage_Core_Block_Template
 	    $appEmulation = Mage::getSingleton('core/app_emulation');
 	    $appEmulation->startEnvironmentEmulation($storeId);
 
-        return $quoteModel->getAllItems();
+		$quoteItems = $quoteModel->getAllItems();
+	    $itemsData = array();
+
+	    foreach ( $quoteItems as $quoteItem ) {
+			if ($quoteItem->getParentItemId() != null)
+				continue;
+			$_product = Mage::getModel('catalog/product')->load($quoteItem->getProductId());
+
+			$inStock = ($_product->getStockItem()->getIsInStock())? 'In Stock' : 'Out of stock';
+			$total = Mage::helper('core')->currency($quoteItem->getBaseRowTotalInclTax());
+			$productUrl = $_product->getProductUrl();
+			$grandTotal = Mage::helper('core')->currency($this->getGrandTotal());
+			$itemsData[] = array(
+				'grandTotal' => $grandTotal,
+				'total' => $total,
+				'inStock' => $inStock,
+				'productUrl' => $productUrl,
+				'product' => $_product,
+				'qty' => $quoteItem->getQty()
+
+			);
+		}
+
+
+
+        return $itemsData;
     }
 
     /**
@@ -84,4 +109,16 @@ class Dotdigitalgroup_Email_Block_Basket extends Mage_Core_Block_Template
 			Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CONTENT_LINK_TEXT
 		);
 	}
+
+
+	/**
+	 * Get dynamic style configuration.
+	 * @return array
+	 */
+	protected function getDynamicStyle() {
+
+		$dynamicStyle = Mage::helper('ddg')->getDynamicStyles();
+		return $dynamicStyle;
+	}
+
 }

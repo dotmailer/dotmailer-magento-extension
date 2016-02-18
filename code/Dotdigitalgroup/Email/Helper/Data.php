@@ -879,20 +879,21 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
             //string to array
             $ipArray = explode(',', $ipString);
             //remove white spaces
-            foreach($ipArray as $key => $ip){
+            foreach ($ipArray as $key => $ip) {
                 $ipArray[$key] = preg_replace('/\s+/', '', $ip);
             }
             //ip address
             $ipAddress = Mage::helper('core/http')->getRemoteAddr();
 
-            if(in_array($ipAddress, $ipArray)) {
+            if (in_array($ipAddress, $ipArray)) {
                 return true;
             }
 
-            $this->getRaygunClient()->Send('Ip address auth failed with ip address :' . $ipAddress);
             return false;
+        } else {
+	        //empty ip list will ignore the validation
+	        return true;
         }
-        return false;
     }
 
 	/**
@@ -970,4 +971,25 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
 		return $this->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_AUTOMATION_REVIEW_ANCHOR, $website);
 	}
 
+
+	public function getDynamicStyles()
+	{
+		return $dynamicStyle = array(
+			'nameStyle' => explode(',', Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_NAME_STYLE)),
+			'priceStyle' => explode(',', Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_PRICE_STYLE)),
+			'linkStyle' => explode(',', Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_LINK_STYLE)),
+			'otherStyle' => explode(',', Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_OTHER_STYLE)),
+			'nameColor' => Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_NAME_COLOR),
+			'fontSize' => Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_NAME_FONT_SIZE),
+			'priceColor' => Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_PRICE_COLOR),
+			'priceFontSize' => Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_PRICE_FONT_SIZE),
+			'urlColor' => Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_LINK_COLOR),
+			'urlFontSize' => Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_LINK_FONT_SIZE),
+			'otherColor' => Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_OTHER_COLOR),
+			'otherFontSize' => Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_OTHER_FONT_SIZE),
+			'docFont' => Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_DOC_FONT),
+			'docBackgroundColor'  => Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_DOC_BG_COLOR),
+			'dynamicStyling' => Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_STYLING)
+		);
+	}
 }

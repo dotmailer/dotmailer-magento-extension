@@ -72,11 +72,11 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
                         $from->sub('5', Zend_Date::MINUTE);
 
 					    //active quotes
-					    $quoteCollection = $this->_getStoreQuotes( $from->toString( 'YYYY-MM-dd HH:mm' ), $to->toString( 'YYYY-MM-dd HH:mm' ),
+					    $quoteCollection = $this->_getStoreQuotes( $from->toString( 'yyyy-MM-dd HH:mm' ), $to->toString( 'yyyy-MM-dd HH:mm' ),
 						    $guest = false, $storeId );
 					    if ( $quoteCollection->getSize() ) {
-						    Mage::helper( 'ddg' )->log( 'Customer lost baskets : ' . $num . ', from : ' . $from->toString( 'YYYY-MM-dd HH:mm' ) .
-								':' . $to->toString( 'YYYY-MM-dd HH:mm' ) );
+						    Mage::helper( 'ddg' )->log( 'Customer lost baskets : ' . $num . ', from : ' . $from->toString( 'yyyy-MM-dd HH:mm' ) .
+								':' . $to->toString( 'yyyy-MM-dd HH:mm' ) );
 					    }
 
 					    //campaign id for customers
@@ -137,10 +137,10 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
 					    }
                         $to = clone($from);
                         $from->sub('5', Zend_Date::MINUTE);
-					    $quoteCollection = $this->_getStoreQuotes( $from->toString( 'YYYY-MM-dd HH:mm' ), $to->toString( 'YYYY-MM-dd HH:mm' ), $guest = true, $storeId );
+					    $quoteCollection = $this->_getStoreQuotes( $from->toString( 'yyyy-MM-dd HH:mm' ), $to->toString( 'yyyy-MM-dd HH:mm' ), $guest = true, $storeId );
 
 					    if ( $quoteCollection->getSize() ) {
-						    Mage::helper( 'ddg' )->log( 'Guest lost baskets : ' . $num . ', from : ' . $from->toString( 'YYYY-MM-dd HH:mm' ) . ':' . $to->toString( 'YYYY-MM-dd HH:mm' ) );
+						    Mage::helper( 'ddg' )->log( 'Guest lost baskets : ' . $num . ', from : ' . $from->toString( 'yyyy-MM-dd HH:mm' ) . ':' . $to->toString( 'yyyy-MM-dd HH:mm' ) );
 					    }
 					    $guestCampaignId = $this->_getLostBasketGuestCampaignId( $num, $storeId );
 					    foreach ( $quoteCollection as $quote ) {
@@ -232,8 +232,8 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
      * @param int $storeId
      * @return Mage_Eav_Model_Entity_Collection_Abstract
      */
-    protected function _getStoreQuotes($from = null, $to = null, $guest = false, $storeId = 0)
-    {
+    protected function _getStoreQuotes($from = null, $to = null, $guest = false, $storeId = 0) {
+
 	    $updated = array(
             'from' => $from,
             'to' => $to,

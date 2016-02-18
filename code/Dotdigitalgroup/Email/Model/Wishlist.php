@@ -153,15 +153,14 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
     protected function _exportWishlistForWebsiteInSingle(Mage_Core_Model_Website $website)
     {
         $helper = Mage::helper('ddg');
-        $client = $helper->getWebsiteApiClient($website);
         $limit = $helper->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT, $website);
         $collection = $this->_getModifiedWishlistToImport($website, $limit);
         $this->_wishlistIds = array();
-        foreach($collection as $emailWishlist){
-            $customer = Mage::getModel('customer/customer')->load($emailWishlist->getCustomerId());
+
+	    foreach ($collection as $emailWishlist) {
             $wishlist = Mage::getModel('wishlist/wishlist')->load($emailWishlist->getWishlistId());
             /** @var  $connectorWishlist */
-            $connectorWishlist = Mage::getModel('ddg_automation/customer_wishlist', $customer);
+            $connectorWishlist = Mage::getModel('ddg_automation/customer_wishlist');
             $connectorWishlist->setId($wishlist->getId());
             $wishListItemCollection = $wishlist->getItemCollection();
             if ($wishListItemCollection->getSize()) {

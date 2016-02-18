@@ -29,20 +29,16 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
 
 			// only for subsribers
 			if ($subscriberStatus == Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED) {
-				$client = Mage::helper('ddg')->getWebsiteApiClient($websiteId);
-				//check for website client
-				if ($client) {
-					//set contact as subscribed
-					$contactEmail->setSubscriberStatus( $subscriberStatus )
-						->setIsSubscriber('1');
-					$apiContact = $client->postContacts( $email );
+				//set contact as subscribed
+				$contactEmail->setSubscriberStatus( $subscriberStatus )
+					->setIsSubscriber('1');
 
-					//resubscribe suppressed contacts
-					if (isset($apiContact->message) && $apiContact->message == Dotdigitalgroup_Email_Model_Apiconnector_Client::API_ERROR_CONTACT_SUPPRESSED) {
-						$apiContact = $client->getContactByEmail($email);
-						$client->postContactsResubscribe( $apiContact );
-					}
-				}
+				Mage::getModel('ddg_automation/importer')->registerQueue(
+					Dotdigitalgroup_Email_Model_Importer::IMPORT_TYPE_SUBSCRIBER_RESUBSCRIBED,
+					array('email' => $email),
+					Dotdigitalgroup_Email_Model_Importer::MODE_SUBSCRIBER_RESUBSCRIBED,
+					$websiteId
+				);
 				// reset the subscriber as suppressed
 				$contactEmail->setSuppressed(null);
 
@@ -51,26 +47,17 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
 				//skip if contact is suppressed
 				if ($contactEmail->getSuppressed())
 					return $this;
+
 				//update contact id for the subscriber
-				$client = Mage::helper('ddg')->getWebsiteApiClient($websiteId);
-				//check for website client
-				if ($client) {
-					$contactId = $contactEmail->getContactId();
-					//get the contact id
-					if ( !$contactId ) {
-						//if contact id is not set get the contact_id
-						$result = $client->postContacts( $email );
-						if ( isset( $result->id ) ) {
-							$contactId = $result->id;
-						} else {
-							//no contact id skip
-							$contactEmail->setSuppressed( '1' )
-								->save();
-							return $this;
-						}
-					}
-					//remove contact from address book
-					$client->deleteAddressBookContact( $helper->getSubscriberAddressBook( $websiteId ), $contactId );
+				$contactId = $contactEmail->getContactId();
+				//get the contact id
+				if ( !$contactId ) {
+					Mage::getModel('ddg_automation/importer')->registerQueue(
+						Dotdigitalgroup_Email_Model_Importer::IMPORT_TYPE_SUBSCRIBER_UPDATE,
+						array('email' => $email, 'id' => $contactEmail->getId()),
+						Dotdigitalgroup_Email_Model_Importer::MODE_SUBSCRIBER_UPDATE,
+						$websiteId
+					);
 				}
 				$contactEmail->setIsSubscriber(null)
 					->setSubscriberStatus(Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED);
@@ -88,8 +75,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
 
 			//update the contact
 			$contactEmail->setStoreId($storeId);
-			if (isset($contactId))
-				$contactEmail->setContactId($contactId);
+
 			//update contact
 			$contactEmail->save();
 

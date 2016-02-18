@@ -6,15 +6,16 @@ class Dotdigitalgroup_Email_ResponseController extends Mage_Core_Controller_Fron
     {
         //authenticate ip address
         $authIp = Mage::helper('ddg')->authIpAddress();
-        if(!$authIp){
+
+	    if (!$authIp) {
             $e = new Exception('You are not authorised to view content of this page.');
             Mage::logException($e);
             throw new Exception($e->getMessage());
         }
-
         //authenticate
         $auth = Mage::helper('ddg')->auth($this->getRequest()->getParam('code'));
-        if (!$auth){
+
+	    if (!$auth) {
             $this->sendResponse();
             Mage::throwException(Mage::helper('ddg')->__('Authentication failed!'));
         }
@@ -23,7 +24,7 @@ class Dotdigitalgroup_Email_ResponseController extends Mage_Core_Controller_Fron
     protected function checkContentNotEmpty($output, $flag = true)
     {
         try{
-            if(strlen($output) < 3 && $flag == false)
+            if (strlen($output) < 3 && $flag == false)
                 $this->sendResponse();
             elseif($flag && !strpos($output, '<table'))
                 $this->sendResponse();

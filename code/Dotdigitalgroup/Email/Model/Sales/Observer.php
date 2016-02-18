@@ -52,19 +52,19 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
 			$emailOrder->save();
 			//Status check automation enrolment
 			$configStatusAutomationMap = unserialize(Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_ORDER_STATUS, $order->getStore()));
-			if(!empty($configStatusAutomationMap)){
-				foreach($configStatusAutomationMap as $configMap){
+			if (!empty($configStatusAutomationMap)) {
+				foreach ($configStatusAutomationMap as $configMap) {
 					if($configMap['status'] == $status) {
 						try {
 							$programId  = $configMap['automation'];
 							$automation = Mage::getModel( 'ddg_automation/automation' );
 							$automation->setEmail( $customerEmail )
-							           ->setAutomationType( 'order_automation_' . $status )
-							           ->setEnrolmentStatus( Dotdigitalgroup_Email_Model_Automation::AUTOMATION_STATUS_PENDING )
-							           ->setTypeId( $order->getId() )
-							           ->setWebsiteId( $websiteId )
-							           ->setStoreName( $storeName )
-							           ->setProgramId( $programId );
+								->setAutomationType( 'order_automation_' . $status )
+								->setEnrolmentStatus( Dotdigitalgroup_Email_Model_Automation::AUTOMATION_STATUS_PENDING )
+								->setTypeId( $order->getId() )
+								->setWebsiteId( $websiteId )
+								->setStoreName( $storeName )
+								->setProgramId( $programId );
 							$automation->save();
 						}catch(Exception $e){
 							Mage::logException($e);
@@ -100,11 +100,11 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
             return $this;
 
         //automation enrolment for order
-        if($order->getCustomerIsGuest()){
+        if ($order->getCustomerIsGuest()) {
             // guest to automation mapped
             $programType = 'XML_PATH_CONNECTOR_AUTOMATION_STUDIO_GUEST_ORDER';
             $automationType = Dotdigitalgroup_Email_Model_Automation::AUTOMATION_TYPE_NEW_GUEST_ORDER;
-        }else{
+        } else {
             // customer to automation mapped
             $programType = 'XML_PATH_CONNECTOR_AUTOMATION_STUDIO_ORDER';
             $automationType = Dotdigitalgroup_Email_Model_Automation::AUTOMATION_TYPE_NEW_ORDER;
@@ -113,8 +113,7 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
         $programId     = Mage::helper( 'ddg' )->getAutomationIdByType($programType, $order->getWebsiteId());
 
         //the program is not mappped
-        if (! $programId){
-
+        if (! $programId) {
             Mage::log('automation type : '  . $automationType. ' program id not found');
             return $this;
         }

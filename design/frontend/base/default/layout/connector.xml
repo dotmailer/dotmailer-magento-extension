@@ -2,36 +2,29 @@
 <layout version="0.1.0">
     <default>
         <reference name="head">
-            <block type="core/template" name="checkout.tag" as="connector.tag"
-                   template="connector/tracking_code.phtml"/>
-            <block type="core/template" name="easy.email.capture.head" as="easy.email.capture.head"
-                   template="connector/email_capture.phtml"/>
-            <block type="core/template" name="easy.email.capture" as="easy.email.capture"
-                   template="connector/email_capture_init.phtml"/>
+            <block type="core/template" name="checkout.tag" as="connector.tag" template="connector/tracking_code.phtml"/>
+            <block type="core/template" name="easy.email.capture.head" as="easy.email.capture.head" template="connector/email_capture.phtml"/>
+            <block type="core/template" name="easy.email.capture" as="easy.email.capture" template="connector/email_capture_init.phtml"/>
         </reference>
     </default>
     <ddg_automation_feefo_score>
         <reference name="content">
-            <block type="ddg_automation/feefo" name="connector_feefo_service_score"
-                   template="connector/feefo/score.phtml"/>
+            <block type="ddg_automation/feefo" name="connector_feefo_service_score" template="connector/feefo/score.phtml"/>
         </reference>
     </ddg_automation_feefo_score>
     <ddg_automation_feefo_reviews>
         <reference name="content">
-            <block type="ddg_automation/feefo" name="connector_feefo_product_reviews"
-                   template="connector/feefo/reviews.phtml"/>
+            <block type="ddg_automation/feefo" name="connector_feefo_product_reviews" template="connector/feefo/reviews.phtml"/>
         </reference>
     </ddg_automation_feefo_reviews>
     <ddg_automation_products_related>
         <reference name="content">
-            <block type="ddg_automation/recommended_products" name="connector_recommended_related"
-                   template="connector/product/list.phtml"/>
+            <block type="ddg_automation/recommended_products" name="connector_recommended_related" template="connector/product/list.phtml"/>
         </reference>
     </ddg_automation_products_related>
     <ddg_automation_products_crosssell>
         <reference name="content">
-            <block type="ddg_automation/recommended_products" name="connector_recommended_crosssell"
-                   template="connector/product/list.phtml"/>
+            <block type="ddg_automation/recommended_products" name="connector_recommended_crosssell" template="connector/product/list.phtml"/>
         </reference>
     </ddg_automation_products_crosssell>
     <ddg_automation_products_upsell>

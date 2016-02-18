@@ -94,7 +94,7 @@ class Dotdigitalgroup_Email_Model_Review extends Mage_Core_Model_Abstract
 
             $reviews->getSelect()
                 ->joinLeft(
-                    array('c' => 'customer_entity'),
+                    array('c' => Mage::getSingleton('core/resource')->getTableName('customer/entity')),
                     'c.entity_id = customer_id',
                     array('email','store_id')
                 );

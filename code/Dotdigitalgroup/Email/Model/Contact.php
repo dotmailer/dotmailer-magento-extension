@@ -15,20 +15,6 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
         $this->_init('ddg_automation/contact');
     }
 
-
-    /**
-     * @return $this|Mage_Core_Model_Abstract
-     */
-    protected function _beforeSave()
-    {
-        parent::_beforeSave();
-        $now = Mage::getSingleton('core/date')->gmtDate();
-        if ($this->isObjectNew()) {
-            $this->setCreatedAt($now);
-        }
-        return $this;
-    }
-
     /**
      * Load contact by customer id
      * @param $customerId
