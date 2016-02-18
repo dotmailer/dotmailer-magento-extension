@@ -6,7 +6,7 @@ This module uses modman
 First ensure you have modman installed (see here: https://github.com/colinmollenhour/modman#installation)
 ...and run the following in your magento root:
 `modman init`
-`modman clone https://github.com/dotmailer/dotmailer_magento.git`
+`modman clone https://github.com/dotmailer/dotmailer-magento-extension.git`
 
 Don't forget to enable symlinks in:
 `System->Configuration->Advanced->Developer->Template Settings`
