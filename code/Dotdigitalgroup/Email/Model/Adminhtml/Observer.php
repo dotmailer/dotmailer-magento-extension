@@ -98,6 +98,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Observer
             Mage::helper('ddg')->log('----VALIDATING ACCOUNT---');
             $testModel = Mage::getModel('ddg_automation/apiconnector_test');
             $isValid = $testModel->validate($apiUsername, $apiPassword);
+            $config = Mage::getConfig();
             if (! $isValid) {
                 /**
                  * Disable invalid Api credentials
@@ -109,10 +110,23 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Observer
                 } else {
                     $scope = "default";
                 }
-                $config = Mage::getConfig();
                 $config->saveConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED, 0, $scope, $scopeId);
-                $config->cleanCache();
             }
+
+            //check if returned value is an object
+            if(is_object($isValid)){
+                //save endpoint for account
+                foreach($isValid->properties as $property){
+                    if($property->name == 'ApiEndpoint' && strlen($property->value)){
+                        $config->saveConfig(
+                            Dotdigitalgroup_Email_Helper_Config::PATH_FOR_API_ENDPOINT,
+                            $property->value
+                        );
+                        break;
+                    }
+                }
+            }
+            $config->cleanCache();
             Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('ddg')->__('API Credentials Valid.'));
         }
         return $this;

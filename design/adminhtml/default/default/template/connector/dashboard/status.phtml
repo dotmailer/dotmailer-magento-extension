@@ -1,20 +1,13 @@
+<?php $displayData = $this->getDisplayData();?>
 <div class="content-header">
 	<h3 class="icon-head head-newsletter-report"><?php echo $this->getTabTitle(); ?></h3>
 </div>
 <?php foreach ( $this->getCheckpoints() as $key =>  $checkpoint ) :?>
 	<?php $method = $this->getFormatedMethodName($key);
-
-	if (is_callable(array($this, $method))) {
-		$data      = $this->$method();
-		$showHowTo = '';
-		$collapsable = '1';
-		if ( $data->getStyle() == 'connector_passed' ) {
-			$showHowTo = 'no_display';
-			$collapsable = '0';
-		}
-		if ($this->_getCollapseState($key) !== false)
-			$collapsable = $this->_getCollapseState($key);
-	}?>
+		$data      = $displayData[$key]['data'];
+		$showHowTo = $displayData[$key]['showHowTo'];
+		$collapsable = $displayData[$key]['collapsable'];
+	?>
 
 <div class="entry-edit connector-fieldset-entry">
 		<div class="entry-edit-head collapseable ">

@@ -6,8 +6,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Contact_Grid extends Mage_Adminhtml_
     {
         parent::__construct();
         $this->setId('email_contact_id');
-        $this->setDefaultSort('entity_id');
-        $this->setDefaultDir('ASC');
+        $this->setDefaultSort('email_contact_id');
+        $this->setDefaultDir('DESC');
         $this->setSaveParametersInSession(true);
         $this->setUseAjax(true);
     }
@@ -16,8 +16,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Contact_Grid extends Mage_Adminhtml_
     {
 	    $collection = Mage::getModel('ddg_automation/contact')->getCollection();
         $this->setCollection($collection);
-        $this->setDefaultSort('updated_at');
-        $this->setDefaultDir('DESC');
         return parent::_prepareCollection();
     }
 
@@ -39,7 +37,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Contact_Grid extends Mage_Adminhtml_
         ))->addColumn('customer_id', array(
 	        'header'        => Mage::helper('ddg')->__('Customer ID'),
 	        'align'         => 'left',
-	        'width'         => '20px',
 	        'index'         => 'customer_id',
 	        'type'          => 'number',
 	        'escape'        => true

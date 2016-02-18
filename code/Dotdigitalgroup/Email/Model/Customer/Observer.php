@@ -32,31 +32,17 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
 			//email change detection
 			if ($emailBefore && $email != $emailBefore) {
 				Mage::helper('ddg')->log('email change detected : '  . $email . ', after : ' . $emailBefore .  ', website id : ' . $websiteId);
-				$enabled = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED, $websiteId);
-
-				if ($enabled) {
-					$client = Mage::helper('ddg')->getWebsiteApiClient($websiteId);
-					$subscribersAddressBook = Mage::helper('ddg')->getWebsiteConfig(
-						Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SUBSCRIBERS_ADDRESS_BOOK_ID, $websiteId);
-					$response = $client->postContacts($emailBefore);
-					//check for matching email
-					if (isset($response->id)) {
-						if ($email != $response->email) {
-							$data = array(
-								'Email' => $email,
-								'EmailType' => 'Html'
-							);
-							//update the contact with same id - different email
-							$client->updateContact($response->id, $data);
-
-						}
-						if (!$isSubscribed && $response->status == 'Subscribed') {
-							$client->deleteAddressBookContact($subscribersAddressBook, $response->id);
-						}
-					} elseif (isset($response->message)) {
-						Mage::helper('ddg')->log('Email change error : ' . $response->message);
-					}
-				}
+				$data = array(
+					'emailBefore' => $emailBefore,
+					'email' => $email,
+					'isSubscribed' => $isSubscribed
+				);
+				Mage::getModel('ddg_automation/importer')->registerQueue(
+					Dotdigitalgroup_Email_Model_Importer::IMPORT_TYPE_CONTACT_UPDATE,
+					$data,
+					Dotdigitalgroup_Email_Model_Importer::MODE_CONTACT_EMAIL_UPDATE,
+					$websiteId
+				);
 
 			} elseif (!$emailBefore) {
 				//for new contacts update email

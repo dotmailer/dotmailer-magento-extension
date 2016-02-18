@@ -6,23 +6,23 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
 
     const REST_WAIT_UPLOAD_TIME = 5;
     //rest api data
-    const REST_ACCOUNT_INFO                     = 'https://apiconnector.com/v2/account-info';
-    const REST_CONTACTS                         = 'https://apiconnector.com/v2/contacts/';
-    const REST_CONTACTS_IMPORT                  = 'https://apiconnector.com/v2/contacts/import/';
-    const REST_ADDRESS_BOOKS                    = 'https://apiconnector.com/v2/address-books/';
-    const REST_DATA_FILEDS                      = 'https://apiconnector.com/v2/data-fields';
-    const REST_TRANSACTIONAL_DATA_IMPORT        = 'https://apiconnector.com/v2/contacts/transactional-data/import/';
-    const REST_TRANSACTIONAL_DATA               = 'https://apiconnector.com/v2/contacts/transactional-data/';
-    const REST_CAMPAIGN_SEND                    = 'https://apiconnector.com/v2/campaigns/send';
-    const REST_CONTACTS_SUPPRESSED_SINCE        = 'https://apiconnector.com/v2/contacts/suppressed-since/';
-    const REST_DATA_FIELDS_CAMPAIGNS            = 'https://apiconnector.com/v2/campaigns';
-    const REST_SMS_MESSAGE_SEND_TO              = 'https://apiconnector.com/v2/sms-messages/send-to/';
-    const REST_CONTACTS_RESUBSCRIBE             = 'https://apiconnector.com/v2/contacts/resubscribe';
-    const REST_CAMPAIGN_FROM_ADDRESS_LIST       = 'https://apiconnector.com/v2/custom-from-addresses';
-    const REST_CREATE_CAMPAIGN                  = 'https://apiconnector.com/v2/campaigns';
-    const REST_PROGRAM                          = 'https://apiconnector.com/v2/programs/';
-    const REST_PROGRAM_ENROLMENTS               = 'https://apiconnector.com/v2/programs/enrolments';
-    const REST_TEMPLATES                        = 'https://apiconnector.com/v2/templates';
+    const REST_ACCOUNT_INFO                     = 'https://r1-api.dotmailer.com/v2/account-info';
+    const REST_CONTACTS                         = '/v2/contacts/';
+    const REST_CONTACTS_IMPORT                  = '/v2/contacts/import/';
+    const REST_ADDRESS_BOOKS                    = '/v2/address-books/';
+    const REST_DATA_FILEDS                      = '/v2/data-fields';
+    const REST_TRANSACTIONAL_DATA_IMPORT        = '/v2/contacts/transactional-data/import/';
+    const REST_TRANSACTIONAL_DATA               = '/v2/contacts/transactional-data/';
+    const REST_CAMPAIGN_SEND                    = '/v2/campaigns/send';
+    const REST_CONTACTS_SUPPRESSED_SINCE        = '/v2/contacts/suppressed-since/';
+    const REST_DATA_FIELDS_CAMPAIGNS            = '/v2/campaigns';
+    const REST_SMS_MESSAGE_SEND_TO              = '/v2/sms-messages/send-to/';
+    const REST_CONTACTS_RESUBSCRIBE             = '/v2/contacts/resubscribe';
+    const REST_CAMPAIGN_FROM_ADDRESS_LIST       = '/v2/custom-from-addresses';
+    const REST_CREATE_CAMPAIGN                  = '/v2/campaigns';
+    const REST_PROGRAM                          = '/v2/programs/';
+    const REST_PROGRAM_ENROLMENTS               = '/v2/programs/enrolments';
+    const REST_TEMPLATES                        = '/v2/templates';
 
     //rest error responces
     const API_ERROR_API_EXCEEDED                = 'Your account has generated excess API activity and is being temporarily capped. Please contact support. ERROR_APIUSAGE_EXCEEDED';
@@ -53,6 +53,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
     protected $_customers_file_slug   = 'customer_sync';
     protected $_subscribers_file_slug = 'subscriber_sync';
     public $result = array('error' => false, 'message' => '');
+    protected $_apiEndpoint;
 
 
     /**
@@ -60,7 +61,42 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
      */
     public function __construct()
     {
+        $this->_checkApiEndPoint();
         parent::__construct();
+    }
+
+    protected function _checkApiEndPoint()
+    {
+        $apiEndpoint = Mage::helper('ddg')->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::PATH_FOR_API_ENDPOINT);
+        if(!$apiEndpoint){
+            $helper = Mage::helper('ddg');
+            $this->setApiUsername($helper->getApiUsername())
+                ->setApiPassword($helper->getApiPassword());
+
+            $accountInfo = $this->getAccountInfo();
+            //check if returned value is an object
+            if(is_object($accountInfo) && !isset($accountInfo->message)){
+                //save endpoint for account
+                foreach($accountInfo->properties as $property){
+                    if($property->name == 'ApiEndpoint' && strlen($property->value)){
+                        $apiEndpoint = $property->value;
+                        $config = Mage::getConfig();
+                        $config->saveConfig(
+                            Dotdigitalgroup_Email_Helper_Config::PATH_FOR_API_ENDPOINT,
+                            $property->value
+                        );
+                        $config->cleanCache();
+                        break;
+                    }
+                }
+            }
+
+            //check api endpoint again
+            if(!$apiEndpoint)
+                throw new Exception('API endpoint cannot be empty. Re-save api credentials to retrieve API endpoint.');
+        }
+
+        $this->_apiEndpoint = $apiEndpoint;
     }
 
     /**
@@ -108,7 +144,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
      */
     public function getContactById($id)
     {
-        $url = self::REST_CONTACTS . $id;
+        $url = $this->_apiEndpoint . self::REST_CONTACTS . $id;
         $this->setUrl($url)
             ->setVerb('GET');
         $response = $this->execute();
@@ -132,7 +168,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
 
     public function postAddressBookContactsImport($filename, $addressBookId)
     {
-        $url = "https://apiconnector.com/v2/address-books/{$addressBookId}/contacts/import";
+        $url = $this->_apiEndpoint . "/v2/address-books/{$addressBookId}/contacts/import";
         $helper = Mage::helper('ddg');
 
         $ch = curl_init($url);
@@ -186,7 +222,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
      */
     public function postAddressBookContacts($addressBookId, $apiContact)
     {
-        $url = self::REST_ADDRESS_BOOKS . $addressBookId . '/contacts';
+        $url = $this->_apiEndpoint . self::REST_ADDRESS_BOOKS . $addressBookId . '/contacts';
         $this->setUrl($url)
             ->setVerb("POST")
             ->buildPostBody($apiContact);
@@ -212,7 +248,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
     public function deleteAddressBookContact($addressBookId, $contactId)
     {
 
-        $url = self::REST_ADDRESS_BOOKS . $addressBookId . '/contacts/' . $contactId;
+        $url = $this->_apiEndpoint . self::REST_ADDRESS_BOOKS . $addressBookId . '/contacts/' . $contactId;
         $this->setUrl($url)
             ->setVerb('DELETE');
 
@@ -226,7 +262,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
      */
     public function getContactsImportReport($importId)
     {
-        $url = self::REST_CONTACTS_IMPORT . $importId . "/report";
+        $url = $this->_apiEndpoint . self::REST_CONTACTS_IMPORT . $importId . "/report";
         $this->setUrl($url)
             ->setVerb('GET');
         $response = $this->execute();
@@ -246,7 +282,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
      */
     public function getContactByEmail($email)
     {
-        $url = self::REST_CONTACTS . $email;
+        $url = $this->_apiEndpoint . self::REST_CONTACTS . $email;
         $this->setUrl($url)
             ->setVerb('GET');
 
@@ -268,7 +304,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
      */
     public function getAddressBooks()
     {
-        $url = self::REST_ADDRESS_BOOKS;
+        $url = $this->_apiEndpoint . self::REST_ADDRESS_BOOKS;
         $this->setUrl($url)
             ->setVerb("GET");
 
@@ -292,7 +328,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
      */
     public function getAddressBookById($id)
     {
-        $url = self::REST_ADDRESS_BOOKS . $id;
+        $url = $this->_apiEndpoint . self::REST_ADDRESS_BOOKS . $id;
 
         $this->setUrl($url)
             ->setVerb('GET');
@@ -317,7 +353,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
             'Name' => $name,
             'Visibility' => $visibility
         );
-        $url = self::REST_ADDRESS_BOOKS;
+        $url = $this->_apiEndpoint . self::REST_ADDRESS_BOOKS;
         $this->setUrl($url)
             ->setVerb('POST')
             ->buildPostBody($data);
@@ -339,7 +375,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
      */
     public function getCampaigns()
     {
-        $url = self::REST_DATA_FIELDS_CAMPAIGNS;
+        $url = $this->_apiEndpoint . self::REST_DATA_FIELDS_CAMPAIGNS;
         $this->setUrl($url)
             ->setVerb('GET');
 
@@ -364,7 +400,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
      */
     public function postDataFields($data, $type = 'String', $visibility = 'public', $defaultValue = false)
     {
-        $url = self::REST_DATA_FILEDS;
+        $url = $this->_apiEndpoint . self::REST_DATA_FILEDS;
         //set default value for the numeric datatype
         if($type == 'numeric' && !$defaultValue)
             $defaultValue = 0;
@@ -403,7 +439,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
      */
     public function deleteDataField($name)
     {
-        $url = self::REST_DATA_FILEDS . '/' . $name;
+        $url = $this->_apiEndpoint . self::REST_DATA_FILEDS . '/' . $name;
         $this->setUrl($url)
             ->setVerb('DELETE');
 
@@ -424,7 +460,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
      */
     public function getDataFields()
     {
-        $url = self::REST_DATA_FILEDS;
+        $url = $this->_apiEndpoint . self::REST_DATA_FILEDS;
         $this->setUrl($url)
             ->setVerb('GET');
 
@@ -447,7 +483,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
      */
     public function updateContact($contactId, $data)
     {
-        $url = self::REST_CONTACTS . $contactId;
+        $url = $this->_apiEndpoint . self::REST_CONTACTS . $contactId;
         $this->setUrl($url)
             ->setVerb('PUT')
             ->buildPostBody($data);
@@ -471,7 +507,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
      */
     public function deleteContact($contactId)
     {
-        $url = self::REST_CONTACTS . $contactId;
+        $url = $this->_apiEndpoint . self::REST_CONTACTS . $contactId;
         $this->setUrl($url)
             ->setVerb('DELETE');
 
@@ -507,7 +543,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
             'Email' => $email,
             'EmailType' => 'Html');
         $data['DataFields'] = $dataFields;
-        $url = self::REST_CONTACTS . $contactId;
+        $url = $this->_apiEndpoint . self::REST_CONTACTS . $contactId;
         $this->setUrl($url)
             ->setVerb('PUT')
             ->buildPostBody($data);
@@ -539,7 +575,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
             "campaignId" => $campaignId,
             "ContactIds" => $contacts
         );
-        $this->setUrl(self::REST_CAMPAIGN_SEND)
+        $this->setUrl($this->_apiEndpoint . self::REST_CAMPAIGN_SEND)
             ->setVerb('POST')
             ->buildPostBody($data);
 
@@ -569,7 +605,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
 			return $object->message = 'Not valid email :' . $email;
 		}
 
-        $url = self::REST_CONTACTS;
+        $url = $this->_apiEndpoint . self::REST_CONTACTS;
         $data = array(
             'Email' => $email,
             'EmailType' => 'Html',
@@ -599,7 +635,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
      */
     public function getContactsSuppressedSinceDate($dateString, $select = 1000, $skip = 0)
     {
-        $url = self::REST_CONTACTS_SUPPRESSED_SINCE . $dateString . '?select=' . $select . '&skip=' . $skip;
+        $url = $this->_apiEndpoint . self::REST_CONTACTS_SUPPRESSED_SINCE . $dateString . '?select=' . $select . '&skip=' . $skip;
         $this->setUrl($url)
             ->setVerb("GET");
 
@@ -632,7 +668,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
                 );
             }
         }
-        $url = self::REST_TRANSACTIONAL_DATA_IMPORT . $collectionName;
+        $url = $this->_apiEndpoint . self::REST_TRANSACTIONAL_DATA_IMPORT . $collectionName;
         $this->setURl($url)
             ->setVerb('POST')
             ->buildPostBody($orders);
@@ -661,9 +697,9 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
     {
         $order = $this->getContactsTransactionalDataByKey($collectionName, $data->id);
         if(isset($order->message) && $order->message == self::API_ERROR_TRANS_NOT_EXISTS){
-            $url  = self::REST_TRANSACTIONAL_DATA . $collectionName;
+            $url  = $this->_apiEndpoint . self::REST_TRANSACTIONAL_DATA . $collectionName;
         }else{
-            $url = self::REST_TRANSACTIONAL_DATA . $collectionName . '/' . $order->key ;
+            $url = $this->_apiEndpoint . self::REST_TRANSACTIONAL_DATA . $collectionName . '/' . $order->key ;
         }
         $apiData = array(
             'Key' => $data->id,
@@ -694,7 +730,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
      */
     public function getContactsTransactionalDataByKey($name, $key)
     {
-        $url = self::REST_TRANSACTIONAL_DATA . $name . '/' . $key;
+        $url = $this->_apiEndpoint . self::REST_TRANSACTIONAL_DATA . $name . '/' . $key;
         $this->setUrl($url)
             ->setVerb('GET');
 
@@ -709,7 +745,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
      */
     public function deleteContactTransactionalData($email, $collectionName = 'Orders')
     {
-        $url =  'https://apiconnector.com/v2/contacts/' . $email . '/transactional-data/' . $collectionName ;
+        $url =  $this->_apiEndpoint . '/v2/contacts/' . $email . '/transactional-data/' . $collectionName ;
         $this->setUrl($url)
             ->setVerb('DELETE');
 
@@ -746,7 +782,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
     public function postSmsMessagesSendTo($telephoneNumber, $message)
     {
         $data = array('Message' => $message);
-        $url = self::REST_SMS_MESSAGE_SEND_TO . $telephoneNumber;
+        $url = $this->_apiEndpoint . self::REST_SMS_MESSAGE_SEND_TO . $telephoneNumber;
         $this->setUrl($url)
             ->setVerb('POST')
             ->buildPostBody($data);
@@ -771,7 +807,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
      */
     public function deleteAddressBookContactsInbulk($addressBookId, $contactIds)
     {
-        $url = 'https://apiconnector.com/v2/address-books/' . $addressBookId . '/contacts/inbulk';
+        $url = $this->_apiEndpoint . '/v2/address-books/' . $addressBookId . '/contacts/inbulk';
         $data = array('ContactIds' => array($contactIds[0]));
         $this->setUrl($url)
             ->setVerb('DELETE')
@@ -798,7 +834,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
 	 */
     public function postContactsResubscribe($apiContact)
     {
-        $url = self::REST_CONTACTS_RESUBSCRIBE;
+        $url = $this->_apiEndpoint . self::REST_CONTACTS_RESUBSCRIBE;
         $data = array(
             'UnsubscribedContact' => $apiContact
         );
@@ -826,7 +862,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
 
     public function getCustomFromAddresses()
     {
-        $url = self::REST_CAMPAIGN_FROM_ADDRESS_LIST;
+        $url = $this->_apiEndpoint . self::REST_CAMPAIGN_FROM_ADDRESS_LIST;
         $this->setUrl($url)
             ->setVerb('GET');
 
@@ -851,7 +887,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
 	 */
     public function postCampaign($data)
     {
-        $url = self::REST_CREATE_CAMPAIGN;
+        $url = $this->_apiEndpoint . self::REST_CREATE_CAMPAIGN;
         $this->setURl($url)
             ->setVerb('POST')
             ->buildPostBody($data);
@@ -873,7 +909,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
      */
     public function getPrograms()
     {
-        $url = self::REST_PROGRAM;
+        $url = $this->_apiEndpoint . self::REST_PROGRAM;
 
         $this->setUrl($url)
             ->setVerb('GET');
@@ -898,7 +934,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
      */
     public function postProgramsEnrolments($data)
     {
-        $url = self::REST_PROGRAM_ENROLMENTS;
+        $url = $this->_apiEndpoint . self::REST_PROGRAM_ENROLMENTS;
         $this->setUrl($url)
             ->setVerb('POST')
             ->buildPostBody($data);
@@ -924,7 +960,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
      */
     public function getProgramById( $id )
     {
-        $url =  self::REST_PROGRAM . $id;
+        $url =  $this->_apiEndpoint . self::REST_PROGRAM . $id;
         $this->setUrl($url)
             ->setVerb('GET');
 
@@ -948,7 +984,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
      */
     public function getCampaignSummary($campaignId)
     {
-        $url = 'https://apiconnector.com/v2/campaigns/' . $campaignId . '/summary';
+        $url = $this->_apiEndpoint . '/v2/campaigns/' . $campaignId . '/summary';
 
         $this->setUrl($url)
             ->setVerb('GET');
@@ -971,7 +1007,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
      */
     public function deleteContactsTransactionalData($key, $collectionName = 'Orders')
     {
-        $url =  'https://apiconnector.com/v2/contacts/transactional-data/' . $collectionName  .'/' . $key ;
+        $url =  $this->_apiEndpoint . '/v2/contacts/transactional-data/' . $collectionName  .'/' . $key ;
         $this->setUrl($url)
             ->setVerb('DELETE');
         $response = $this->execute();
@@ -992,7 +1028,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
      */
     public function postCampaignAttachments($campaignId, $data)
     {
-        $url = self::REST_CREATE_CAMPAIGN . "/$campaignId/attachments";
+        $url = $this->_apiEndpoint . self::REST_CREATE_CAMPAIGN . "/$campaignId/attachments";
         $this->setURl($url)
             ->setVerb('POST')
             ->buildPostBody($data);
@@ -1042,7 +1078,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
      */
     public function getContactAddressBooks($contactId)
     {
-        $url =  'https://apiconnector.com/v2/contacts/' . $contactId . '/address-books' ;
+        $url =  $this->_apiEndpoint . '/v2/contacts/' . $contactId . '/address-books' ;
         $this->setUrl($url)
             ->setVerb('GET');
         $response = $this->execute();
@@ -1064,7 +1100,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
      */
     public function getApiTemplateList()
     {
-        $url =  self::REST_TEMPLATES;
+        $url =  $this->_apiEndpoint . self::REST_TEMPLATES;
         $this->setUrl($url)
             ->setVerb('GET');
 
@@ -1089,7 +1125,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
      */
     public function getApiTemplate($templateId)
     {
-        $url =  self::REST_TEMPLATES . '/' . $templateId;
+        $url =  $this->_apiEndpoint . self::REST_TEMPLATES . '/' . $templateId;
         $this->setUrl($url)
             ->setVerb('GET');
 
@@ -1122,7 +1158,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
                 );
             }
         }
-        $url = self::REST_TRANSACTIONAL_DATA_IMPORT . $collectionName;
+        $url = $this->_apiEndpoint . self::REST_TRANSACTIONAL_DATA_IMPORT . $collectionName;
         $this->setURl($url)
             ->setVerb('POST')
             ->buildPostBody($orders);
@@ -1140,7 +1176,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
 
     public function getCampaignsWithActivitySinceDate($dateTime)
     {
-        $url = self::REST_DATA_FIELDS_CAMPAIGNS . '/with-activity-since/' . $dateTime;
+        $url = $this->_apiEndpoint . self::REST_DATA_FIELDS_CAMPAIGNS . '/with-activity-since/' . $dateTime;
 
         $this->setUrl($url)
             ->setVerb('GET');
@@ -1158,7 +1194,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
 
     public function getCampaignActivityByContactId($campaignId, $contactId)
     {
-        $url = self::REST_DATA_FIELDS_CAMPAIGNS . '/' . $campaignId . '/activities/' . $contactId;
+        $url = $this->_apiEndpoint . self::REST_DATA_FIELDS_CAMPAIGNS . '/' . $campaignId . '/activities/' . $contactId;
 
         $this->setUrl($url)
             ->setVerb('GET');
@@ -1182,7 +1218,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
      */
     public function getContactsImportByImportId($importId)
     {
-        $url = self::REST_CONTACTS_IMPORT . $importId;
+        $url = $this->_apiEndpoint . self::REST_CONTACTS_IMPORT . $importId;
 
         $this->setUrl($url)
             ->setVerb('GET');
@@ -1206,7 +1242,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
      */
     public function getContactsTransactionalDataImportByImportId($importId)
     {
-        $url = self::REST_TRANSACTIONAL_DATA_IMPORT . $importId;
+        $url = $this->_apiEndpoint . self::REST_TRANSACTIONAL_DATA_IMPORT . $importId;
 
         $this->setUrl($url)
             ->setVerb('GET');
@@ -1231,7 +1267,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
      */
     public function getContactImportReportFaults($id)
     {
-        $url = self::REST_CONTACTS_IMPORT . $id . '/report-faults';
+        $url = $this->_apiEndpoint . self::REST_CONTACTS_IMPORT . $id . '/report-faults';
         $this->setUrl($url)
             ->setVerb('GET');
 

@@ -111,7 +111,7 @@ class Dotdigitalgroup_Email_Model_Resource_Contact extends Mage_Core_Model_Mysql
 
         $select
             ->from(
-                array('customer' => $this->getReadConnection()->getTableName('customer/customer')),
+                array('customer' => $this->getReadConnection()->getTableName($this->getTable('customer/customer'))),
                 array('customer_id' => 'entity_id','email','website_id','store_id')
             )
             ->where("entity_id not in ($emailContacts)");
@@ -127,7 +127,7 @@ class Dotdigitalgroup_Email_Model_Resource_Contact extends Mage_Core_Model_Mysql
                 array('c.customer_id')
             )
             ->joinLeft(
-                array('e' => $this->getReadConnection()->getTableName('customer/customer')),
+                array('e' => $this->getReadConnection()->getTableName($this->getTable('customer/customer'))),
                 "c.customer_id = e.entity_id"
             )
             ->where('e.entity_id is NULL');

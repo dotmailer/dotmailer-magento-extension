@@ -284,7 +284,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
     public function runreviewsyncAction()
     {
 
-        $result = Mage::getModel('ddg_automation/cron')->reviewSync();
+        $result = Mage::getModel('ddg_automation/review')->sync();
         if ($result['message'])
             Mage::getSingleton('adminhtml/session')->addSuccess($result['message']);
 

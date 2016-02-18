@@ -50,4 +50,26 @@ class Dotdigitalgroup_Email_Block_Coupon extends Mage_Core_Block_Template
         return false;
     }
 
+
+	protected function getStyle() {
+		return explode(',', Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_COUPON_STYLE));
+	}
+
+	protected function getCouponColor() {
+		return Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_COUPON_COLOR);
+	}
+
+	protected function getFontSize() {
+		return Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_COUPON_FONT_SIZE);
+	}
+
+	protected function getFont()
+	{
+		return Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_COUPON_FONT);
+	}
+
+	protected function getBackgroundColor()
+	{
+		return Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_COUPON_BG_COLOR);
+	}
 }

@@ -3,25 +3,26 @@
 class Dotdigitalgroup_Email_Model_Adminhtml_Source_Automation_Programme
 {
 
+	/**
+	 * @return array
+	 * @throws Mage_Core_Exception
+	 */
 	public function toOptionArray()
 	{
 		$fields = array();
-		$websiteName = Mage::app()->getRequest()->getParam('website', false);
+		$websiteCode = Mage::app()->getRequest()->getParam('website', false);
 
-        $website = Mage::app()->getRequest()->getParam('website', false);
-        if ($website)
-            $website = Mage::app()->getWebsite($website);
-        else
-            $website = 0;
+		//website code param
+        if (! $websiteCode)
+	        $websiteCode = 0;//use admin
+
+		$website = Mage::app()->getWebsite($websiteCode);
 
 		$fields[] = array('value' => '0', 'label' => Mage::helper('ddg')->__('-- Disabled --'));
-		if ($websiteName) {
-			$website = Mage::app()->getWebsite($websiteName);
-		}
 
 		if (Mage::helper('ddg')->isEnabled($website)) {
 
-			$client = Mage::helper( 'ddg' )->getWebsiteApiClient( $website );
+			$client = Mage::helper('ddg')->getWebsiteApiClient( $website );
 			$programmes = $client->getPrograms();
 			if ($programmes) {
 				foreach ( $programmes as $one ) {

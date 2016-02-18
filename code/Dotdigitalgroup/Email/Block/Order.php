@@ -33,4 +33,43 @@ class Dotdigitalgroup_Email_Block_Order extends Dotdigitalgroup_Email_Block_Edc
         return $order;
     }
 
+	/**
+	 * Dysplay mode.
+	 * @return string
+	 */
+	public function getMode()
+	{
+		$website = Mage::app()->getStore($this->getOrder()->getStoreId())->getWebsite();
+		$mode = Mage::helper('ddg')->getReviewDisplayType($website);
+
+		return $mode;
+	}
+
+	/**
+	 * Order website.
+	 * @return Mage_Core_Model_Website
+	 */
+	public function getWebsite()
+	{
+		return Mage::app()->getStore($this->getOrder()->getStoreId())->getWebsite();
+	}
+	/**
+	 * Product items to display.
+	 * @return Mage_Catalog_Model_Resource_Product_Collection
+	 */
+	public function getItems()
+	{
+		$order = $this->getOrder();
+		$items = $order->getAllVisibleItems();
+		$productIds = array();
+		//get the product ids for the collection
+		foreach ( $items as $item ) {
+			$productIds[] = $item->getProductId();
+		}
+		$items = Mage::getModel('catalog/product')->getCollection()
+			->addAttributeToSelect('*')
+			->addFieldToFilter('entity_id', array('in' => $productIds));
+
+		return $items;
+	}
 }

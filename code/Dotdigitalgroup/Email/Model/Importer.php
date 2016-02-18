@@ -13,6 +13,9 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
     const MODE_SINGLE = 'Single';
     const MODE_SINGLE_DELETE = 'Single_Delete';
     const MODE_CONTACT_DELETE = 'Contact_Delete';
+    const MODE_CONTACT_EMAIL_UPDATE = 'Contact_Email_Update';
+    const MODE_SUBSCRIBER_UPDATE = 'Subscriber_Update';
+    const MODE_SUBSCRIBER_RESUBSCRIBED = 'Subscriber_Resubscribed';
 
     //import type
     const IMPORT_TYPE_CONTACT = 'Contact';
@@ -23,6 +26,9 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
     const IMPORT_TYPE_QUOTE = 'Quote';
     const IMPORT_TYPE_SUBSCRIBERS = 'Subscriber';
     const IMPORT_TYPE_GUEST = 'Guest';
+    const IMPORT_TYPE_CONTACT_UPDATE = 'Contact';
+    const IMPORT_TYPE_SUBSCRIBER_UPDATE = 'Subscriber';
+    const IMPORT_TYPE_SUBSCRIBER_RESUBSCRIBED = 'Subscriber';
 
     protected $_reasons = array(
         'Globally Suppressed',
@@ -260,6 +266,53 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
                     if (isset($result->message)) {
                         $error = true;
                     }
+                } elseif ($item->getImportMode() == self::MODE_CONTACT_EMAIL_UPDATE){
+                    $emailBefore = $importData['emailBefore'];
+                    $email = $importData['email'];
+                    $isSubscribed = $importData['isSubscribed'];
+                    $subscribersAddressBook = Mage::helper('ddg')->getWebsiteConfig(
+                        Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SUBSCRIBERS_ADDRESS_BOOK_ID, $websiteId);
+                    $result = $client->postContacts($emailBefore);
+                    //check for matching email
+                    if (isset($result->id)) {
+                        if ($email != $result->email) {
+                            $data = array(
+                                'Email' => $email,
+                                'EmailType' => 'Html'
+                            );
+                            //update the contact with same id - different email
+                            $client->updateContact($result->id, $data);
+                        }
+                        if (!$isSubscribed && $result->status == 'Subscribed') {
+                            $client->deleteAddressBookContact($subscribersAddressBook, $result->id);
+                        }
+                    } elseif (isset($result->message)) {
+                        $error = true;
+                        Mage::helper('ddg')->log('Email change error : ' . $result->message);
+                    }
+                } elseif ($item->getImportMode() == self::MODE_SUBSCRIBER_UPDATE){
+                    $email = $importData['email'];
+                    $id = $importData['id'];
+                    $contactEmail = Mage::getModel('ddg_automation/contact')->load($id);
+                    $result = $client->postContacts( $email );
+                    if ( isset( $result->id ) ) {
+                        $contactId = $result->id;
+                        $client->deleteAddressBookContact( $helper->getSubscriberAddressBook( $websiteId ), $contactId );
+                        $contactEmail->setContactId($contactId)
+                            ->save();
+                    } else {
+                        $contactEmail->setSuppressed( '1' )
+                            ->save();
+                    }
+                } elseif ($item->getImportMode() == self::MODE_SUBSCRIBER_RESUBSCRIBED){
+                    $email = $importData['email'];
+                    $apiContact = $client->postContacts( $email );
+
+                    //resubscribe suppressed contacts
+                    if (isset($apiContact->message) && $apiContact->message == Dotdigitalgroup_Email_Model_Apiconnector_Client::API_ERROR_CONTACT_SUPPRESSED) {
+                        $apiContact = $client->getContactByEmail($email);
+                        $client->postContactsResubscribe( $apiContact );
+                    }
                 } else { //bulk import transactional data
                     $result = $client->postContactsTransactionalDataImport($importData, $item->getImportType());
                     if (isset($result->message) && !isset($result->id)) {
@@ -277,7 +330,10 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
                 if (!$error) {
                     if ($item->getImportMode() == self::MODE_SINGLE_DELETE or
                         $item->getImportMode() == self::MODE_SINGLE or
-                        $item->getImportMode() == self::MODE_CONTACT_DELETE
+                        $item->getImportMode() == self::MODE_CONTACT_DELETE or
+                        $item->getImportMode() == self::MODE_CONTACT_EMAIL_UPDATE or
+                        $item->getImportMode() == self::MODE_SUBSCRIBER_RESUBSCRIBED or
+                        $item->getImportMode() == self::MODE_SUBSCRIBER_UPDATE
                     ) {
                         $item->setImportStatus(self::IMPORTED)
                             ->setImportFinished($now)

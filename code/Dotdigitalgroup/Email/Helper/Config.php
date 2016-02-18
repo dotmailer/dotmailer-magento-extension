@@ -264,6 +264,10 @@ class Dotdigitalgroup_Email_Helper_Config
 
 	const RAYGUN_API_CODE_URL                               = 'https://dotmailerformagento.co.uk/magento/raygun.xml';
 
+    /**
+     * API endpoint
+     */
+     const PATH_FOR_API_ENDPOINT = 'connector/api/endpoint';
 
     /**
      * @param int $website

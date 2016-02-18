@@ -4,68 +4,75 @@
     $items = $this->getWishlistItems();
 ?>
 <?php if($items): ?>
-
-    <?php
-    $name_style = explode(',', Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_NAME_STYLE));
-    $price_style = explode(',', Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_PRICE_STYLE));
-    $link_style = explode(',', Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_LINK_STYLE));
-    ?>
+    <?php $dynamicStyle = Mage::helper('ddg')->getDynamicStyles();?>
     <style>
-        .product-name{
-            color: <?php echo Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_NAME_COLOR);?>;
-            font-size: <?php echo Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_NAME_FONT_SIZE);?>;
-        <?php if(in_array('bold', $name_style)): ?>
-            font-weight: bold;
-        <?php endif; ?>
-        <?php if(in_array('italic', $name_style)): ?>
-            font-style: italic;
-        <?php endif; ?>
-        <?php if(in_array('underline', $name_style)): ?>
-            text-decoration: underline;
-        <?php endif; ?>
-        }
-        .product-price{
-            color: <?php echo Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_PRICE_COLOR);?>;
-            font-size: <?php echo Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_PRICE_FONT_SIZE);?>;
-        <?php if(in_array('bold', $price_style)): ?>
-            font-weight: bold;
-        <?php endif; ?>
-        <?php if(in_array('italic', $price_style)): ?>
-            font-style: italic;
-        <?php endif; ?>
-        <?php if(in_array('underline', $price_style)): ?>
-            text-decoration: underline;
-        <?php endif; ?>
-        }
-        .proudct-url{
-            color: <?php echo Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_LINK_COLOR);?>;
-            font-size: <?php echo Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_LINK_FONT_SIZE);?>;
-        <?php if(in_array('bold', $link_style)): ?>
-            font-weight: bold;
-        <?php endif; ?>
-        <?php if(in_array('italic', $link_style)): ?>
-            font-style: italic;
-        <?php endif; ?>
-        <?php if(in_array('underline', $link_style)): ?>
-            text-decoration: underline;
-        <?php endif; ?>
-        }
-        .product-table{
-            font-family: <?php echo Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_DOC_FONT);?>;
-            background-color: <?php echo Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_DOC_BG_COLOR);?>;
-            width: 100%;
-        }
-        .product-table img{
-            display: block;
-            margin-left: auto;
-            margin-right: auto
-        }
-        .product-table td{
-            width: 25%;
-            padding-bottom: 10px;
-        }
-        /** Styling from config field **/
-        <?php echo Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_STYLING);?>
+	    .product-name{
+		    color: <?php echo $dynamicStyle['nameColor'];?>;
+		    font-size: <?php echo $dynamicStyle['fontSize'];?>;
+	    <?php if(in_array('bold', $dynamicStyle['nameStyle'])): ?>
+		    font-weight: bold;
+	    <?php endif; ?>
+	    <?php if(in_array('italic', $dynamicStyle['nameStyle'])): ?>
+		    font-style: italic;
+	    <?php endif; ?>
+	    <?php if(in_array('underline', $dynamicStyle['nameStyle'])): ?>
+		    text-decoration: underline;
+	    <?php endif; ?>
+	    }
+	    .product-price{
+		    color: <?php echo $dynamicStyle['priceColor'];?>;
+		    font-size: <?php echo $dynamicStyle['priceFontSize'];?>;
+	    <?php if(in_array('bold', $dynamicStyle['priceStyle'])): ?>
+		    font-weight: bold;
+	    <?php endif; ?>
+	    <?php if(in_array('italic', $dynamicStyle['priceStyle'])): ?>
+		    font-style: italic;
+	    <?php endif; ?>
+	    <?php if(in_array('underline', $dynamicStyle['priceStyle'])): ?>
+		    text-decoration: underline;
+	    <?php endif; ?>
+	    }
+	    .proudct-url{
+		    color: <?php echo $dynamicStyle['urlColor'];?>;
+		    font-size: <?php echo $dynamicStyle['urlFontSize'];?>;
+	    <?php if(in_array('bold', $dynamicStyle['linkStyle'])): ?>
+		    font-weight: bold;
+	    <?php endif; ?>
+	    <?php if(in_array('italic', $dynamicStyle['linkStyle'])): ?>
+		    font-style: italic;
+	    <?php endif; ?>
+	    <?php if(in_array('underline', $dynamicStyle['linkStyle'])): ?>
+		    text-decoration: underline;
+	    <?php endif; ?>
+	    }
+	    .other-text{
+		    color: <?php echo $dynamicStyle['otherColor'];?>;
+		    font-size: <?php echo $dynamicStyle['otherFontSize'];?>;
+	    <?php if(in_array('bold', $dynamicStyle['otherStyle'])): ?>
+		    font-weight: bold;
+	    <?php endif; ?>
+	    <?php if(in_array('italic', $dynamicStyle['otherStyle'])): ?>
+		    font-style: italic;
+	    <?php endif; ?>
+	    <?php if(in_array('underline', $dynamicStyle['otherStyle'])): ?>
+		    text-decoration: underline;
+	    <?php endif; ?>
+	    }
+	    .product-table{
+		    font-family: <?php echo $dynamicStyle['docFont'];?>;
+		    background-color: <?php echo $dynamicStyle['docBackgroundColor'];?>;
+		    width: 100% !important;
+	    }
+	    .product-table img{
+		    display: block;
+		    margin-left: auto;
+		    margin-right: auto
+	    }
+	    .product-table td{
+		    width: 25%;
+		    padding-bottom: 10px;
+	    }
+	    <?php echo $dynamicStyle['dynamicStyling'];?>
         /** Responsive  **/
         @media (max-width: 760px) {
             /* Force table to not be like tables anymore */
@@ -97,7 +104,7 @@
             <div align="center">
                 <a class="proudct-url" href="<?php echo $_product->getProductUrl();?>">
                     <?php
-                        if($urlText = $this->getTextForUrl($_product->getStoreId()))
+                        if ($urlText = $this->getTextForUrl($_product->getStoreId()))
                             echo $this->escapeHtml($urlText);
                         else
                             echo $this->__('View Now');

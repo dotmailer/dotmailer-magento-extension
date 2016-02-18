@@ -24,6 +24,18 @@ Compatibility
 
 ### Upgrade notice
 
+### V5.3.0
+
+## Features
+ - Support for dotmailer regions
+
+## Bug fixes
+ - Bug fixed for fatal error on manual sync
+
+## Improvments
+ - Magento code audit changes x3
+ - Email validation on ajax call
+
 ### V5.2.0
 
 ## Features

@@ -7,6 +7,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Analysis_Rfm extends 
     protected $_group = 0;
     protected $_website = 0;
 
+
     /**
      * set template
      *
@@ -51,6 +52,20 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Analysis_Rfm extends 
         }
         return $this->rfm;
     }
+
+	/**
+	 * @return array
+	 */
+	protected function getLabels() {
+
+		$labels = array(
+			Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Rfm::FREQUENCY => "Frequency (orders)",
+			Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Rfm::RECENCY => "Recency (days)",
+			Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Rfm::MONETARY => "Monetary (value)"
+		);
+
+		return $labels;
+	}
 
     /**
      * get currency

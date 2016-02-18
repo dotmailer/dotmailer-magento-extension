@@ -94,6 +94,35 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
 		return $this->_checkpoints;
 	}
 
+	protected function getDisplayData() {
+
+		$displayData = array();
+		foreach ( $this->getCheckpoints() as $key =>  $checkpoint ) {
+
+			$method = $this->getFormatedMethodName( $key );
+
+			if ( is_callable( array( $this, $method ) ) ) {
+				$data        = $this->$method();
+				$showHowTo   = '';
+				$collapsable = '1';
+
+				if ( $data->getStyle() == 'connector_passed' ) {
+					$showHowTo   = 'no_display';
+					$collapsable = '0';
+				}
+				if ( $this->_getCollapseState( $key ) !== false ) {
+					$collapsable = $this->_getCollapseState( $key );
+				}
+				$displayData[$key] = array(
+					'showHowTo' => $showHowTo,
+					'collapsable' => $collapsable,
+					'data' => $data
+				);
+			}
+		}
+		return $displayData;
+	}
+
 
 	public function addCheckpoint($checkpoint)
 	{
@@ -1703,4 +1732,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status extends Mage_A
         }
         return $resultContent;
     }
+
+
+
 }

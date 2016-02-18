@@ -3,76 +3,69 @@ $items = $this->getBasketItems();
 $helper = Mage::helper('core');
 ?>
 <?php if($items): ?>
-    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-    <html xmlns="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
-    <head>
-
-        <title>Basket</title>
-
-    </head>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	<html xmlns="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
+    <head><title>Basket</title></head>
     <body">
     <?php
-    $nameStyle = explode(',', Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_NAME_STYLE));
-    $priceStyle = explode(',', Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_PRICE_STYLE));
-    $linkStyle = explode(',', Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_LINK_STYLE));
-    $otherStyle = explode(',', Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_OTHER_STYLE));
+        $dynamicStyle = $this->getDynamicStyle();
     ?>
     <style>
         .product-name{
-            color: <?php echo Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_NAME_COLOR);?>;
-            font-size: <?php echo Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_NAME_FONT_SIZE);?>;
-        <?php if(in_array('bold', $nameStyle)): ?>
+            color: <?php echo $dynamicStyle['nameColor'];?>;
+            font-size: <?php echo $dynamicStyle['fontSize'];?>;
+        <?php if(in_array('bold', $dynamicStyle['nameStyle'])): ?>
             font-weight: bold;
         <?php endif; ?>
-        <?php if(in_array('italic', $nameStyle)): ?>
+        <?php if(in_array('italic', $dynamicStyle['nameStyle'])): ?>
             font-style: italic;
         <?php endif; ?>
-        <?php if(in_array('underline', $nameStyle)): ?>
+        <?php if(in_array('underline', $dynamicStyle['nameStyle'])): ?>
             text-decoration: underline;
         <?php endif; ?>
         }
         .product-price{
-            color: <?php echo Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_PRICE_COLOR);?>;
-            font-size: <?php echo Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_PRICE_FONT_SIZE);?>;
-        <?php if(in_array('bold', $priceStyle)): ?>
+            color: <?php echo $dynamicStyle['priceColor'];?>;
+            font-size: <?php echo $dynamicStyle['priceFontSize'];?>;
+        <?php if(in_array('bold', $dynamicStyle['priceStyle'])): ?>
             font-weight: bold;
         <?php endif; ?>
-        <?php if(in_array('italic', $priceStyle)): ?>
+        <?php if(in_array('italic', $dynamicStyle['priceStyle'])): ?>
             font-style: italic;
         <?php endif; ?>
-        <?php if(in_array('underline', $priceStyle)): ?>
+        <?php if(in_array('underline', $dynamicStyle['priceStyle'])): ?>
             text-decoration: underline;
         <?php endif; ?>
         }
         .proudct-url{
-            color: <?php echo Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_LINK_COLOR);?>;
-            font-size: <?php echo Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_LINK_FONT_SIZE);?>;
-        <?php if(in_array('bold', $linkStyle)): ?>
+            color: <?php echo $dynamicStyle['urlColor'];?>;
+            font-size: <?php echo $dynamicStyle['urlFontSize'];?>;
+        <?php if(in_array('bold', $dynamicStyle['linkStyle'])): ?>
             font-weight: bold;
         <?php endif; ?>
-        <?php if(in_array('italic', $linkStyle)): ?>
+        <?php if(in_array('italic', $dynamicStyle['linkStyle'])): ?>
             font-style: italic;
         <?php endif; ?>
-        <?php if(in_array('underline', $linkStyle)): ?>
+        <?php if(in_array('underline', $dynamicStyle['linkStyle'])): ?>
             text-decoration: underline;
         <?php endif; ?>
         }
         .other-text{
-            color: <?php echo Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_OTHER_COLOR);?>;
-            font-size: <?php echo Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_OTHER_FONT_SIZE);?>;
-        <?php if(in_array('bold', $otherStyle)): ?>
+            color: <?php echo $dynamicStyle['otherColor'];?>;
+            font-size: <?php echo $dynamicStyle['otherFontSize'];?>;
+        <?php if(in_array('bold', $dynamicStyle['otherStyle'])): ?>
             font-weight: bold;
         <?php endif; ?>
-        <?php if(in_array('italic', $otherStyle)): ?>
+        <?php if(in_array('italic', $dynamicStyle['otherStyle'])): ?>
             font-style: italic;
         <?php endif; ?>
-        <?php if(in_array('underline', $otherStyle)): ?>
+        <?php if(in_array('underline', $dynamicStyle['otherStyle'])): ?>
             text-decoration: underline;
         <?php endif; ?>
         }
         .product-table{
-            font-family: <?php echo Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_DOC_FONT);?>;
-            background-color: <?php echo Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_DOC_BG_COLOR);?>;
+            font-family: <?php echo $dynamicStyle['docFont'];?>;
+            background-color: <?php echo $dynamicStyle['docBackgroundColor'];?>;
             width: 100% !important;
         }
         .product-table img{
@@ -84,7 +77,7 @@ $helper = Mage::helper('core');
             width: 25%;
             padding-bottom: 10px;
         }
-        <?php echo Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_STYLING);?>
+        <?php echo $dynamicStyle['dynamicStyling'];?>
         /** Responsive  **/
         @media (max-width: 760px) {
             /* Force table to not be like tables anymore */

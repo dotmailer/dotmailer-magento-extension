@@ -431,7 +431,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
 							}
 
 
-							if ($value) // check limit on text and assign value to array
+							if (is_string($value)) // check limit on text and assign value to array
 								$attributes[][$attribute_code] = $this->_limitLength($value);
 						}
 					}

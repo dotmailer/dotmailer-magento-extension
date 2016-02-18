@@ -6,6 +6,15 @@ class Dotdigitalgroup_Email_AjaxController extends Mage_Core_Controller_Front_Ac
     {
         if($this->getRequest()->getParam('email') && Mage::getSingleton('checkout/session')->getQuote()){
             $email = $this->getRequest()->getParam('email');
+            $email = filter_var($email, FILTER_SANITIZE_EMAIL);
+
+            //regular expressions from http://regexlib.com.
+            // Match formats joe@aol.com | joe@wrox.co.uk | joe@domain.info
+            if(!preg_match('/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/', $email)){
+                Mage::helper('ddg')->log('ajax emailCapture fail for given email. Failed by regex');
+                return null;
+            }
+
             $quote = Mage::getSingleton('checkout/session')->getQuote();
             if($quote->hasItems()){
                 try {
