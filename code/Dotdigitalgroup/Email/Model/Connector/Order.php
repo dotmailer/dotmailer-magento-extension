@@ -285,8 +285,9 @@ class Dotdigitalgroup_Email_Model_Connector_Order
      */
     protected function _limitLength($value)
     {
-        if (strlen($value) > 250)
+        if (strlen($value) > 250) {
             $value = substr($value, 0, 250);
+        }
 
         return $value;
     }
