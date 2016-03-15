@@ -33,6 +33,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Abandoned ex
             'total_count'  => "COUNT(main_table.entity_id)",
             'day_count'  => "ROUND(COUNT(main_table.entity_id) / DATEDIFF(date(MAX(main_table.updated_at)) , date(MIN(main_table.updated_at))), 2)"
         ));
+
         return $collection;
     }
 
@@ -54,6 +55,6 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Abandoned ex
             $storeIds = Mage::app()->getGroup($group)->getStoreIds();
             $this->storeIds = $storeIds;
         }
-        return $this->getPreparedCollection()->getFirstItem();
+        return $this->getPreparedCollection()->setPageSize(1)->setCurPage(1)->getFirstItem();
     }
 }
