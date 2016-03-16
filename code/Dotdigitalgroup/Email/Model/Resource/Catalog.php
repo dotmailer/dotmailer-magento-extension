@@ -1,7 +1,7 @@
 <?php
 
 class Dotdigitalgroup_Email_Model_Resource_Catalog
-    extends Mage_Core_Model_Mysql4_Abstract
+    extends Mage_Core_Model_Resource_Db_Abstract
 {
 
     /**

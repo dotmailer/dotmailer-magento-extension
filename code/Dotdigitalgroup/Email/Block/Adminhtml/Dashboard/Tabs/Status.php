@@ -2022,7 +2022,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
             default:
             case 'models':
                 return Mage::getConfig()->getModelClassName($class);
-                break;
         }
     }
 
@@ -2076,7 +2075,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
             $version = 'Magento version : ' . Mage::getVersion() . 'V';
         }
 
-        $fh  = @fopen('/proc/meminfo', 'r');
+        $fh  = fopen('/proc/meminfo', 'r');
         $mem = 0;
         if ($fh) {
             while ($line = fgets($fh)) {

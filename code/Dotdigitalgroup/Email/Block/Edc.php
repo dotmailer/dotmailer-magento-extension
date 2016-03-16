@@ -479,6 +479,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
                 if ($product->isSaleable()) {
                     $productsToDisplay[$product->getId()] = $product;
                 }
+
                 //stop the limit was reached
                 if (count($productsToDisplay) == $limit) {
                     break;

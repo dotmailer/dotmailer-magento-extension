@@ -227,7 +227,7 @@ class Dotdigitalgroup_Email_Model_Quote extends Mage_Core_Model_Abstract
         $collection->addFieldToFilter('quote_id', $quoteId)
             ->setPageSize(1);
 
-        if ($collection->count()) {
+        if ($collection->getSize()) {
             return $collection->getFirstItem();
         }
 

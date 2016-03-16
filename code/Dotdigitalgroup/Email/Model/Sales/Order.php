@@ -497,7 +497,7 @@ class Dotdigitalgroup_Email_Model_Sales_Order
             ->setPageSize(1)
             ->setOrder('entity_id');
 
-        if ($collection->count()) {
+        if ($collection->getSize()) {
             return $collection->getFirstItem();
         } else {
             return false;
@@ -522,7 +522,7 @@ class Dotdigitalgroup_Email_Model_Sales_Order
             ->setPageSize(1)
             ->setOrder('entity_id');
 
-        if ($collection->count()) {
+        if ($collection->getSize()) {
             return $collection->getFirstItem();
         } else {
             return false;

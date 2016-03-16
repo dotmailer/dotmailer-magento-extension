@@ -139,8 +139,6 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
                 Mage::logException($e);
             }
         }
-
-        return;
     }
 
     /**

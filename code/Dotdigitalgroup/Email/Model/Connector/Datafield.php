@@ -31,7 +31,7 @@ class Dotdigitalgroup_Email_Model_Connector_Datafield
      *
      * @var array
      */
-    private $_contactDatafields
+    protected $_contactDatafields
         = array(
             'customer_id'         => array(
                 'name'       => 'CUSTOMER_ID',

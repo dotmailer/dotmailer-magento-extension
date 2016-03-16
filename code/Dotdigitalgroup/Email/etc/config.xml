@@ -430,8 +430,6 @@
         <connector_api_credentials>
             <api>
                 <enabled>0</enabled>
-                <username></username>
-                <password></password>
             </api>
         </connector_api_credentials>
         <connector_sync_settings>

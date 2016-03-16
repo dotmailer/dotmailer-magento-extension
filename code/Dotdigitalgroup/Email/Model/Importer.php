@@ -493,7 +493,7 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
         }
 
         $collection->setPageSize(1);
-        if ($collection->count()) {
+        if ($collection->getSize()) {
             return $collection->getFirstItem();
         }
 

@@ -29,7 +29,7 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
             ->addFieldToFilter('customer_id', $customerId)
             ->setPageSize(1);
 
-        if ($collection->count()) {
+        if ($collection->getSize()) {
             return $collection->getFirstItem();
         }
 

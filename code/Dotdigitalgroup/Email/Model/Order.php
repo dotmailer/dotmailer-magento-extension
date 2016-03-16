@@ -44,7 +44,7 @@ class Dotdigitalgroup_Email_Model_Order extends Mage_Core_Model_Abstract
             ->addFieldToFilter('quote_id', $quoteId)
             ->setPageSize(1);
 
-        if ($collection->count()) {
+        if ($collection->getSize()) {
             return $collection->getFirstItem();
         } else {
             $this->setOrderId($orderId)
@@ -69,7 +69,7 @@ class Dotdigitalgroup_Email_Model_Order extends Mage_Core_Model_Abstract
             ->addFieldToFilter('quote_id', $quoteId)
             ->addFieldToFilter('store_id', $storeId);
 
-        if ($collection->count()) {
+        if ($collection->getSize()) {
             return $collection->getFirstItem();
         } else {
             $now = Mage::getSingleton('core/date')->gmtDate();

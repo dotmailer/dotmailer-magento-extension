@@ -76,8 +76,6 @@ block:
   - Adminhtml#System#Config#Resetguests.php
   - Adminhtml#System#Config#Resetsubscribers.php
   - Adminhtml#System#Config#Validator.php
-  - Adminhtml#System#Config#Waitingfield.php
-  - Adminhtml#System#Config#Wrapper.php
   - Adminhtml#System#Dynamic#Basket#Crosssell.php
   - Adminhtml#System#Dynamic#Basket#Related.php
   - Adminhtml#System#Dynamic#Basket#Upsell.php
