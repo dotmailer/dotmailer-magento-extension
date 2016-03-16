@@ -57,14 +57,14 @@ class Dotdigitalgroup_Email_Helper_File
     /**
      * Moves the output file from one folder to the next
      *
-     * @param $source_folder
+     * @param $sourceFolder
      * @param $destFolder
      * @param $filename
      */
-    public function moveFile($source_folder, $destFolder, $filename)
+    public function moveFile($sourceFolder, $destFolder, $filename)
     {
         // generate the full file paths
-        $sourceFilepath = $source_folder . DS . $filename;
+        $sourceFilepath = $sourceFolder . DS . $filename;
         $destFilepath   = $destFolder . DS . $filename;
 
         // rename the file

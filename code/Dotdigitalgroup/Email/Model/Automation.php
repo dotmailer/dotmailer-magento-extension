@@ -140,13 +140,13 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
                 $this->_updateDefaultDatafields($email);
                 break;
             case self::AUTOMATION_TYPE_NEW_ORDER :
-                $this->_updateNewOrderDatafields($email);
+                $this->_updateNewOrderDatafields();
                 break;
             case self::AUTOMATION_TYPE_NEW_GUEST_ORDER:
-                $this->_updateNewOrderDatafields($email);
+                $this->_updateNewOrderDatafields();
                 break;
             case self::AUTOMATION_TYPE_NEW_REVIEW :
-                $this->_updateNewOrderDatafields($email);
+                $this->_updateNewOrderDatafields();
                 break;
             case self::AUTOMATION_TYPE_NEW_WISHLIST:
                 $this->_updateDefaultDatafields($email);
@@ -165,7 +165,7 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
         );
     }
 
-    protected function _updateNewOrderDatafields($email)
+    protected function _updateNewOrderDatafields()
     {
         $website = Mage::app()->getWebsite($this->websiteId);
         $order   = Mage::getModel('sales/order')->load($this->typeId);

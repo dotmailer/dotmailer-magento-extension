@@ -53,7 +53,7 @@ class Dotdigitalgroup_Email_Model_Sales_Order
             if ($numOrders) {
                 Mage::helper('ddg')->log(
                     '--------- register Order sync with importer ---------- : '
-                    . count($orders)
+                    . $numOrders
                 );
                 //register in queue with importer
                 $check = Mage::getModel('ddg_automation/importer')

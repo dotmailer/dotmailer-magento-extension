@@ -118,10 +118,12 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
     public function getLoadedProductCollection()
     {
         $mode  = $this->getRequest()->getActionName();
+        $result = array();
         $limit = Mage::helper('ddg/recommended')->getDisplayLimitByMode($mode);
         if ( ! $this->_edcType) {
             $this->_edcType = $mode;
         }
+
 
         switch ($this->_edcType) {
             case 'recentlyviewed':
