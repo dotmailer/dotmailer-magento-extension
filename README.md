@@ -1,5 +1,9 @@
-EMAIL Connector Magento Integration Module
+[![Build Status](https://travis-ci.org/dotmailer/dotmailer-magento-extension.svg?branch=master)](dotmailer/dotmailer-magento-extension)
+
+dotmailer for Magento
 ==========================================
+
+Full support documentation and setup guides available here - https://support.dotmailer.com/hc/en-gb/categories/202610368-Magento
 
 This module uses modman
 
