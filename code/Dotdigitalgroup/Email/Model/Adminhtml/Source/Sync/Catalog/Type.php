@@ -2,6 +2,7 @@
 
 class Dotdigitalgroup_Email_Model_Adminhtml_Source_Sync_Catalog_Type
 {
+
     /**
      * Options getter. Styling options
      *
@@ -11,6 +12,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Sync_Catalog_Type
     {
         $options = Mage::getModel('catalog/product_type')->getAllOptions();
         array_shift($options);
+
         return $options;
     }
 }

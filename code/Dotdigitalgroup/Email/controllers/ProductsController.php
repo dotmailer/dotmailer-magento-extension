@@ -1,46 +1,51 @@
 <?php
-require_once 'Dotdigitalgroup' . DS . 'Email' . DS . 'controllers' . DS . 'ResponseController.php';
+require_once 'Dotdigitalgroup' . DS . 'Email' . DS . 'controllers' . DS
+    . 'ResponseController.php';
 
-class Dotdigitalgroup_Email_ProductsController extends Dotdigitalgroup_Email_ResponseController
+class Dotdigitalgroup_Email_ProductsController
+    extends Dotdigitalgroup_Email_ResponseController
 {
-	/**
-	 * @return Mage_Core_Controller_Front_Action|void
-	 */
+
+    /**
+     * @return Mage_Core_Controller_Front_Action|void
+     */
     public function preDispatch()
     {
         //authenticate
         $this->authenticate();
-	    //skip order_id check for this actions
-	    $skip = array('push', 'nosto');
-	    $actionName = $this->getRequest()->getActionName();
-        if (! in_array($actionName, $skip)) {
+        //skip order_id check for this actions
+        $skip       = array('push', 'nosto');
+        $actionName = $this->getRequest()->getActionName();
+        if ( ! in_array($actionName, $skip)) {
             $orderId = $this->getRequest()->getParam('order_id', false);
             //check for order id param
-	        if ($orderId) {
+            if ($orderId) {
                 //check if order still exists
-	            $order = Mage::getModel('sales/order')->load($orderId);
-	            if ($order->getId()) {
+                $order = Mage::getModel('sales/order')->load($orderId);
+                if ($order->getId()) {
                     Mage::register('current_order', $order);
-		            //start app emulation
-	                $storeId = $order->getStoreId();
-	                $appEmulation = Mage::getSingleton('core/app_emulation');
-	                $appEmulation->startEnvironmentEmulation($storeId);
+                    //start app emulation
+                    $storeId      = $order->getStoreId();
+                    $appEmulation = Mage::getSingleton('core/app_emulation');
+                    $appEmulation->startEnvironmentEmulation($storeId);
                 } else {
-		            $message = 'Dynamic : order not found: ' . $orderId;
+                    $message = 'Dynamic : order not found: ' . $orderId;
                     Mage::helper('ddg')->log($message)
-		                ->rayLog($message);
+                        ->rayLog($message);
                 }
             } else {
-                Mage::helper('ddg')->log('Dynamic : order_id missing :' . $orderId);
+                Mage::helper('ddg')->log(
+                    'Dynamic : order_id missing :' . $orderId
+                );
             }
         }
 
         parent::preDispatch();
     }
 
-	/**
-	 * Related products.
-	 */
+    /**
+     * Related products.
+     */
     public function relatedAction()
     {
         $this->loadLayout();
@@ -48,9 +53,9 @@ class Dotdigitalgroup_Email_ProductsController extends Dotdigitalgroup_Email_Res
         $this->renderLayout();
     }
 
-	/**
-	 * Crosssell products.
-	 */
+    /**
+     * Crosssell products.
+     */
     public function crosssellAction()
     {
         $this->loadLayout();
@@ -58,9 +63,9 @@ class Dotdigitalgroup_Email_ProductsController extends Dotdigitalgroup_Email_Res
         $this->renderLayout();
     }
 
-	/**
-	 * Upsell products.
-	 */
+    /**
+     * Upsell products.
+     */
     public function upsellAction()
     {
         $this->loadLayout();
@@ -68,24 +73,25 @@ class Dotdigitalgroup_Email_ProductsController extends Dotdigitalgroup_Email_Res
         $this->renderLayout();
     }
 
-	/**
-	 * Products that are set to manually push as related.
-	 */
+    /**
+     * Products that are set to manually push as related.
+     */
     public function pushAction()
     {
         $this->loadLayout();
 
-	    $this->renderLayout();
+        $this->renderLayout();
     }
 
-	/**
-	 * Nosto recommendation action.
-	 */
-	public function nostoAction()
-	{
-		$this->loadLayout();
+    /**
+     * Nosto recommendation action.
+     */
+    public function nostoAction()
+    {
+        $this->loadLayout();
 
-        $html = $this->getLayout()->getBlock('connector_nosto_recommended')->toHtml();
+        $html = $this->getLayout()->getBlock('connector_nosto_recommended')
+            ->toHtml();
 
         //if empty than display our fallback products instead.
         if (empty($html)) {
@@ -94,6 +100,6 @@ class Dotdigitalgroup_Email_ProductsController extends Dotdigitalgroup_Email_Res
         } else {
             $this->renderLayout();
         }
-	}
+    }
 
 }

@@ -1,6 +1,7 @@
 <?php
 
-class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Addressbookbutton extends Mage_Adminhtml_Block_System_Config_Form_Field
+class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Addressbookbutton
+    extends Mage_Adminhtml_Block_System_Config_Form_Field
 {
 
     protected function _getAddRowButtonHtml($title)
@@ -12,11 +13,14 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Addressbookbutton ext
             ->toHtml();
     }
 
-    protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element)
+    protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element
+    ) 
     {
         $this->setElement($element);
         $originalData = $element->getOriginalData();
 
-        return $this->_getAddRowButtonHtml($this->__($originalData['button_label']));
+        return $this->_getAddRowButtonHtml(
+            $this->__($originalData['button_label'])
+        );
     }
 }

@@ -1,7 +1,9 @@
 <?php
 
-class Dotdigitalgroup_Email_Block_Adminhtml_Importer extends Mage_Adminhtml_Block_Widget_Grid_Container
+class Dotdigitalgroup_Email_Block_Adminhtml_Importer
+    extends Mage_Adminhtml_Block_Widget_Grid_Container
 {
+
     public function __construct()
     {
         parent::__construct();

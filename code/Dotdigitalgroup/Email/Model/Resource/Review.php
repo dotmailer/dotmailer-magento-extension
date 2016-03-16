@@ -1,11 +1,13 @@
 <?php
 
-class Dotdigitalgroup_Email_Model_Resource_Review extends Mage_Core_Model_Mysql4_Abstract
+class Dotdigitalgroup_Email_Model_Resource_Review
+    extends Mage_Core_Model_Mysql4_Abstract
 {
+
     /**
      * constructor.
      */
-    protected  function _construct()
+    protected function _construct()
     {
         $this->_init('ddg_automation/review', 'id');
 
@@ -19,13 +21,17 @@ class Dotdigitalgroup_Email_Model_Resource_Review extends Mage_Core_Model_Mysql4
     public function reset()
     {
         $conn = $this->_getWriteAdapter();
-        try{
-            $num = $conn->update($this->getMainTable(),
+        try {
+            $num = $conn->update(
+                $this->getMainTable(),
                 array('review_imported' => new Zend_Db_Expr('null')),
-                $conn->quoteInto('review_imported is ?', new Zend_Db_Expr('not null'))
+                $conn->quoteInto(
+                    'review_imported is ?', new Zend_Db_Expr('not null')
+                )
             );
+
             return $num;
-        }catch (Exception $e){
+        } catch (Exception $e) {
             Mage::logException($e);
         }
     }
@@ -37,13 +43,16 @@ class Dotdigitalgroup_Email_Model_Resource_Review extends Mage_Core_Model_Mysql4
      */
     public function setImported($ids)
     {
-        try{
+        try {
             $write = $this->_getWriteAdapter();
             $tableName = $this->getMainTable();
             $ids = implode(', ', $ids);
             $now = Mage::getSingleton('core/date')->gmtDate();
-            $write->update($tableName, array('review_imported' => 1, 'updated_at' => $now), "review_id IN ($ids)");
-        }catch (Exception $e){
+            $write->update(
+                $tableName, array('review_imported' => 1, 'updated_at' => $now),
+                "review_id IN ($ids)"
+            );
+        } catch (Exception $e) {
             Mage::logException($e);
         }
     }

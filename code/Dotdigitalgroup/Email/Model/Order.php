@@ -2,7 +2,9 @@
 
 class Dotdigitalgroup_Email_Model_Order extends Mage_Core_Model_Abstract
 {
+
     const EMAIL_ORDER_NOT_IMPORTED = null;
+
     /**
      * constructor
      */
@@ -22,14 +24,17 @@ class Dotdigitalgroup_Email_Model_Order extends Mage_Core_Model_Abstract
         if ($this->isObjectNew()) {
             $this->setCreatedAt($now);
         }
+
         return $this;
     }
 
 
     /**
      * Load the email order by quote id.
+     *
      * @param $orderId
      * @param $quoteId
+     *
      * @return $this|Varien_Object
      */
     public function loadByOrderId($orderId, $quoteId)
@@ -45,18 +50,19 @@ class Dotdigitalgroup_Email_Model_Order extends Mage_Core_Model_Abstract
             $this->setOrderId($orderId)
                 ->setQuoteId($quoteId);
         }
+
         return $this;
     }
 
 
-	/**
-	 * @param $orderId
-	 * @param $quoteId
-	 * @param $storeId
-	 *
-	 * @return $this|Varien_Object
-	 */
-	public function getEmailOrderRow($orderId, $quoteId, $storeId)
+    /**
+     * @param $orderId
+     * @param $quoteId
+     * @param $storeId
+     *
+     * @return $this|Varien_Object
+     */
+    public function getEmailOrderRow($orderId, $quoteId, $storeId)
     {
         $collection = $this->getCollection()
             ->addFieldToFilter('order_id', $orderId)
@@ -73,21 +79,24 @@ class Dotdigitalgroup_Email_Model_Order extends Mage_Core_Model_Abstract
                 ->setStoreId($storeId)
                 ->setCreatedAt($now);
         }
+
         return $this;
 
     }
 
-	/**
-	 * Get all orders with particular status within certain days.
-	 *
-	 * @param $storeIds
-	 * @param $limit
-	 * @param $orderStatuses
+    /**
+     * Get all orders with particular status within certain days.
+     *
+     * @param $storeIds
+     * @param $limit
+     * @param $orderStatuses
      * @param $modified
-	 *
-	 * @return Dotdigitalgroup_Email_Model_Resource_Order_Collection
-	 */
-    public function getOrdersToImport($storeIds, $limit, $orderStatuses, $modified = false)
+     *
+     * @return Dotdigitalgroup_Email_Model_Resource_Order_Collection
+     */
+    public function getOrdersToImport($storeIds, $limit, $orderStatuses,
+        $modified = false
+    ) 
     {
         $collection = $this->getCollection()
             ->addFieldToFilter('store_id', array('in' => $storeIds))
@@ -97,11 +106,15 @@ class Dotdigitalgroup_Email_Model_Order extends Mage_Core_Model_Abstract
             $collection
                 ->addFieldToFilter('email_imported', 1)
                 ->addFieldToFilter('modified', 1);
-        } else
-            $collection->addFieldToFilter('email_imported', array('null' => true));
+        } else {
+            $collection->addFieldToFilter(
+                'email_imported', array('null' => true)
+            );
+        }
 
 
         $collection->getSelect()->limit($limit);
+
         return $collection;
     }
 
@@ -121,7 +134,7 @@ class Dotdigitalgroup_Email_Model_Order extends Mage_Core_Model_Abstract
 
         $collection->getSelect()->limit($limit);
 
-	    return $collection;
+        return $collection;
     }
 
 }

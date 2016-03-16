@@ -1,8 +1,11 @@
 <?php
-require_once 'Dotdigitalgroup' . DS . 'Email' . DS . 'controllers' . DS . 'ResponseController.php';
+require_once 'Dotdigitalgroup' . DS . 'Email' . DS . 'controllers' . DS
+    . 'ResponseController.php';
 
-class Dotdigitalgroup_Email_QuoteproductsController extends Dotdigitalgroup_Email_ResponseController
+class Dotdigitalgroup_Email_QuoteproductsController
+    extends Dotdigitalgroup_Email_ResponseController
 {
+
     /**
      * @return Mage_Core_Controller_Front_Action|void
      */
@@ -28,7 +31,9 @@ class Dotdigitalgroup_Email_QuoteproductsController extends Dotdigitalgroup_Emai
                         ->rayLog($message);
                 }
             } else {
-                Mage::helper('ddg')->log('Dynamic : order_id missing :' . $quoteId);
+                Mage::helper('ddg')->log(
+                    'Dynamic : order_id missing :' . $quoteId
+                );
             }
         }
 
@@ -42,7 +47,7 @@ class Dotdigitalgroup_Email_QuoteproductsController extends Dotdigitalgroup_Emai
     {
         $this->loadLayout();
 
-	    $this->renderLayout();
+        $this->renderLayout();
         $this->checkContentNotEmpty($this->getLayout()->getOutput());
     }
 

@@ -6,7 +6,7 @@
  * file that was distributed with this source code.
  *
  * @copyright Copyright (c) 2013 Ben Ramsey <http://benramsey.com>
- * @license http://opensource.org/licenses/MIT MIT
+ * @license   http://opensource.org/licenses/MIT MIT
  */
 
 namespace Raygun4Php\Rhumsaa\Uuid;
@@ -31,56 +31,66 @@ use InvalidArgumentException;
  */
 final class Uuid
 {
+
     /**
      * When this namespace is specified, the name string is a fully-qualified domain name.
+     *
      * @link http://tools.ietf.org/html/rfc4122#appendix-C
      */
     const NAMESPACE_DNS = '6ba7b810-9dad-11d1-80b4-00c04fd430c8';
 
     /**
      * When this namespace is specified, the name string is a URL.
+     *
      * @link http://tools.ietf.org/html/rfc4122#appendix-C
      */
     const NAMESPACE_URL = '6ba7b811-9dad-11d1-80b4-00c04fd430c8';
 
     /**
      * When this namespace is specified, the name string is an ISO OID.
+     *
      * @link http://tools.ietf.org/html/rfc4122#appendix-C
      */
     const NAMESPACE_OID = '6ba7b812-9dad-11d1-80b4-00c04fd430c8';
 
     /**
      * When this namespace is specified, the name string is an X.500 DN in DER or a text output format.
+     *
      * @link http://tools.ietf.org/html/rfc4122#appendix-C
      */
     const NAMESPACE_X500 = '6ba7b814-9dad-11d1-80b4-00c04fd430c8';
 
     /**
      * The nil UUID is special form of UUID that is specified to have all 128 bits set to zero.
+     *
      * @link http://tools.ietf.org/html/rfc4122#section-4.1.7
      */
     const NIL = '00000000-0000-0000-0000-000000000000';
 
     /**
      * Reserved for NCS compatibility.
+     *
      * @link http://tools.ietf.org/html/rfc4122#section-4.1.1
      */
     const RESERVED_NCS = 0;
 
     /**
      * Specifies the UUID layout given in RFC 4122.
+     *
      * @link http://tools.ietf.org/html/rfc4122#section-4.1.1
      */
     const RFC_4122 = 2;
 
     /**
      * Reserved for Microsoft compatibility.
+     *
      * @link http://tools.ietf.org/html/rfc4122#section-4.1.1
      */
     const RESERVED_MICROSOFT = 6;
 
     /**
      * Reserved for future definition.
+     *
      * @link http://tools.ietf.org/html/rfc4122#section-4.1.1
      */
     const RESERVED_FUTURE = 7;
@@ -130,14 +140,15 @@ final class Uuid
      * @var array
      * @link Rhumsaa.Uuid.Uuid.html#method_getFields
      */
-    protected $fields = array(
-        'time_low' => '00000000',
-        'time_mid' => '0000',
-        'time_hi_and_version' => '0000',
-        'clock_seq_hi_and_reserved' => '00',
-        'clock_seq_low' => '00',
-        'node' => '000000000000',
-    );
+    protected $fields
+        = array(
+            'time_low'                  => '00000000',
+            'time_mid'                  => '0000',
+            'time_hi_and_version'       => '0000',
+            'clock_seq_hi_and_reserved' => '00',
+            'clock_seq_low'             => '00',
+            'node'                      => '000000000000',
+        );
 
     /**
      * Creates a universally unique identifier (UUID) from an array of fields.
@@ -146,6 +157,7 @@ final class Uuid
      * UUIDs.
      *
      * @param array $fields
+     *
      * @link Rhumsaa.Uuid.Uuid.html#method_getFields
      */
     protected function __construct(array $fields)
@@ -176,19 +188,28 @@ final class Uuid
      * A. Use them as keys in a B-Tree or similar mapping.
      *
      * @param Uuid $uuid UUID to which this UUID is to be compared
+     *
      * @return int -1, 0 or 1 as this UUID is less than, equal to, or greater than $uuid
      */
     public function compareTo(Uuid $uuid)
     {
         $comparison = null;
 
-        if ($this->getMostSignificantBitsHex() < $uuid->getMostSignificantBitsHex()) {
+        if ($this->getMostSignificantBitsHex()
+            < $uuid->getMostSignificantBitsHex()
+        ) {
             $comparison = -1;
-        } elseif ($this->getMostSignificantBitsHex() > $uuid->getMostSignificantBitsHex()) {
+        } elseif ($this->getMostSignificantBitsHex()
+            > $uuid->getMostSignificantBitsHex()
+        ) {
             $comparison = 1;
-        } elseif ($this->getLeastSignificantBitsHex() < $uuid->getLeastSignificantBitsHex()) {
+        } elseif ($this->getLeastSignificantBitsHex()
+            < $uuid->getLeastSignificantBitsHex()
+        ) {
             $comparison = -1;
-        } elseif ($this->getLeastSignificantBitsHex() > $uuid->getLeastSignificantBitsHex()) {
+        } elseif ($this->getLeastSignificantBitsHex()
+            > $uuid->getLeastSignificantBitsHex()
+        ) {
             $comparison = 1;
         } else {
             $comparison = 0;
@@ -205,11 +226,12 @@ final class Uuid
      * as this UUID.
      *
      * @param object $obj
+     *
      * @return bool True if $obj is equal to this UUID
      */
     public function equals($obj)
     {
-        if (!($obj instanceof Uuid)) {
+        if ( ! ($obj instanceof Uuid)) {
             return false;
         }
 
@@ -297,7 +319,7 @@ final class Uuid
     public function getClockSequence()
     {
         return (($this->getClockSeqHiAndReserved() & 0x3f) << 8)
-            | $this->getClockSeqLow();
+        | $this->getClockSeqLow();
     }
 
     /**
@@ -325,7 +347,9 @@ final class Uuid
     public function getDateTime()
     {
         if ($this->getVersion() != 1) {
-            throw new Exception\UnsupportedOperationException('Not a time-based UUID');
+            throw new Exception\UnsupportedOperationException(
+                'Not a time-based UUID'
+            );
         }
 
 
@@ -336,7 +360,9 @@ final class Uuid
 
         } elseif (self::hasBigNumber()) {
 
-            $time = \Moontoast\Math\BigNumber::baseConvert($this->getTimestampHex(), 16, 10);
+            $time = \Moontoast\Math\BigNumber::baseConvert(
+                $this->getTimestampHex(), 16, 10
+            );
 
             $ts = new \Moontoast\Math\BigNumber($time, 20);
             $ts->subtract('122192928000000000');
@@ -378,7 +404,7 @@ final class Uuid
      */
     public function getFields()
     {
-        if (!self::is64BitSystem()) {
+        if ( ! self::is64BitSystem()) {
             throw new Exception\UnsatisfiedDependencyException(
                 'Cannot call ' . __METHOD__ . ' on a 32-bit system, since some '
                 . 'values overflow the system max integer value'
@@ -387,12 +413,12 @@ final class Uuid
         }
 
         return array(
-            'time_low' => $this->getTimeLow(),
-            'time_mid' => $this->getTimeMid(),
-            'time_hi_and_version' => $this->getTimeHiAndVersion(),
+            'time_low'                  => $this->getTimeLow(),
+            'time_mid'                  => $this->getTimeMid(),
+            'time_hi_and_version'       => $this->getTimeHiAndVersion(),
             'clock_seq_hi_and_reserved' => $this->getClockSeqHiAndReserved(),
-            'clock_seq_low' => $this->getClockSeqLow(),
-            'node' => $this->getNode(),
+            'clock_seq_low'             => $this->getClockSeqLow(),
+            'node'                      => $this->getNode(),
         );
     }
 
@@ -426,7 +452,7 @@ final class Uuid
      */
     public function getLeastSignificantBits()
     {
-        if (!self::hasBigNumber()) {
+        if ( ! self::hasBigNumber()) {
             throw new Exception\UnsatisfiedDependencyException(
                 'Cannot call ' . __METHOD__ . ' without support for large '
                 . 'integers, since least significant bits is an unsigned '
@@ -467,7 +493,7 @@ final class Uuid
      */
     public function getMostSignificantBits()
     {
-        if (!self::hasBigNumber()) {
+        if ( ! self::hasBigNumber()) {
             throw new Exception\UnsatisfiedDependencyException(
                 'Cannot call ' . __METHOD__ . ' without support for large '
                 . 'integers, since most significant bits is an unsigned '
@@ -527,7 +553,7 @@ final class Uuid
      */
     public function getNode()
     {
-        if (!self::is64BitSystem()) {
+        if ( ! self::is64BitSystem()) {
             throw new Exception\UnsatisfiedDependencyException(
                 'Cannot call ' . __METHOD__ . ' on a 32-bit system, since node '
                 . 'is an unsigned 48-bit integer and can overflow the system '
@@ -598,9 +624,10 @@ final class Uuid
      */
     public function getTimeLow()
     {
-        if (!self::is64BitSystem()) {
+        if ( ! self::is64BitSystem()) {
             throw new Exception\UnsatisfiedDependencyException(
-                'Cannot call ' . __METHOD__ . ' on a 32-bit system, since time_low '
+                'Cannot call ' . __METHOD__
+                . ' on a 32-bit system, since time_low '
                 . 'is an unsigned 32-bit integer and can overflow the system '
                 . 'max integer value'
                 . '; consider calling getTimeLowHex instead'
@@ -660,12 +687,15 @@ final class Uuid
     public function getTimestamp()
     {
         if ($this->getVersion() != 1) {
-            throw new Exception\UnsupportedOperationException('Not a time-based UUID');
+            throw new Exception\UnsupportedOperationException(
+                'Not a time-based UUID'
+            );
         }
 
-        if (!self::is64BitSystem()) {
+        if ( ! self::is64BitSystem()) {
             throw new Exception\UnsatisfiedDependencyException(
-                'Cannot call ' . __METHOD__ . ' on a 32-bit system, since timestamp '
+                'Cannot call ' . __METHOD__
+                . ' on a 32-bit system, since timestamp '
                 . 'is an unsigned 60-bit integer and can overflow the system '
                 . 'max integer value'
                 . '; consider calling getTimestampHex instead'
@@ -694,7 +724,9 @@ final class Uuid
     public function getTimestampHex()
     {
         if ($this->getVersion() != 1) {
-            throw new Exception\UnsupportedOperationException('Not a time-based UUID');
+            throw new Exception\UnsupportedOperationException(
+                'Not a time-based UUID'
+            );
         }
 
         return sprintf(
@@ -767,7 +799,7 @@ final class Uuid
     public function getVersion()
     {
         if ($this->getVariant() == self::RFC_4122) {
-            return (int) (($this->getTimeHiAndVersion() >> 12) & 0x0f);
+            return (int)(($this->getTimeHiAndVersion() >> 12) & 0x0f);
         }
 
         return null;
@@ -790,13 +822,16 @@ final class Uuid
      * Creates a UUID from a byte string.
      *
      * @param string $bytes
+     *
      * @return Uuid
      * @throws InvalidArgumentException If the $bytes string does not contain 16 characters
      */
     public static function fromBytes($bytes)
     {
         if (strlen($bytes) !== 16) {
-            throw new InvalidArgumentException('$bytes string should contain 16 characters.');
+            throw new InvalidArgumentException(
+                '$bytes string should contain 16 characters.'
+            );
         }
 
         $uuid = '';
@@ -816,12 +851,15 @@ final class Uuid
      * in the toString() method.
      *
      * @param string $name A string that specifies a UUID
+     *
      * @return Uuid
      * @throws InvalidArgumentException If the $name isn't a valid UUID
      */
     public static function fromString($name)
     {
-        $nameParsed = str_replace(array('urn:', 'uuid:', '{', '}', '-'), '', $name);
+        $nameParsed = str_replace(
+            array('urn:', 'uuid:', '{', '}', '-'), '', $name
+        );
 
         // We have stripped out the dashes and are breaking up the string using
         // substr(). In this way, we can accept a full hex value that doesn't
@@ -835,17 +873,21 @@ final class Uuid
         );
         $nameParsed = implode('-', $components);
 
-        if (!self::isValid($nameParsed)) {
+        if ( ! self::isValid($nameParsed)) {
             throw new InvalidArgumentException('Invalid UUID string: ' . $name);
         }
 
         $fields = array(
-            'time_low' => sprintf('%08s', $components[0]),
-            'time_mid' => sprintf('%04s', $components[1]),
-            'time_hi_and_version' => sprintf('%04s', $components[2]),
-            'clock_seq_hi_and_reserved' => sprintf('%02s', substr($components[3], 0, 2)),
-            'clock_seq_low' => sprintf('%02s', substr($components[3], 2)),
-            'node' => sprintf('%012s', $components[4]),
+            'time_low'                  => sprintf('%08s', $components[0]),
+            'time_mid'                  => sprintf('%04s', $components[1]),
+            'time_hi_and_version'       => sprintf('%04s', $components[2]),
+            'clock_seq_hi_and_reserved' => sprintf(
+                '%02s', substr($components[3], 0, 2)
+            ),
+            'clock_seq_low'             => sprintf(
+                '%02s', substr($components[3], 2)
+            ),
+            'node'                      => sprintf('%012s', $components[4]),
         );
 
         return new self($fields);
@@ -855,6 +897,7 @@ final class Uuid
      * Check if a string is a valid uuid
      *
      * @param string $uuid The uuid to test
+     *
      * @return boolean
      */
     public static function isValid($uuid)
@@ -865,9 +908,14 @@ final class Uuid
             return true;
         }
 
-        if (!preg_match('/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/', $uuid)) {
+        if ( ! preg_match(
+            '/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/',
+            $uuid
+        )
+        ) {
             return false;
         }
+
         return true;
     }
 
@@ -877,25 +925,28 @@ final class Uuid
      * address. If $clockSeq is given, it is used as the sequence number;
      * otherwise a random 14-bit sequence number is chosen.
      *
-     * @param int|string $node A 48-bit number representing the hardware
-     *                         address. This number may be represented as
-     *                         an integer or a hexadecimal string.
-     * @param int $clockSeq A 14-bit number used to help avoid duplicates that
-     *                      could arise when the clock is set backwards in time
-     *                      or if the node ID changes.
+     * @param int|string $node     A 48-bit number representing the hardware
+     *                             address. This number may be represented as
+     *                             an integer or a hexadecimal string.
+     * @param int        $clockSeq A 14-bit number used to help avoid duplicates that
+     *                             could arise when the clock is set backwards in time
+     *                             or if the node ID changes.
+     *
      * @return Uuid
      * @throws InvalidArgumentException if the $node is invalid
      */
     public static function uuid1($node = null, $clockSeq = null)
     {
-        if ($node === null && !self::$ignoreSystemNode) {
+        if ($node === null && ! self::$ignoreSystemNode) {
             $node = self::getNodeFromSystem();
         }
 
         // if $node is still null (couldn't get from system), randomly generate
         // a node value, according to RFC 4122, Section 4.5
         if ($node === null) {
-            $node = sprintf('%06x%06x', mt_rand(0, 1 << 24), mt_rand(0, 1 << 24));
+            $node = sprintf(
+                '%06x%06x', mt_rand(0, 1 << 24), mt_rand(0, 1 << 24)
+            );
         }
 
         // Convert the node to hex, if it is still an integer
@@ -921,7 +972,9 @@ final class Uuid
         } else {
             $timeOfDay = self::$timeOfDayTest;
         }
-        $uuidTime = self::calculateUuidTime($timeOfDay['sec'], $timeOfDay['usec']);
+        $uuidTime = self::calculateUuidTime(
+            $timeOfDay['sec'], $timeOfDay['usec']
+        );
 
         // Set the version number to 1
         $timeHi = hexdec($uuidTime['hi']) & 0x0fff;
@@ -934,12 +987,12 @@ final class Uuid
         $clockSeqHi |= 0x80;
 
         $fields = array(
-            'time_low' => $uuidTime['low'],
-            'time_mid' => $uuidTime['mid'],
-            'time_hi_and_version' => sprintf('%04x', $timeHi),
+            'time_low'                  => $uuidTime['low'],
+            'time_mid'                  => $uuidTime['mid'],
+            'time_hi_and_version'       => sprintf('%04x', $timeHi),
             'clock_seq_hi_and_reserved' => sprintf('%02x', $clockSeqHi),
-            'clock_seq_low' => sprintf('%02x', $clockSeq & 0xff),
-            'node' => $node,
+            'clock_seq_low'             => sprintf('%02x', $clockSeq & 0xff),
+            'node'                      => $node,
         );
 
         return new self($fields);
@@ -949,13 +1002,14 @@ final class Uuid
      * Generate a version 3 UUID based on the MD5 hash of a namespace identifier (which
      * is a UUID) and a name (which is a string).
      *
-     * @param Uuid|string $ns The UUID namespace in which to create the named UUID
-     * @param string $name The name to create a UUID for
+     * @param Uuid|string $ns   The UUID namespace in which to create the named UUID
+     * @param string      $name The name to create a UUID for
+     *
      * @return Uuid
      */
     public static function uuid3($ns, $name)
     {
-        if (!($ns instanceof Uuid)) {
+        if ( ! ($ns instanceof Uuid)) {
             $ns = self::fromString($ns);
         }
 
@@ -977,6 +1031,7 @@ final class Uuid
         // hexadecimal string that looks a lot like an MD5 hash, so at this
         // point, we can just pass it to uuidFromHashedName.
         $hex = bin2hex($bytes);
+
         return self::uuidFromHashedName($hex, 4);
     }
 
@@ -984,13 +1039,14 @@ final class Uuid
      * Generate a version 5 UUID based on the SHA-1 hash of a namespace identifier (which
      * is a UUID) and a name (which is a string).
      *
-     * @param Uuid|string $ns The UUID namespace in which to create the named UUID
-     * @param string $name The name to create a UUID for
+     * @param Uuid|string $ns   The UUID namespace in which to create the named UUID
+     * @param string      $name The name to create a UUID for
+     *
      * @return Uuid
      */
     public static function uuid5($ns, $name)
     {
-        if (!($ns instanceof Uuid)) {
+        if ( ! ($ns instanceof Uuid)) {
             $ns = self::fromString($ns);
         }
 
@@ -1005,8 +1061,9 @@ final class Uuid
      * UUID time is a 60-bit time value as a count of 100-nanosecond intervals
      * since 00:00:00.00, 15 October 1582.
      *
-     * @param int $sec Seconds since the Unix Epoch
+     * @param int $sec  Seconds since the Unix Epoch
      * @param int $usec Microseconds
+     *
      * @return array
      * @throws Exception\UnsatisfiedDependencyException if called on a 32-bit system and Moontoast\Math\BigNumber is not present
      */
@@ -1021,7 +1078,7 @@ final class Uuid
             return array(
                 'low' => sprintf('%08x', $uuidTime & 0xffffffff),
                 'mid' => sprintf('%04x', ($uuidTime >> 32) & 0xffff),
-                'hi' => sprintf('%04x', ($uuidTime >> 48) & 0x0fff),
+                'hi'  => sprintf('%04x', ($uuidTime >> 48) & 0x0fff),
             );
         }
 
@@ -1044,7 +1101,7 @@ final class Uuid
             return array(
                 'low' => substr($uuidTimeHex, 8),
                 'mid' => substr($uuidTimeHex, 4, 4),
-                'hi' => substr($uuidTimeHex, 0, 4),
+                'hi'  => substr($uuidTimeHex, 0, 4),
             );
         }
 
@@ -1076,8 +1133,9 @@ final class Uuid
             $ifconfig = `ifconfig 2>&1`;
         }
 
-        $node = null;
-        $pattern = '/[^:]([0-9A-Fa-f]{2}([:-])[0-9A-Fa-f]{2}(\2[0-9A-Fa-f]{2}){4})[^:]/';
+        $node    = null;
+        $pattern
+                 = '/[^:]([0-9A-Fa-f]{2}([:-])[0-9A-Fa-f]{2}(\2[0-9A-Fa-f]{2}){4})[^:]/';
         $matches = array();
 
         // Search the ifconfig output for all MAC addresses and return
@@ -1098,7 +1156,8 @@ final class Uuid
      */
     protected static function hasBigNumber()
     {
-        return (class_exists('Moontoast\Math\BigNumber') && !self::$forceNoBigNumber);
+        return (class_exists('Moontoast\Math\BigNumber')
+            && ! self::$forceNoBigNumber);
     }
 
     /**
@@ -1108,7 +1167,8 @@ final class Uuid
      */
     protected static function hasOpensslRandomPseudoBytes()
     {
-        return (function_exists('openssl_random_pseudo_bytes') && !self::$forceNoOpensslRandomPseudoBytes);
+        return (function_exists('openssl_random_pseudo_bytes')
+            && ! self::$forceNoOpensslRandomPseudoBytes);
     }
 
     /**
@@ -1118,15 +1178,16 @@ final class Uuid
      */
     protected static function is64BitSystem()
     {
-        return (PHP_INT_SIZE == 8 && !self::$force32Bit);
+        return (PHP_INT_SIZE == 8 && ! self::$force32Bit);
     }
 
     /**
      * Returns a version 3 or 5 UUID based on the hash (md5 or sha1) of a
      * namespace identifier (which is a UUID) and a name (which is a string)
      *
-     * @param string $hash The hash to use when creating the UUID
-     * @param int $version The UUID version to be generated
+     * @param string $hash    The hash to use when creating the UUID
+     * @param int    $version The UUID version to be generated
+     *
      * @return Uuid
      */
     protected static function uuidFromHashedName($hash, $version)
@@ -1142,12 +1203,12 @@ final class Uuid
         $clockSeqHi |= 0x80;
 
         $fields = array(
-            'time_low' => substr($hash, 0, 8),
-            'time_mid' => substr($hash, 8, 4),
-            'time_hi_and_version' => sprintf('%04x', $timeHi),
+            'time_low'                  => substr($hash, 0, 8),
+            'time_mid'                  => substr($hash, 8, 4),
+            'time_hi_and_version'       => sprintf('%04x', $timeHi),
             'clock_seq_hi_and_reserved' => sprintf('%02x', $clockSeqHi),
-            'clock_seq_low' => substr($hash, 18, 2),
-            'node' => substr($hash, 20, 12),
+            'clock_seq_low'             => substr($hash, 18, 2),
+            'node'                      => substr($hash, 20, 12),
         );
 
         return new self($fields);
@@ -1155,6 +1216,7 @@ final class Uuid
 
     /**
      * @param int $length
+     *
      * @return string
      */
     private static function generateBytes($length)
@@ -1167,6 +1229,7 @@ final class Uuid
         foreach (range(1, $length) as $i) {
             $bytes = chr(mt_rand(0, 256)) . $bytes;
         }
+
         return $bytes;
     }
 }

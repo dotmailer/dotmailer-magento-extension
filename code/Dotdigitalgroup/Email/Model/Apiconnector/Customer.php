@@ -7,40 +7,41 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     public $customerData;
     public $reviewCollection;
 
-	//enterprise reward
-	public $reward;
+    //enterprise reward
+    public $reward;
 
     public $rewardCustomer;
     public $rewardLastSpent = "";
     public $rewardLastEarned = "";
     public $rewardExpiry = "";
 
-    protected $_mapping_hash;
+    protected $_mappingHash;
 
-    protected $subscriber_status = array(
-        Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED => 'Subscribed',
-        Mage_Newsletter_Model_Subscriber::STATUS_NOT_ACTIVE => 'Not Active',
-        Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED => 'Unsubscribed',
-        Mage_Newsletter_Model_Subscriber::STATUS_UNCONFIRMED => 'Unconfirmed'
-    );
+    public $subscriberStatus
+        = array(
+            Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED   => 'Subscribed',
+            Mage_Newsletter_Model_Subscriber::STATUS_NOT_ACTIVE   => 'Not Active',
+            Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED => 'Unsubscribed',
+            Mage_Newsletter_Model_Subscriber::STATUS_UNCONFIRMED  => 'Unconfirmed'
+        );
 
 
-	/**
-	 * constructor, mapping hash to map.
-	 *
-	 * @param $mappingHash
-	 */
-	public function __construct( $mappingHash)
-	{
+    /**
+     * constructor, mapping hash to map.
+     *
+     * @param $mappingHash
+     */
+    public function __construct($mappingHash)
+    {
         $this->setMappigHash($mappingHash);
     }
 
-	/**
-	 * Set key value data.
-	 *
-	 * @param $data
-	 */
-	public function setData($data)
+    /**
+     * Set key value data.
+     *
+     * @param $data
+     */
+    public function setData($data)
     {
         $this->customerData[] = $data;
     }
@@ -56,8 +57,9 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         $this->setReviewCollection();
         $website = $customer->getStore()->getWebsite();
 
-        if ($website && Mage::helper('ddg')->isSweetToothToGo($website))
+        if ($website && Mage::helper('ddg')->isSweetToothToGo($website)) {
             $this->setRewardCustomer($customer);
+        }
 
         foreach ($this->getMappingHash() as $key => $field) {
 
@@ -69,10 +71,12 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
             foreach ($exploded as $one) {
                 $function .= ucfirst($one);
             }
-            try{
-                $value = call_user_func(array('self', $function));
+            try {
+                $value                    = call_user_func(
+                    array('self', $function)
+                );
                 $this->customerData[$key] = $value;
-            }catch (Exception $e){
+            } catch (Exception $e) {
                 Mage::logException($e);
             }
         }
@@ -80,10 +84,10 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
 
     public function setReviewCollection()
     {
-        $customer_id = $this->customer->getId();
-        $collection = Mage::getModel('review/review')->getCollection()
-            ->addCustomerFilter($customer_id)
-            ->setOrder('review_id','DESC');
+        $customerId = $this->customer->getId();
+        $collection  = Mage::getModel('review/review')->getCollection()
+            ->addCustomerFilter($customerId)
+            ->setOrder('review_id', 'DESC');
 
         $this->reviewCollection = $collection;
     }
@@ -93,12 +97,15 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         return $this->reviewCollection->getSize();
     }
 
-    public function getLastReviewDate(){
+    public function getLastReviewDate()
+    {
 
-	    if(count($this->reviewCollection)){
-		    $this->reviewCollection->getSelect()->limit(1);
-	        return $this->reviewCollection->getFirstItem()->getCreatedAt();
+        if (count($this->reviewCollection)) {
+            $this->reviewCollection->getSelect()->limit(1);
+
+            return $this->reviewCollection->getFirstItem()->getCreatedAt();
         }
+
         return '';
     }
 
@@ -110,349 +117,361 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     public function setRewardCustomer(Mage_Customer_Model_Customer $customer)
     {
         //get tbt reward customer
-        $tbt_reward = Mage::getModel('rewards/customer')->getRewardsCustomer($customer);
-        $this->rewardCustomer = $tbt_reward;
+        $tbtReward           = Mage::getModel('rewards/customer')
+            ->getRewardsCustomer(
+                $customer
+            );
+        $this->rewardCustomer = $tbtReward;
 
         //get transfers collection from tbt reward. only active and order by last updated.
-        $lastTransfers = $tbt_reward->getTransfers()
+        $lastTransfers = $tbtReward->getTransfers()
             ->selectOnlyActive()
-            ->addOrder('last_update_ts', Varien_Data_Collection::SORT_ORDER_DESC);
+            ->addOrder(
+                'last_update_ts', Varien_Data_Collection::SORT_ORDER_DESC
+            );
 
         $spent = $earn = null;
 
-        foreach($lastTransfers as $transfer) {
-            // if transfer quantity is greater then 0 then this is last points earned date. keep checking until earn is not null
-            if(is_null($earn) && $transfer->getQuantity() > 0){
-                $earn  = $transfer->getEffectiveStart();
-            }
-            // id transfer quantity is less then 0 then this is last points spent date. keep checking until spent is not null
-            else if(is_null($spent) && $transfer->getQuantity() < 0) {
+        foreach ($lastTransfers as $transfer) {
+            // if transfer quantity is greater then 0 then this is last points earned date.
+            // keep checking until earn is not null
+            if (is_null($earn) && $transfer->getQuantity() > 0) {
+                $earn = $transfer->getEffectiveStart();
+            } else if (is_null($spent) && $transfer->getQuantity() < 0) {
+                // id transfer quantity is less then 0 then this is last points spent date.
+                // keep checking until spent is not null
                 $spent = $transfer->getEffectiveStart();
             }
             // break if both spent and earn are not null (a value has been assigned)
-            if(!is_null($spent) && !is_null($earn)) {
+            if ( ! is_null($spent) && ! is_null($earn)) {
                 break;
             }
         }
 
         // if earn is not null (has a value) then assign the value to property
-        if($earn)
+        if ($earn) {
             $this->rewardLastEarned = $earn;
+        }
         // if spent is not null (has a value) then assign the value to property
-        if($spent)
+        if ($spent) {
             $this->rewardLastSpent = $spent;
+        }
 
-        $tbt_expiry = Mage::getSingleton('rewards/expiry')
-            ->getExpiryDate($tbt_reward);
+        $tbtExpiry = Mage::getSingleton('rewards/expiry')
+            ->getExpiryDate($tbtReward);
 
         // if there is an expiry (has a value) then assign the value to property
-        if($tbt_expiry)
-            $this->rewardExpiry = $tbt_expiry;
+        if ($tbtExpiry) {
+            $this->rewardExpiry = $tbtExpiry;
+        }
     }
 
     /**
-	 * get customer id.
-	 *
-	 * @return mixed
-	 */
-	public function getCustomerId()
+     * get customer id.
+     *
+     * @return mixed
+     */
+    public function getCustomerId()
     {
         return $this->customer->getId();
     }
 
-	/**
-	 * get first name.
-	 *
-	 * @return mixed
-	 */
-	public function getFirstname(){
+    /**
+     * get first name.
+     *
+     * @return mixed
+     */
+    public function getFirstname()
+    {
         return $this->customer->getFirstname();
     }
 
-	/**
-	 * get last name.
-	 *
-	 * @return mixed
-	 */
-	public function getLastname()
+    /**
+     * get last name.
+     *
+     * @return mixed
+     */
+    public function getLastname()
     {
         return $this->customer->getLastname();
     }
 
-	/**
-	 * get date of birth.
-	 *
-	 * @return mixed
-	 */
-	public function getDob()
+    /**
+     * get date of birth.
+     *
+     * @return mixed
+     */
+    public function getDob()
     {
         return $this->customer->getDob();
     }
 
-	/**
-	 * get customer gender.
-	 *
-	 * @return bool|string
-	 */
-	public function getGender()
+    /**
+     * get customer gender.
+     *
+     * @return bool|string
+     */
+    public function getGender()
     {
         return $this->_getCustomerGender();
     }
 
-	/**
-	 * get customer prefix.
-	 *
-	 * @return mixed
-	 */
-	public function getPrefix()
+    /**
+     * get customer prefix.
+     *
+     * @return mixed
+     */
+    public function getPrefix()
     {
         return $this->customer->getPrefix();
     }
 
-	/**
-	 * get customer suffix.
-	 *
-	 * @return mixed
-	 */
-	public function getSuffix()
+    /**
+     * get customer suffix.
+     *
+     * @return mixed
+     */
+    public function getSuffix()
     {
         return $this->customer->getSuffix();
     }
 
-	/**
-	 * get website name.
-	 *
-	 * @return string
-	 */
-	public function getWebsiteName()
+    /**
+     * get website name.
+     *
+     * @return string
+     */
+    public function getWebsiteName()
     {
         return $this->_getWebsiteName();
     }
 
-	/**
-	 * get store name.
-	 *
-	 * @return null|string
-	 */
-	public function getStoreName()
+    /**
+     * get store name.
+     *
+     * @return null|string
+     */
+    public function getStoreName()
     {
         return $this->_getStoreName();
     }
 
-	/**
-	 * get customer created at date.
-	 *
-	 * @return mixed
-	 */
-	public function getCreatedAt()
+    /**
+     * get customer created at date.
+     *
+     * @return mixed
+     */
+    public function getCreatedAt()
     {
         return $this->customer->getCreatedAt();
     }
 
-	/**
-	 * get customer last logged in date.
-	 *
-	 * @return mixed
-	 */
-	public function getLastLoggedDate()
+    /**
+     * get customer last logged in date.
+     *
+     * @return mixed
+     */
+    public function getLastLoggedDate()
     {
         return $this->customer->getLastLoggedDate();
     }
 
-	/**
-	 * get cutomer group.
-	 *
-	 * @return string
-	 */
-	public function getCustomerGroup()
+    /**
+     * get cutomer group.
+     *
+     * @return string
+     */
+    public function getCustomerGroup()
     {
         return $this->_getCustomerGroup();
     }
 
-	/**
-	 * get billing address line 1.
-	 *
-	 * @return string
-	 */
-	public function getBillingAddress1()
+    /**
+     * get billing address line 1.
+     *
+     * @return string
+     */
+    public function getBillingAddress1()
     {
         return $this->_getStreet($this->customer->getBillingStreet(), 1);
     }
 
-	/**
-	 * get billing address line 2.
-	 *
-	 * @return string
-	 */
-	public function getBillingAddress2()
+    /**
+     * get billing address line 2.
+     *
+     * @return string
+     */
+    public function getBillingAddress2()
     {
         return $this->_getStreet($this->customer->getBillingStreet(), 2);
     }
 
-	/**
-	 * get billing city.
-	 *
-	 * @return mixed
-	 */
-	public function getBillingCity()
+    /**
+     * get billing city.
+     *
+     * @return mixed
+     */
+    public function getBillingCity()
     {
         return $this->customer->getBillingCity();
     }
 
-	/**
-	 * get billing country.
-	 *
-	 * @return mixed
-	 */
-	public function getBillingCountry()
+    /**
+     * get billing country.
+     *
+     * @return mixed
+     */
+    public function getBillingCountry()
     {
         return $this->customer->getBillingCountryCode();
     }
 
-	/**
-	 * get billing state.
-	 *
-	 * @return mixed
-	 */
-	public function getBillingState()
+    /**
+     * get billing state.
+     *
+     * @return mixed
+     */
+    public function getBillingState()
     {
         return $this->customer->getBillingRegion();
     }
 
-	/**
-	 * get billing postcode.
-	 *
-	 * @return mixed
-	 */
-	public function getBillingPostcode()
+    /**
+     * get billing postcode.
+     *
+     * @return mixed
+     */
+    public function getBillingPostcode()
     {
         return $this->customer->getBillingPostcode();
     }
 
-	/**
-	 * get billing phone.
-	 *
-	 * @return mixed
-	 */
-	public function getBillingTelephone()
+    /**
+     * get billing phone.
+     *
+     * @return mixed
+     */
+    public function getBillingTelephone()
     {
         return $this->customer->getBillingTelephone();
     }
 
-	/**
-	 * get delivery address line 1.
-	 *
-	 * @return string
-	 */
-	public function getDeliveryAddress1()
+    /**
+     * get delivery address line 1.
+     *
+     * @return string
+     */
+    public function getDeliveryAddress1()
     {
         return $this->_getStreet($this->customer->getShippingStreet(), 1);
     }
 
-	/**
-	 * get delivery addrss line 2.
-	 *
-	 * @return string
-	 */
-	public function getDeliveryAddress2()
+    /**
+     * get delivery addrss line 2.
+     *
+     * @return string
+     */
+    public function getDeliveryAddress2()
     {
         return $this->_getStreet($this->customer->getShippingStreet(), 2);
     }
 
-	/**
-	 * get delivery city.
-	 *
-	 * @return mixed
-	 */
-	public function getDeliveryCity()
+    /**
+     * get delivery city.
+     *
+     * @return mixed
+     */
+    public function getDeliveryCity()
     {
         return $this->customer->getShippingCity();
     }
 
-	/**
-	 * get delivery country.
-	 *
-	 * @return mixed
-	 */
-	public function getDeliveryCountry(){
+    /**
+     * get delivery country.
+     *
+     * @return mixed
+     */
+    public function getDeliveryCountry()
+    {
         return $this->customer->getShippingCountryCode();
     }
 
-	/**
-	 * get delivery state.
-	 *
-	 * @return mixed
-	 */
-	public function getDeliveryState()
+    /**
+     * get delivery state.
+     *
+     * @return mixed
+     */
+    public function getDeliveryState()
     {
         return $this->customer->getShippingRegion();
     }
 
-	/**
-	 * get delivery postcode.
-	 *
-	 * @return mixed
-	 */
-	public function getDeliveryPostcode()
+    /**
+     * get delivery postcode.
+     *
+     * @return mixed
+     */
+    public function getDeliveryPostcode()
     {
         return $this->customer->getShippingPostcode();
     }
 
-	/**
-	 * get delivery phone.
-	 *
-	 * @return mixed
-	 */
-	public function getDeliveryTelephone(){
+    /**
+     * get delivery phone.
+     *
+     * @return mixed
+     */
+    public function getDeliveryTelephone()
+    {
         return $this->customer->getShippingTelephone();
     }
 
-	/**
-	 * get numbser of orders.
-	 *
-	 * @return mixed
-	 */
-	public function getNumberOfOrders()
+    /**
+     * get numbser of orders.
+     *
+     * @return mixed
+     */
+    public function getNumberOfOrders()
     {
         return $this->customer->getNumberOfOrders();
     }
 
-	/**
-	 * get average order value.
-	 *
-	 * @return mixed
-	 */
-	public function getAverageOrderValue()
+    /**
+     * get average order value.
+     *
+     * @return mixed
+     */
+    public function getAverageOrderValue()
     {
         return $this->customer->getAverageOrderValue();
     }
 
-	/**
-	 * get total spend.
-	 *
-	 * @return mixed
-	 */
-	public function getTotalSpend()
+    /**
+     * get total spend.
+     *
+     * @return mixed
+     */
+    public function getTotalSpend()
     {
         return $this->customer->getTotalSpend();
     }
 
-	/**
-	 * get last order date.
-	 *
-	 * @return mixed
-	 */
-	public function getLastOrderDate()
+    /**
+     * get last order date.
+     *
+     * @return mixed
+     */
+    public function getLastOrderDate()
     {
         return $this->customer->getLastOrderDate();
     }
 
-	/**
-	 * get last order id.
-	 *
-	 * @return mixed
-	 */
-	public function getLastOrderId()
+    /**
+     * get last order id.
+     *
+     * @return mixed
+     */
+    public function getLastOrderId()
     {
         return $this->customer->getLastOrderId();
     }
@@ -467,36 +486,35 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         return $this->customer->getLastQuoteId();
     }
 
-	/**
-	 * get cutomer id.
-	 *
-	 * @return mixed
-	 */
-	public function getId()
+    /**
+     * get cutomer id.
+     *
+     * @return mixed
+     */
+    public function getId()
     {
         return $this->customer->getId();
     }
 
-	/**
-	 * get customer title.
-	 *
-	 * @return mixed
-	 */
-	public function getTitle()
+    /**
+     * get customer title.
+     *
+     * @return mixed
+     */
+    public function getTitle()
     {
         return $this->customer->getPrefix();
     }
 
-	/**
-	 * get total refund value.
-	 *
-	 * @return float|int
-	 */
-	public function getTotalRefund()
+    /**
+     * get total refund value.
+     *
+     * @return float|int
+     */
+    public function getTotalRefund()
     {
-        $orders = Mage::getResourceModel('sales/order_collection')
-            ->addAttributeToFilter('customer_id', $this->customer->getId())
-        ;
+        $orders        = Mage::getResourceModel('sales/order_collection')
+            ->addAttributeToFilter('customer_id', $this->customer->getId());
         $totalRefunded = 0;
         foreach ($orders as $order) {
             $refunded = $order->getTotalRefunded();
@@ -506,70 +524,77 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         return $totalRefunded;
     }
 
-	/**
-	 * export to CSV.
-	 *
-	 * @return mixed
-	 */
-	public function toCSVArray()
+    /**
+     * export to CSV.
+     *
+     * @return mixed
+     */
+    public function toCSVArray()
     {
         $result = $this->customerData;
+
         return $result;
     }
 
-	/**
-	 * customer gender.
-	 *
-	 * @return bool|string
-	 * @throws Mage_Core_Exception
-	 */
-	protected function _getCustomerGender()
+    /**
+     * customer gender.
+     *
+     * @return bool|string
+     * @throws Mage_Core_Exception
+     */
+    protected function _getCustomerGender()
     {
         $genderId = $this->customer->getGender();
         if (is_numeric($genderId)) {
             $gender = Mage::getResourceModel('customer/customer')
                 ->getAttribute('gender')
                 ->getSource()
-                ->getOptionText($genderId)
-            ;
+                ->getOptionText($genderId);
+
             return $gender;
         }
 
         return '';
     }
 
-    protected function _getStreet($street, $line){
+    protected function _getStreet($street, $line)
+    {
         $street = explode("\n", $street);
-        if(isset($street[$line - 1]))
+        if (isset($street[$line - 1])) {
             return $street[$line - 1];
+        }
+
         return '';
     }
 
-    protected function _getWebsiteName(){
+    protected function _getWebsiteName()
+    {
         $websiteId = $this->customer->getWebsiteId();
-        $website = Mage::app()->getWebsite($websiteId);
-        if($website)
+        $website   = Mage::app()->getWebsite($websiteId);
+        if ($website) {
             return $website->getName();
+        }
 
         return '';
     }
 
-    protected  function _getStoreName()
+    protected function _getStoreName()
     {
         $storeId = $this->customer->getStoreId();
-        $store = Mage::app()->getStore($storeId);
-        if($store)
+        $store   = Mage::app()->getStore($storeId);
+        if ($store) {
             return $store->getName();
+        }
 
         return '';
     }
 
     /**
-     * @param mixed $mapping_hash
+     * @param mixed $mappingHash
      */
-    public function setMappingHash($mapping_hash)
+    public function setMappingHash($mappingHash)
     {
-        $this->_mapping_hash = $mapping_hash;
+        $this->_mappingHash = $mappingHash;
     }
 
     /**
@@ -577,37 +602,46 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getMappingHash()
     {
-        return $this->_mapping_hash;
+        return $this->_mappingHash;
     }
 
-    protected function _getCustomerGroup(){
+    protected function _getCustomerGroup()
+    {
 
-	    $groupId = $this->customer->getGroupId();
-        $group = Mage::getModel('customer/group')->load($groupId);
+        $groupId = $this->customer->getGroupId();
+        $group   = Mage::getModel('customer/group')->load($groupId);
 
         if ($group->getId()) {
             return $group->getCode();
         }
+
         return '';
     }
 
-	/**
-	 * mapping hash value.
-	 *
-	 * @param $value
-	 *
-	 * @return $this
-	 */
-	public function setMappigHash($value)
+    /**
+     * mapping hash value.
+     *
+     * @param $value
+     *
+     * @return $this
+     */
+    public function setMappigHash($value)
     {
-        $this->_mapping_hash = $value;
+        $this->_mappingHash = $value;
+
         return $this;
     }
 
     public function getRewardReferralUrl()
     {
-        if(Mage::helper('ddg')->isSweetToothToGo($this->customer->getStore()->getWebsite()))
-           return (string) Mage::helper('rewardsref/url')->getUrl($this->customer);
+        if (Mage::helper('ddg')->isSweetToothToGo(
+            $this->customer->getStore()->getWebsite()
+        )
+        ) {
+            return (string)Mage::helper('rewardsref/url')->getUrl(
+                $this->customer
+            );
+        }
 
         return '';
     }
@@ -619,23 +653,33 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
 
     public function getRewardPointPending()
     {
-        return $this->cleanString($this->rewardCustomer->getPendingPointsSummary());
+        return $this->cleanString(
+            $this->rewardCustomer->getPendingPointsSummary()
+        );
     }
 
     public function getRewardPointPendingTime()
     {
-        return $this->cleanString($this->rewardCustomer->getPendingTimePointsSummary());
+        return $this->cleanString(
+            $this->rewardCustomer->getPendingTimePointsSummary()
+        );
     }
 
     public function getRewardPointOnHold()
     {
-        return $this->cleanString($this->rewardCustomer->getOnHoldPointsSummary());
+        return $this->cleanString(
+            $this->rewardCustomer->getOnHoldPointsSummary()
+        );
     }
 
     public function getRewardPointExpiration()
     {
-        if($this->rewardExpiry != "")
-            return Mage::getModel('core/date')->date('Y/m/d', strtotime($this->rewardExpiry));
+        if ($this->rewardExpiry != "") {
+            return Mage::getModel('core/date')->date(
+                'Y/m/d', strtotime($this->rewardExpiry)
+            );
+        }
+
         return $this->rewardExpiry;
     }
 
@@ -651,78 +695,100 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
 
     public function cleanString($string)
     {
-        $cleanedString = preg_replace("/[^0-9]/","",$string);
-        if($cleanedString != "")
-            return (int) number_format($cleanedString, 0, '.', '');
+        $cleanedString = preg_replace("/[^0-9]/", "", $string);
+        if ($cleanedString != "") {
+            return (int)number_format($cleanedString, 0, '.', '');
+        }
+
         return 0;
     }
 
     public function getSubscriberStatus()
     {
-        $subscriber = Mage::getModel('newsletter/subscriber')->loadByCustomer($this->customer);
-        if($subscriber->getCustomerId())
-             return $this->subscriber_status[$subscriber->getSubscriberStatus()];
+        $subscriber = Mage::getModel('newsletter/subscriber')->loadByCustomer(
+            $this->customer
+        );
+        if ($subscriber->getCustomerId()) {
+            return $this->subscriberStatus[$subscriber->getSubscriberStatus()];
+        }
     }
 
-	/**
-	 * Reward points balance.
-	 * @return int
-	 */
-	public function getRewardPoints() {
-		if (!$this->reward)
-			$this->_setReward();
+    /**
+     * Reward points balance.
+     *
+     * @return int
+     */
+    public function getRewardPoints()
+    {
+        if ( ! $this->reward) {
+            $this->_setReward();
+        }
 
-        if($this->reward !== true){
+        if ($this->reward !== true) {
             return $this->reward->getPointsBalance();
         }
+
         return '';
-	}
+    }
 
-	/**
-	 * Currency amount points.
-	 * @return mixed
-	 */
-	public function getRewardAmount() {
-		if (!$this->reward)
-			$this->_setReward();
-
-        if($this->reward !== true){
-		    return $this->reward->getCurrencyAmount();
+    /**
+     * Currency amount points.
+     *
+     * @return mixed
+     */
+    public function getRewardAmount()
+    {
+        if ( ! $this->reward) {
+            $this->_setReward();
         }
+
+        if ($this->reward !== true) {
+            return $this->reward->getCurrencyAmount();
+        }
+
         return '';
-	}
+    }
 
-	/**
-	 * Expiration date to use the points.
-	 * @return string
-	 */
-	public function getExpirationDate()
-	{
-		//set reward for later use
-		if (!$this->reward)
-			$this->_setReward();
+    /**
+     * Expiration date to use the points.
+     *
+     * @return string
+     */
+    public function getExpirationDate()
+    {
+        //set reward for later use
+        if ( ! $this->reward) {
+            $this->_setReward();
+        }
 
-        if($this->reward !== true){
+        if ($this->reward !== true) {
             $expiredAt = $this->reward->getExpirationDate();
 
             if ($expiredAt) {
-                $date = Mage::helper('core')->formatDate($expiredAt, 'short', true);
+                $date = Mage::helper('core')->formatDate(
+                    $expiredAt, 'short', true
+                );
             } else {
                 $date = '';
             }
+
             return $date;
         }
 
-		return '';
-	}
+        return '';
+    }
 
 
-	protected function _setReward() {
-        if (Mage::getModel('enterprise_reward/reward_history')){
-            $collection = Mage::getModel('enterprise_reward/reward_history')->getCollection()
+    protected function _setReward()
+    {
+        if (Mage::getModel('enterprise_reward/reward_history')) {
+            $collection = Mage::getModel('enterprise_reward/reward_history')
+                ->getCollection()
                 ->addCustomerFilter($this->customer->getId())
                 ->addWebsiteFilter($this->customer->getWebsiteId())
-                ->setExpiryConfig(Mage::helper('enterprise_reward')->getExpiryConfig())
+                ->setExpiryConfig(
+                    Mage::helper('enterprise_reward')->getExpiryConfig()
+                )
                 ->addExpirationDate($this->customer->getWebsiteId())
                 ->skipExpiredDuplicates()
                 ->setDefaultOrder();
@@ -730,59 +796,66 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
             $item = $collection->setPageSize(1)->setCurPage(1)->getFirstItem();
 
             $this->reward = $item;
-        }
-        else
+        } else {
             $this->reward = true;
-	}
+        }
+    }
 
 
-	/**
-	 * Customer segments id.
-	 * @return string
-	 */
-	public function getCustomerSegments()
-	{
+    /**
+     * Customer segments id.
+     *
+     * @return string
+     */
+    public function getCustomerSegments()
+    {
         $collection = Mage::getModel('ddg_automation/contact')->getCollection()
             ->addFieldToFilter('customer_id', $this->getCustomerId())
             ->addFieldToFilter('website_id', $this->customer->getWebsiteId());
 
         $item = $collection->setPageSize(1)->setCurPage(1)->getFirstItem();
 
-		if ($item)
-			return $item->getSegmentIds();
+        if ($item) {
+            return $item->getSegmentIds();
+        }
 
-		return '';
-	}
+        return '';
+    }
 
 
-
-	/**
-	 * Last used reward points.
-	 * @return mixed
-	 */
-	public function getLastUsedDate()
-	{
+    /**
+     * Last used reward points.
+     *
+     * @return mixed
+     */
+    public function getLastUsedDate()
+    {
         if (Mage::getModel('enterprise_reward/reward_history')) {
             //last used from the reward history based on the points delta used
-            $collection = Mage::getModel('enterprise_reward/reward_history')->getCollection()
+            $collection = Mage::getModel('enterprise_reward/reward_history')
+                ->getCollection()
                 ->addCustomerFilter($this->customer->getId())
                 ->addWebsiteFilter($this->customer->getWebsiteId())
                 ->addFieldToFilter('points_delta', array('lt' => 0))
                 ->setDefaultOrder();
 
-            $item = $collection->setPageSize(1)->setCurPage(1)->getFirstItem();
+            $item     = $collection->setPageSize(1)->setCurPage(1)
+                ->getFirstItem();
             $lastUsed = $item->getCreatedAt();
 
             //for any valid date
-            if ($lastUsed)
-                return $date = Mage::helper('core')->formatDate($lastUsed, 'short', true);
+            if ($lastUsed) {
+                return $date = Mage::helper('core')->formatDate(
+                    $lastUsed, 'short', true
+                );
+            }
         }
-		return '';
-	}
+
+        return '';
+    }
 
 
-
-	/**
+    /**
      * get most purchased category
      *
      * @return string
@@ -790,12 +863,13 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     public function getMostPurCategory()
     {
         $id = $this->customer->getMostCategoryId();
-        if($id){
+        if ($id) {
             return Mage::getModel('catalog/category')
                 ->load($id)
                 ->setStoreId($this->customer->getStoreId())
                 ->getName();
         }
+
         return "";
     }
 
@@ -807,8 +881,10 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     public function getMostPurBrand()
     {
         $brand = $this->customer->getMostBrand();
-        if($brand)
+        if ($brand) {
             return $brand;
+        }
+
         return "";
     }
 
@@ -820,8 +896,10 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     public function getMostFreqPurDay()
     {
         $day = $this->customer->getWeekDay();
-        if($day)
+        if ($day) {
             return $day;
+        }
+
         return "";
     }
 
@@ -833,8 +911,10 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     public function getMostFreqPurMon()
     {
         $month = $this->customer->getMonthDay();
-        if($month)
+        if ($month) {
             return $month;
+        }
+
         return "";
     }
 
@@ -846,12 +926,13 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     public function getFirstCategoryPur()
     {
         $id = $this->customer->getFirstCategoryId();
-        if($id){
+        if ($id) {
             return Mage::getModel('catalog/category')
                 ->load($id)
                 ->setStoreId($this->customer->getStoreId())
                 ->getName();
         }
+
         return "";
     }
 
@@ -863,12 +944,13 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     public function getLastCategoryPur()
     {
         $id = $this->customer->getLastCategoryId();
-        if($id){
+        if ($id) {
             return Mage::getModel('catalog/category')
                 ->setStoreId($this->customer->getStoreId())
                 ->load($id)
                 ->getName();
         }
+
         return "";
     }
 
@@ -880,6 +962,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     public function getFirstBrandPur()
     {
         $id = $this->customer->getProductIdForFirstBrand();
+
         return $this->_getBrandValue($id);
     }
 
@@ -891,6 +974,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     public function getLastBrandPur()
     {
         $id = $this->customer->getProductIdForLastBrand();
+
         return $this->_getBrandValue($id);
     }
 
@@ -900,14 +984,16 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_DATA_FIELDS_BRAND_ATTRIBUTE,
             $this->customer->getWebsiteId()
         );
-        if($id && $attribute){
+        if ($id && $attribute) {
             $brand = Mage::getModel('catalog/product')
                 ->setStoreId($this->customer->getStoreId())
                 ->load($id)
                 ->getAttributeText($attribute);
-            if($brand)
+            if ($brand) {
                 return $brand;
+            }
         }
+
         return "";
     }
 

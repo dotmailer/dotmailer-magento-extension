@@ -52,13 +52,20 @@ class Dotdigitalgroup_Email_Block_Basket extends Mage_Core_Block_Template
             if ($quoteItem->getParentItemId() != null) {
                 continue;
             }
-            $_product = Mage::getModel('catalog/product')->load($quoteItem->getProductId());
+            $_product = Mage::getModel('catalog/product')->load(
+                $quoteItem->getProductId()
+            );
 
-            $inStock     = ($_product->getStockItem()->getIsInStock()) ? 'In Stock'
+            $inStock     = ($_product->getStockItem()->getIsInStock())
+                ? 'In Stock'
                 : 'Out of stock';
-            $total       = Mage::helper('core')->currency($quoteItem->getBaseRowTotalInclTax());
+            $total       = Mage::helper('core')->currency(
+                $quoteItem->getBaseRowTotalInclTax()
+            );
             $productUrl  = $_product->getProductUrl();
-            $grandTotal  = Mage::helper('core')->currency($this->getGrandTotal());
+            $grandTotal  = Mage::helper('core')->currency(
+                $this->getGrandTotal()
+            );
             $itemsData[] = array(
                 'grandTotal' => $grandTotal,
                 'total'      => $total,

@@ -2,69 +2,73 @@
 
 class Dotdigitalgroup_Email_Model_Connector_Order
 {
+
     /**
      * Order Increment ID
+     *
      * @var string
      */
-    public  $id;
+    public $id;
     /**
      * Email
+     *
      * @var string
      */
-    public  $email;
+    public $email;
     /**
      * @var int
      */
-    public  $quote_id;
+    public $quote_id;
     /**
      * @var string
      */
-    public  $store_name;
+    public $store_name;
     /**
      * @var string
      */
-    public  $purchase_date;
+    public $purchase_date;
     /**
      * @var string
      */
-    public  $delivery_address;
+    public $delivery_address;
     /**
      * @var string
      */
-    public  $billing_address;
+    public $billing_address;
     /**
      * @var array
      */
-    public  $products = array();
+    public $products = array();
     /**
      * @var float
      */
-    public  $order_subtotal;
+    public $order_subtotal;
     /**
      * @var float
      */
-    public  $discount_ammount;
+    public $discount_ammount;
     /**
      * @var float
      */
-    public  $order_total;
+    public $order_total;
     /**
      * Payment name
+     *
      * @var string
      */
-    public  $payment;
+    public $payment;
     /**
      * @var string
      */
-    public  $delivery_method;
+    public $delivery_method;
     /**
      * @var float
      */
-    public  $delivery_total;
+    public $delivery_total;
     /**
      * @var string
      */
-    public  $currency;
+    public $currency;
 
 
     public $couponCode;
@@ -72,7 +76,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
     /**
      * @var array
      */
-    public  $custom = array();
+    public $custom = array();
 
     /**
      * @var string
@@ -83,112 +87,143 @@ class Dotdigitalgroup_Email_Model_Connector_Order
 
     /**
      * set the order information
+     *
      * @param Mage_Sales_Model_Order $orderData
      */
     public function setOrderData(Mage_Sales_Model_Order $orderData)
     {
-        $this->id           = $orderData->getIncrementId();
-        $this->quote_id     = $orderData->getQuoteId();
-        $this->email        = $orderData->getCustomerEmail();
-        $this->store_name   = $orderData->getStoreName();
+        $this->id         = $orderData->getIncrementId();
+        $this->quote_id   = $orderData->getQuoteId();
+        $this->email      = $orderData->getCustomerEmail();
+        $this->store_name = $orderData->getStoreName();
 
-	    $created_at = new Zend_Date($orderData->getCreatedAt(), Zend_Date::ISO_8601);
+        $created_at = new Zend_Date(
+            $orderData->getCreatedAt(), Zend_Date::ISO_8601
+        );
 
-	    $this->purchase_date = $created_at->toString(Zend_Date::ISO_8601);
+        $this->purchase_date   = $created_at->toString(Zend_Date::ISO_8601);
         $this->delivery_method = $orderData->getShippingDescription();
-        $this->delivery_total = $orderData->getShippingAmount();
-        $this->currency = $orderData->getStoreCurrencyCode();
+        $this->delivery_total  = $orderData->getShippingAmount();
+        $this->currency        = $orderData->getStoreCurrencyCode();
 
-	    if ($payment = $orderData->getPayment())
+        if ($payment = $orderData->getPayment()) {
             $this->payment = $payment->getMethodInstance()->getTitle();
+        }
         $this->couponCode = $orderData->getCouponCode();
 
-		//set order custom attributes
+        //set order custom attributes
         $this->_setOrderCustomAttributes($orderData);
-		//billing
+        //billing
         $this->_setBillingData($orderData);
         //shipping
-	    $this->_setShippingData($orderData);
-	    //order items
+        $this->_setShippingData($orderData);
+        //order items
         $this->_setOrderItems($orderData);
-		//sales data
-        $this->order_subtotal   = (float)number_format($orderData->getData('subtotal'), 2 , '.', '');
-        $this->discount_ammount = (float)number_format($orderData->getData('discount_amount'), 2 , '.', '');
-        $orderTotal = abs($orderData->getData('grand_total') - $orderData->getTotalRefunded());
-        $this->order_total      = (float)number_format($orderTotal, 2 , '.', '');
-        $this->order_status = $orderData->getStatus();
+        //sales data
+        $this->order_subtotal   = (float)number_format(
+            $orderData->getData('subtotal'), 2, '.', ''
+        );
+        $this->discount_ammount = (float)number_format(
+            $orderData->getData('discount_amount'), 2, '.', ''
+        );
+        $orderTotal             = abs(
+            $orderData->getData('grand_total') - $orderData->getTotalRefunded()
+        );
+        $this->order_total      = (float)number_format($orderTotal, 2, '.', '');
+        $this->order_status     = $orderData->getStatus();
     }
 
-	/**
-	 * Shipping address.
-	 */
-	protected function _setShippingData( $orderData ) {
+    /**
+     * Shipping address.
+     */
+    protected function _setShippingData($orderData)
+    {
 
-		if ($orderData->getShippingAddress()) {
-			$shippingData = $orderData->getShippingAddress()->getData();
+        if ($orderData->getShippingAddress()) {
+            $shippingData = $orderData->getShippingAddress()->getData();
 
-			$this->delivery_address = array(
-				'delivery_address_1' => $this->_getStreet($shippingData['street'], 1),
-				'delivery_address_2' => $this->_getStreet($shippingData['street'], 2),
-				'delivery_city'      => $shippingData['city'],
-				'delivery_region'    => $shippingData['region'],
-				'delivery_country'   => $shippingData['country_id'],
-				'delivery_postcode'  => $shippingData['postcode']
-			);
-		}
-	}
-	/**
-	 * Billing address.
-	 */
-	protected function _setBillingData($orderData) {
+            $this->delivery_address = array(
+                'delivery_address_1' => $this->_getStreet(
+                    $shippingData['street'], 1
+                ),
+                'delivery_address_2' => $this->_getStreet(
+                    $shippingData['street'], 2
+                ),
+                'delivery_city'      => $shippingData['city'],
+                'delivery_region'    => $shippingData['region'],
+                'delivery_country'   => $shippingData['country_id'],
+                'delivery_postcode'  => $shippingData['postcode']
+            );
+        }
+    }
 
-		if ($orderData->getBillingAddress()) {
-			$billingData  = $orderData->getBillingAddress()->getData();
-			$this->billing_address = array(
-				'billing_address_1' => $this->_getStreet($billingData['street'], 1),
-				'billing_address_2' => $this->_getStreet($billingData['street'], 2),
-				'billing_city'      => $billingData['city'],
-				'billing_region'    => $billingData['region'],
-				'billing_country'   => $billingData['country_id'],
-				'billing_postcode'  => $billingData['postcode'],
-			);
-		}
-	}
+    /**
+     * Billing address.
+     */
+    protected function _setBillingData($orderData)
+    {
 
-	/**
-	 * custom order attributes
-	 */
-	protected function _setOrderCustomAttributes( $orderData ) {
+        if ($orderData->getBillingAddress()) {
+            $billingData           = $orderData->getBillingAddress()->getData();
+            $this->billing_address = array(
+                'billing_address_1' => $this->_getStreet(
+                    $billingData['street'], 1
+                ),
+                'billing_address_2' => $this->_getStreet(
+                    $billingData['street'], 2
+                ),
+                'billing_city'      => $billingData['city'],
+                'billing_region'    => $billingData['region'],
+                'billing_country'   => $billingData['country_id'],
+                'billing_postcode'  => $billingData['postcode'],
+            );
+        }
+    }
 
-		$helper = Mage::helper('ddg');
-		$website = Mage::app()->getStore($orderData->getStore())->getWebsite();
-		$customAttributes = $helper->getConfigSelectedCustomOrderAttributes($website);
-		if($customAttributes) {
-			$fields = Mage::getResourceModel( 'ddg_automation/order' )->getOrderTableDescription();
-			foreach ( $customAttributes as $customAttribute ) {
-				if ( isset( $fields[ $customAttribute ] ) ) {
-					$field = $fields[ $customAttribute ];
-					$value = $this->_getCustomAttributeValue( $field, $orderData );
-					if ( $value ) {
-						$this->_assignCustom( $field, $value );
-					}
-				}
-			}
-		}
-	}
+    /**
+     * custom order attributes
+     */
+    protected function _setOrderCustomAttributes($orderData)
+    {
+
+        $helper           = Mage::helper('ddg');
+        $website          = Mage::app()->getStore($orderData->getStore())
+            ->getWebsite();
+        $customAttributes = $helper->getConfigSelectedCustomOrderAttributes(
+            $website
+        );
+        if ($customAttributes) {
+            $fields = Mage::getResourceModel('ddg_automation/order')
+                ->getOrderTableDescription();
+            foreach ($customAttributes as $customAttribute) {
+                if (isset($fields[$customAttribute])) {
+                    $field = $fields[$customAttribute];
+                    $value = $this->_getCustomAttributeValue(
+                        $field, $orderData
+                    );
+                    if ($value) {
+                        $this->_assignCustom($field, $value);
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * get the street name by line number
+     *
      * @param $street
      * @param $line
+     *
      * @return string
      */
-    protected  function _getStreet($street, $line)
+    protected function _getStreet($street, $line)
     {
         $street = explode("\n", $street);
         if ($line == 1) {
             return $street[0];
         }
-        if (isset($street[$line -1])) {
+        if (isset($street[$line - 1])) {
 
             return $street[$line - 1];
         } else {
@@ -198,9 +233,10 @@ class Dotdigitalgroup_Email_Model_Connector_Order
     }
 
     /**
-	 * exposes the class as an array of objects.
-	 * @return array
-	 */
+     * exposes the class as an array of objects.
+     *
+     * @return array
+     */
     public function expose()
     {
         return get_object_vars($this);
@@ -218,7 +254,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
         }
 
         $value = null;
-        try{
+        try {
             switch ($type) {
                 case 'int':
                 case 'smallint':
@@ -226,27 +262,31 @@ class Dotdigitalgroup_Email_Model_Connector_Order
                     break;
 
                 case 'decimal':
-                    $value = (float)number_format($orderData->$function(), 2 , '.', '');
+                    $value = (float)number_format(
+                        $orderData->$function(), 2, '.', ''
+                    );
                     break;
 
                 case 'timestamp':
                 case 'datetime':
                 case 'date':
-                    $date = new Zend_Date($orderData->$function(), Zend_Date::ISO_8601);
+                    $date  = new Zend_Date(
+                        $orderData->$function(), Zend_Date::ISO_8601
+                    );
                     $value = $date->toString(Zend_Date::ISO_8601);
-                break;
+                    break;
 
                 default:
                     $value = $orderData->$function();
             }
-        }catch (Exception $e){
+        } catch (Exception $e) {
             Mage::logException($e);
         }
 
         return $value;
     }
 
-    /** 
+    /**
      * create property on runtime
      *
      * @param $field
@@ -261,12 +301,15 @@ class Dotdigitalgroup_Email_Model_Connector_Order
      * get attributes from attribute set
      *
      * @param $attributeSetId
+     *
      * @return array
      */
     protected function _getAttributesArray($attributeSetId)
     {
-        $result = array();
-        $attributes = Mage::getResourceModel('catalog/product_attribute_collection')
+        $result     = array();
+        $attributes = Mage::getResourceModel(
+            'catalog/product_attribute_collection'
+        )
             ->setAttributeSetFilter($attributeSetId)
             ->getItems();
 
@@ -281,18 +324,21 @@ class Dotdigitalgroup_Email_Model_Connector_Order
      *  check string length and limit to 250
      *
      * @param $value
+     *
      * @return string
      */
     protected function _limitLength($value)
     {
-        if (strlen($value) > 250)
+        if (strlen($value) > 250) {
             $value = substr($value, 0, 250);
+        }
 
         return $value;
     }
 
     /**
      * @param Mage_Sales_Model_Order_Item $orderItem
+     *
      * @return array
      */
     protected function _getOrderItemOptions($orderItem)
@@ -300,22 +346,28 @@ class Dotdigitalgroup_Email_Model_Connector_Order
         $orderItemOptions = $orderItem->getProductOptions();
 
         //if product doesn't have options
-        if (!array_key_exists('options', $orderItemOptions)) {
+        if ( ! array_key_exists('options', $orderItemOptions)) {
             return array();
         }
 
         $orderItemOptions = $orderItemOptions['options'];
 
         //if product options isn't array
-        if (!is_array($orderItemOptions)) {
+        if ( ! is_array($orderItemOptions)) {
             return array();
         }
 
         $options = array();
 
         foreach ($orderItemOptions as $orderItemOption) {
-            if (array_key_exists('value', $orderItemOption) && array_key_exists('label', $orderItemOption)) {
-                $label = str_replace(' ', '-', $orderItemOption['label']);
+            if (array_key_exists('value', $orderItemOption)
+                && array_key_exists(
+                    'label', $orderItemOption
+                )
+            ) {
+                $label             = str_replace(
+                    ' ', '-', $orderItemOption['label']
+                );
                 $options[][$label] = $orderItemOption['value'];
             }
         }
@@ -328,29 +380,33 @@ class Dotdigitalgroup_Email_Model_Connector_Order
      * get attribute set name
      *
      * @param Mage_Catalog_Model_Product $product
+     *
      * @return string
      */
     protected function _getAttributeSetName(Mage_Catalog_Model_Product $product)
     {
         //check if empty. on true load model and cache result
-        if(empty($this->_attributeSet)){
+        if (empty($this->_attributeSet)) {
             $this->_loadAttributeModel($product);
-            if(empty($this->_attributeSet))
+            if (empty($this->_attributeSet)) {
                 return '';
-            else
+            } else {
                 return $this->_attributeSet->getAttributeSetName();
+            }
         }
 
         //if cached attribute set id equals product's attribute set id
-        if($this->_attributeSet->getId() == $product->getAttributeSetId())
+        if ($this->_attributeSet->getId() == $product->getAttributeSetId()) {
             return $this->_attributeSet->getAttributeSetName();
+        }
 
         //if both above false. load model and cache result
         $this->_loadAttributeModel($product);
-        if(empty($this->_attributeSet))
+        if (empty($this->_attributeSet)) {
             return '';
-        else
+        } else {
             return $this->_attributeSet->getAttributeSetName();
+        }
     }
 
     /**
@@ -360,107 +416,129 @@ class Dotdigitalgroup_Email_Model_Connector_Order
      */
     protected function _loadAttributeModel(Mage_Catalog_Model_Product $product)
     {
-        $attributeSetModel = Mage::getModel( "eav/entity_attribute_set" );
-        $attributeSetModel->load( $product->getAttributeSetId() );
-        if($attributeSetModel->getId())
+        $attributeSetModel = Mage::getModel("eav/entity_attribute_set");
+        $attributeSetModel->load($product->getAttributeSetId());
+        if ($attributeSetModel->getId()) {
             $this->_attributeSet = $attributeSetModel;
+        }
     }
 
-	protected function _setOrderItems( $orderData ) {
+    protected function _setOrderItems($orderData)
+    {
 
-		$website = Mage::app()->getStore($orderData->getStore())->getWebsite();
+        $website = Mage::app()->getStore($orderData->getStore())->getWebsite();
 
-		$syncCustomOption = Mage::helper('ddg')->getWebsiteConfig(
-			Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_ORDER_PRODUCT_CUSTOM_OPTIONS,
-			$website
-		);
+        $syncCustomOption = Mage::helper('ddg')->getWebsiteConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_ORDER_PRODUCT_CUSTOM_OPTIONS,
+            $website
+        );
 
-		/**
-		 * Order items.
-		 *  @var Mage_Sales_Model_Order_Item $productItem
-		 */
-		foreach ($orderData->getAllItems() as $productItem) {
-			//product custom options
-			$customOptions = array();
-			if ($syncCustomOption)
-				$customOptions = $this->_getOrderItemOptions($productItem);
+        /**
+         * Order items.
+         *
+         * @var Mage_Sales_Model_Order_Item $productItem
+         */
+        foreach ($orderData->getAllItems() as $productItem) {
+            //product custom options
+            $customOptions = array();
+            if ($syncCustomOption) {
+                $customOptions = $this->_getOrderItemOptions($productItem);
+            }
 
-			$product = $productItem->getProduct();
+            $product = $productItem->getProduct();
 
-			if ($product) {
-				// category names
-				$categoryCollection = $product->getCategoryCollection()
-				                              ->addAttributeToSelect( 'name' );
-				$productCat = array();
-				foreach ( $categoryCollection as $cat ) {
-					$categories                 = array();
-					$categories[]               = $cat->getName();
-					$productCat[]['Name'] = substr(implode(', ', $categories), 0, 244);
-				}
+            if ($product) {
+                // category names
+                $categoryCollection = $product->getCategoryCollection()
+                    ->addAttributeToSelect('name');
+                $productCat         = array();
+                foreach ($categoryCollection as $cat) {
+                    $categories           = array();
+                    $categories[]         = $cat->getName();
+                    $productCat[]['Name'] = substr(
+                        implode(', ', $categories), 0, 244
+                    );
+                }
 
-				$attributes = array();
-				//selected attributes from config
-				$configAttributes = Mage::helper('ddg')->getWebsiteConfig(
-					Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_ORDER_PRODUCT_ATTRIBUTES,
-					$orderData->getStore()->getWebsite()
-				);
-				if ($configAttributes) {
-					$configAttributes = explode(',', $configAttributes);
-					//attributes from attribute set
-					$attributesFromAttributeSet = $this->_getAttributesArray($product->getAttributeSetId());
+                $attributes = array();
+                //selected attributes from config
+                $configAttributes = Mage::helper('ddg')->getWebsiteConfig(
+                    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_ORDER_PRODUCT_ATTRIBUTES,
+                    $orderData->getStore()->getWebsite()
+                );
+                if ($configAttributes) {
+                    $configAttributes = explode(',', $configAttributes);
+                    //attributes from attribute set
+                    $attributesFromAttributeSet = $this->_getAttributesArray(
+                        $product->getAttributeSetId()
+                    );
 
-					foreach ($configAttributes as $attribute_code) {
-						//if config attribute is in attribute set
-						if (in_array($attribute_code, $attributesFromAttributeSet)) {
-							//attribute input type
-							$inputType = $product->getResource()
-			                     ->getAttribute($attribute_code)
-			                     ->getFrontend()
-			                     ->getInputType();
+                    foreach ($configAttributes as $attribute_code) {
+                        //if config attribute is in attribute set
+                        if (in_array(
+                            $attribute_code, $attributesFromAttributeSet
+                        )) {
+                            //attribute input type
+                            $inputType = $product->getResource()
+                                ->getAttribute($attribute_code)
+                                ->getFrontend()
+                                ->getInputType();
 
-							//fetch attribute value from product depending on input type
-							switch ($inputType) {
-								case 'multiselect':
-								case 'select':
-								case 'dropdown':
-									$value = $product->getAttributeText($attribute_code);
-									break;
-								default:
-									$value = $product->getData($attribute_code);
-									break;
-							}
+                            //fetch attribute value from product depending on input type
+                            switch ($inputType) {
+                                case 'multiselect':
+                                case 'select':
+                                case 'dropdown':
+                                    $value = $product->getAttributeText(
+                                        $attribute_code
+                                    );
+                                    break;
+                                default:
+                                    $value = $product->getData($attribute_code);
+                                    break;
+                            }
 
+                            // check limit on text and assign value to array
+                            if (is_string($value)) {
+                                $attributes[][$attribute_code]
+                                    = $this->_limitLength($value);
+                            }
+                        }
+                    }
+                }
 
-							if (is_string($value)) // check limit on text and assign value to array
-								$attributes[][$attribute_code] = $this->_limitLength($value);
-						}
-					}
-				}
-
-				$attributeSetName = $this->_getAttributeSetName($product);
-				$this->products[] = array(
-					'name'          => $productItem->getName(),
-					'sku'           => $productItem->getSku(),
-					'qty'           => (int) number_format( $productItem->getData( 'qty_ordered' ), 2 ),
-					'price'         => (float) number_format( $productItem->getPrice(), 2, '.', '' ),
-					'attribute-set' => $attributeSetName,
-					'categories' => $productCat,
-					'attributes' => $attributes,
-					'custom-options' => $customOptions
-				);
-			} else {
-				// when no product information is available limit to this data
-				$this->products[] = array(
-					'name'          => $productItem->getName(),
-					'sku'           => $productItem->getSku(),
-					'qty'           => (int) number_format( $productItem->getData( 'qty_ordered' ), 2 ),
-					'price' => (float)number_format($productItem->getPrice(), 2, '.', ''),
-					'attribute-set' => '',
-					'categories' => array(),
-					'attributes' => array(),
-					'custom-options' => $customOptions
-				);
-			}
-		}
-	}
+                $attributeSetName = $this->_getAttributeSetName($product);
+                $this->products[] = array(
+                    'name'           => $productItem->getName(),
+                    'sku'            => $productItem->getSku(),
+                    'qty'            => (int)number_format(
+                        $productItem->getData('qty_ordered'), 2
+                    ),
+                    'price'          => (float)number_format(
+                        $productItem->getPrice(), 2, '.', ''
+                    ),
+                    'attribute-set'  => $attributeSetName,
+                    'categories'     => $productCat,
+                    'attributes'     => $attributes,
+                    'custom-options' => $customOptions
+                );
+            } else {
+                // when no product information is available limit to this data
+                $this->products[] = array(
+                    'name'           => $productItem->getName(),
+                    'sku'            => $productItem->getSku(),
+                    'qty'            => (int)number_format(
+                        $productItem->getData('qty_ordered'), 2
+                    ),
+                    'price'          => (float)number_format(
+                        $productItem->getPrice(), 2, '.', ''
+                    ),
+                    'attribute-set'  => '',
+                    'categories'     => array(),
+                    'attributes'     => array(),
+                    'custom-options' => $customOptions
+                );
+            }
+        }
+    }
 }

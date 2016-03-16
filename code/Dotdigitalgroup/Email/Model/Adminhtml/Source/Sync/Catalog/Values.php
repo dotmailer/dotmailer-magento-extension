@@ -2,6 +2,7 @@
 
 class Dotdigitalgroup_Email_Model_Adminhtml_Source_Sync_Catalog_Values
 {
+
     /**
      * Options getter. Styling options
      *

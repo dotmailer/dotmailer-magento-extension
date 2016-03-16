@@ -1,8 +1,11 @@
 <?php
-require_once 'Dotdigitalgroup' . DS . 'Email' . DS . 'controllers' . DS . 'ResponseController.php';
+require_once 'Dotdigitalgroup' . DS . 'Email' . DS . 'controllers' . DS
+    . 'ResponseController.php';
 
-class Dotdigitalgroup_Email_WishlistController extends Dotdigitalgroup_Email_ResponseController
+class Dotdigitalgroup_Email_WishlistController
+    extends Dotdigitalgroup_Email_ResponseController
 {
+
     /**
      * Related products.
      */

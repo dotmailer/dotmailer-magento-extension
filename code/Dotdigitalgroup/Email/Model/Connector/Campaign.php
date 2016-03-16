@@ -27,11 +27,13 @@ class Dotdigitalgroup_Email_Model_Connector_Campaign
 
     /**
      * @param $emailSendId
+     *
      * @return $this
      */
     public function setEmailSendId($emailSendId)
     {
         $this->emailSendId[] = $emailSendId;
+
         return $this;
     }
 
@@ -45,11 +47,13 @@ class Dotdigitalgroup_Email_Model_Connector_Campaign
 
     /**
      * @param $contact
+     *
      * @return $this
      */
     public function setContactId($contact)
     {
         $this->contacts[] = $contact;
+
         return $this;
     }
 
@@ -63,11 +67,13 @@ class Dotdigitalgroup_Email_Model_Connector_Campaign
 
     /**
      * @param $emails
+     *
      * @return $this
      */
     public function setEmails($emails)
     {
         $this->emails = $emails;
+
         return $this;
     }
 
@@ -81,11 +87,13 @@ class Dotdigitalgroup_Email_Model_Connector_Campaign
 
     /**
      * @param $id
+     *
      * @return $this
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 

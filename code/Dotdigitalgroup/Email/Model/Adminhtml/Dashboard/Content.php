@@ -6,116 +6,133 @@
 class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Content
 {
 
-	/**
-	 * css style that can be used to alert based on result
-	 * @var
-	 */
-	public $style;
+    /**
+     * css style that can be used to alert based on result
+     *
+     * @var
+     */
+    public $style;
 
-	/**
-	 * @return mixed
-	 */
-	public function getTitle() {
-		return $this->title;
-	}
+    /**
+     * @return mixed
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
 
-	/**
-	 * @param $title
-	 *
-	 * @return $this
-	 */
-	public function setTitle( $title ) {
-		$this->title = $title;
-		return $this;
-	}
+    /**
+     * @param $title
+     *
+     * @return $this
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
 
-	/**
-	 * title to be displayed as a key for the status
-	 * @var
-	 */
-	public $title;
+        return $this;
+    }
 
-	/**
-	 * message to be displayd in the body
-	 * @var
-	 */
-	public $message;
+    /**
+     * title to be displayed as a key for the status
+     *
+     * @var
+     */
+    public $title;
 
-	/**
-	 * how to fix message
-	 * @var
-	 */
-	public $howto = array();
+    /**
+     * message to be displayd in the body
+     *
+     * @var
+     */
+    public $message;
 
-	/**
-	 * @return mixed
-	 */
+    /**
+     * how to fix message
+     *
+     * @var
+     */
+    public $howto = array();
 
-	/**
-	 * table data
-	 * @var
-	 */
-	public $table = array();
+    /**
+     * @return mixed
+     */
 
-	public function getHowto() {
-		return $this->howto;
-	}
+    /**
+     * table data
+     *
+     * @var
+     */
+    public $table = array();
 
-	/**
-	 * @param $howto
-	 *
-	 * @return $this
-	 */
-	public function setHowto( $howto ) {
-		$this->howto[] = $howto;
-		return $this;
-	}
+    public function getHowto()
+    {
+        return $this->howto;
+    }
 
-	/**
-	 * @return mixed
-	 */
-	public function getMessage() {
-		return $this->message;
-	}
+    /**
+     * @param $howto
+     *
+     * @return $this
+     */
+    public function setHowto($howto)
+    {
+        $this->howto[] = $howto;
 
-	/**
-	 * @param $message
-	 *
-	 * @return $this
-	 */
-	public function setMessage( $message ) {
-		$this->message = $message;
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * @return mixed
-	 */
-	public function getStyle() {
-		return $this->style;
-	}
+    /**
+     * @return mixed
+     */
+    public function getMessage()
+    {
+        return $this->message;
+    }
 
-	/**
-	 * @param $style
-	 *
-	 * @return $this
-	 */
-	public function setStyle( $style ) {
-		$this->style = $style;
-		return $this;
-	}
+    /**
+     * @param $message
+     *
+     * @return $this
+     */
+    public function setMessage($message)
+    {
+        $this->message = $message;
 
-	public function setTable($table)
-	{
-		$this->table[] = $table;
-		return $this;
-	}
+        return $this;
+    }
 
-	public function getTable() {
-		return $this->table;
-	}
+    /**
+     * @return mixed
+     */
+    public function getStyle()
+    {
+        return $this->style;
+    }
 
+    /**
+     * @param $style
+     *
+     * @return $this
+     */
+    public function setStyle($style)
+    {
+        $this->style = $style;
 
+        return $this;
+    }
+
+    public function setTable($table)
+    {
+        $this->table[] = $table;
+
+        return $this;
+    }
+
+    public function getTable()
+    {
+        return $this->table;
+    }
 
 
 }

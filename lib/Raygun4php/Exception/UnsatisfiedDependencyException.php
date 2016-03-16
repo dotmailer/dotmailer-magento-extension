@@ -6,7 +6,7 @@
  * file that was distributed with this source code.
  *
  * @copyright Copyright (c) 2013 Ben Ramsey <http://benramsey.com>
- * @license http://opensource.org/licenses/MIT MIT
+ * @license   http://opensource.org/licenses/MIT MIT
  */
 
 namespace Raygun4Php\Rhumsaa\Uuid\Exception;
@@ -17,4 +17,5 @@ namespace Raygun4Php\Rhumsaa\Uuid\Exception;
  */
 class UnsatisfiedDependencyException extends \RuntimeException
 {
+
 }

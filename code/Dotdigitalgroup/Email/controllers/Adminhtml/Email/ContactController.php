@@ -1,18 +1,21 @@
 <?php
 
-class Dotdigitalgroup_Email_Adminhtml_Email_ContactController extends Mage_Adminhtml_Controller_Action
+class Dotdigitalgroup_Email_Adminhtml_Email_ContactController
+    extends Mage_Adminhtml_Controller_Action
 {
+
     /**
      * constructor - set the used module name
      */
-    protected function _construct(){
+    protected function _construct()
+    {
         $this->setUsedModuleName('Dotdigitalgroup_Email');
     }
 
-	/**
-	 * main page.
-	 */
-	public function indexAction()
+    /**
+     * main page.
+     */
+    public function indexAction()
     {
         $this->_title($this->__('Email'))
             ->_title($this->__('Manage Contacts'));
@@ -20,91 +23,121 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ContactController extends Mage_Admin
         $this->_setActiveMenu('email_connector');
         $this->renderLayout();
     }
-	/**
-	 * Edit action. Sync contact and redirect back.
-	 */
-	public function editAction()
-	{
-		$contactId  = (int) $this->getRequest()->getParam('id');
-		$contact = $this->_initAction();
-		if ($contactId && !$contact->getId()) {
-			$this->_getSession()->addError(Mage::helper('ddg')->__('This contact no longer exists.'));
-			$this->_redirect('*/*/');
-			return;
-		}
-		$contactEmail = Mage::getModel('ddg_automation/apiconnector_contact')->syncContact();
-		if ($contactEmail)
-			Mage::getSingleton('adminhtml/session')->addSuccess('Successfully synced : ' . $contactEmail);
 
-		Mage::dispatchEvent('email_contact_controller_edit_action', array('contact' => $contact));
+    /**
+     * Edit action. Sync contact and redirect back.
+     */
+    public function editAction()
+    {
+        $contactId = (int)$this->getRequest()->getParam('id');
+        $contact   = $this->_initAction();
+        if ($contactId && ! $contact->getId()) {
+            $this->_getSession()->addError(
+                Mage::helper('ddg')->__('This contact no longer exists.')
+            );
+            $this->_redirect('*/*/');
 
-		$this->_redirect('*/*');
-	}
+            return;
+        }
+        $contactEmail = Mage::getModel('ddg_automation/apiconnector_contact')
+            ->syncContact();
+        if ($contactEmail) {
+            Mage::getSingleton('adminhtml/session')->addSuccess(
+                'Successfully synced : ' . $contactEmail
+            );
+        }
 
-	/**
-	 * Delete a contact.
-	 */
-	public function deleteAction()
+        Mage::dispatchEvent(
+            'email_contact_controller_edit_action', array('contact' => $contact)
+        );
+
+        $this->_redirect('*/*');
+    }
+
+    /**
+     * Delete a contact.
+     */
+    public function deleteAction()
     {
         if ($id = $this->getRequest()->getParam('id')) {
             $contact = Mage::getModel('ddg_automation/contact')->setId($id);
             try {
                 $contact->delete();
-                $this->_getSession()->addSuccess(Mage::helper('ddg')->__('The contact has been deleted.'));
-            }
-            catch (Exception $e) {
+                $this->_getSession()->addSuccess(
+                    Mage::helper('ddg')->__('The contact has been deleted.')
+                );
+            } catch (Exception $e) {
                 $this->_getSession()->addError($e->getMessage());
             }
         }
-        $this->getResponse()->setRedirect($this->getUrl('*/*/', array('store'=>$this->getRequest()->getParam('store'))));
+        $this->getResponse()->setRedirect(
+            $this->getUrl(
+                '*/*/', array('store' => $this->getRequest()->getParam('store'))
+            )
+        );
     }
 
-	/**
-	 * Mass delete contacts.
-	 */
-	public function massDeleteAction()
+    /**
+     * Mass delete contacts.
+     */
+    public function massDeleteAction()
     {
         $contactIds = $this->getRequest()->getParam('contact');
-        if (!is_array($contactIds)) {
-            $this->_getSession()->addError($this->__('Please select contacts.'));
-        }else {
-            $num = Mage::getResourceModel('ddg_automation/contact')->massDelete($contactIds);
-            if(is_int($num)){
+        if ( ! is_array($contactIds)) {
+            $this->_getSession()->addError(
+                $this->__('Please select contacts.')
+            );
+        } else {
+            $num = Mage::getResourceModel('ddg_automation/contact')->massDelete(
+                $contactIds
+            );
+            if (is_int($num)) {
                 $this->_getSession()->addSuccess(
-                    Mage::helper('ddg')->__('Total of %d record(s) have been deleted.', $num)
+                    Mage::helper('ddg')->__(
+                        'Total of %d record(s) have been deleted.', $num
+                    )
                 );
-            }else
+            } else {
                 $this->_getSession()->addError($num->getMessage());
+            }
         }
         $this->_redirect('*/*/index');
     }
 
-	/**
-	 * Mark a contact to be resend.
-	 */
-	public function massResendAction()
+    /**
+     * Mark a contact to be resend.
+     */
+    public function massResendAction()
     {
         $contactIds = $this->getRequest()->getParam('contact');
 
-        if (!is_array($contactIds)) {
-            $this->_getSession()->addError($this->__('Please select contacts.'));
-        }else {
-            $num = Mage::getResourceModel('ddg_automation/contact')->massResend($contactIds);
-            if(is_int($num)){
+        if ( ! is_array($contactIds)) {
+            $this->_getSession()->addError(
+                $this->__('Please select contacts.')
+            );
+        } else {
+            $num = Mage::getResourceModel('ddg_automation/contact')->massResend(
+                $contactIds
+            );
+            if (is_int($num)) {
                 $this->_getSession()->addSuccess(
-                    Mage::helper('ddg')->__('Total of %d record(s) set for resend.', $num)
+                    Mage::helper('ddg')->__(
+                        'Total of %d record(s) set for resend.', $num
+                    )
                 );
-            }else
-                 $this->_getSession()->addError($num->getMessage());
+            } else {
+                $this->_getSession()->addError($num->getMessage());
+            }
         }
         $this->_redirect('*/*/index');
     }
 
 
-	/**
-	 * main grid.
-	 */
-	public function gridAction(){
+    /**
+     * main grid.
+     */
+    public function gridAction()
+    {
         $this->loadLayout();
         $this->renderLayout();
     }
@@ -112,27 +145,32 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ContactController extends Mage_Admin
 
     public function exportCsvAction()
     {
-        $fileName   = 'contacts.csv';
-        $content    = $this->getLayout()->createBlock('ddg_automation/adminhtml_contact_grid')
+        $fileName = 'contacts.csv';
+        $content  = $this->getLayout()->createBlock(
+            'ddg_automation/adminhtml_contact_grid'
+        )
             ->getCsvFile();
         $this->_prepareDownloadResponse($fileName, $content);
     }
 
     protected function _isAllowed()
     {
-        return Mage::getSingleton('admin/session')->isAllowed('email_connector/reports/email_connector_contact');
+        return Mage::getSingleton('admin/session')->isAllowed(
+            'email_connector/reports/email_connector_contact'
+        );
     }
 
-	protected function _initAction()
-	{
-		$contactId  = (int) $this->getRequest()->getParam('id');
-		$contact    = Mage::getModel('ddg_automation/contact')
-		                  ->setStoreId($this->getRequest()->getParam('store', 0));
+    protected function _initAction()
+    {
+        $contactId = (int)$this->getRequest()->getParam('id');
+        $contact   = Mage::getModel('ddg_automation/contact')
+            ->setStoreId($this->getRequest()->getParam('store', 0));
 
-		if ($contactId) {
-			$contact->load($contactId);
-		}
-		Mage::register('current_contact', $contact);
-		return $contact;
-	}
+        if ($contactId) {
+            $contact->load($contactId);
+        }
+        Mage::register('current_contact', $contact);
+
+        return $contact;
+    }
 }

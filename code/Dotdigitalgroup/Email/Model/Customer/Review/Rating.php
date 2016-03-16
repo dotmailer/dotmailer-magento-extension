@@ -2,10 +2,11 @@
 
 class Dotdigitalgroup_Email_Model_Customer_Review_Rating
 {
+
     /**
      * @var int
      */
-    public $rating_score;
+    public $ratingScore;
 
     /**
      * constructor
@@ -24,7 +25,8 @@ class Dotdigitalgroup_Email_Model_Customer_Review_Rating
      */
     public function setRatingScore($score)
     {
-        $this->rating_score = (int)$score;
+        $this->ratingScore = (int)$score;
+
         return $this;
     }
 
@@ -33,7 +35,7 @@ class Dotdigitalgroup_Email_Model_Customer_Review_Rating
      */
     public function getRatingScore()
     {
-        return $this->rating_score;
+        return $this->ratingScore;
     }
 
     /**

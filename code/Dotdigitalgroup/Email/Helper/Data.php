@@ -6,61 +6,86 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
     public function isEnabled($website = 0)
     {
         $website = Mage::app()->getWebsite($website);
-        return (bool)$website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED);
+
+        return (bool)$website->getConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED
+        );
     }
 
     /**
-     * @param int/object $website
+     * @param int /object $website
+     *
      * @return mixed
      */
     public function getApiUsername($website = 0)
     {
         $website = Mage::app()->getWebsite($website);
 
-        return $website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_USERNAME);
+        return $website->getConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_USERNAME
+        );
     }
 
     public function getApiPassword($website = 0)
     {
         $website = Mage::app()->getWebsite($website);
 
-        return $website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_PASSWORD);
+        return $website->getConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_PASSWORD
+        );
     }
 
     public function auth($authRequest)
     {
-        if ($authRequest != Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_CONTENT_PASSCODE)) {
-            $this->getRaygunClient()->Send('Authentication failed with code :' . $authRequest);
+        if ($authRequest != Mage::getStoreConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_CONTENT_PASSCODE
+        )
+        ) {
+            $this->getRaygunClient()->Send(
+                'Authentication failed with code :' . $authRequest
+            );
+
             //throw new Exception('Authentication failed : ' . $authRequest);
             return false;
         }
+
         return true;
     }
 
     public function getMappedCustomerId()
     {
-        return Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_MAPPING_CUSTOMER_ID);
+        return Mage::getStoreConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_MAPPING_CUSTOMER_ID
+        );
     }
 
     public function getMappedOrderId()
     {
-        return Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_MAPPING_LAST_ORDER_ID);
+        return Mage::getStoreConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_MAPPING_LAST_ORDER_ID
+        );
     }
 
     public function getPasscode()
     {
-        return Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_CONTENT_PASSCODE);
+        return Mage::getStoreConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_CONTENT_PASSCODE
+        );
     }
 
     public function getLastOrderId()
     {
-        return Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_MAPPING_LAST_ORDER_ID);
+        return Mage::getStoreConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_MAPPING_LAST_ORDER_ID
+        );
 
     }
 
     public function getLastQuoteId()
     {
-        return Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_MAPPING_LAST_QUOTE_ID);
+        return Mage::getStoreConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_MAPPING_LAST_QUOTE_ID
+        );
 
     }
 
@@ -72,53 +97,68 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
             Mage::log($data, $level, $filename, $force = true);
         }
 
-	    return $this;
+        return $this;
     }
 
     public function getDebugEnabled()
     {
-        return (bool) Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_ADVANCED_DEBUG_ENABLED);
+        return (bool)Mage::getStoreConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_ADVANCED_DEBUG_ENABLED
+        );
     }
 
     /**
      * Extension version number.
+     *
      * @return string
      */
     public function getConnectorVersion()
     {
-        $modules = (array) Mage::getConfig()->getNode('modules')->children();
+        $modules = (array)Mage::getConfig()->getNode('modules')->children();
         if (isset($modules['Dotdigitalgroup_Email'])) {
             $moduleName = $modules['Dotdigitalgroup_Email'];
-            return (string) $moduleName->version;
+
+            return (string)$moduleName->version;
         }
+
         return '';
     }
 
 
     public function getPageTrackingEnabled()
     {
-        return (bool)Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_PAGE_TRACKING_ENABLED);
+        return (bool)Mage::getStoreConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_PAGE_TRACKING_ENABLED
+        );
     }
 
     public function getRoiTrackingEnabled()
     {
-        return (bool)Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_ROI_TRACKING_ENABLED);
+        return (bool)Mage::getStoreConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_ROI_TRACKING_ENABLED
+        );
     }
 
     public function getResourceAllocationEnabled()
     {
-        return (bool)Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_RESOURCE_ALLOCATION);
+        return (bool)Mage::getStoreConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_RESOURCE_ALLOCATION
+        );
     }
 
     public function getMappedStoreName($website)
     {
-        $mapped = $website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_MAPPING_CUSTOMER_STORENAME);
-        $storeName = ($mapped)? $mapped : '';
-        return  $storeName;
+        $mapped    = $website->getConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_MAPPING_CUSTOMER_STORENAME
+        );
+        $storeName = ($mapped) ? $mapped : '';
+
+        return $storeName;
     }
 
     /**
      * Get the contact id for the custoemer based on website id.
+     *
      * @param $email
      * @param $websiteId
      *
@@ -126,46 +166,58 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getContactId($email, $websiteId)
     {
-        $contact = Mage::getModel('ddg_automation/contact')->loadByCustomerEmail($email, $websiteId);
+        $contact = Mage::getModel('ddg_automation/contact')
+            ->loadByCustomerEmail($email, $websiteId);
         if ($contactId = $contact->getContactId()) {
             return $contactId;
         }
 
-        $client = $this->getWebsiteApiClient($websiteId);
+        $client   = $this->getWebsiteApiClient($websiteId);
         $response = $client->postContacts($email);
 
-        if (isset($response->message))
+        if (isset($response->message)) {
             return false;
+        }
         //save contact id
-        if (isset($response->id)){
+        if (isset($response->id)) {
             $contact->setContactId($response->id)
                 ->save();
         }
+
         return $response->id;
     }
 
     public function getCustomerAddressBook($website)
     {
         $website = Mage::app()->getWebsite($website);
-        return $website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMERS_ADDRESS_BOOK_ID);
+
+        return $website->getConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMERS_ADDRESS_BOOK_ID
+        );
     }
 
     public function getSubscriberAddressBook($website)
     {
         $website = Mage::app()->getWebsite($website);
-        return $website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SUBSCRIBERS_ADDRESS_BOOK_ID);
+
+        return $website->getConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SUBSCRIBERS_ADDRESS_BOOK_ID
+        );
     }
 
     public function getGuestAddressBook($website)
     {
         $website = Mage::app()->getWebsite($website);
-        return $website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_GUEST_ADDRESS_BOOK_ID);
+
+        return $website->getConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_GUEST_ADDRESS_BOOK_ID
+        );
     }
 
     /**
      * @return $this
      */
-    public  function allowResourceFullExecution()
+    public function allowResourceFullExecution()
     {
         if ($this->getResourceAllocationEnabled()) {
 
@@ -176,12 +228,16 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
             /* and memory to 512 megabytes */
             ini_set('memory_limit', '512M');
         }
+
         return $this;
     }
+
     public function convert($size)
     {
-        $unit=array('b','kb','mb','gb','tb','pb');
-        return round($size/pow(1024,($i=floor(log($size,1024)))),2).' '.$unit[$i];
+        $unit = array('b', 'kb', 'mb', 'gb', 'tb', 'pb');
+
+        return round($size / pow(1024, ($i = floor(log($size, 1024)))), 2) . ' '
+        . $unit[$i];
     }
 
     /**
@@ -191,10 +247,12 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
     {
         $accounts = array();
         foreach (Mage::app()->getWebsites() as $website) {
-            $websiteId = $website->getId();
-            $apiUsername = $this->getApiUsername($website);
-            $accounts[$apiUsername] = $apiUsername . ', websiteId: ' . $websiteId . ' name ' . $website->getName();
+            $websiteId              = $website->getId();
+            $apiUsername            = $this->getApiUsername($website);
+            $accounts[$apiUsername] = $apiUsername . ', websiteId: '
+                . $websiteId . ' name ' . $website->getName();
         }
+
         return implode('</br>', $accounts);
     }
 
@@ -207,10 +265,13 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
     public function getCustomAttributes($website = 0)
     {
         $website = Mage::app()->getWebsite($website);
-        $attr = $website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_MAPPING_CUSTOM_DATAFIELDS);
+        $attr    = $website->getConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_MAPPING_CUSTOM_DATAFIELDS
+        );
 
-        if (!$attr)
+        if ( ! $attr) {
             return array();
+        }
 
         return unserialize($attr);
     }
@@ -218,39 +279,50 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
 
     /**
      * Enterprise custom datafields attributes.
+     *
      * @param int $website
      *
      * @return array
      * @throws Mage_Core_Exception
      */
-    public function getEnterpriseAttributes( $website = 0) {
+    public function getEnterpriseAttributes($website = 0)
+    {
         $website = Mage::app()->getWebsite($website);
-        $result = array();
-        $attrs = $website->getConfig('connector_data_mapping/enterprise_data');
+        $result  = array();
+        $attrs   = $website->getConfig(
+            'connector_data_mapping/enterprise_data'
+        );
 
-        if(is_array($attrs)){
+        if (is_array($attrs)) {
             //get individual mapped keys
-            foreach ( $attrs as $key => $one ) {
-                $config = $website->getConfig('connector_data_mapping/enterprise_data/' . $key);
+            foreach ($attrs as $key => $one) {
+                $config = $website->getConfig(
+                    'connector_data_mapping/enterprise_data/' . $key
+                );
                 //check for the mapped field
-                if ($config)
+                if ($config) {
                     $result[$key] = $config;
+                }
             }
         }
 
-        if (empty($result))
+        if (empty($result)) {
             return false;
+        }
+
         return $result;
     }
 
     /**
-     * @param $path
+     * @param                                              $path
      * @param null|string|bool|int|Mage_Core_Model_Website $websiteId
+     *
      * @return mixed
      */
     public function getWebsiteConfig($path, $websiteId = 0)
     {
         $website = Mage::app()->getWebsite($websiteId);
+
         return $website->getConfig($path);
     }
 
@@ -263,11 +335,16 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getWebsiteApiClient($website = 0)
     {
-        if(!$this->isEnabled($website))
+        if ( ! $this->isEnabled($website)) {
             return false;
+        }
 
-        if (! $apiUsername = $this->getApiUsername($website) || ! $apiPassword = $this->getApiPassword($website))
+        if ( ! $apiUsername = $this->getApiUsername($website)
+            || ! $apiPassword
+                = $this->getApiPassword($website)
+        ) {
             return false;
+        }
 
         $client = Mage::getModel('ddg_automation/apiconnector_client');
         $client->setApiUsername($this->getApiUsername($website))
@@ -282,18 +359,21 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
     public function getCode()
     {
         $adminUser = Mage::getSingleton('admin/session')->getUser();
-        $code = $adminUser->getEmailCode();
+        $code      = $adminUser->getEmailCode();
 
         return $code;
     }
 
     /**
      * Autorisation url for OAUTH.
+     *
      * @return string
      */
     public function getAuthoriseUrl()
     {
-        $clientId = Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CLIENT_ID);
+        $clientId = Mage::getStoreConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CLIENT_ID
+        );
 
         //callback uri if not set custom
         $redirectUri = $this->getRedirectUri();
@@ -301,14 +381,15 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         $adminUser = Mage::getSingleton('admin/session')->getUser();
         //query params
         $params = array(
-            'redirect_uri' => $redirectUri,
-            'scope' => 'Account',
-            'state' => $adminUser->getId(),
+            'redirect_uri'  => $redirectUri,
+            'scope'         => 'Account',
+            'state'         => $adminUser->getId(),
             'response_type' => 'code'
         );
 
         $authorizeBaseUrl = Mage::helper('ddg/config')->getAuthorizeLink();
-        $url = $authorizeBaseUrl . http_build_query($params) . '&client_id=' . $clientId;
+        $url              = $authorizeBaseUrl . http_build_query($params)
+            . '&client_id=' . $clientId;
 
         return $url;
     }
@@ -322,54 +403,79 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
 
     /**
      * order status config value
+     *
      * @param int $website
+     *
      * @return mixed order status
      */
     public function getConfigSelectedStatus($website = 0)
     {
-        $status = $this->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_ORDER_STATUS, $website);
-        if($status)
-            return explode(',',$status);
-        else
+        $status = $this->getWebsiteConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_ORDER_STATUS,
+            $website
+        );
+        if ($status) {
+            return explode(',', $status);
+        } else {
             return false;
+        }
     }
 
     public function getConfigSelectedCustomOrderAttributes($website = 0)
     {
-        $customAttributes = $this->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOM_ORDER_ATTRIBUTES, $website);
-        if($customAttributes)
-            return explode(',',$customAttributes);
-        else
+        $customAttributes = $this->getWebsiteConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOM_ORDER_ATTRIBUTES,
+            $website
+        );
+        if ($customAttributes) {
+            return explode(',', $customAttributes);
+        } else {
             return false;
+        }
     }
 
     public function getConfigSelectedCustomQuoteAttributes($website = 0)
     {
-        $customAttributes = $this->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOM_QUOTE_ATTRIBUTES, $website);
-        if($customAttributes)
-            return explode(',',$customAttributes);
-        else
+        $customAttributes = $this->getWebsiteConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOM_QUOTE_ATTRIBUTES,
+            $website
+        );
+        if ($customAttributes) {
+            return explode(',', $customAttributes);
+        } else {
             return false;
+        }
     }
 
     /**
      * check sweet tooth installed/active status
+     *
      * @return boolean
      */
     public function isSweetToothEnabled()
     {
-        return (bool)Mage::getConfig()->getModuleConfig('TBT_Rewards')->is('active', 'true');
+        return (bool)Mage::getConfig()->getModuleConfig('TBT_Rewards')->is(
+            'active', 'true'
+        );
     }
 
     /**
      * check sweet tooth installed/active status and active status
+     *
      * @param Mage_Core_Model_Website $website
+     *
      * @return boolean
      */
     public function isSweetToothToGo($website)
     {
-        $stMappingStatus = $this->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_MAPPING_SWEETTOOTH_ACTIVE, $website);
-        if($stMappingStatus && $this->isSweetToothEnabled()) return true;
+        $stMappingStatus = $this->getWebsiteConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_MAPPING_SWEETTOOTH_ACTIVE,
+            $website
+        );
+        if ($stMappingStatus && $this->isSweetToothEnabled()) {
+            return true;
+        }
+
         return false;
     }
 
@@ -377,36 +483,40 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
     {
         try {
             $coreResource = Mage::getSingleton('core/resource');
-            $con = $coreResource->getConnection('core_write');
+            $con          = $coreResource->getConnection('core_write');
             $con->update(
                 $coreResource->getTableName('ddg_automation/contact'),
                 array('email_imported' => new Zend_Db_Expr('null')),
                 array("customer_id = ?" => $customerId)
             );
         } catch (Exception $e) {
-           Mage::logException($e);
+            Mage::logException($e);
         }
     }
 
     /**
-     * Diff between to times;
+     * Diff between to times.
      *
-     * @param $time1
-     * @param $time2
+     * @param      $timeOne
+     * @param null $timeTwo
+     *
      * @return int
      */
-    public function dateDiff($time1, $time2=NULL) {
-        if (is_null($time2)) {
-            $time2 = Mage::getModel('core/date')->date();
+    public function dateDiff($timeOne, $timeTwo = null)
+    {
+        if (is_null($timeTwo)) {
+            $timeTwo = Mage::getModel('core/date')->date();
         }
-        $time1 = strtotime($time1);
-        $time2 = strtotime($time2);
-        return $time2 - $time1;
+        $timeOne = strtotime($timeOne);
+        $timeTwo = strtotime($timeTwo);
+
+        return $timeTwo - $timeOne;
     }
 
 
     /**
      * Disable website config when the request is made admin area only!
+     *
      * @param $path
      *
      * @throws Mage_Core_Exception
@@ -415,7 +525,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
     {
         $scopeId = 0;
         if ($website = Mage::app()->getRequest()->getParam('website')) {
-            $scope = 'websites';
+            $scope   = 'websites';
             $scopeId = Mage::app()->getWebsite($website)->getId();
         } else {
             $scope = "default";
@@ -427,9 +537,11 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
 
     /**
      * number of customers with duplicate emails, emails as total number
+     *
      * @return Mage_Customer_Model_Resource_Customer_Collection
      */
-    public function getCustomersWithDuplicateEmails( ) {
+    public function getCustomersWithDuplicateEmails()
+    {
         $customers = Mage::getModel('customer/customer')->getCollection();
 
         //duplicate emails
@@ -448,12 +560,18 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getRaygunClient()
     {
-        $code = Mage::getstoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_RAYGUN_APPLICATION_CODE);
+        $code = Mage::getstoreConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_RAYGUN_APPLICATION_CODE
+        );
 
         if ($this->raygunEnabled()) {
             //use async mode for sending.
-            $async = Mage::getStoreConfigFlag(Dotdigitalgroup_Email_Helper_Config::XML_PATH_RAYGUN_APPLICATION_ASYNC);
-            require_once Mage::getBaseDir('lib') . DS . 'Raygun4php' . DS  . 'RaygunClient.php';
+            $async = Mage::getStoreConfigFlag(
+                Dotdigitalgroup_Email_Helper_Config::XML_PATH_RAYGUN_APPLICATION_ASYNC
+            );
+            require_once Mage::getBaseDir('lib') . DS . 'Raygun4php' . DS
+                . 'RaygunClient.php';
+
             return new Raygun4php\RaygunClient($code, $async);
         }
 
@@ -462,22 +580,26 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
 
     /**
      * Raygun logs.
-     * @param $message
+     *
+     * @param        $message
      * @param string $filename
-     * @param int $line
-     * @param array $tags
+     * @param int    $line
+     * @param array  $tags
      *
      * @return int|null
      */
-    public function rayLog($message, $filename = 'apiconnector/client.php', $line = 1, $tags = array())
+    public function rayLog($message, $filename = 'apiconnector/client.php',
+        $line = 1, $tags = array()
+    ) 
     {
-	    //check if raygun has code enabled
-        if (!$this->raygunEnabled())
+        //check if raygun has code enabled
+        if ( ! $this->raygunEnabled()) {
             return;
+        }
 
-	    $baseUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);
+        $baseUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);
 
-	    if (empty($tags)) {
+        if (empty($tags)) {
             $tags = array(
                 $baseUrl,
                 Mage::getVersion()
@@ -488,12 +610,13 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         //user, firstname, lastname, email, annonim, uuid
         $client->SetUser($baseUrl, null, null, $this->getApiUsername());
         $client->SetVersion($this->getConnectorVersion());
-        $client->SendError(100, $message, $filename,$line, $tags);
+        $client->SendError(100, $message, $filename, $line, $tags);
     }
 
 
     /**
      * check for raygun application and if enabled.
+     *
      * @param int $websiteId
      *
      * @return mixed
@@ -503,13 +626,16 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
     {
         $website = Mage::app()->getWebsite($websiteId);
 
-        return  (bool)$website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_RAYGUN_APPLICATION_CODE);
+        return (bool)$website->getConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_RAYGUN_APPLICATION_CODE
+        );
 
     }
 
     /**
      * Generate the baseurl for the default store
      * dynamic content will be displayed
+     *
      * @return string
      * @throws Mage_Core_Exception
      */
@@ -518,16 +644,20 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         $website = Mage::app()->getRequest()->getParam('website', false);
 
         //set website url for the default store id
-        $website = ($website)? Mage::app()->getWebsite( $website ) : 0;
+        $website = ($website) ? Mage::app()->getWebsite($website) : 0;
 
         $defaultGroup = Mage::app()->getWebsite($website)
             ->getDefaultGroup();
 
-        if (! $defaultGroup)
-            return $mage = Mage::app()->getStore()->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);
+        if ( ! $defaultGroup) {
+            return $mage = Mage::app()->getStore()->getBaseUrl(
+                Mage_Core_Model_Store::URL_TYPE_WEB
+            );
+        }
 
         //base url
-        $baseUrl = Mage::app()->getStore($defaultGroup->getDefaultStore())->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK);
+        $baseUrl = Mage::app()->getStore($defaultGroup->getDefaultStore())
+            ->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK);
 
         return $baseUrl;
 
@@ -537,11 +667,15 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      *
      *
      * @param int $store
+     *
      * @return mixed
      */
     public function isNewsletterSuccessDisabled($store = 0)
     {
-        return Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DISABLE_NEWSLETTER_SUCCESS, $store);
+        return Mage::getStoreConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DISABLE_NEWSLETTER_SUCCESS,
+            $store
+        );
     }
 
     /**
@@ -549,7 +683,9 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getEasyEmailCapture()
     {
-        return Mage::getStoreConfigFlag(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_EMAIL_CAPTURE);
+        return Mage::getStoreConfigFlag(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_EMAIL_CAPTURE
+        );
     }
 
     /**
@@ -557,8 +693,11 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getEasyEmailCaptureForNewsletter()
     {
-        return Mage::getStoreConfigFlag(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_EMAIL_CAPTURE_NEWSLETTER);
+        return Mage::getStoreConfigFlag(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_EMAIL_CAPTURE_NEWSLETTER
+        );
     }
+
     /**
      * get feefo logon config value
      *
@@ -566,7 +705,9 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getFeefoLogon()
     {
-        return $this->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_REVIEWS_FEEFO_LOGON);
+        return $this->getWebsiteConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_REVIEWS_FEEFO_LOGON
+        );
     }
 
     /**
@@ -576,7 +717,9 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getFeefoReviewsPerProduct()
     {
-        return $this->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_REVIEWS_FEEFO_REVIEWS);
+        return $this->getWebsiteConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_REVIEWS_FEEFO_REVIEWS
+        );
     }
 
     /**
@@ -586,41 +729,55 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getFeefoLogoTemplate()
     {
-        return $this->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_REVIEWS_FEEFO_TEMPLATE);
+        return $this->getWebsiteConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_REVIEWS_FEEFO_TEMPLATE
+        );
     }
 
-	/**
-	 * @param $website
-	 * @return string
-	 */
-	public function getReviewDisplayType($website)
-	{
-		return $this->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_CONTENT_REVIEW_DISPLAY_TYPE, $website);
-	}
+    /**
+     * @param $website
+     *
+     * @return string
+     */
+    public function getReviewDisplayType($website)
+    {
+        return $this->getWebsiteConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_CONTENT_REVIEW_DISPLAY_TYPE,
+            $website
+        );
+    }
 
     /**
      * update data fields
      *
-     * @param $email
+     * @param                         $email
      * @param Mage_Core_Model_Website $website
-     * @param $storeName
+     * @param                         $storeName
      */
-    public function updateDataFields($email, Mage_Core_Model_Website $website, $storeName)
+    public function updateDataFields($email, Mage_Core_Model_Website $website,
+        $storeName
+    ) 
     {
         $data = array();
-        if($store_name = $website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_STORE_NAME)){
+        if ($storeName = $website->getConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_STORE_NAME
+        )
+        ) {
             $data[] = array(
-                'Key' => $store_name,
+                'Key'   => $storeName,
                 'Value' => $storeName
             );
         }
-        if($website_name = $website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_WEBSITE_NAME)){
+        if ($websiteName = $website->getConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_WEBSITE_NAME
+        )
+        ) {
             $data[] = array(
-                'Key' => $website_name,
+                'Key'   => $websiteName,
                 'Value' => $website->getName()
             );
         }
-        if(!empty($data)){
+        if ( ! empty($data)) {
             //update data fields
             $client = $this->getWebsiteApiClient($website);
             $client->updateContactDatafieldsByEmail($email, $data);
@@ -629,25 +786,32 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
 
     /**
      * check connector SMTP installed/active status
+     *
      * @return boolean
      */
     public function isSmtpEnabled()
     {
-        return (bool)Mage::getConfig()->getModuleConfig('Ddg_Transactional')->is('active', 'true');
+        return (bool)Mage::getConfig()->getModuleConfig('Ddg_Transactional')
+            ->is('active', 'true');
     }
 
     /**
      * Is magento enterprise.
+     *
      * @return bool
      */
     public function isEnterprise()
     {
-        return Mage::getConfig ()->getModuleConfig ( 'Enterprise_Enterprise' ) && Mage::getConfig ()->getModuleConfig ( 'Enterprise_AdminGws' ) && Mage::getConfig ()->getModuleConfig ( 'Enterprise_Checkout' ) && Mage::getConfig ()->getModuleConfig ( 'Enterprise_Customer' );
+        return Mage::getConfig()->getModuleConfig('Enterprise_Enterprise')
+        && Mage::getConfig()->getModuleConfig('Enterprise_AdminGws')
+        && Mage::getConfig()->getModuleConfig('Enterprise_Checkout')
+        && Mage::getConfig()->getModuleConfig('Enterprise_Customer');
 
     }
 
     /**
      * Update last quote id datafield.
+     *
      * @param $quoteId
      * @param $email
      * @param $websiteId
@@ -659,7 +823,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         $quoteIdField = $this->getLastQuoteId();
 
         $data[] = array(
-            'Key' => $quoteIdField,
+            'Key'   => $quoteIdField,
             'Value' => $quoteId
         );
         //update datafields for conctact
@@ -672,17 +836,25 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
     public function disableRaygun()
     {
         $config = Mage::getModel('core/config');
-        $config->saveConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_RAYGUN_APPLICATION_CODE, '');
+        $config->saveConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_RAYGUN_APPLICATION_CODE,
+            ''
+        );
         Mage::getConfig()->cleanCache();
     }
 
     public function enableRaygunCode()
     {
         $curl = new Varien_Http_Adapter_Curl();
-        $curl->setConfig(array(
-            'timeout'   => 2
-        ));
-        $curl->write(Zend_Http_Client::GET, Dotdigitalgroup_Email_Helper_Config::RAYGUN_API_CODE_URL, '1.0');
+        $curl->setConfig(
+            array(
+                'timeout' => 2
+            )
+        );
+        $curl->write(
+            Zend_Http_Client::GET,
+            Dotdigitalgroup_Email_Helper_Config::RAYGUN_API_CODE_URL, '1.0'
+        );
         $data = $curl->read();
 
         if ($data === false) {
@@ -692,15 +864,19 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         $data = trim($data[1]);
         $curl->close();
 
-        $xml  = new SimpleXMLElement($data);
+        $xml        = new SimpleXMLElement($data);
         $raygunCode = $xml->code;
 
         //not found
-        if (!$raygunCode)
+        if ( ! $raygunCode) {
             return;
+        }
 
         $config = Mage::getModel('core/config');
-        $config->saveConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_RAYGUN_APPLICATION_CODE, $raygunCode);
+        $config->saveConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_RAYGUN_APPLICATION_CODE,
+            $raygunCode
+        );
     }
 
     /**
@@ -708,12 +884,13 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      *
      * @param $e Exception
      */
-    public function sendRaygunException( $e )
+    public function sendRaygunException($e)
     {
-        if (!$this->raygunEnabled())
+        if ( ! $this->raygunEnabled()) {
             return;
+        }
         $baseUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);
-        $tags = array(
+        $tags    = array(
             $baseUrl,
             Mage::getVersion()
         );
@@ -732,8 +909,12 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getOrderSyncEnabled($websiteId = 0)
     {
-        return Mage::getStoreConfigFlag(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_ORDER_ENABLED, $websiteId);
+        return Mage::getStoreConfigFlag(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_ORDER_ENABLED,
+            $websiteId
+        );
     }
+
     /**
      * @param int $websiteId
      *
@@ -741,7 +922,10 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getCatalogSyncEnabled($websiteId = 0)
     {
-        return Mage::getStoreConfigFlag(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_CATALOG_ENABLED, $websiteId);
+        return Mage::getStoreConfigFlag(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_CATALOG_ENABLED,
+            $websiteId
+        );
     }
 
     /**
@@ -751,7 +935,10 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getContactSyncEnabled($websiteId = 0)
     {
-        return Mage::getStoreConfigFlag(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_CONTACT_ENABLED, $websiteId);
+        return Mage::getStoreConfigFlag(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_CONTACT_ENABLED,
+            $websiteId
+        );
     }
 
     /**
@@ -761,7 +948,10 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getGuestSyncEnabled($websiteId = 0)
     {
-        return Mage::getStoreConfigFlag(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_GUEST_ENABLED, $websiteId);
+        return Mage::getStoreConfigFlag(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_GUEST_ENABLED,
+            $websiteId
+        );
     }
 
     /**
@@ -771,7 +961,10 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getSubscriberSyncEnabled($websiteId = 0)
     {
-        return Mage::getStoreConfigFlag(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_SUBSCRIBER_ENABLED, $websiteId);
+        return Mage::getStoreConfigFlag(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_SUBSCRIBER_ENABLED,
+            $websiteId
+        );
     }
 
     /**
@@ -779,25 +972,31 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getCronInstalled()
     {
-        $lastCustomerSync = Mage::getModel('ddg_automation/cron')->getLastCustomerSync();
-        $timespan = Mage::helper('ddg')->dateDiff($lastCustomerSync);
+        $lastCustomerSync = Mage::getModel('ddg_automation/cron')
+            ->getLastCustomerSync();
+        $timespan         = Mage::helper('ddg')->dateDiff($lastCustomerSync);
 
         //last customer cron was less then 15 min
         if ($timespan <= 15 * 60) {
             return true;
         }
+
         return false;
     }
+
     /**
      * Get the config id by the automation type.
-     * @param $automationType
+     *
+     * @param     $automationType
      * @param int $websiteId
      *
      * @return mixed
      */
     public function getAutomationIdByType($automationType, $websiteId = 0)
     {
-        $path = constant('Dotdigitalgroup_Email_Helper_Config::' . $automationType);
+        $path                 = constant(
+            'Dotdigitalgroup_Email_Helper_Config::' . $automationType
+        );
         $automationCampaignId = $this->getWebsiteConfig($path, $websiteId);
 
         return $automationCampaignId;
@@ -805,12 +1004,15 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
 
     public function getAbandonedProductName()
     {
-        return Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_ABANDONED_PRODUCT_NAME);
+        return Mage::getStoreConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_ABANDONED_PRODUCT_NAME
+        );
 
     }
 
     /**
      * Update last quote id datafield.
+     *
      * @param $name
      * @param $email
      * @param $websiteId
@@ -823,7 +1025,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
 
         if ($field) {
             $data[] = array(
-                'Key' => $field,
+                'Key'   => $field,
                 'Value' => $name
             );
             //update data field for contact
@@ -843,7 +1045,9 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
     public function getApiResponseTimeLimit($websiteId = 0)
     {
         $website = Mage::app()->getWebsite($websiteId);
-        $limit = $website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DEBUG_API_REQUEST_LIMIT);
+        $limit   = $website->getConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DEBUG_API_REQUEST_LIMIT
+        );
 
         return $limit;
     }
@@ -855,27 +1059,32 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      *
      * @return string
      */
-    public function getAccountEmail( $website = 0)
+    public function getAccountEmail($website = 0)
     {
         $client = $this->getWebsiteApiClient($website);
-        $info =  $client->getAccountInfo();
-        $email = '';
+        $info   = $client->getAccountInfo();
+        $email  = '';
 
-        if(isset($info->properties)){
+        if (isset($info->properties)) {
             $properties = $info->properties;
 
-            foreach ( $properties as $property ) {
+            foreach ($properties as $property) {
 
-                if ($property->name == 'MainEmail')
+                if ($property->name == 'MainEmail') {
                     $email = $property->value;
+                }
             }
         }
+
         return $email;
     }
 
     public function authIpAddress()
     {
-        if ($ipString = Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_IP_RESTRICTION_ADDRESSES)) {
+        if ($ipString = Mage::getStoreConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_IP_RESTRICTION_ADDRESSES
+        )
+        ) {
             //string to array
             $ipArray = explode(',', $ipString);
             //remove white spaces
@@ -891,35 +1100,38 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
 
             return false;
         } else {
-	        //empty ip list will ignore the validation
-	        return true;
+            //empty ip list will ignore the validation
+            return true;
         }
     }
 
-	/**
-	 * get log file content.
-	 *
-	 * @param string $filename
-	 *
-	 * @return string
-	 */
+    /**
+     * get log file content.
+     *
+     * @param string $filename
+     *
+     * @return string
+     */
     public function getLogFileContent($filename = 'connector_api.log')
     {
-        $path_to_log_file = Mage::getBaseDir('var') . DS . 'log' . DS . $filename;;
-		//tail the length file content
-		$lengthBefore = 500000;
+        $pathLogfile = Mage::getBaseDir('var') . DS . 'log' . DS
+            . $filename;;
+        //tail the length file content
+        $lengthBefore = 500000;
 
-	    $handle = fopen($path_to_log_file, 'r');
-	    fseek($handle, -$lengthBefore, SEEK_END);
+        $handle = fopen($pathLogfile, 'r');
+        fseek($handle, -$lengthBefore, SEEK_END);
 
-        if (!$handle) {
-            return "Log file is not readable or does not exist at this moment. File path is ".$path_to_log_file;
+        if ( ! $handle) {
+            return "Log file is not readable or does not exist at this moment. File path is "
+            . $pathLogfile;
         }
 
-	    $contents = fread($handle, filesize($path_to_log_file));
+        $contents = fread($handle, filesize($pathLogfile));
 
-        if (!$contents) {
-            return "Log file is not readable or does not exist at this moment. File path is ".$path_to_log_file;
+        if ( ! $contents) {
+            return "Log file is not readable or does not exist at this moment. File path is "
+            . $pathLogfile;
         }
         fclose($handle);
 
@@ -927,69 +1139,126 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
 
-	/**
-	 * PRODUCT REVIEW REMINDER.
-	 */
-	public function isReviewReminderEnabled($website)
-	{
-		return $this->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_REVIEWS_ENABLED, $website);
-	}
+    /**
+     * PRODUCT REVIEW REMINDER.
+     */
+    public function isReviewReminderEnabled($website)
+    {
+        return $this->getWebsiteConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_REVIEWS_ENABLED,
+            $website
+        );
+    }
 
-	/**
-	 * @param $website
-	 * @return string
-	 */
-	public function getReviewReminderOrderStatus($website)
-	{
-		return $this->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_AUTOMATION_REVIEW_STATUS, $website);
-	}
+    /**
+     * @param $website
+     *
+     * @return string
+     */
+    public function getReviewReminderOrderStatus($website)
+    {
+        return $this->getWebsiteConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_AUTOMATION_REVIEW_STATUS,
+            $website
+        );
+    }
 
-	/**
-	 * @param $website
-	 * @return int
-	 */
-	public function getReviewReminderDelay($website)
-	{
-		return $this->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_AUTOMATION_REVIEW_DELAY, $website);
-	}
+    /**
+     * @param $website
+     *
+     * @return int
+     */
+    public function getReviewReminderDelay($website)
+    {
+        return $this->getWebsiteConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_AUTOMATION_REVIEW_DELAY,
+            $website
+        );
+    }
 
-	/**
-	 * @param $website
-	 * @return int
-	 */
-	public function getReviewReminderCampaign($website)
-	{
-		return $this->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_AUTOMATION_REVIEW_CAMPAIGN, $website);
-	}
+    /**
+     * @param $website
+     *
+     * @return int
+     */
+    public function getReviewReminderCampaign($website)
+    {
+        return $this->getWebsiteConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_AUTOMATION_REVIEW_CAMPAIGN,
+            $website
+        );
+    }
 
-	/**
-	 * @param $website
-	 * @return string
-	 */
-	public function getReviewReminderAnchor($website)
-	{
-		return $this->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_AUTOMATION_REVIEW_ANCHOR, $website);
-	}
+    /**
+     * @param $website
+     *
+     * @return string
+     */
+    public function getReviewReminderAnchor($website)
+    {
+        return $this->getWebsiteConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_AUTOMATION_REVIEW_ANCHOR,
+            $website
+        );
+    }
 
 
-	public function getDynamicStyles()
-	{
-		return $dynamicStyle = array(
-			'nameStyle' => explode(',', Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_NAME_STYLE)),
-			'priceStyle' => explode(',', Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_PRICE_STYLE)),
-			'linkStyle' => explode(',', Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_LINK_STYLE)),
-			'otherStyle' => explode(',', Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_OTHER_STYLE)),
-			'nameColor' => Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_NAME_COLOR),
-			'fontSize' => Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_NAME_FONT_SIZE),
-			'priceColor' => Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_PRICE_COLOR),
-			'priceFontSize' => Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_PRICE_FONT_SIZE),
-			'urlColor' => Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_LINK_COLOR),
-			'urlFontSize' => Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_LINK_FONT_SIZE),
-			'otherColor' => Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_OTHER_COLOR),
-			'otherFontSize' => Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_OTHER_FONT_SIZE),
-			'docFont' => Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_DOC_FONT),
-			'docBackgroundColor'  => Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_DOC_BG_COLOR),
-			'dynamicStyling' => Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_STYLING)
-		);
-	}
+    public function getDynamicStyles()
+    {
+        return $dynamicStyle = array(
+            'nameStyle'          => explode(
+                ',', Mage::getStoreConfig(
+                    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_NAME_STYLE
+                )
+            ),
+            'priceStyle'         => explode(
+                ',', Mage::getStoreConfig(
+                    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_PRICE_STYLE
+                )
+            ),
+            'linkStyle'          => explode(
+                ',', Mage::getStoreConfig(
+                    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_LINK_STYLE
+                )
+            ),
+            'otherStyle'         => explode(
+                ',', Mage::getStoreConfig(
+                    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_OTHER_STYLE
+                )
+            ),
+            'nameColor'          => Mage::getStoreConfig(
+                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_NAME_COLOR
+            ),
+            'fontSize'           => Mage::getStoreConfig(
+                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_NAME_FONT_SIZE
+            ),
+            'priceColor'         => Mage::getStoreConfig(
+                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_PRICE_COLOR
+            ),
+            'priceFontSize'      => Mage::getStoreConfig(
+                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_PRICE_FONT_SIZE
+            ),
+            'urlColor'           => Mage::getStoreConfig(
+                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_LINK_COLOR
+            ),
+            'urlFontSize'        => Mage::getStoreConfig(
+                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_LINK_FONT_SIZE
+            ),
+            'otherColor'         => Mage::getStoreConfig(
+                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_OTHER_COLOR
+            ),
+            'otherFontSize'      => Mage::getStoreConfig(
+                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_OTHER_FONT_SIZE
+            ),
+            'docFont'            => Mage::getStoreConfig(
+                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_DOC_FONT
+            ),
+            'docBackgroundColor' => Mage::getStoreConfig(
+                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_DOC_BG_COLOR
+            ),
+            'dynamicStyling'     => Mage::getStoreConfig(
+                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_STYLING
+            )
+        );
+    }
 }

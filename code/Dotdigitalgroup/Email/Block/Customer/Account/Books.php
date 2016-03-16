@@ -1,9 +1,11 @@
 <?php
 
-class Dotdigitalgroup_Email_Block_Customer_Account_Books extends Mage_Customer_Block_Account_Dashboard
+class Dotdigitalgroup_Email_Block_Customer_Account_Books
+    extends Mage_Customer_Block_Account_Dashboard
 {
+
     protected $_client;
-    protected $contact_id;
+    public $contactId;
 
     /**
      * subscription pref save url
@@ -20,6 +22,7 @@ class Dotdigitalgroup_Email_Block_Customer_Account_Books extends Mage_Customer_B
      *
      * @param $path
      * @param $website
+     *
      * @return mixed
      */
     protected function _getWebsiteConfigFromHelper($path, $website)
@@ -34,13 +37,16 @@ class Dotdigitalgroup_Email_Block_Customer_Account_Books extends Mage_Customer_B
      */
     protected function _getApiClient()
     {
-        if(empty($this->_client)) {
+        if (empty($this->_client)) {
             $website = $this->getCustomer()->getStore()->getWebsite();
-            $client = Mage::getModel('ddg_automation/apiconnector_client');
-            $client->setApiUsername(Mage::helper('ddg')->getApiUsername($website))
+            $client  = Mage::getModel('ddg_automation/apiconnector_client');
+            $client->setApiUsername(
+                Mage::helper('ddg')->getApiUsername($website)
+            )
                 ->setApiPassword(Mage::helper('ddg')->getApiPassword($website));
             $this->_client = $client;
         }
+
         return $this->_client;
     }
 
@@ -65,39 +71,45 @@ class Dotdigitalgroup_Email_Block_Customer_Account_Books extends Mage_Customer_B
     public function getAdditionalBooksToShow()
     {
         $additionalBooksToShow = array();
-        $additionalFromConfig =  $this->_getWebsiteConfigFromHelper(
+        $additionalFromConfig  = $this->_getWebsiteConfigFromHelper(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_ADDRESSBOOK_PREF_SHOW_BOOKS,
             $this->getCustomer()->getStore()->getWebsite()
         );
 
-        if(strlen($additionalFromConfig))
-        {
+        if (strlen($additionalFromConfig)) {
             $additionalFromConfig = explode(',', $additionalFromConfig);
             $this->getConnectorContact();
-            if($this->contact_id){
-                $addressBooks = $this->_getApiClient()->getContactAddressBooks($this->contact_id);
+            if ($this->contactId) {
+                $addressBooks          = $this->_getApiClient()
+                    ->getContactAddressBooks(
+                        $this->contactId
+                    );
                 $processedAddressBooks = array();
-                if(is_array($addressBooks)){
-                    foreach($addressBooks as $addressBook){
-                        $processedAddressBooks[$addressBook->id] = $addressBook->name;
+                if (is_array($addressBooks)) {
+                    foreach ($addressBooks as $addressBook) {
+                        $processedAddressBooks[$addressBook->id]
+                            = $addressBook->name;
                     }
                 }
-                foreach($additionalFromConfig as $bookId){
-                    $connectorBook = $this->_getApiClient()->getAddressBookById($bookId);
-                    if(isset($connectorBook->id))
-                    {
+                foreach ($additionalFromConfig as $bookId) {
+                    $connectorBook = $this->_getApiClient()->getAddressBookById(
+                        $bookId
+                    );
+                    if (isset($connectorBook->id)) {
                         $subscribed = 0;
-                        if(isset($processedAddressBooks[$bookId]))
+                        if (isset($processedAddressBooks[$bookId])) {
                             $subscribed = 1;
+                        }
                         $additionalBooksToShow[] = array(
-                            "name"         => $connectorBook->name,
-                            "value"         => $connectorBook->id,
-                            "subscribed"    => $subscribed
+                            "name"       => $connectorBook->name,
+                            "value"      => $connectorBook->id,
+                            "subscribed" => $subscribed
                         );
                     }
                 }
             }
         }
+
         return $additionalBooksToShow;
     }
 
@@ -121,52 +133,59 @@ class Dotdigitalgroup_Email_Block_Customer_Account_Books extends Mage_Customer_B
      */
     public function getDataFieldsToShow()
     {
-        $datafieldsToShow = array();
-        $dataFieldsFromConfig =  $this->_getWebsiteConfigFromHelper(
+        $datafieldsToShow     = array();
+        $dataFieldsFromConfig = $this->_getWebsiteConfigFromHelper(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_ADDRESSBOOK_PREF_SHOW_FIELDS,
             $this->getCustomer()->getStore()->getWebsite()
         );
-        if(strlen($dataFieldsFromConfig))
-        {
+        if (strlen($dataFieldsFromConfig)) {
             $dataFieldsFromConfig = explode(',', $dataFieldsFromConfig);
-            $contact = $this->getConnectorContact();
-            if($this->contact_id)
-            {
-                $contactDataFields = $contact->dataFields;
+            $contact              = $this->getConnectorContact();
+            if ($this->contactId) {
+                $contactDataFields          = $contact->dataFields;
                 $processedContactDataFields = array();
-                foreach($contactDataFields as $contactDataField){
-                    $processedContactDataFields[$contactDataField->key] = $contactDataField->value;
+                foreach ($contactDataFields as $contactDataField) {
+                    $processedContactDataFields[$contactDataField->key]
+                        = $contactDataField->value;
                 }
 
-                $connectorDataFields = $this->_getApiClient()->getDataFields();
+                $connectorDataFields          = $this->_getApiClient()
+                    ->getDataFields();
                 $processedConnectorDataFields = array();
-                foreach($connectorDataFields as $connectorDataField){
-                    $processedConnectorDataFields[$connectorDataField->name] = $connectorDataField;
+                foreach ($connectorDataFields as $connectorDataField) {
+                    $processedConnectorDataFields[$connectorDataField->name]
+                        = $connectorDataField;
                 }
-                foreach($dataFieldsFromConfig as $dataFieldFromConfig){
-                    if(isset($processedConnectorDataFields[$dataFieldFromConfig])){
+                foreach ($dataFieldsFromConfig as $dataFieldFromConfig) {
+                    if (isset($processedConnectorDataFields[$dataFieldFromConfig])) {
                         $value = "";
-                        $type = "";
-                        if(isset($processedContactDataFields[$processedConnectorDataFields[$dataFieldFromConfig]->name])){
-                            if($processedConnectorDataFields[$dataFieldFromConfig]->type == "Date"){
-                                $type = "Date";
-                                $value = $processedContactDataFields[$processedConnectorDataFields[$dataFieldFromConfig]->name];
-                                $value = Mage::app()->getLocale()->date($value)->toString("Y/M/d");
+                        $type  = "";
+                        if (isset($processedContactDataFields[$processedConnectorDataFields[$dataFieldFromConfig]->name])) {
+                            if ($processedConnectorDataFields[$dataFieldFromConfig]->type
+                                == "Date"
+                            ) {
+                                $type  = "Date";
+                                $value
+                                       = $processedContactDataFields[$processedConnectorDataFields[$dataFieldFromConfig]->name];
+                                $value = Mage::app()->getLocale()->date($value)
+                                    ->toString("Y/M/d");
+                            } else {
+                                $value
+                                    = $processedContactDataFields[$processedConnectorDataFields[$dataFieldFromConfig]->name];
                             }
-                            else
-                                $value = $processedContactDataFields[$processedConnectorDataFields[$dataFieldFromConfig]->name];
                         }
 
                         $datafieldsToShow[] = array(
-                            'name'  =>  $processedConnectorDataFields[$dataFieldFromConfig]->name,
-                            'type'  =>  $processedConnectorDataFields[$dataFieldFromConfig]->type,
-                            'value' =>  $value
+                            'name'  => $processedConnectorDataFields[$dataFieldFromConfig]->name,
+                            'type'  => $processedConnectorDataFields[$dataFieldFromConfig]->type,
+                            'value' => $value
                         );
                     }
                 }
 
             }
         }
+
         return $datafieldsToShow;
     }
 
@@ -177,12 +196,16 @@ class Dotdigitalgroup_Email_Block_Customer_Account_Books extends Mage_Customer_B
      */
     public function canShowAnything()
     {
-        if($this->getCanShowDataFields() or $this->getCanShowAdditionalBooks()){
-            $books = $this->getAdditionalBooksToShow();
+        if ($this->getCanShowDataFields() or $this->getCanShowAdditionalBooks(
+        )
+        ) {
+            $books  = $this->getAdditionalBooksToShow();
             $fields = $this->getDataFieldsToShow();
-            if(!empty($books) or !empty($fields))
+            if ( ! empty($books) or ! empty($fields)) {
                 return true;
+            }
         }
+
         return false;
     }
 
@@ -193,17 +216,24 @@ class Dotdigitalgroup_Email_Block_Customer_Account_Books extends Mage_Customer_B
      */
     public function getConnectorContact()
     {
-        $contact = $this->_getApiClient()->getContactByEmail($this->getCustomer()->getEmail());
-        if($contact->id){
+        $contact = $this->_getApiClient()->getContactByEmail(
+            $this->getCustomer()->getEmail()
+        );
+        if ($contact->id) {
             $this->_getCustomerSession()->setConnectorContactId($contact->id);
-            $this->contact_id = $contact->id;
-        }else{
-            $contact = $this->_getApiClient()->postContacts($this->getCustomer()->getEmail());
-            if($contact->id){
-                $this->_getCustomerSession()->setConnectorContactId($contact->id);
-                $this->contact_id = $contact->id;
+            $this->contactId = $contact->id;
+        } else {
+            $contact = $this->_getApiClient()->postContacts(
+                $this->getCustomer()->getEmail()
+            );
+            if ($contact->id) {
+                $this->_getCustomerSession()->setConnectorContactId(
+                    $contact->id
+                );
+                $this->contactId = $contact->id;
             }
         }
+
         return $contact;
     }
 

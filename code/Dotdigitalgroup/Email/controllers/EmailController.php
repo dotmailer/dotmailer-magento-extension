@@ -1,8 +1,11 @@
 <?php
-require_once 'Dotdigitalgroup' . DS . 'Email' . DS . 'controllers' . DS . 'ResponseController.php';
+require_once 'Dotdigitalgroup' . DS . 'Email' . DS . 'controllers' . DS
+    . 'ResponseController.php';
 
-class Dotdigitalgroup_Email_EmailController extends Dotdigitalgroup_Email_ResponseController
+class Dotdigitalgroup_Email_EmailController
+    extends Dotdigitalgroup_Email_ResponseController
 {
+
     /**
      * @var $_quote Mage_Sales_Model_Quote
      */
@@ -16,9 +19,11 @@ class Dotdigitalgroup_Email_EmailController extends Dotdigitalgroup_Email_Respon
         //authenticate
         $this->authenticate();
         $this->loadLayout();
-        $wishlist = $this->getLayout()->createBlock('ddg_automation/wishlist', 'connector_wishlist', array(
-            'template' => 'connector/wishlist.phtml'
-        ));
+        $wishlist = $this->getLayout()->createBlock(
+            'ddg_automation/wishlist', 'connector_wishlist', array(
+                'template' => 'connector/wishlist.phtml'
+            )
+        );
         $this->getLayout()->getBlock('content')->append($wishlist);
         $this->renderLayout();
         $this->checkContentNotEmpty($wishlist->toHtml(), false);
@@ -36,9 +41,11 @@ class Dotdigitalgroup_Email_EmailController extends Dotdigitalgroup_Email_Respon
             $root->setTemplate('page/blank.phtml');
         }
         //content template
-        $coupon = $this->getLayout()->createBlock('ddg_automation/coupon', 'connector_coupon', array(
-            'template' => 'connector/coupon.phtml'
-        ));
+        $coupon = $this->getLayout()->createBlock(
+            'ddg_automation/coupon', 'connector_coupon', array(
+                'template' => 'connector/coupon.phtml'
+            )
+        );
         $this->checkContentNotEmpty($coupon->toHtml(), false);
         $this->getLayout()->getBlock('content')->append($coupon);
         $this->renderLayout();
@@ -55,9 +62,11 @@ class Dotdigitalgroup_Email_EmailController extends Dotdigitalgroup_Email_Respon
         if ($root = $this->getLayout()->getBlock('root')) {
             $root->setTemplate('page/blank.phtml');
         }
-        $basket = $this->getLayout()->createBlock('ddg_automation/basket', 'connector_basket', array(
-            'template' => 'connector/basket.phtml'
-        ));
+        $basket = $this->getLayout()->createBlock(
+            'ddg_automation/basket', 'connector_basket', array(
+                'template' => 'connector/basket.phtml'
+            )
+        );
         $this->getLayout()->getBlock('content')->append($basket);
         $this->renderLayout();
         $this->checkContentNotEmpty($this->getLayout()->getOutput());
@@ -78,19 +87,25 @@ class Dotdigitalgroup_Email_EmailController extends Dotdigitalgroup_Email_Respon
             } else {
                 Mage::helper('ddg')->log('order not found: ' . $orderId);
                 $this->sendResponse();
-                Mage::throwException(Mage::helper('ddg')->__('Order not found'));
+                Mage::throwException(
+                    Mage::helper('ddg')->__('Order not found')
+                );
             }
         } else {
             Mage::helper('ddg')->log('order_id missing :' . $orderId);
             $this->sendResponse();
-            Mage::throwException(Mage::helper('ddg')->__('Order id is missing'));
+            Mage::throwException(
+                Mage::helper('ddg')->__('Order id is missing')
+            );
         }
 
 
         $this->loadLayout();
-        $review = $this->getLayout()->createBlock('ddg_automation/order', 'connector_review', array(
-            'template' => 'connector/review.phtml'
-        ));
+        $review = $this->getLayout()->createBlock(
+            'ddg_automation/order', 'connector_review', array(
+                'template' => 'connector/review.phtml'
+            )
+        );
         $this->getLayout()->getBlock('content')->append($review);
         $this->renderLayout();
         $this->checkContentNotEmpty($this->getLayout()->getOutput());
@@ -101,24 +116,30 @@ class Dotdigitalgroup_Email_EmailController extends Dotdigitalgroup_Email_Respon
      */
     public function callbackAction()
     {
-        $code = $this->getRequest()->getParam('code', false);
-        $userId = $this->getRequest()->getParam('state');
+        $code      = $this->getRequest()->getParam('code', false);
+        $userId    = $this->getRequest()->getParam('state');
         $adminUser = Mage::getModel('admin/user')->load($userId);
 
 
         if ($code && $adminUser->getId()) {
-            $baseUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB, true);
+            $baseUrl = Mage::getBaseUrl(
+                Mage_Core_Model_Store::URL_TYPE_WEB, true
+            );
             //callback url
-            $callback    = $baseUrl . 'connector/email/callback';
-            $data = 'client_id='    . Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CLIENT_ID) .
-                '&client_secret='   . Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CLIENT_SECRET_ID) .
-                '&redirect_uri='    . $callback .
+            $callback = $baseUrl . 'connector/email/callback';
+            $data     = 'client_id=' . Mage::getStoreConfig(
+                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CLIENT_ID
+            ) .
+                '&client_secret=' . Mage::getStoreConfig(
+                    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CLIENT_SECRET_ID
+                ) .
+                '&redirect_uri=' . $callback .
                 '&grant_type=authorization_code' .
-                '&code='            . $code;
+                '&code=' . $code;
 
 
             $url = Mage::helper('ddg/config')->getTokenUrl();
-            $ch = curl_init();
+            $ch  = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_TIMEOUT, 10);
@@ -127,20 +148,29 @@ class Dotdigitalgroup_Email_EmailController extends Dotdigitalgroup_Email_Respon
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
             curl_setopt($ch, CURLOPT_POST, count($data));
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array ('Content-Type: application/x-www-form-urlencoded'));
+            curl_setopt(
+                $ch, CURLOPT_HTTPHEADER,
+                array('Content-Type: application/x-www-form-urlencoded')
+            );
 
 
             $response = json_decode(curl_exec($ch));
             if ($response === false) {
-	            Mage::helper('ddg')->log("Error Number: " . curl_errno($ch))
-	                ->rayLog('Automaion studio number not found : ' . serialize($response));
+                Mage::helper('ddg')->log("Error Number: " . curl_errno($ch))
+                    ->rayLog(
+                        'Automaion studio number not found : ' . serialize(
+                            $response
+                        )
+                    );
             }
 
             //save the refresh token to the admin user
             $adminUser->setRefreshToken($response->refresh_token)->save();
         }
         //redirect to automation index page
-        $this->_redirectReferer(Mage::helper('adminhtml')->getUrl('adminhtml/email_studio/index'));
+        $this->_redirectReferer(
+            Mage::helper('adminhtml')->getUrl('adminhtml/email_studio/index')
+        );
     }
 
     /**
@@ -148,24 +178,27 @@ class Dotdigitalgroup_Email_EmailController extends Dotdigitalgroup_Email_Respon
      */
     public function getbasketAction()
     {
-        $quote_id = $this->getRequest()->getParam('quote_id');
+        $quoteId = $this->getRequest()->getParam('quote_id');
         //no quote id redirect to base url
-        if(!$quote_id)
+        if ( ! $quoteId) {
             $this->_redirectUrl(Mage::getBaseUrl());
+        }
 
-        $quoteModel = Mage::getModel('sales/quote')->load($quote_id);
+        $quoteModel = Mage::getModel('sales/quote')->load($quoteId);
 
         //no quote id redirect to base url
-        if (!$quoteModel->getId())
+        if ( ! $quoteModel->getId()) {
             $this->_redirectUrl(Mage::getBaseUrl());
+        }
 
         //set quoteModel to _quote property for later use
         $this->_quote = $quoteModel;
 
-        if($quoteModel->getCustomerId())
+        if ($quoteModel->getCustomerId()) {
             $this->_handleCustomerBasket();
-        else
+        } else {
             $this->_handleGuestBasket();
+        }
     }
 
     /**
@@ -174,45 +207,54 @@ class Dotdigitalgroup_Email_EmailController extends Dotdigitalgroup_Email_Respon
     protected function _handleCustomerBasket()
     {
         $customerSession = Mage::getSingleton('customer/session');
-        $configCartUrl = $this->_quote->getStore()->getWebsite()->getConfig(
+        $configCartUrl   = $this->_quote->getStore()->getWebsite()->getConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CONTENT_CART_URL
         );
 
         //if customer is logged in then redirect to cart
-        if($customerSession->isLoggedIn()){
+        if ($customerSession->isLoggedIn()) {
             $checkoutSession = Mage::getSingleton('checkout/session');
-            if($checkoutSession->getQuote() && $checkoutSession->getQuote()->hasItems()){
+            if ($checkoutSession->getQuote()
+                && $checkoutSession->getQuote()->hasItems()
+            ) {
                 $quote = $checkoutSession->getQuote();
-                if($this->_quote->getId() != $quote->getId())
+                if ($this->_quote->getId() != $quote->getId()) {
                     $this->_checkMissingAndAdd();
-            }
-            else{
+                }
+            } else {
                 $this->_loadAndReplace();
             }
 
-            if($configCartUrl)
+            if ($configCartUrl) {
                 $url = $configCartUrl;
-            else
-                $url = $customerSession->getCustomer()->getStore()->getUrl('checkout/cart');
+            } else {
+                $url = $customerSession->getCustomer()->getStore()->getUrl(
+                    'checkout/cart'
+                );
+            }
 
             $this->_redirectUrl($url);
-        }
-        else{
+        } else {
             //set after auth url. customer will be redirected to cart after successful login
-            if($configCartUrl)
+            if ($configCartUrl) {
                 $cartUrl = $configCartUrl;
-            else
+            } else {
                 $cartUrl = 'checkout/cart';
-            $customerSession->setAfterAuthUrl($this->_quote->getStore()->getUrl($cartUrl));
+            }
+            $customerSession->setAfterAuthUrl(
+                $this->_quote->getStore()->getUrl($cartUrl)
+            );
 
             //send customer to login page
-            $configLoginUrl = $this->_quote->getStore()->getWebsite()->getConfig(
-                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CONTENT_LOGIN_URL
-            );
-            if($configLoginUrl)
+            $configLoginUrl = $this->_quote->getStore()->getWebsite()
+                ->getConfig(
+                    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CONTENT_LOGIN_URL
+                );
+            if ($configLoginUrl) {
                 $loginUrl = $configLoginUrl;
-            else
+            } else {
                 $loginUrl = 'customer/account/login';
+            }
             $this->_redirectUrl($this->_quote->getStore()->getUrl($loginUrl));
         }
     }
@@ -223,10 +265,11 @@ class Dotdigitalgroup_Email_EmailController extends Dotdigitalgroup_Email_Respon
     protected function _handleGuestBasket()
     {
         $checkoutSession = Mage::getSingleton('checkout/session');
-        if($checkoutSession->getQuote() && $checkoutSession->getQuote()->hasItems()){
+        if ($checkoutSession->getQuote()
+            && $checkoutSession->getQuote()->hasItems()
+        ) {
             $this->_checkMissingAndAdd();
-        }
-        else{
+        } else {
             $this->_loadAndReplace();
         }
 
@@ -234,10 +277,11 @@ class Dotdigitalgroup_Email_EmailController extends Dotdigitalgroup_Email_Respon
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CONTENT_CART_URL
         );
 
-        if($configCartUrl)
+        if ($configCartUrl) {
             $url = $configCartUrl;
-        else
+        } else {
             $url = 'checkout/cart';
+        }
         $this->_redirectUrl($this->_quote->getStore()->getUrl($url));
     }
 
@@ -247,20 +291,20 @@ class Dotdigitalgroup_Email_EmailController extends Dotdigitalgroup_Email_Respon
     protected function _checkMissingAndAdd()
     {
         $checkoutSession = Mage::getSingleton('checkout/session');
-        $currentQuote = $checkoutSession->getQuote();
-        if($currentQuote->hasItems()){
+        $currentQuote    = $checkoutSession->getQuote();
+        if ($currentQuote->hasItems()) {
             $currentSessionItems = $currentQuote->getAllItems();
-            $currentItemIds = array();
-            foreach($currentSessionItems as $currentSessionItem){
+            $currentItemIds      = array();
+            foreach ($currentSessionItems as $currentSessionItem) {
                 $currentItemIds[] = $currentSessionItem->getId();
             }
-            foreach($this->_quote->getAllItems() as $item){
-                if(!in_array($item->getId(), $currentItemIds)){
+            foreach ($this->_quote->getAllItems() as $item) {
+                if ( ! in_array($item->getId(), $currentItemIds)) {
                     $currentQuote->addItem($item);
                 }
             }
             $currentQuote->collectTotals()->save();
-        }else{
+        } else {
             $this->_loadAndReplace();
         }
     }
@@ -271,7 +315,9 @@ class Dotdigitalgroup_Email_EmailController extends Dotdigitalgroup_Email_Respon
     protected function _loadAndReplace()
     {
         $checkoutSession = Mage::getSingleton('checkout/session');
-        $quote = Mage::getSingleton('sales/quote')->load($this->_quote->getId());
+        $quote           = Mage::getSingleton('sales/quote')->load(
+            $this->_quote->getId()
+        );
         $quote->setIsActive(true)->save();
         $checkoutSession->replaceQuote($quote);
     }

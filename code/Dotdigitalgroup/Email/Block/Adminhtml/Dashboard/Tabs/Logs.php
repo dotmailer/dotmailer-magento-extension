@@ -4,6 +4,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Logs
     extends Mage_Adminhtml_Block_Widget
     implements Mage_Adminhtml_Block_Widget_Tab_Interface
 {
+
     /**
      * Set the template.
      */
@@ -18,6 +19,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Logs
     {
         return true;
     }
+
     public function isHidden()
     {
         return true;

@@ -1,11 +1,13 @@
 <?php
 
-class Dotdigitalgroup_Email_Adminhtml_Email_OrderController extends Mage_Adminhtml_Controller_Action
+class Dotdigitalgroup_Email_Adminhtml_Email_OrderController
+    extends Mage_Adminhtml_Controller_Action
 {
-	/**
-	 * main page.
-	 */
-	public function indexAction()
+
+    /**
+     * main page.
+     */
+    public function indexAction()
     {
         $this->loadLayout();
         $this->_setActiveMenu('ddg_automation');
@@ -20,6 +22,8 @@ class Dotdigitalgroup_Email_Adminhtml_Email_OrderController extends Mage_Adminht
      */
     protected function _isAllowed()
     {
-        return Mage::getSingleton('admin/session')->isAllowed('email_connector/reports/email_connector_order');
+        return Mage::getSingleton('admin/session')->isAllowed(
+            'email_connector/reports/email_connector_order'
+        );
     }
 }

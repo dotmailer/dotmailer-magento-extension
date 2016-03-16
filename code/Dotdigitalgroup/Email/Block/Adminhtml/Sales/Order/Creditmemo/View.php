@@ -1,12 +1,14 @@
 <?php
-class Dotdigitalgroup_Email_Block_Adminhtml_Sales_Order_Creditmemo_View extends Mage_Adminhtml_Block_Widget_Form_Container
+
+class Dotdigitalgroup_Email_Block_Adminhtml_Sales_Order_Creditmemo_View
+    extends Mage_Adminhtml_Block_Widget_Form_Container
 {
 
     public function __construct()
     {
-        $this->_objectId    = 'creditmemo_id';
-        $this->_controller  = 'sales_order_creditmemo';
-        $this->_mode        = 'view';
+        $this->_objectId   = 'creditmemo_id';
+        $this->_controller = 'sales_order_creditmemo';
+        $this->_mode       = 'view';
 
         parent::__construct();
 
@@ -15,46 +17,56 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Sales_Order_Creditmemo_View extends 
         $this->_removeButton('delete');
 
         if ($this->getCreditmemo()->canCancel()) {
-            $this->_addButton('cancel', array(
-                    'label'     => Mage::helper('sales')->__('Cancel'),
-                    'class'     => 'delete',
-                    'onclick'   => 'setLocation(\''.$this->getCancelUrl().'\')'
+            $this->_addButton(
+                'cancel', array(
+                    'label'   => Mage::helper('sales')->__('Cancel'),
+                    'class'   => 'delete',
+                    'onclick' => 'setLocation(\'' . $this->getCancelUrl()
+                        . '\')'
                 )
             );
         }
 
         if ($this->_isAllowedAction('emails')) {
-            $this->addButton('send_notification', array(
-                'label'     => Mage::helper('sales')->__('Send Email'),
-                'onclick'   => 'confirmSetLocation(\''
-                . Mage::helper('sales')->__('Are you sure you want to send Creditmemo email to customer?')
-                . '\', \'' . $this->getEmailUrl() . '\')'
-            ));
+            $this->addButton(
+                'send_notification', array(
+                    'label'   => Mage::helper('sales')->__('Send Email'),
+                    'onclick' => 'confirmSetLocation(\''
+                        . Mage::helper('sales')->__(
+                            'Are you sure you want to send Creditmemo email to customer?'
+                        )
+                        . '\', \'' . $this->getEmailUrl() . '\')'
+                )
+            );
         }
 
         if ($this->getCreditmemo()->canRefund()) {
-            $this->_addButton('refund', array(
-                    'label'     => Mage::helper('sales')->__('Refund'),
-                    'class'     => 'save',
-                    'onclick'   => 'setLocation(\''.$this->getRefundUrl().'\')'
+            $this->_addButton(
+                'refund', array(
+                    'label'   => Mage::helper('sales')->__('Refund'),
+                    'class'   => 'save',
+                    'onclick' => 'setLocation(\'' . $this->getRefundUrl()
+                        . '\')'
                 )
             );
         }
 
         if ($this->getCreditmemo()->canVoid()) {
-            $this->_addButton('void', array(
-                    'label'     => Mage::helper('sales')->__('Void'),
-                    'class'     => 'save',
-                    'onclick'   => 'setLocation(\''.$this->getVoidUrl().'\')'
+            $this->_addButton(
+                'void', array(
+                    'label'   => Mage::helper('sales')->__('Void'),
+                    'class'   => 'save',
+                    'onclick' => 'setLocation(\'' . $this->getVoidUrl() . '\')'
                 )
             );
         }
 
         if ($this->getCreditmemo()->getId()) {
-            $this->_addButton('print', array(
-                    'label'     => Mage::helper('sales')->__('Print'),
-                    'class'     => 'save',
-                    'onclick'   => 'setLocation(\''.$this->getPrintUrl().'\')'
+            $this->_addButton(
+                'print', array(
+                    'label'   => Mage::helper('sales')->__('Print'),
+                    'class'   => 'save',
+                    'onclick' => 'setLocation(\'' . $this->getPrintUrl() . '\')'
                 )
             );
         }
@@ -78,12 +90,21 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Sales_Order_Creditmemo_View extends 
     public function getHeaderText()
     {
         if ($this->getCreditmemo()->getEmailSent()) {
-            $emailSent = Mage::helper('sales')->__('the credit memo email was sent');
+            $emailSent = Mage::helper('sales')->__(
+                'the credit memo email was sent'
+            );
+        } else {
+            $emailSent = Mage::helper('sales')->__(
+                'the credit memo email is not sent'
+            );
         }
-        else {
-            $emailSent = Mage::helper('sales')->__('the credit memo email is not sent');
-        }
-        return Mage::helper('sales')->__('Credit Memo #%1$s | %3$s | %2$s (%4$s)', $this->getCreditmemo()->getIncrementId(), $this->formatDate($this->getCreditmemo()->getCreatedAtDate(), 'medium', true), $this->getCreditmemo()->getStateName(), $emailSent);
+
+        return Mage::helper('sales')->__(
+            'Credit Memo #%1$s | %3$s | %2$s (%4$s)',
+            $this->getCreditmemo()->getIncrementId(), $this->formatDate(
+                $this->getCreditmemo()->getCreatedAtDate(), 'medium', true
+            ), $this->getCreditmemo()->getStateName(), $emailSent
+        );
     }
 
     /**
@@ -96,9 +117,10 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Sales_Order_Creditmemo_View extends 
         return $this->getUrl(
             '*/sales_order/view',
             array(
-                'order_id'  => $this->getCreditmemo()->getOrderId(),
-                'active_tab'=> 'order_creditmemos'
-            ));
+                'order_id'   => $this->getCreditmemo()->getOrderId(),
+                'active_tab' => 'order_creditmemos'
+            )
+        );
     }
 
     /**
@@ -108,7 +130,10 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Sales_Order_Creditmemo_View extends 
      */
     public function getCaptureUrl()
     {
-        return $this->getUrl('*/*/capture', array('creditmemo_id'=>$this->getCreditmemo()->getId()));
+        return $this->getUrl(
+            '*/*/capture',
+            array('creditmemo_id' => $this->getCreditmemo()->getId())
+        );
     }
 
     /**
@@ -118,7 +143,10 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Sales_Order_Creditmemo_View extends 
      */
     public function getVoidUrl()
     {
-        return $this->getUrl('*/*/void', array('creditmemo_id'=>$this->getCreditmemo()->getId()));
+        return $this->getUrl(
+            '*/*/void',
+            array('creditmemo_id' => $this->getCreditmemo()->getId())
+        );
     }
 
     /**
@@ -128,7 +156,10 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Sales_Order_Creditmemo_View extends 
      */
     public function getCancelUrl()
     {
-        return $this->getUrl('*/*/cancel', array('creditmemo_id'=>$this->getCreditmemo()->getId()));
+        return $this->getUrl(
+            '*/*/cancel',
+            array('creditmemo_id' => $this->getCreditmemo()->getId())
+        );
     }
 
     /**
@@ -138,10 +169,12 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Sales_Order_Creditmemo_View extends 
      */
     public function getEmailUrl()
     {
-        return $this->getUrl('*/*/email', array(
-            'creditmemo_id' => $this->getCreditmemo()->getId(),
-            'order_id'      => $this->getCreditmemo()->getOrderId()
-        ));
+        return $this->getUrl(
+            '*/*/email', array(
+                'creditmemo_id' => $this->getCreditmemo()->getId(),
+                'order_id'      => $this->getCreditmemo()->getOrderId()
+            )
+        );
     }
 
     /**
@@ -151,18 +184,20 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Sales_Order_Creditmemo_View extends 
      */
     public function getPrintUrl()
     {
-        return $this->getUrl('*/*/print', array(
-            'creditmemo_id' => $this->getCreditmemo()->getId()
-        ));
+        return $this->getUrl(
+            '*/*/print', array(
+                'creditmemo_id' => $this->getCreditmemo()->getId()
+            )
+        );
     }
 
     /**
-	 * Update 'back' button url.
-	 *
-	 * @param $flag
-	 *
-	 * @return $this|Mage_Adminhtml_Block_Widget_Container
-	 */
+     * Update 'back' button url.
+     *
+     * @param $flag
+     *
+     * @return $this|Mage_Adminhtml_Block_Widget_Container
+     */
     public function updateBackButtonUrl($flag)
     {
         if ($flag) {
@@ -170,7 +205,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Sales_Order_Creditmemo_View extends 
                 return $this->_updateButton(
                     'back',
                     'onclick',
-                    'setLocation(\'' . $this->getCreditmemo()->getBackUrl() . '\')'
+                    'setLocation(\'' . $this->getCreditmemo()->getBackUrl()
+                    . '\')'
                 );
             }
 
@@ -180,6 +216,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Sales_Order_Creditmemo_View extends 
                 'setLocation(\'' . $this->getUrl('*/sales_creditmemo/') . '\')'
             );
         }
+
         return $this;
     }
 
@@ -187,10 +224,13 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Sales_Order_Creditmemo_View extends 
      * Check whether action is allowed
      *
      * @param string $action
+     *
      * @return bool
      */
     public function _isAllowedAction($action)
     {
-        return Mage::getSingleton('admin/session')->isAllowed('sales/order/actions/' . $action);
+        return Mage::getSingleton('admin/session')->isAllowed(
+            'sales/order/actions/' . $action
+        );
     }
 }

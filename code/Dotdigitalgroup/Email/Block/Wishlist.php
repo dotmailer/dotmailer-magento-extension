@@ -1,29 +1,36 @@
 <?php
 
-class Dotdigitalgroup_Email_Block_Wishlist extends Dotdigitalgroup_Email_Block_Edc
+class Dotdigitalgroup_Email_Block_Wishlist
+    extends Dotdigitalgroup_Email_Block_Edc
 {
+
     protected $_website;
 
     public function getWishlistItems()
     {
         $wishlist = $this->_getWishlist();
-        if($wishlist && count($wishlist->getItemCollection()))
+        if ($wishlist && count($wishlist->getItemCollection())) {
             return $wishlist->getItemCollection();
-        else
+        } else {
             return false;
+        }
     }
 
-    protected function _getWishlist() {
+    protected function _getWishlist()
+    {
 
-	    //customer id param
-	    $customerId = Mage::app()->getRequest()->getParam('customer_id', false);
+        //customer id param
+        $customerId = Mage::app()->getRequest()->getParam('customer_id', false);
 
-	    if (! $customerId)
+        if ( ! $customerId) {
             return false;
+        }
 
-        $wishlistModel = Mage::getModel('wishlist/wishlist')->loadByCustomer($customerId);
+        $wishlistModel = Mage::getModel('wishlist/wishlist')->loadByCustomer(
+            $customerId
+        );
 
-	    return $wishlistModel;
+        return $wishlistModel;
     }
 
     public function getMode()

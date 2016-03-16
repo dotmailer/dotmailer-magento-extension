@@ -43,10 +43,12 @@ $installer->run(
 );
 
 //Subscribers that are not customers
-$installer->run("
+$installer->run(
+    "
           INSERT IGNORE INTO {$this->getTable('email_contact')} (`email`, `is_subscriber`, `subscriber_status`)
           SELECT `subscriber_email`, '1' as col2, '1' as col3 FROM `{$this->getTable('newsletter/subscriber')}` WHERE `customer_id` = 0 AND `subscriber_status` = 1;
-        ");
+        "
+);
 
 
 $installer->endSetup();

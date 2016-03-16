@@ -8,15 +8,19 @@
 var Mailcheck = Class.create();
 Mailcheck.prototype = {
     initialize: function(options) {
-        this.options = Object.extend({
+        this.options = Object.extend(
+            {
             elements: ".validate-email"
-        }, options || {} );
+            }, options || {} 
+        );
 
 
         // Observe blur on each email field
-        $$(this.options.elements).each(function(email) {
+        $$(this.options.elements).each(
+            function(email) {
             Event.observe(email,'blur',this.checkEmail.bindAsEventListener(this));
-        }.bind(this));
+            }.bind(this)
+        );
 
         // When a suggestion is clicked, update email input
         Event.on(document,'click', 'a.suggested-domain', this.useSuggestion.bindAsEventListener(this));

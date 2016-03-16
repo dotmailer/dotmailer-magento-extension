@@ -1,19 +1,22 @@
 <?php
 
-class Dotdigitalgroup_Email_Block_Adminhtml_System_Installation extends Mage_Core_Block_Template
+class Dotdigitalgroup_Email_Block_Adminhtml_System_Installation
+    extends Mage_Core_Block_Template
 {
-    public $sections = array(
-        'connector_api_credentials',
-        'connector_data_mapping',
-        'connector_sync_settings',
-        'connector_roi_tracking',
-        'connector_lost_baskets',
-        'connector_reviews',
-        'connector_dynamic_content',
-        'connector_transactional_emails',
-        'connector_configuration',
-        'connector_developer_settings'
-    );
+
+    public $sections
+        = array(
+            'connector_api_credentials',
+            'connector_data_mapping',
+            'connector_sync_settings',
+            'connector_roi_tracking',
+            'connector_lost_baskets',
+            'connector_reviews',
+            'connector_dynamic_content',
+            'connector_transactional_emails',
+            'connector_configuration',
+            'connector_developer_settings'
+        );
 
     /**
      * get the website domain.
@@ -27,6 +30,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Installation extends Mage_Cor
 
     /**
      * api username.
+     *
      * @return string
      */
     public function getApiUsername()
@@ -36,11 +40,12 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Installation extends Mage_Cor
 
     /**
      * check if the cron is running.
+     *
      * @return bool
      */
     public function getCronInstalled()
     {
-        return (Mage::helper('ddg')->getCronInstalled())? '1' : '0';
+        return (Mage::helper('ddg')->getCronInstalled()) ? '1' : '0';
     }
 
     /*
@@ -51,17 +56,18 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Installation extends Mage_Cor
         $section = $this->getRequest()->getParam('section');
 
         // not not track other sections
-        if (!in_array($section, $this->sections))
+        if ( ! in_array($section, $this->sections)) {
             return;
+        }
 
         $features = array(
-            'customer_sync' => $this->getCustomerSync(),
-            'guest_sync' => $this->getGuestSync(),
+            'customer_sync'   => $this->getCustomerSync(),
+            'guest_sync'      => $this->getGuestSync(),
             'subscriber_sync' => $this->getSubscriberSync(),
-            'order_sync' => $this->getOrderSync(),
-            'catalog_sync' => $this->getCatalogSync(),
-            'dotmailer_smtp' => $this->getDotmailerSmtp(),
-            'roi' => $this->getRoi()
+            'order_sync'      => $this->getOrderSync(),
+            'catalog_sync'    => $this->getCatalogSync(),
+            'dotmailer_smtp'  => $this->getDotmailerSmtp(),
+            'roi'             => $this->getRoi()
         );
 
         return json_encode($features);
@@ -105,6 +111,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Installation extends Mage_Cor
 
     /**
      * magento version.
+     *
      * @return string
      */
     public function getMageVersion()
@@ -114,6 +121,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Installation extends Mage_Cor
 
     /**
      * connector version.
+     *
      * @return string
      */
     public function getConnectorVersion()
@@ -121,41 +129,43 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Installation extends Mage_Cor
         return Mage::helper('ddg')->getConnectorVersion();
     }
 
-	/**
-	 * Get the api and website names.
-	 * @return mixed|string
-	 */
-	public function getWebsiteNames()
-	{
+    /**
+     * Get the api and website names.
+     *
+     * @return mixed|string
+     */
+    public function getWebsiteNames()
+    {
 
-		$data = Mage::helper('ddg')->getStringWebsiteApiAccounts();
+        $data = Mage::helper('ddg')->getStringWebsiteApiAccounts();
 
-		return $data;
-	}
+        return $data;
+    }
 
-	/**
-	 * Get the account email.
-	 *
-	 * @return mixed
-	 */
-	public function getAccountEmail()
-	{
-		return Mage::helper('ddg')->getAccountEmail();
-	}
+    /**
+     * Get the account email.
+     *
+     * @return mixed
+     */
+    public function getAccountEmail()
+    {
+        return Mage::helper('ddg')->getAccountEmail();
+    }
 
 
-	/**
-	 * Use the beacon only on the api connector section.
-	 * @return string
-	 */
-	protected function _toHtml()
-	{
-		$section = $this->getAction()->getRequest()->getParam('section', false);
+    /**
+     * Use the beacon only on the api connector section.
+     *
+     * @return string
+     */
+    protected function _toHtml()
+    {
+        $section = $this->getAction()->getRequest()->getParam('section', false);
 
-		if ($section == 'connector_api_credentials') {
-			return parent::_toHtml();
-		} else {
-			return '';
-		}
-	}
+        if ($section == 'connector_api_credentials') {
+            return parent::_toHtml();
+        } else {
+            return '';
+        }
+    }
 }

@@ -1,12 +1,15 @@
 <?php
 
-class Dotdigitalgroup_Email_Block_Recommended_Products extends Dotdigitalgroup_Email_Block_Edc
+class Dotdigitalgroup_Email_Block_Recommended_Products
+    extends Dotdigitalgroup_Email_Block_Edc
 {
-	/**
-	 * Slot div name.
-	 * @var string
-	 */
-	public $slot;
+
+    /**
+     * Slot div name.
+     *
+     * @var string
+     */
+    public $slot;
 
     /**
      * get the products to display for table
@@ -14,56 +17,67 @@ class Dotdigitalgroup_Email_Block_Recommended_Products extends Dotdigitalgroup_E
     public function getLoadedProductCollection()
     {
         $orderModel = Mage::registry('current_order');
-		if (! $orderModel) {
-			Mage::log('no current_order found for EDC');
-			return array();
-		}
+        if ( ! $orderModel) {
+            Mage::log('no current_order found for EDC');
 
-		//display mode based on the action name
-		$mode  = $this->getRequest()->getActionName();
-	    //number of product items to be displayed
-        $limit      = Mage::helper('ddg/recommended')->getDisplayLimitByMode($mode);
-        $orderItems = $orderModel->getAllItems();
-        $productsToDisplay = $this->getProductsToDisplay($orderItems, $limit, $mode, 'PRODUCT');
+            return array();
+        }
 
-	    return $productsToDisplay;
+        //display mode based on the action name
+        $mode = $this->getRequest()->getActionName();
+        //number of product items to be displayed
+        $limit             = Mage::helper('ddg/recommended')
+            ->getDisplayLimitByMode(
+                $mode
+            );
+        $orderItems        = $orderModel->getAllItems();
+        $productsToDisplay = $this->getProductsToDisplay(
+            $orderItems, $limit, $mode, 'PRODUCT'
+        );
+
+        return $productsToDisplay;
     }
 
-	/**
-	 * Nosto products data.
-	 * @return object
-	 */
-	public function getNostoProducts()
-	{
-		$client = Mage::getModel('ddg_automation/apiconnector_client');
-		//slot name, div id
-		$slot  = Mage::app()->getRequest()->getParam('slot', false);
+    /**
+     * Nosto products data.
+     *
+     * @return object
+     */
+    public function getNostoProducts()
+    {
+        $client = Mage::getModel('ddg_automation/apiconnector_client');
+        //slot name, div id
+        $slot = Mage::app()->getRequest()->getParam('slot', false);
 
-		//email recommendation
-		$email = Mage::app()->getRequest()->getParam('email', false);
+        //email recommendation
+        $email = Mage::app()->getRequest()->getParam('email', false);
 
-		//no valid data for nosto recommendation
-		if (!$slot || ! $email)
-			return false;
-		else
-			$this->slot = $slot;
+        //no valid data for nosto recommendation
+        if ( ! $slot || ! $email) {
+            return false;
+        } else {
+            $this->slot = $slot;
+        }
 
-		//html data from nosto
-		$data = $client->getNostoProducts($slot, $email);
+        //html data from nosto
+        $data = $client->getNostoProducts($slot, $email);
 
-		//check for valid response
-		if (! isset($data->$email) && !isset($data->$email->$slot))
-			return false;
-		return $data->$email->$slot;
-	}
+        //check for valid response
+        if ( ! isset($data->$email) && ! isset($data->$email->$slot)) {
+            return false;
+        }
 
-	/**
-	 * Slot name.
-	 * Should be called after getNostoProducts.
-	 * @return string
-	 */
-	public function getSlotName()
-	{
-		return $this->slot;
-	}
+        return $data->$email->$slot;
+    }
+
+    /**
+     * Slot name.
+     * Should be called after getNostoProducts.
+     *
+     * @return string
+     */
+    public function getSlotName()
+    {
+        return $this->slot;
+    }
 }

@@ -1,7 +1,9 @@
 <?php
 
-class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Analysis_Abandonedcarts extends  Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Analysis
+class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Analysis_Abandonedcarts
+    extends Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Analysis
 {
+
     protected $_store = 0;
     protected $_group = 0;
     protected $_website = 0;
@@ -15,8 +17,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Analysis_Abandonedcar
     {
         parent::_construct();
 
-        $this->_store = $this->getRequest()->getParam('store');
-        $this->_group = $this->getRequest()->getParam('group');
+        $this->_store   = $this->getRequest()->getParam('store');
+        $this->_group   = $this->getRequest()->getParam('group');
         $this->_website = $this->getRequest()->getParam('website');
         $this->setTemplate('connector/dashboard/tabs/data.phtml');
     }
@@ -30,10 +32,22 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Analysis_Abandonedcar
     protected function _prepareLayout()
     {
         $lifetimeAbanodned = $this->getAbandonedCartInformationForTab();
-        $this->addTotal($this->__('Total Abandoned Cart Lost Revenue'), $lifetimeAbanodned->getLifetime());
-        $this->addTotal($this->__('Average Abandoned Cart Lost Revenue'), $lifetimeAbanodned->getAverage());
-        $this->addTotal($this->__('Total Number Of Abandoned Carts'), $lifetimeAbanodned->getTotalCount(), true);
-        $this->addTotal($this->__('Average Abandoned Carts Created Per Day'), $lifetimeAbanodned->getDayCount(), true);
+        $this->addTotal(
+            $this->__('Total Abandoned Cart Lost Revenue'),
+            $lifetimeAbanodned->getLifetime()
+        );
+        $this->addTotal(
+            $this->__('Average Abandoned Cart Lost Revenue'),
+            $lifetimeAbanodned->getAverage()
+        );
+        $this->addTotal(
+            $this->__('Total Number Of Abandoned Carts'),
+            $lifetimeAbanodned->getTotalCount(), true
+        );
+        $this->addTotal(
+            $this->__('Average Abandoned Carts Created Per Day'),
+            $lifetimeAbanodned->getDayCount(), true
+        );
     }
 
     /**
@@ -43,8 +57,13 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Analysis_Abandonedcar
      */
     protected function getAbandonedCartInformationForTab()
     {
-        $abandonedAnalysisModel = Mage::getModel('ddg_automation/adminhtml_dashboard_tabs_analysis_abandoned');
-        return $abandonedAnalysisModel->getLifeTimeAbandoned($this->_store, $this->_website, $this->_group);
+        $abandonedAnalysisModel = Mage::getModel(
+            'ddg_automation/adminhtml_dashboard_tabs_analysis_abandoned'
+        );
+
+        return $abandonedAnalysisModel->getLifeTimeAbandoned(
+            $this->_store, $this->_website, $this->_group
+        );
     }
 
     /**

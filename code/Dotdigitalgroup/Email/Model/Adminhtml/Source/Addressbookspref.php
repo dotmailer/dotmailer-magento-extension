@@ -2,72 +2,83 @@
 
 class Dotdigitalgroup_Email_Model_Adminhtml_Source_Addressbookspref
 {
-	protected function getWebsite()
-	{
-		$website = Mage::app()->getWebsite();
-		$websiteParam = Mage::app()->getRequest()->getParam('website');
-		if($websiteParam)
-			$website = Mage::app()->getWebsite($websiteParam);
-		return $website;
-	}
 
-	/**
-	 * get address books
-	 *
-	 * @return null
-	 */
-	protected function getAddressBooks()
-	{
-		$website = $this->getWebsite();
-		$client = Mage::getModel( 'ddg_automation/apiconnector_client' );
-		$client->setApiUsername( Mage::helper( 'ddg' )->getApiUsername( $website ) )
-			->setApiPassword( Mage::helper( 'ddg' )->getApiPassword( $website ) );
+    protected function getWebsite()
+    {
+        $website      = Mage::app()->getWebsite();
+        $websiteParam = Mage::app()->getRequest()->getParam('website');
+        if ($websiteParam) {
+            $website = Mage::app()->getWebsite($websiteParam);
+        }
 
-		$savedAddressBooks = Mage::registry( 'addressbooks' );
-		//get saved address books from registry
-		if ( $savedAddressBooks ) {
-			$addressBooks = $savedAddressBooks;
-		} else {
-			// api all address books
-			$addressBooks = $client->getAddressBooks();
-			Mage::register( 'addressbooks', $addressBooks );
-		}
-		return $addressBooks;
-	}
+        return $website;
+    }
 
-	/**
-	 * addressbook options
-	 *
-	 * @return array
-	 * @throws Mage_Core_Exception
-	 */
-	public function toOptionArray()
-	{
-		$fields = array();
-		$website = $this->getWebsite();
+    /**
+     * get address books
+     *
+     * @return null
+     */
+    protected function getAddressBooks()
+    {
+        $website = $this->getWebsite();
+        $client  = Mage::getModel('ddg_automation/apiconnector_client');
+        $client->setApiUsername(Mage::helper('ddg')->getApiUsername($website))
+            ->setApiPassword(Mage::helper('ddg')->getApiPassword($website));
 
-		$enabled = Mage::helper('ddg')->isEnabled($website);
+        $savedAddressBooks = Mage::registry('addressbooks');
+        //get saved address books from registry
+        if ($savedAddressBooks) {
+            $addressBooks = $savedAddressBooks;
+        } else {
+            // api all address books
+            $addressBooks = $client->getAddressBooks();
+            Mage::register('addressbooks', $addressBooks);
+        }
 
-		//get address books options
-		if ($enabled) {
-			$addressBooks = $this->getAddressBooks();
-			//set the error message to the select option
-			if ( isset( $addressBooks->message ) ) {
-				$fields[] = array( 'value' => 0, 'label' => Mage::helper( 'ddg' )->__( $addressBooks->message) );
-			}
+        return $addressBooks;
+    }
 
-			$subscriberAddressBook = Mage::helper('ddg')->getSubscriberAddressBook(Mage::app()->getWebsite());
+    /**
+     * addressbook options
+     *
+     * @return array
+     * @throws Mage_Core_Exception
+     */
+    public function toOptionArray()
+    {
+        $fields  = array();
+        $website = $this->getWebsite();
 
-			//set up fields with book id and label
-			if ($addressBooks) {
-				foreach ( $addressBooks as $book ) {
-					if ( isset( $book->id ) && $book->visibility == 'Public' && $book->id != $subscriberAddressBook ) {
-						$fields[] = array( 'value' => $book->id, 'label' => $book->name );
-					}
-				}
-			}
-		}
+        $enabled = Mage::helper('ddg')->isEnabled($website);
 
-		return $fields;
-	}
+        //get address books options
+        if ($enabled) {
+            $addressBooks = $this->getAddressBooks();
+            //set the error message to the select option
+            if (isset($addressBooks->message)) {
+                $fields[] = array('value' => 0,
+                                  'label' => Mage::helper('ddg')->__(
+                                      $addressBooks->message
+                                  ));
+            }
+
+            $subscriberAddressBook = Mage::helper('ddg')
+                ->getSubscriberAddressBook(Mage::app()->getWebsite());
+
+            //set up fields with book id and label
+            if ($addressBooks) {
+                foreach ($addressBooks as $book) {
+                    if (isset($book->id) && $book->visibility == 'Public'
+                        && $book->id != $subscriberAddressBook
+                    ) {
+                        $fields[] = array('value' => $book->id,
+                                          'label' => $book->name);
+                    }
+                }
+            }
+        }
+
+        return $fields;
+    }
 }

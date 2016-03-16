@@ -224,11 +224,15 @@ $installer->getConnection()->addIndex(
 );
 
 //if default 'manufacturer' attribute found save it in config
-$attributes = Mage::getResourceModel('catalog/product_attribute_collection')->addVisibleFilter();
+$attributes = Mage::getResourceModel('catalog/product_attribute_collection')
+    ->addVisibleFilter();
 $attributes->addFieldToFilter('main_table.attribute_code', 'manufacturer');
-if($attributes->getSize()){
+if ($attributes->getSize()) {
     $configModel = Mage::getModel('core/config');
-    $configModel->saveConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_DATA_FIELDS_BRAND_ATTRIBUTE, 'manufacturer');
+    $configModel->saveConfig(
+        Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_DATA_FIELDS_BRAND_ATTRIBUTE,
+        'manufacturer'
+    );
 }
 
 

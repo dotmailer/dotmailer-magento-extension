@@ -1,24 +1,28 @@
 <?php
 
-class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Gridlist extends Mage_Adminhtml_Block_System_Config_Form_Field
+class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Gridlist
+    extends Mage_Adminhtml_Block_System_Config_Form_Field
 {
+
     /**
-	 * Dynamic contaent dysplay type.
-	 *
-	 * @param Varien_Data_Form_Element_Abstract $element
-	 *
-	 * @return string
-	 */
-    protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element)
+     * Dynamic contaent dysplay type.
+     *
+     * @param Varien_Data_Form_Element_Abstract $element
+     *
+     * @return string
+     */
+    protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element
+    ) 
     {
         // Get the default HTML for this option
         $html = parent::_getElementHtml($element);
 
 
-        $jQuery = '<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>';
+        $jQuery
+            = '<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>';
 
-        $jQuery .=
-           '<script type="text/javascript">
+        $jQuery
+            .= '<script type="text/javascript">
             jQuery.noConflict();
             jQuery(document).ready(function() {
                       var gridOptions = {

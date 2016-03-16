@@ -1,7 +1,9 @@
 <?php
 
-class Dotdigitalgroup_Email_Adminhtml_Email_WishlistController extends Mage_Adminhtml_Controller_Action
+class Dotdigitalgroup_Email_Adminhtml_Email_WishlistController
+    extends Mage_Adminhtml_Controller_Action
 {
+
     /**
      * main page.
      */
@@ -20,6 +22,8 @@ class Dotdigitalgroup_Email_Adminhtml_Email_WishlistController extends Mage_Admi
      */
     protected function _isAllowed()
     {
-        return Mage::getSingleton('admin/session')->isAllowed('email_connector/reports/email_connector_wishlist');
+        return Mage::getSingleton('admin/session')->isAllowed(
+            'email_connector/reports/email_connector_wishlist'
+        );
     }
 }

@@ -2,11 +2,12 @@
 
 class Dotdigitalgroup_Email_Block_Products extends Mage_Core_Block_Template
 {
+
     /**
-	 * Prepare layout, set template.
-	 *
-	 * @return Mage_Core_Block_Abstract|void
-	 */
+     * Prepare layout, set template.
+     *
+     * @return Mage_Core_Block_Abstract|void
+     */
     protected function _prepareLayout()
     {
         if ($root = $this->getLayout()->getBlock('root')) {
@@ -20,16 +21,18 @@ class Dotdigitalgroup_Email_Block_Products extends Mage_Core_Block_Template
     public function getRecommendedProducts()
     {
         $productsToDisplay = array();
-        $orderId = $this->getRequest()->getParam('order', false);
-        $mode  = $this->getRequest()->getParam('mode', false);
+        $orderId           = $this->getRequest()->getParam('order', false);
+        $mode              = $this->getRequest()->getParam('mode', false);
         if ($orderId && $mode) {
             $orderModel = Mage::getModel('sales/order')->load($orderId);
             if ($orderModel->getId()) {
-	            $storeId = $orderModel->getStoreId();
-	            $appEmulation = Mage::getSingleton('core/app_emulation');
-	            $appEmulation->startEnvironmentEmulation($storeId);
+                $storeId = $orderModel->getStoreId();
+                $appEmulation = Mage::getSingleton('core/app_emulation');
+                $appEmulation->startEnvironmentEmulation($storeId);
                 //order products
-                $productRecommended = Mage::getModel('ddg_automation/dynamic_recommended', $orderModel);
+                $productRecommended = Mage::getModel(
+                    'ddg_automation/dynamic_recommended', $orderModel
+                );
                 $productRecommended->setMode($mode);
 
                 //get the order items recommendations
@@ -42,23 +45,25 @@ class Dotdigitalgroup_Email_Block_Products extends Mage_Core_Block_Template
 
 
     /**
-	 * Price html block.
-	 *
-	 * @param $product
-	 *
-	 * @return string
-	 */
+     * Price html block.
+     *
+     * @param $product
+     *
+     * @return string
+     */
     public function getPriceHtml($product)
     {
         $this->setTemplate('connector/price.phtml');
         $this->setProduct($product);
+
         return $this->toHtml();
     }
 
     /**
-	 * Display type mode.
-	 * @return mixed|string
-	 */
+     * Display type mode.
+     *
+     * @return mixed|string
+     */
     public function getDisplayType()
     {
         return Mage::helper('ddg/recommended')->getDisplayType();

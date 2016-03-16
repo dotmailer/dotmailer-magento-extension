@@ -2,21 +2,25 @@
 
 class Dotdigitalgroup_Email_Model_Adminhtml_Source_Advanced_Attributes
 {
+
     /**
      * Returns custom order attributes
+     *
      * @return array
      */
     public function toOptionArray()
     {
-        $fields = Mage::getResourceModel('ddg_automation/order')->getOrderTableDescription();
+        $fields = Mage::getResourceModel('ddg_automation/order')
+            ->getOrderTableDescription();
 
         $customFields = array();
-        foreach($fields as $key => $field){
+        foreach ($fields as $key => $field) {
             $customFields[] = array(
                 'value' => $field['COLUMN_NAME'],
                 'label' => $field['COLUMN_NAME']
             );
         }
+
         return $customFields;
     }
 }

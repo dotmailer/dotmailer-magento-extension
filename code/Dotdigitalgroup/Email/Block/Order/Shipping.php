@@ -1,10 +1,14 @@
 <?php
-class Dotdigitalgroup_Email_Block_Order_Shipping  extends Mage_Sales_Block_Order_Creditmemo_Items
+
+class Dotdigitalgroup_Email_Block_Order_Shipping
+    extends Mage_Sales_Block_Order_Creditmemo_Items
 {
+
     /**
-	 * Prepare layout.
-	 * @return Mage_Core_Block_Abstract|void
-	 */
+     * Prepare layout.
+     *
+     * @return Mage_Core_Block_Abstract|void
+     */
     protected function _prepareLayout()
     {
         if ($root = $this->getLayout()->getBlock('root')) {
@@ -12,20 +16,25 @@ class Dotdigitalgroup_Email_Block_Order_Shipping  extends Mage_Sales_Block_Order
         }
     }
 
-	/**
-	 * @return Mage_Sales_Model_Order
-	 * @throws Exception
-	 */
+    /**
+     * @return Mage_Sales_Model_Order
+     * @throws Exception
+     */
     public function getOrder()
     {
         $order = Mage::registry('current_order');
-        if (! $order) {
-            Mage::throwException(Mage::helper('ddg')->__('no current_order found for EDC'));
+        if ( ! $order) {
+            Mage::throwException(
+                Mage::helper('ddg')->__('no current_order found for EDC')
+            );
         }
 
-        if (! $order->hasShipments()) {
+        if ( ! $order->hasShipments()) {
             //throw new Exception('TE - no shipments for order : '. $orderId);
-            Mage::helper('ddg')->log('TE - no shipments for order : '. $order->getId());
+            Mage::helper('ddg')->log(
+                'TE - no shipments for order : ' . $order->getId()
+            );
+
             return false;
         }
 

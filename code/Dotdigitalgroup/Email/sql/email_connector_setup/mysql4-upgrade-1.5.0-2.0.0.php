@@ -1,11 +1,11 @@
 <?php
 
 
-$installer  = $this;
+$installer = $this;
 
 $installer->startSetup();
 
-try{
+try {
 
     $installer->run(
         "DROP TABLE IF EXISTS {$this->getTable('email_order')};
@@ -66,7 +66,7 @@ try{
     $installer->removeAttribute('customer', 'dotmailer_contact_id');
 
 
-}catch (Exception $e){
+} catch (Exception $e) {
 
     Mage::log($e->getMessage());
 

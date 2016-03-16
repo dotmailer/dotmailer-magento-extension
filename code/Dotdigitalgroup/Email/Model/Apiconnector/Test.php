@@ -1,6 +1,9 @@
 <?php
-class Dotdigitalgroup_Email_Model_Apiconnector_Test extends Dotdigitalgroup_Email_Model_Apiconnector_Client
+
+class Dotdigitalgroup_Email_Model_Apiconnector_Test
+    extends Dotdigitalgroup_Email_Model_Apiconnector_Client
 {
+
     /**
      * Validate apiuser on save.
      *
@@ -16,14 +19,22 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Test extends Dotdigitalgroup_Emai
                 ->setApiPassword($apiPassword);
             $accountInfo = $this->getAccountInfo();
             if (isset($accountInfo->message)) {
-                Mage::getSingleton('adminhtml/session')->addError($accountInfo->message);
-                Mage::helper('ddg')->log('VALIDATION ERROR :  ' . $accountInfo->message);
+                Mage::getSingleton('adminhtml/session')->addError(
+                    $accountInfo->message
+                );
+                Mage::helper('ddg')->log(
+                    'VALIDATION ERROR :  ' . $accountInfo->message
+                );
+
                 return false;
             }
+
             return $accountInfo;
         }
+
         return false;
     }
+
     /**
      * Ajax validate api user.
      *
@@ -43,8 +54,10 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Test extends Dotdigitalgroup_Emai
                 $message = 'API Username And Password Do Not Match!';
                 Mage::helper('ddg')->log($message);
             }
+
             return $message;
         }
+
         return false;
     }
 }

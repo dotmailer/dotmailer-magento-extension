@@ -1,20 +1,26 @@
 <?php
 
-class Dotdigitalgroup_Email_Block_Adminhtml_System_Config_Datafield extends Mage_Adminhtml_Block_System_Config_Form_Field
+class Dotdigitalgroup_Email_Block_Adminhtml_System_Config_Datafield
+    extends Mage_Adminhtml_Block_System_Config_Form_Field
 {
 
     /**
-	 * Ajax Create the datafields.
-	 * @param Varien_Data_Form_Element_Abstract $element
-	 *
-	 * @return string
-	 */
-    protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element)
+     * Ajax Create the datafields.
+     *
+     * @param Varien_Data_Form_Element_Abstract $element
+     *
+     * @return string
+     */
+    protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element
+    ) 
     {
-        $url = Mage::helper('adminhtml')->getUrl('*/connector/createnewdatafield');
+        $url     = Mage::helper('adminhtml')->getUrl(
+            '*/connector/createnewdatafield'
+        );
         $website = Mage::app()->getRequest()->getParam('website', 0);
 
-        $element->setData('after_element_html',
+        $element->setData(
+            'after_element_html',
             "<script>
                 function createDatafield(form, element) {
                     var datafield_name  	= $('connector_data_mapping_dynamic_datafield_datafield_name').value;

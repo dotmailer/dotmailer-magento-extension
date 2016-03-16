@@ -14,45 +14,66 @@ if ($installer->getConnection()->isTableExists($catalogTable)) {
     $installer->getConnection()->dropTable($catalogTable);
 }
 $table = $installer->getConnection()->newTable($catalogTable);
-$table->addColumn('id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
-    'primary' => true,
+$table->addColumn(
+    'id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
+    'primary'  => true,
     'identity' => true,
     'unsigned' => true,
     'nullable' => false
-), 'Primary Key')
-    ->addColumn('product_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
+    ), 'Primary Key'
+)
+    ->addColumn(
+        'product_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-    ), 'Product Id')
-    ->addColumn('imported', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
+        ), 'Product Id'
+    )
+    ->addColumn(
+        'imported', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => true,
-    ), 'Product Imported')
-    ->addColumn('modified', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
+        ), 'Product Imported'
+    )
+    ->addColumn(
+        'modified', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => true,
-    ), 'Product Modified')
-    ->addColumn('created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(), 'Creation Time')
-    ->addColumn('updated_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(), 'Update Time')
-    ->addIndex($this->getIdxName($catalogTable, array('product_id')),
-        array('product_id'))
-    ->addIndex($this->getIdxName($catalogTable, array('imported')),
-        array('imported'))
-    ->addIndex($this->getIdxName($catalogTable, array('modified')),
-        array('modified'))
+        ), 'Product Modified'
+    )
+    ->addColumn(
+        'created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(),
+        'Creation Time'
+    )
+    ->addColumn(
+        'updated_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(),
+        'Update Time'
+    )
+    ->addIndex(
+        $this->getIdxName($catalogTable, array('product_id')),
+        array('product_id')
+    )
+    ->addIndex(
+        $this->getIdxName($catalogTable, array('imported')),
+        array('imported')
+    )
+    ->addIndex(
+        $this->getIdxName($catalogTable, array('modified')),
+        array('modified')
+    )
     ->setComment('Connector Catalog');
 $installer->getConnection()->createTable($table);
 
 /**
  * Populate catalog table
  */
-$select = $installer->getConnection()->select()
+$select      = $installer->getConnection()->select()
     ->from(
         array('catalog' => $this->getTable('catalog_product_entity')),
-        array('product_id' => 'catalog.entity_id', 'created_at' => 'catalog.created_at')
+        array('product_id' => 'catalog.entity_id',
+              'created_at' => 'catalog.created_at')
     );
 $insertArray = array('product_id', 'created_at');
-$sqlQuery = $select->insertFromSelect($catalogTable, $insertArray, false);
+$sqlQuery    = $select->insertFromSelect($catalogTable, $insertArray, false);
 $installer->getConnection()->query($sqlQuery);
 
 /**
@@ -64,44 +85,65 @@ if ($installer->getConnection()->isTableExists($rulesTable)) {
     $installer->getConnection()->dropTable($rulesTable);
 }
 $table = $installer->getConnection()->newTable($rulesTable);
-$table->addColumn('id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
-    'primary' => true,
+$table->addColumn(
+    'id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
+    'primary'  => true,
     'identity' => true,
     'unsigned' => true,
     'nullable' => false
-), 'Primary Key')
-    ->addColumn('name', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
+    ), 'Primary Key'
+)
+    ->addColumn(
+        'name', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'nullable' => false,
-        'default' => ''
-    ), 'Rule Name')
-    ->addColumn('website_ids', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
+        'default'  => ''
+        ), 'Rule Name'
+    )
+    ->addColumn(
+        'website_ids', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'nullable' => false,
-        'default' => '0'
-    ), 'Website Id')
-    ->addColumn('type', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
+        'default'  => '0'
+        ), 'Website Id'
+    )
+    ->addColumn(
+        'type', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'nullable' => false,
-        'default' => 0
-    ), 'Rule Type')
-    ->addColumn('status', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
+        'default'  => 0
+        ), 'Rule Type'
+    )
+    ->addColumn(
+        'status', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'nullable' => false,
-        'default' => 0
-    ), 'Status')
-    ->addColumn('combination', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
+        'default'  => 0
+        ), 'Status'
+    )
+    ->addColumn(
+        'combination', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'nullable' => false,
-        'default' => '1'
-    ), 'Rule Condition')
-    ->addColumn('condition', Varien_Db_Ddl_Table::TYPE_BLOB, null, array(
+        'default'  => '1'
+        ), 'Rule Condition'
+    )
+    ->addColumn(
+        'condition', Varien_Db_Ddl_Table::TYPE_BLOB, null, array(
         'nullable' => false,
-        'default' => ''
-    ), 'Rule Condition')
-    ->addColumn('created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(), 'Creation Time')
-    ->addColumn('updated_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(), 'Update Time')
+        'default'  => ''
+        ), 'Rule Condition'
+    )
+    ->addColumn(
+        'created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(),
+        'Creation Time'
+    )
+    ->addColumn(
+        'updated_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(),
+        'Update Time'
+    )
     ->setComment('Connector Rules');
 $installer->getConnection()->createTable($table);
 
 $configModel = Mage::getModel('core/config');
 //Save all product types as string to extension's config value
-$types = Mage::getModel('ddg_automation/adminhtml_source_sync_catalog_type')->toOptionArray();
+$types   = Mage::getModel('ddg_automation/adminhtml_source_sync_catalog_type')
+    ->toOptionArray();
 $options = array();
 foreach ($types as $type) {
     $options[] = $type['value'];
@@ -109,16 +151,24 @@ foreach ($types as $type) {
 $typeString = implode(',', $options);
 
 //Save all product visibilities as string to extension's config value
-$visibilities = Mage::getModel('ddg_automation/adminhtml_source_sync_catalog_visibility')->toOptionArray();
-$options = array();
+$visibilities = Mage::getModel(
+    'ddg_automation/adminhtml_source_sync_catalog_visibility'
+)->toOptionArray();
+$options      = array();
 foreach ($visibilities as $visibility) {
     $options[] = $visibility['value'];
 }
 $visibilityString = implode(',', $options);
 
 //save config value
-$configModel->saveConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_CATALOG_TYPE, $typeString);
-$configModel->saveConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_CATALOG_VISIBILITY, $visibilityString);
+$configModel->saveConfig(
+    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_CATALOG_TYPE,
+    $typeString
+);
+$configModel->saveConfig(
+    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_CATALOG_VISIBILITY,
+    $visibilityString
+);
 
 
 /**
@@ -130,67 +180,107 @@ if ($installer->getConnection()->isTableExists($importerTable)) {
     $installer->getConnection()->dropTable($importerTable);
 }
 $table = $installer->getConnection()->newTable($importerTable);
-$table->addColumn('id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
-    'primary' => true,
+$table->addColumn(
+    'id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
+    'primary'  => true,
     'identity' => true,
     'unsigned' => true,
     'nullable' => false
-), 'Primary Key')
-    ->addColumn('import_type', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
+    ), 'Primary Key'
+)
+    ->addColumn(
+        'import_type', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'nullable' => false,
-        'default' => ''
-    ), 'Import Type')
-    ->addColumn('website_id', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
+        'default'  => ''
+        ), 'Import Type'
+    )
+    ->addColumn(
+        'website_id', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'nullable' => false,
-        'default' => '0'
-    ), 'Website Id')
-    ->addColumn('import_status', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
+        'default'  => '0'
+        ), 'Website Id'
+    )
+    ->addColumn(
+        'import_status', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'nullable' => false,
-        'default' => 0
-    ), 'Import Status')
-    ->addColumn('import_id', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
+        'default'  => 0
+        ), 'Import Status'
+    )
+    ->addColumn(
+        'import_id', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'nullable' => false,
-        'default' => ''
-    ), 'Import Id')
-    ->addColumn('import_data', Varien_Db_Ddl_Table::TYPE_BLOB, '2M', array(
+        'default'  => ''
+        ), 'Import Id'
+    )
+    ->addColumn(
+        'import_data', Varien_Db_Ddl_Table::TYPE_BLOB, '2M', array(
         'nullable' => false,
-        'default' => ''
-    ), 'Import Data')
-    ->addColumn('import_mode', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
+        'default'  => ''
+        ), 'Import Data'
+    )
+    ->addColumn(
+        'import_mode', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'nullable' => false,
-        'default' => ''
-    ), 'Import Mode')
-    ->addColumn('import_file', Varien_Db_Ddl_Table::TYPE_TEXT, null, array(
+        'default'  => ''
+        ), 'Import Mode'
+    )
+    ->addColumn(
+        'import_file', Varien_Db_Ddl_Table::TYPE_TEXT, null, array(
         'nullable' => false,
-        'default' => ''
-    ), 'Import File')
-    ->addColumn('message', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
+        'default'  => ''
+        ), 'Import File'
+    )
+    ->addColumn(
+        'message', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'nullable' => false,
-        'default' => ''
-    ), 'Error Message')
-    ->addColumn('created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(), 'Creation Time')
-    ->addColumn('updated_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(), 'Update Time')
-    ->addColumn('import_started', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(), 'Import Started')
-    ->addColumn('import_finished', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(), 'Import Finished')
-    ->addIndex($this->getIdxName($importerTable, array('import_type')),
-        array('import_type'))
-    ->addIndex($this->getIdxName($importerTable, array('website_id')),
-        array('website_id'))
-    ->addIndex($this->getIdxName($importerTable, array('import_status')),
-        array('import_status'))
-    ->addIndex($this->getIdxName($importerTable, array('import_mode')),
-        array('import_mode'))
+        'default'  => ''
+        ), 'Error Message'
+    )
+    ->addColumn(
+        'created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(),
+        'Creation Time'
+    )
+    ->addColumn(
+        'updated_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(),
+        'Update Time'
+    )
+    ->addColumn(
+        'import_started', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(),
+        'Import Started'
+    )
+    ->addColumn(
+        'import_finished', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(),
+        'Import Finished'
+    )
+    ->addIndex(
+        $this->getIdxName($importerTable, array('import_type')),
+        array('import_type')
+    )
+    ->addIndex(
+        $this->getIdxName($importerTable, array('website_id')),
+        array('website_id')
+    )
+    ->addIndex(
+        $this->getIdxName($importerTable, array('import_status')),
+        array('import_status')
+    )
+    ->addIndex(
+        $this->getIdxName($importerTable, array('import_mode')),
+        array('import_mode')
+    )
     ->setComment('Email Importer');
 $installer->getConnection()->createTable($table);
 
 //modify email_order table
 $orderTable = $installer->getTable('ddg_automation/order');
-$installer->getConnection()->addColumn($orderTable, 'modified', array(
-    'type' => Varien_Db_Ddl_Table::TYPE_SMALLINT,
-    'unsigned' => true,
-    'nullable' => true,
-    'comment' => 'Order Modified'
-));
+$installer->getConnection()->addColumn(
+    $orderTable, 'modified', array(
+        'type'     => Varien_Db_Ddl_Table::TYPE_SMALLINT,
+        'unsigned' => true,
+        'nullable' => true,
+        'comment'  => 'Order Modified'
+    )
+);
 
 /**
  * drop config table
@@ -199,7 +289,7 @@ $configTable = $this->getTable('ddg_automation/config');
 
 //drop config table if exist
 if ($installer->getConnection()->isTableExists($configTable)) {
-	$installer->getConnection()->dropTable($configTable);
+    $installer->getConnection()->dropTable($configTable);
 }
 
 /**
@@ -243,16 +333,20 @@ $installer->getConnection()->addIndex(
 $orderTable = $installer->getTable('ddg_automation/order');
 
 //modify column
-$installer->getConnection()->modifyColumn($orderTable, 'order_status', 'VARCHAR(50)');
+$installer->getConnection()->modifyColumn(
+    $orderTable, 'order_status', 'VARCHAR(50)'
+);
 
 //add column
-$installer->getConnection()->addColumn($orderTable, 'modified', array(
-    'type' => Varien_Db_Ddl_Table::TYPE_SMALLINT,
-    'unsigned' => true,
-    'nullable' => true,
-    'default' => null,
-    'comment' => 'Is Order Modified'
-));
+$installer->getConnection()->addColumn(
+    $orderTable, 'modified', array(
+        'type'     => Varien_Db_Ddl_Table::TYPE_SMALLINT,
+        'unsigned' => true,
+        'nullable' => true,
+        'default'  => null,
+        'comment'  => 'Is Order Modified'
+    )
+);
 
 
 //add indexes to order table
@@ -327,15 +421,15 @@ $installer->getConnection()->addIndex(
 );
 
 //clear old config values
-$conn = $installer->getConnection();
+$conn  = $installer->getConnection();
 $paths = array(
-	'connector_sms%',
-	'connector_advanced_settings%',
+    'connector_sms%',
+    'connector_advanced_settings%',
 );
 
-foreach ( $paths as $path ) {
-	$expr = new Zend_Db_Expr("path LIKE '{$path}'");
-	$conn->delete($this->getTable('core/config_data'), $expr);
+foreach ($paths as $path) {
+    $expr = new Zend_Db_Expr("path LIKE '{$path}'");
+    $conn->delete($this->getTable('core/config_data'), $expr);
 }
 
 $installer->endSetup();

@@ -2,6 +2,7 @@
 
 class Dotdigitalgroup_Email_Model_Cron
 {
+
     /**
      * CRON FOR EMAIL IMPORTER PROCESSOR
      */
@@ -17,6 +18,7 @@ class Dotdigitalgroup_Email_Model_Cron
     {
         // send customers
         $result = Mage::getModel('ddg_automation/catalog')->sync();
+
         return $result;
     }
 
@@ -26,11 +28,16 @@ class Dotdigitalgroup_Email_Model_Cron
     public function contactSync()
     {
         // send customers
-        $result = Mage::getModel('ddg_automation/apiconnector_contact')->sync();
+        $result           = Mage::getModel(
+            'ddg_automation/apiconnector_contact'
+        )->sync();
         $subscriberResult = $this->subscribersAndGuestSync();
-        if(isset($subscriberResult['message']) && isset($result['message']))
-            $result['message'] = $result['message'] . ' - ' . $subscriberResult['message'];
-	    return $result;
+        if (isset($subscriberResult['message']) && isset($result['message'])) {
+            $result['message'] = $result['message'] . ' - '
+                . $subscriberResult['message'];
+        }
+
+        return $result;
     }
 
     /**
@@ -39,7 +46,7 @@ class Dotdigitalgroup_Email_Model_Cron
     public function abandonedCarts()
     {
 
-		Mage::getModel( 'ddg_automation/sales_quote' )->proccessAbandonedCarts();
+        Mage::getModel('ddg_automation/sales_quote')->proccessAbandonedCarts();
 
     }
 
@@ -60,12 +67,13 @@ class Dotdigitalgroup_Email_Model_Cron
     public function reviewAndProductReminderSync()
     {
         //create product reminder campaigns
-        Mage::getModel('ddg_automation/sales_order')->createProductReminderReviewCampaigns();
+        Mage::getModel('ddg_automation/sales_order')
+            ->createProductReminderReviewCampaigns();
 
         //sync reviews
         $result = Mage::getModel('ddg_automation/review')->sync();
 
-	    return $result;
+        return $result;
     }
 
     /**
@@ -78,7 +86,7 @@ class Dotdigitalgroup_Email_Model_Cron
         // send order
         $orderResult = Mage::getModel('ddg_automation/sales_order')->sync();
 
-	    return $orderResult;
+        return $orderResult;
     }
 
     /**
@@ -105,7 +113,7 @@ class Dotdigitalgroup_Email_Model_Cron
         //send quote
         $quoteResult = $this->quoteSync();
 
-        return $orderResult['message'] . '  ' .$quoteResult['message'];
+        return $orderResult['message'] . '  ' . $quoteResult['message'];
     }
 
     /**
@@ -114,12 +122,15 @@ class Dotdigitalgroup_Email_Model_Cron
     public function subscribersAndGuestSync()
     {
         //sync subscribers
-	    $subscriberModel = Mage::getModel('ddg_automation/newsletter_subscriber');
-        $result = $subscriberModel->sync();
+        $subscriberModel = Mage::getModel(
+            'ddg_automation/newsletter_subscriber'
+        );
+        $result          = $subscriberModel->sync();
 
         //sync guests
         Mage::getModel('ddg_automation/customer_guest')->sync();
-	    return $result;
+
+        return $result;
     }
 
     /**
@@ -137,40 +148,46 @@ class Dotdigitalgroup_Email_Model_Cron
      */
     public function cleaning()
     {
-        $helper = Mage::helper('ddg/file');
-	    $archivedFolder = $helper->getArchiveFolder();
-	    $result = $helper->deleteDir($archivedFolder);
-	    $message = 'Cleaning cronjob result : ' . $result;
-	    $helper->log($message);
-	    Mage::helper('ddg')->rayLog($message, 'model/cron.php');
+        $helper         = Mage::helper('ddg/file');
+        $archivedFolder = $helper->getArchiveFolder();
+        $result         = $helper->deleteDir($archivedFolder);
+        $message        = 'Cleaning cronjob result : ' . $result;
+        $helper->log($message);
+        Mage::helper('ddg')->rayLog($message, 'model/cron.php');
 
-	    return $result;
+        return $result;
     }
 
 
-	/**
-	 * Last customer sync date.
-	 * @return bool|string
-	 */
-	public function getLastCustomerSync(){
+    /**
+     * Last customer sync date.
+     *
+     * @return bool|string
+     */
+    public function getLastCustomerSync()
+    {
 
-		$schedules = Mage::getModel('cron/schedule')->getCollection();
-		$schedules->getSelect()->limit(1)->order('executed_at DESC');
-		$schedules->addFieldToFilter('status', Mage_Cron_Model_Schedule::STATUS_SUCCESS)
-            ->addFieldToFilter('job_code', 'ddg_automation_customer_subscriber_guest_sync');
+        $schedules = Mage::getModel('cron/schedule')->getCollection();
+        $schedules->getSelect()->limit(1)->order('executed_at DESC');
+        $schedules->addFieldToFilter(
+            'status', Mage_Cron_Model_Schedule::STATUS_SUCCESS
+        )
+            ->addFieldToFilter(
+                'job_code', 'ddg_automation_customer_subscriber_guest_sync'
+            );
 
 
-		if ($schedules->getSize() == 0) {
-			return false;
-		}
-		$executedAt = $schedules->getFirstItem()->getExecutedAt();
+        if ($schedules->getSize() == 0) {
+            return false;
+        }
+        $executedAt = $schedules->getFirstItem()->getExecutedAt();
 
-		return Mage::getModel('core/date')->date(NULL, $executedAt);
-	}
+        return Mage::getModel('core/date')->date(null, $executedAt);
+    }
 
-	public function automationStatus()
-	{
-		Mage::getModel('ddg_automation/automation')->enrollment();
+    public function automationStatus()
+    {
+        Mage::getModel('ddg_automation/automation')->enrollment();
 
-	}
+    }
 }

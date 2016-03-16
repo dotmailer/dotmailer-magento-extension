@@ -6,6 +6,7 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
     const EMAIL_CONTACT_IMPORTED = 1;
     const EMAIL_CONTACT_NOT_IMPORTED = null;
     const EMAIL_SUBSCRIBER_NOT_IMPORTED = null;
+
     /**
      * constructor
      */
@@ -17,17 +18,20 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
 
     /**
      * Load contact by customer id
+     *
      * @param $customerId
+     *
      * @return mixed
      */
     public function loadByCustomerId($customerId)
     {
-        $collection =  $this->getCollection()
+        $collection = $this->getCollection()
             ->addFieldToFilter('customer_id', $customerId)
             ->setPageSize(1);
 
-        if($collection->count())
+        if ($collection->count()) {
             return $collection->getFirstItem();
+        }
 
         return $this;
     }
@@ -35,14 +39,14 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
     /**
      * get all customer contacts not imported for a website.
      *
-     * @param $websiteId
+     * @param     $websiteId
      * @param int $pageSize
      *
      * @return Dotdigitalgroup_Email_Model_Resource_Contact_Collection
      */
     public function getContactsToImportForWebsite($websiteId, $pageSize = 100)
     {
-        $collection =  $this->getCollection()
+        $collection = $this->getCollection()
             ->addFieldToFilter('website_id', $websiteId)
             ->addFieldToFilter('email_imported', array('null' => true))
             ->addFieldToFilter('customer_id', array('neq' => '0'));
@@ -55,8 +59,10 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
 
     /**
      * Get missing contacts.
-     * @param $websiteId
+     *
+     * @param     $websiteId
      * @param int $pageSize
+     *
      * @return mixed
      */
     public function getMissingContacts($websiteId, $pageSize = 100)
@@ -73,8 +79,10 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
 
     /**
      * Load Contact by Email.
+     *
      * @param $email
      * @param $websiteId
+     *
      * @return $this
      */
     public function loadByCustomerEmail($email, $websiteId)
@@ -90,12 +98,14 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
             $this->setEmail($email)
                 ->setWebsiteId($websiteId);
         }
+
         return $this;
     }
 
     /**
      * batch non imported subscribers for a website.
-     * @param $website
+     *
+     * @param     $website
      * @param int $limit
      *
      * @return Dotdigitalgroup_Email_Model_Resource_Contact_Collection
@@ -116,6 +126,7 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
 
     /**
      * get all not imported guests for a website.
+     *
      * @param $website
      *
      * @return Dotdigitalgroup_Email_Model_Resource_Contact_Collection
@@ -127,7 +138,7 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
             ->addFieldToFilter('email_imported', array('null' => true))
             ->addFieldToFilter('website_id', $website->getId());
 
-	    return $guestCollection;
+        return $guestCollection;
     }
 
     public function getNumberOfImportedContacs()
@@ -138,88 +149,106 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
         return $collection->getSize();
     }
 
-	/**
-	 * Get the number of customers for a website.
-	 * @param int $websiteId
-	 *
-	 * @return int
-	 */
-	public function getNumberCustomerContacts($websiteId = 0)
-	{
-		$countContacts = Mage::getModel('ddg_automation/contact')->getCollection()
-		    ->addFieldToFilter('customer_id', array('gt' => '0'))
-		    ->addFieldToFilter('website_id', $websiteId)
-		    ->getSize();
-		return $countContacts;
-	}
-
-	/**
-	 *
-	 * Get number of suppressed contacts as customer.
-	 * @param int $websiteId
-	 *
-	 * @return int
-	 */
-	public function getNumberCustomerSuppressed( $websiteId = 0 )
-	{
-		$countContacts = Mage::getModel('ddg_automation/contact')->getCollection()
-			->addFieldToFilter('customer_id', array('gt' => 0))
-			->addFieldToFilter('website_id', $websiteId)
-			->addFieldToFilter('suppressed', '1')
-			->getSize();
-
-		return $countContacts;
-	}
-
-	/**
-	 * Get number of synced customers.
-	 * @param int $websiteId
-	 *
-	 * @return int
-	 */
-	public function getNumberCustomerSynced( $websiteId = 0 )
-	{
-		$countContacts = Mage::getModel('ddg_automation/contact')->getCollection()
-			->addFieldToFilter('customer_id', array('gt' => 0))
-			->addFieldToFilter('website_id', $websiteId)
-			->addFieldToFilter('email_imported' , '1')
-			->getSize();
-
-		return $countContacts;
-
-	}
-
-	/**
-	 * Get number of subscribers synced.
-	 * @param int $websiteId
-	 *
-	 * @return int
-	 */
-	public function getNumberSubscribersSynced( $websiteId = 0 )
-	{
-		$countContacts = Mage::getModel('ddg_automation/contact')->getCollection()
-			->addFieldToFilter('subscriber_status', Dotdigitalgroup_Email_Model_Newsletter_Subscriber::STATUS_SUBSCRIBED)
-			->addFieldToFilter('subscriber_imported', '1')
-			->addFieldToFilter('website_id', $websiteId)
-			->getSize();
-
-		return $countContacts;
-	}
-
-	/**
-	 * Get number of subscribers.
-	 * @param int $websiteId
-	 *
-	 * @return int
-	 */
-	public function getNumberSubscribers( $websiteId = 0 )
-	{
-
-		$countContacts = Mage::getModel('ddg_automation/contact')->getCollection()
-			->addFieldToFilter('subscriber_status', Dotdigitalgroup_Email_Model_Newsletter_Subscriber::STATUS_SUBSCRIBED)
-			->addFieldToFilter('website_id', $websiteId)
+    /**
+     * Get the number of customers for a website.
+     *
+     * @param int $websiteId
+     *
+     * @return int
+     */
+    public function getNumberCustomerContacts($websiteId = 0)
+    {
+        $countContacts = Mage::getModel('ddg_automation/contact')
+            ->getCollection()
+            ->addFieldToFilter('customer_id', array('gt' => '0'))
+            ->addFieldToFilter('website_id', $websiteId)
             ->getSize();
-		return $countContacts;
-	}
+
+        return $countContacts;
+    }
+
+    /**
+     *
+     * Get number of suppressed contacts as customer.
+     *
+     * @param int $websiteId
+     *
+     * @return int
+     */
+    public function getNumberCustomerSuppressed($websiteId = 0)
+    {
+        $countContacts = Mage::getModel('ddg_automation/contact')
+            ->getCollection()
+            ->addFieldToFilter('customer_id', array('gt' => 0))
+            ->addFieldToFilter('website_id', $websiteId)
+            ->addFieldToFilter('suppressed', '1')
+            ->getSize();
+
+        return $countContacts;
+    }
+
+    /**
+     * Get number of synced customers.
+     *
+     * @param int $websiteId
+     *
+     * @return int
+     */
+    public function getNumberCustomerSynced($websiteId = 0)
+    {
+        $countContacts = Mage::getModel('ddg_automation/contact')
+            ->getCollection()
+            ->addFieldToFilter('customer_id', array('gt' => 0))
+            ->addFieldToFilter('website_id', $websiteId)
+            ->addFieldToFilter('email_imported', '1')
+            ->getSize();
+
+        return $countContacts;
+
+    }
+
+    /**
+     * Get number of subscribers synced.
+     *
+     * @param int $websiteId
+     *
+     * @return int
+     */
+    public function getNumberSubscribersSynced($websiteId = 0)
+    {
+        $countContacts = Mage::getModel('ddg_automation/contact')
+            ->getCollection()
+            ->addFieldToFilter(
+                'subscriber_status',
+                Dotdigitalgroup_Email_Model_Newsletter_Subscriber::STATUS_SUBSCRIBED
+            )
+            ->addFieldToFilter('subscriber_imported', '1')
+            ->addFieldToFilter('website_id', $websiteId)
+            ->getSize();
+
+        return $countContacts;
+    }
+
+    /**
+     * Get number of subscribers.
+     *
+     * @param int $websiteId
+     *
+     * @return int
+     */
+    public function getNumberSubscribers($websiteId = 0)
+    {
+
+        $countContacts = Mage::getModel('ddg_automation/contact')
+            ->getCollection()
+            ->addFieldToFilter(
+                'subscriber_status',
+                Dotdigitalgroup_Email_Model_Newsletter_Subscriber::STATUS_SUBSCRIBED
+            )
+            ->addFieldToFilter('website_id', $websiteId)
+            ->getSize();
+
+        return $countContacts;
+    }
 
 }

@@ -2,6 +2,7 @@
 
 class Dotdigitalgroup_Email_Model_Adminhtml_Source_Sync_Catalog_Attributes
 {
+
     /**
      * all attributes type catalog
      *
@@ -9,20 +10,24 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Sync_Catalog_Attributes
      */
     public function toOptionArray()
     {
-        $attributes = Mage::getResourceModel('catalog/product_attribute_collection')->addVisibleFilter();
+        $attributes     = Mage::getResourceModel(
+            'catalog/product_attribute_collection'
+        )->addVisibleFilter();
         $attributeArray = array();
 
         //exclude these from showing in the options
-        $exclude = array('gallery', 'image', 'media_gallery', 'small_image', 'thumbnail');
+        $exclude = array('gallery', 'image', 'media_gallery', 'small_image',
+                         'thumbnail');
 
         foreach ($attributes as $attribute) {
-            if (!in_array($attribute->getData('attribute_code'), $exclude)) {
+            if ( ! in_array($attribute->getData('attribute_code'), $exclude)) {
                 $attributeArray[] = array(
                     'label' => $attribute->getData('frontend_label'),
                     'value' => $attribute->getData('attribute_code')
                 );
             }
         }
+
         return $attributeArray;
     }
 }

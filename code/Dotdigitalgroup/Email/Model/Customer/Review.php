@@ -2,15 +2,16 @@
 
 class Dotdigitalgroup_Email_Model_Customer_Review
 {
-    /**
-     * @var int
-     */
-    public  $id;
 
     /**
      * @var int
      */
-    public  $customer_id;
+    public $id;
+
+    /**
+     * @var int
+     */
+    public $customer_id;
 
     /**
      * @var string
@@ -44,21 +45,25 @@ class Dotdigitalgroup_Email_Model_Customer_Review
 
     /**
      * @param $email
+     *
      * @return $this
      */
     public function setEmail($email)
     {
         $this->email = $email;
+
         return $this;
     }
 
     /**
      * @param $customer_id
+     *
      * @return $this
      */
     public function setCustomerId($customer_id)
     {
-        $this->customer_id = (int) $customer_id;
+        $this->customer_id = (int)$customer_id;
+
         return $this;
     }
 
@@ -67,16 +72,18 @@ class Dotdigitalgroup_Email_Model_Customer_Review
      */
     public function getCustomerId()
     {
-        return (int) $this->customer_id;
+        return (int)$this->customer_id;
     }
 
     /**
      * @param $id
+     *
      * @return $this
      */
     public function setId($id)
     {
-        $this->id = (int) $id;
+        $this->id = (int)$id;
+
         return $this;
     }
 
@@ -85,7 +92,7 @@ class Dotdigitalgroup_Email_Model_Customer_Review
      */
     public function getId()
     {
-        return (int) $this->id;
+        return (int)$this->id;
     }
 
     /**
@@ -103,6 +110,7 @@ class Dotdigitalgroup_Email_Model_Customer_Review
      * set review date.
      *
      * @param $date
+     *
      * @return $this;
      */
     public function setReviewDate($date)
@@ -110,6 +118,7 @@ class Dotdigitalgroup_Email_Model_Customer_Review
         $created_at = new Zend_Date($date, Zend_Date::ISO_8601);
 
         $this->review_date = $created_at->toString(Zend_Date::ISO_8601);;
+
         return $this;
     }
 
@@ -125,12 +134,14 @@ class Dotdigitalgroup_Email_Model_Customer_Review
      * set product
      *
      * @param Mage_Catalog_Model_Product $product
+     *
      * @return $this
      */
     public function setProduct(Mage_Catalog_Model_Product $product)
     {
         $this->setProductName($product->getName());
         $this->setProductSku($product->getSku());
+
         return $this;
     }
 
@@ -138,13 +149,14 @@ class Dotdigitalgroup_Email_Model_Customer_Review
      * set review data
      *
      * @param Mage_Review_Model_Review $review $product
+     *
      * @return $this
      */
     public function setReviewData(Mage_Review_Model_Review $review)
     {
-        $store = Mage::app()->getStore($review->getStoreId());
+        $store       = Mage::app()->getStore($review->getStoreId());
         $websiteName = $store->getWebsite()->getName();
-        $storeName = $store->getName();
+        $storeName   = $store->getName();
         $this->setId($review->getReviewId())
             ->setWebsiteName($websiteName)
             ->setStoreName($storeName)
@@ -195,11 +207,13 @@ class Dotdigitalgroup_Email_Model_Customer_Review
      * set website name
      *
      * @param $name
+     *
      * @return $this
      */
     public function setWebsiteName($name)
     {
         $this->website_name = $name;
+
         return $this;
     }
 
@@ -215,11 +229,13 @@ class Dotdigitalgroup_Email_Model_Customer_Review
      * set store name
      *
      * @param $name
+     *
      * @return $this
      */
     public function setStoreName($name)
     {
         $this->store_name = $name;
+
         return $this;
     }
 

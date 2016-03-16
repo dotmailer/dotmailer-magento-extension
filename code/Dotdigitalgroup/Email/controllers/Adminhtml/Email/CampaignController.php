@@ -1,7 +1,9 @@
 <?php
 
-class Dotdigitalgroup_Email_Adminhtml_Email_CampaignController extends Mage_Adminhtml_Controller_Action
+class Dotdigitalgroup_Email_Adminhtml_Email_CampaignController
+    extends Mage_Adminhtml_Controller_Action
 {
+
     /**
      * constructor - set the used module name
      */
@@ -11,8 +13,8 @@ class Dotdigitalgroup_Email_Adminhtml_Email_CampaignController extends Mage_Admi
     }
 
     /**
-	 * Email campaigns.
-	 */
+     * Email campaigns.
+     */
     public function indexAction()
     {
         $this->_title($this->__('Email'))
@@ -23,67 +25,84 @@ class Dotdigitalgroup_Email_Adminhtml_Email_CampaignController extends Mage_Admi
     }
 
     /**
-	 * Delete campaign.
-	 */
+     * Delete campaign.
+     */
     public function deleteAction()
-	{
+    {
         if ($id = $this->getRequest()->getParam('id')) {
             $campaign = Mage::getModel('ddg_automation/campaign')->setId($id);
             try {
                 $campaign->delete();
-                $this->_getSession()->addSuccess(Mage::helper('ddg')->__('The campaign has been deleted.'));
-            }
-            catch (Exception $e) {
+                $this->_getSession()->addSuccess(
+                    Mage::helper('ddg')->__('The campaign has been deleted.')
+                );
+            } catch (Exception $e) {
                 $this->_getSession()->addError($e->getMessage());
             }
         }
-        $this->getResponse()->setRedirect($this->getUrl('*/*/', array('store'=>$this->getRequest()->getParam('store'))));
+        $this->getResponse()->setRedirect(
+            $this->getUrl(
+                '*/*/', array('store' => $this->getRequest()->getParam('store'))
+            )
+        );
     }
 
     /**
-	 * Delete mass campaigns.
-	 */
+     * Delete mass campaigns.
+     */
     public function massDeleteAction()
-	{
+    {
         $campaignIds = $this->getRequest()->getParam('campaign');
-        if (!is_array($campaignIds)) {
-            $this->_getSession()->addError($this->__('Please select campaigns.'));
+        if ( ! is_array($campaignIds)) {
+            $this->_getSession()->addError(
+                $this->__('Please select campaigns.')
+            );
         } else {
-            $num = Mage::getResourceModel('ddg_automation/campaign')->massDelete($campaignIds);
-            if(is_int($num)){
+            $num = Mage::getResourceModel('ddg_automation/campaign')
+                ->massDelete($campaignIds);
+            if (is_int($num)) {
                 $this->_getSession()->addSuccess(
-                    Mage::helper('ddg')->__('Total of %d record(s) have been deleted.', $num));
-            }
-            else
+                    Mage::helper('ddg')->__(
+                        'Total of %d record(s) have been deleted.', $num
+                    )
+                );
+            } else {
                 $this->_getSession()->addError($num->getMessage());
+            }
         }
         $this->_redirect('*/*/index');
     }
 
     /**
-	 * Mass mark for resend campaings.
-	 */
+     * Mass mark for resend campaings.
+     */
     public function massResendAction()
     {
         $campaignIds = $this->getRequest()->getParam('campaign');
-        if (!is_array($campaignIds)) {
-            $this->_getSession()->addError($this->__('Please select campaigns.'));
+        if ( ! is_array($campaignIds)) {
+            $this->_getSession()->addError(
+                $this->__('Please select campaigns.')
+            );
         } else {
-            $num = Mage::getResourceModel('ddg_automation/campaign')->massResend($campaignIds);
+            $num = Mage::getResourceModel('ddg_automation/campaign')
+                ->massResend($campaignIds);
 
-	        if(is_int($num)){
+            if (is_int($num)) {
                 $this->_getSession()->addSuccess(
-                    Mage::helper('ddg')->__('Total of %d record(s) have resend .', $num)
+                    Mage::helper('ddg')->__(
+                        'Total of %d record(s) have resend .', $num
+                    )
                 );
-            }else
+            } else {
                 $this->_getSession()->addError($num->getMessage());
+            }
         }
         $this->_redirect('*/*/index');
     }
 
     /**
-	 * main page.
-	 */
+     * main page.
+     */
     public function gridAction()
     {
         $this->loadLayout();
@@ -93,7 +112,9 @@ class Dotdigitalgroup_Email_Adminhtml_Email_CampaignController extends Mage_Admi
 
     protected function _isAllowed()
     {
-        return Mage::getSingleton('admin/session')->isAllowed('email_connector/reports/email_connector_campaign');
+        return Mage::getSingleton('admin/session')->isAllowed(
+            'email_connector/reports/email_connector_campaign'
+        );
     }
 
 }

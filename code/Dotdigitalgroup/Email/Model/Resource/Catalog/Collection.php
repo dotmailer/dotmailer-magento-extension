@@ -1,7 +1,9 @@
 <?php
 
-class Dotdigitalgroup_Email_Model_Resource_Catalog_Collection extends Mage_Core_Model_Resource_Db_Collection_Abstract
+class Dotdigitalgroup_Email_Model_Resource_Catalog_Collection
+    extends Mage_Core_Model_Resource_Db_Collection_Abstract
 {
+
     /**
      * constructor.
      */

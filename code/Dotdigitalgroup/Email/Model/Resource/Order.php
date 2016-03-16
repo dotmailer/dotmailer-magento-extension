@@ -1,11 +1,13 @@
 <?php
 
-class Dotdigitalgroup_Email_Model_Resource_Order extends Mage_Core_Model_Resource_Db_Abstract
+class Dotdigitalgroup_Email_Model_Resource_Order
+    extends Mage_Core_Model_Resource_Db_Abstract
 {
-	/**
-	 * cosntructor.
-	 */
-	protected function _construct()
+
+    /**
+     * cosntructor.
+     */
+    protected function _construct()
     {
         $this->_init('ddg_automation/order', 'email_order_id');
     }
@@ -17,7 +19,9 @@ class Dotdigitalgroup_Email_Model_Resource_Order extends Mage_Core_Model_Resourc
      */
     public function getOrderTableDescription()
     {
-        return $this->getReadConnection()->describeTable($this->getTable('sales/order'));
+        return $this->getReadConnection()->describeTable(
+            $this->getTable('sales/order')
+        );
     }
 
     /**
@@ -27,14 +31,19 @@ class Dotdigitalgroup_Email_Model_Resource_Order extends Mage_Core_Model_Resourc
      */
     public function resetOrders()
     {
-        try{
+        try {
             $conn = $this->_getWriteAdapter();
-            $num = $conn->update($this->getMainTable(),
-                array('email_imported' => new Zend_Db_Expr('null'), 'modified' => new Zend_Db_Expr('null')),
-                $conn->quoteInto('email_imported is ?', new Zend_Db_Expr('not null'))
+            $num  = $conn->update(
+                $this->getMainTable(),
+                array('email_imported' => new Zend_Db_Expr('null'),
+                      'modified'       => new Zend_Db_Expr('null')),
+                $conn->quoteInto(
+                    'email_imported is ?', new Zend_Db_Expr('not null')
+                )
             );
+
             return $num;
-        }catch (Exception $e){
+        } catch (Exception $e) {
             Mage::logException($e);
         }
     }

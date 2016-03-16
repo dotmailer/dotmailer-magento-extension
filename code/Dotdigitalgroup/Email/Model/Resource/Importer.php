@@ -1,7 +1,9 @@
 <?php
 
-class Dotdigitalgroup_Email_Model_Resource_Importer extends Mage_Core_Model_Resource_Db_Abstract
+class Dotdigitalgroup_Email_Model_Resource_Importer
+    extends Mage_Core_Model_Resource_Db_Abstract
 {
+
     /**
      * cosntructor.
      */
@@ -14,16 +16,19 @@ class Dotdigitalgroup_Email_Model_Resource_Importer extends Mage_Core_Model_Reso
      * Mark a contact to be resend.
      *
      * @param $ids
+     *
      * @return Exception|int
      */
     public function massResend($ids)
     {
         try {
             $conn = $this->_getWriteAdapter();
-            $num = $conn->update($this->getMainTable(),
+            $num  = $conn->update(
+                $this->getMainTable(),
                 array('import_status' => 0),
                 array('id IN(?)' => $ids)
             );
+
             return $num;
         } catch (Exception $e) {
             return $e;
@@ -34,15 +39,18 @@ class Dotdigitalgroup_Email_Model_Resource_Importer extends Mage_Core_Model_Reso
      * Mass delete contacts.
      *
      * @param $ids
+     *
      * @return Exception|int
      */
     public function massDelete($ids)
     {
         try {
             $conn = $this->_getWriteAdapter();
-            $num = $conn->delete($this->getMainTable(),
+            $num  = $conn->delete(
+                $this->getMainTable(),
                 array('id IN(?)' => $ids)
             );
+
             return $num;
         } catch (Exception $e) {
             return $e;

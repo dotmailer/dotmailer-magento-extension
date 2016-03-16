@@ -2,7 +2,8 @@
 
 class Dotdigitalgroup_Email_Block_Adminhtml_Customer_Tab
     extends Mage_Adminhtml_Block_Widget
-    implements Mage_Adminhtml_Block_Widget_Tab_Interface {
+    implements Mage_Adminhtml_Block_Widget_Tab_Interface
+{
 
     public function getTabLabel()
     {

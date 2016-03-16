@@ -2,29 +2,32 @@
 
 class Dotdigitalgroup_Email_Model_Connector_Account
 {
-    protected  $_api_username;
-    protected  $_api_password;
-    protected  $_limit;
-    protected  $_contactBookId;
-    protected  $_subscriberBookId;
-    protected  $_websites = array();
-    protected  $_csv_headers;
-    protected  $_customers_filename;
-    protected  $_subscribers_filename;
-    protected  $_mapping_hash;
-    protected  $_contacts = array();
-    protected  $_orders = array();
-    protected  $_orderIds = array();
+
+    protected $_apiUsername;
+    protected $_apiPassword;
+    protected $_limit;
+    protected $_contactBookId;
+    protected $_subscriberBookId;
+    protected $_websites = array();
+    protected $_csvHeaders;
+    protected $_customersFilename;
+    protected $_subscribersFilename;
+    protected $_mappingHash;
+    protected $_contacts = array();
+    protected $_orders = array();
+    protected $_orderIds = array();
     protected $_ordersForSingleSync = array();
     protected $_orderIdsForSingleSync = array();
 
     /**
      * @param $api_password
+     *
      * @return $this
      */
     public function setApiPassword($api_password)
     {
-        $this->_api_password = $api_password;
+        $this->_apiPassword = $api_password;
+
         return $this;
     }
 
@@ -33,16 +36,18 @@ class Dotdigitalgroup_Email_Model_Connector_Account
      */
     public function getApiPassword()
     {
-        return $this->_api_password;
+        return $this->_apiPassword;
     }
 
     /**
      * @param $api_username
+     *
      * @return $this
      */
     public function setApiUsername($api_username)
     {
-        $this->_api_username = $api_username;
+        $this->_apiUsername = $api_username;
+
         return $this;
     }
 
@@ -51,7 +56,7 @@ class Dotdigitalgroup_Email_Model_Connector_Account
      */
     public function getApiUsername()
     {
-        return $this->_api_username;
+        return $this->_apiUsername;
     }
 
     /**
@@ -75,7 +80,7 @@ class Dotdigitalgroup_Email_Model_Connector_Account
      */
     public function setContacts($contacts)
     {
-        if (!empty($this->_contacts)) {
+        if ( ! empty($this->_contacts)) {
             $this->_contacts += $contacts;
         } else {
             $this->_contacts[] = $contacts;
@@ -95,7 +100,7 @@ class Dotdigitalgroup_Email_Model_Connector_Account
      */
     public function setCustomersFilename($customers_filename)
     {
-        $this->_customers_filename = $customers_filename;
+        $this->_customersFilename = $customers_filename;
     }
 
     /**
@@ -103,7 +108,7 @@ class Dotdigitalgroup_Email_Model_Connector_Account
      */
     public function getCustomersFilename()
     {
-        return $this->_customers_filename;
+        return $this->_customersFilename;
     }
 
     /**
@@ -123,11 +128,11 @@ class Dotdigitalgroup_Email_Model_Connector_Account
     }
 
     /**
-     * @param mixed $mapping_hash
+     * @param mixed $mappingHash
      */
-    public function setMappingHash($mapping_hash)
+    public function setMappingHash($mappingHash)
     {
-        $this->_mapping_hash = $mapping_hash;
+        $this->_mappingHash = $mappingHash;
     }
 
     /**
@@ -135,7 +140,7 @@ class Dotdigitalgroup_Email_Model_Connector_Account
      */
     public function getMappingHash()
     {
-        return $this->_mapping_hash;
+        return $this->_mappingHash;
     }
 
     /**
@@ -178,7 +183,7 @@ class Dotdigitalgroup_Email_Model_Connector_Account
      */
     public function setSubscribersFilename($subscribers_filename)
     {
-        $this->_subscribers_filename = $subscribers_filename;
+        $this->_subscribersFilename = $subscribers_filename;
     }
 
     /**
@@ -186,7 +191,7 @@ class Dotdigitalgroup_Email_Model_Connector_Account
      */
     public function getSubscribersFilename()
     {
-        return $this->_subscribers_filename;
+        return $this->_subscribersFilename;
     }
 
     /**
@@ -194,7 +199,7 @@ class Dotdigitalgroup_Email_Model_Connector_Account
      */
     public function setCsvHeaders($csv_headers)
     {
-        $this->_csv_headers = $csv_headers;
+        $this->_csvHeaders = $csv_headers;
     }
 
     /**
@@ -202,8 +207,9 @@ class Dotdigitalgroup_Email_Model_Connector_Account
      */
     public function getCsvHeaders()
     {
-        return $this->_csv_headers;
+        return $this->_csvHeaders;
     }
+
     /**
      * @param mixed $websites
      */

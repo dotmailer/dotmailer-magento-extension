@@ -1,7 +1,9 @@
 <?php
 
-class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Analysis_Subscriber extends  Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Analysis
+class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Analysis_Subscriber
+    extends Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Analysis
 {
+
     protected $_store = 0;
     protected $_group = 0;
     protected $_website = 0;
@@ -15,8 +17,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Analysis_Subscriber e
     {
         parent::_construct();
 
-        $this->_store = $this->getRequest()->getParam('store');
-        $this->_group = $this->getRequest()->getParam('group');
+        $this->_store   = $this->getRequest()->getParam('store');
+        $this->_group   = $this->getRequest()->getParam('group');
         $this->_website = $this->getRequest()->getParam('website');
         $this->setTemplate('connector/dashboard/tabs/data.phtml');
     }
@@ -30,9 +32,18 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Analysis_Subscriber e
     protected function _prepareLayout()
     {
         $lifetimeSubscribers = $this->getSubscriberInformationForTab();
-        $this->addTotal($this->__('Total Number Of Subscribers'), $lifetimeSubscribers->getTotalSubscriber(), true);
-        $this->addTotal($this->__('Subscribers Who Are Also Customers'), $lifetimeSubscribers->getTotalSubscriberCustomer(), true);
-        $this->addTotal($this->__('Average Subscribers Created Per Day'), $lifetimeSubscribers->getSubscribersPerDay(), true);
+        $this->addTotal(
+            $this->__('Total Number Of Subscribers'),
+            $lifetimeSubscribers->getTotalSubscriber(), true
+        );
+        $this->addTotal(
+            $this->__('Subscribers Who Are Also Customers'),
+            $lifetimeSubscribers->getTotalSubscriberCustomer(), true
+        );
+        $this->addTotal(
+            $this->__('Average Subscribers Created Per Day'),
+            $lifetimeSubscribers->getSubscribersPerDay(), true
+        );
     }
 
     /**
@@ -42,8 +53,13 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Analysis_Subscriber e
      */
     protected function getSubscriberInformationForTab()
     {
-        $subscriberAnalysisModel = Mage::getModel('ddg_automation/adminhtml_dashboard_tabs_analysis_subscriber');
-        return $subscriberAnalysisModel->getLifetimeSubscribers($this->_store, $this->_website, $this->_group);
+        $subscriberAnalysisModel = Mage::getModel(
+            'ddg_automation/adminhtml_dashboard_tabs_analysis_subscriber'
+        );
+
+        return $subscriberAnalysisModel->getLifetimeSubscribers(
+            $this->_store, $this->_website, $this->_group
+        );
     }
 
     /**
