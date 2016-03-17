@@ -18,7 +18,7 @@ class Dotdigitalgroup_Email_Helper_File
 
     public function __construct()
     {
-        $this->_outputFolder          = Mage::getBaseDir('var') . DS . 'export'
+        $this->_outputFolder        = Mage::getBaseDir('var') . DS . 'export'
             . DS . 'email';
         $this->_outputArchiveFolder = $this->_outputFolder . DS . 'archive';
 
@@ -136,7 +136,8 @@ class Dotdigitalgroup_Email_Helper_File
 
     protected function arrayToCsv(array &$fields, $delimiter, $enclosure,
         $encloseAll = false, $nullToMysqlNull = false
-    ) {
+    ) 
+    {
         $delimiterEsc = preg_quote($delimiter, '/');
         $enclosureEsc = preg_quote($enclosure, '/');
 
@@ -154,8 +155,8 @@ class Dotdigitalgroup_Email_Helper_File
                 )
             ) {
                 $output[] = $enclosure . str_replace(
-                        $enclosure, $enclosure . $enclosure, $field
-                    ) . $enclosure;
+                    $enclosure, $enclosure . $enclosure, $field
+                ) . $enclosure;
             } else {
                 $output[] = $field;
             }

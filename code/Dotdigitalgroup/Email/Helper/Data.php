@@ -41,8 +41,8 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
     public function auth($authRequest)
     {
         if ($authRequest != Mage::getStoreConfig(
-                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_CONTENT_PASSCODE
-            )
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_CONTENT_PASSCODE
+        )
         ) {
             $this->getRaygunClient()->Send(
                 'Authentication failed with code :' . $authRequest
@@ -592,7 +592,8 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function rayLog($message, $filename = 'apiconnector/client.php',
         $line = 1, $tags = array()
-    ) {
+    ) 
+    {
         //check if raygun has code enabled
         if ( ! $this->raygunEnabled()) {
             return;
@@ -757,7 +758,8 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function updateDataFields($email, Mage_Core_Model_Website $website,
         $storeName
-    ) {
+    ) 
+    {
         $data = array();
         if ($storeName = $website->getConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_STORE_NAME
@@ -1208,23 +1210,23 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         return $dynamicStyle = array(
             'nameStyle'          => explode(
                 ',', Mage::getStoreConfig(
-                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_NAME_STYLE
-            )
+                    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_NAME_STYLE
+                )
             ),
             'priceStyle'         => explode(
                 ',', Mage::getStoreConfig(
-                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_PRICE_STYLE
-            )
+                    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_PRICE_STYLE
+                )
             ),
             'linkStyle'          => explode(
                 ',', Mage::getStoreConfig(
-                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_LINK_STYLE
-            )
+                    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_LINK_STYLE
+                )
             ),
             'otherStyle'         => explode(
                 ',', Mage::getStoreConfig(
-                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_OTHER_STYLE
-            )
+                    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_OTHER_STYLE
+                )
             ),
             'nameColor'          => Mage::getStoreConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_NAME_COLOR
