@@ -150,14 +150,6 @@
                     </ddg_data_mapping_reset>
                 </observers>
             </admin_system_config_changed_section_connector_data_mapping>
-            <admin_system_config_changed_section_connector_sync_settings>
-                <observers>
-                    <ddg_sys_check_feature_active>
-                        <class>ddg_automation/adminhtml_observer</class>
-                        <method>checkFeatureActive</method>
-                    </ddg_sys_check_feature_active>
-                </observers>
-            </admin_system_config_changed_section_connector_sync_settings>
             <customer_save_after>
                 <observers>
                     <ddg_customer_save_after>
