@@ -79,16 +79,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_General
             'MainEmail'                  => $this->__('Not Available'),
             'AvailableEmailSendsCredits' => $this->__('Not Available')
         );
-        $this->group['data']    = array(
-            'Title'                                 => 'Data',
-            'TransactionalDataAllowanceInMegabytes' => $this->__(
-                'Not Available'
-            ),
-            'TransactionalDataUsageInMegabytes'     => $this->__(
-                'Not Available'
-            )
-        );
-        $this->group['api']     = array(
+
+        $this->group['api'] = array(
             'Title'             => 'Api',
             'APILocale'         => $this->__('Not Available'),
             'ApiCallsRemaining' => $this->__('Not Available')
