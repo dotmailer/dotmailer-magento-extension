@@ -28,7 +28,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
 			$contactEmail = Mage::getModel('ddg_automation/contact')->loadByCustomerEmail($email, $websiteId);
 
 			// only for subsribers
-			if ($subscriberStatus == Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED) {
+			if ($subscriberStatus == Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED) {
 				//set contact as subscribed
 				$contactEmail->setSubscriberStatus( $subscriberStatus )
 					->setIsSubscriber('1');
@@ -43,24 +43,6 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
 				$contactEmail->setSuppressed(null);
 
 				//not subscribed
-			} else {
-				//skip if contact is suppressed
-				if ($contactEmail->getSuppressed())
-					return $this;
-
-				//update contact id for the subscriber
-				$contactId = $contactEmail->getContactId();
-				//get the contact id
-				if ( !$contactId ) {
-					Mage::getModel('ddg_automation/importer')->registerQueue(
-						Dotdigitalgroup_Email_Model_Importer::IMPORT_TYPE_SUBSCRIBER_UPDATE,
-						array('email' => $email, 'id' => $contactEmail->getId()),
-						Dotdigitalgroup_Email_Model_Importer::MODE_SUBSCRIBER_UPDATE,
-						$websiteId
-					);
-				}
-				$contactEmail->setIsSubscriber(null)
-					->setSubscriberStatus(Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED);
 			}
 
 			// fix for a multiple hit of the observer
