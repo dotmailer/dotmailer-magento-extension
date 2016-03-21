@@ -14,7 +14,6 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
     const MODE_SINGLE_DELETE = 'Single_Delete';
     const MODE_CONTACT_DELETE = 'Contact_Delete';
     const MODE_CONTACT_EMAIL_UPDATE = 'Contact_Email_Update';
-    const MODE_SUBSCRIBER_UPDATE = 'Subscriber_Update';
     const MODE_SUBSCRIBER_RESUBSCRIBED = 'Subscriber_Resubscribed';
 
     //import type
@@ -22,13 +21,14 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
     const IMPORT_TYPE_ORDERS = 'Orders';
     const IMPORT_TYPE_WISHLIST = 'Wishlist';
     const IMPORT_TYPE_REVIEWS = 'Reviews';
-    const IMPORT_TYPE_CATALOG = 'Catalog_Default';
     const IMPORT_TYPE_QUOTE = 'Quote';
     const IMPORT_TYPE_SUBSCRIBERS = 'Subscriber';
     const IMPORT_TYPE_GUEST = 'Guest';
     const IMPORT_TYPE_CONTACT_UPDATE = 'Contact';
-    const IMPORT_TYPE_SUBSCRIBER_UPDATE = 'Subscriber';
     const IMPORT_TYPE_SUBSCRIBER_RESUBSCRIBED = 'Subscriber';
+
+    //sync limits
+    const SYNC_SINGLE_LIMIT_NUMBER = 100;
 
     protected $_reasons = array(
         'Globally Suppressed',
@@ -47,6 +47,11 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
         'RejectedByWatchdog', 'InvalidFileFormat', 'Unknown',
         'Failed', 'ExceedsAllowedContactLimit', 'NotAvailableInThisVersion'
     );
+
+    protected $_bulkPriority;
+    protected $_singlePriority;
+    protected $_totalItems;
+    protected $_bulkSyncLimit;
 
     /**
      * constructor
@@ -103,76 +108,67 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
         }
     }
 
-    /**
-     * start point. importer queue processor. check if un-finished import exist.
-     *
-     * @return bool
-     */
-    public function processQueue()
+    protected function _checkImportStatus()
     {
         $helper = Mage::helper('ddg');
         $helper->allowResourceFullExecution();
-        if ($item = $this->_getQueue(true)) {
-            $websiteId = $item->getWebsiteId();
-            $enabled = $helper->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED, $websiteId);
-            if ($enabled) {
+        if ($items = $this->_getImportingItems($this->_bulkSyncLimit)) {
+            foreach($items as $item) {
+                $websiteId = $item->getWebsiteId();
                 $client = Mage::helper('ddg')->getWebsiteApiClient($websiteId);
-                if (
-                    $item->getImportType() == self::IMPORT_TYPE_CONTACT or
-                    $item->getImportType() == self::IMPORT_TYPE_SUBSCRIBERS or
-                    $item->getImportType() == self::IMPORT_TYPE_GUEST
+                if ($client) {
+                    if (
+                        $item->getImportType() == self::IMPORT_TYPE_CONTACT or
+                        $item->getImportType() == self::IMPORT_TYPE_SUBSCRIBERS or
+                        $item->getImportType() == self::IMPORT_TYPE_GUEST
 
-                ) {
-                    $response = $client->getContactsImportByImportId($item->getImportId());
-                } else {
-                    $response = $client->getContactsTransactionalDataImportByImportId($item->getImportId());
-                }
-                //if curl error 28
-                $curlError = $client->getCurlError();
-                if ($curlError) {
-                    $item->setMessage($curlError)
-                        ->save();
-                } else {
-                    if ($response && !isset($response->message)) {
-                        if ($response->status == 'Finished') {
-                            $now = Mage::getSingleton('core/date')->gmtDate();
-                            $item->setImportStatus(self::IMPORTED)
-                                ->setImportFinished($now)
-                                ->setMessage('')
-                                ->save();
-
-                            if (
-                                $item->getImportType() == self::IMPORT_TYPE_CONTACT or
-                                $item->getImportType() == self::IMPORT_TYPE_SUBSCRIBERS or
-                                $item->getImportType() == self::IMPORT_TYPE_GUEST
-
-                            ){
-                                if($item->getImportId())
-                                    $this->_processContactImportReportFaults($item->getImportId(), $websiteId);
-                            }
-
-                            $this->_processQueue();
-                        } elseif (in_array($response->status, $this->import_statuses)) {
-                            $item->setImportStatus(self::FAILED)
-                                ->setMessage('Import failed with status '.$response->status)
-                                ->save();
-
-                            $this->_processQueue();
-                        }
+                    ) {
+                        $response = $client->getContactsImportByImportId($item->getImportId());
+                    } else {
+                        $response = $client->getContactsTransactionalDataImportByImportId($item->getImportId());
                     }
-                    if ($response && isset($response->message)) {
-                        $item->setImportStatus(self::FAILED)
-                            ->setMessage($response->message)
+                    //if curl error 28
+                    $curlError = $client->getCurlError();
+                    if ($curlError) {
+                        $item->setMessage($curlError)
+                            ->setImportStatus(self::FAILED)
                             ->save();
+                    } else {
+                        if ($response && !isset($response->message)) {
+                            if ($response->status == 'Finished') {
+                                $now = Mage::getSingleton('core/date')->gmtDate();
+                                $item->setImportStatus(self::IMPORTED)
+                                    ->setImportFinished($now)
+                                    ->setMessage('')
+                                    ->save();
+                                if (
+                                    $item->getImportType() == self::IMPORT_TYPE_CONTACT or
+                                    $item->getImportType() == self::IMPORT_TYPE_SUBSCRIBERS or
+                                    $item->getImportType() == self::IMPORT_TYPE_GUEST
 
-                        $this->_processQueue();
+                                ) {
+                                    if ($item->getImportId()) {
+                                        $this->_processContactImportReportFaults($item->getImportId(), $websiteId);
+                                    }
+                                }
+                            } elseif (in_array($response->status, $this->import_statuses)) {
+                                $item->setImportStatus(self::FAILED)
+                                    ->setMessage('Import failed with status ' . $response->status)
+                                    ->save();
+                            }else{
+                                //Not finished
+                                $this->_totalItems += 1;
+                            }
+                        }
+                        if ($response && isset($response->message)) {
+                            $item->setImportStatus(self::FAILED)
+                                ->setMessage($response->message)
+                                ->save();
+                        }
                     }
                 }
             }
-        } else {
-            $this->_processQueue();
         }
-        return true;
     }
 
     protected function _processContactImportReportFaults($id, $websiteId)
@@ -197,203 +193,209 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
         }
     }
 
-    /**
-     * actual importer queue processor
-     */
-    protected function _processQueue() {
-        if ($item = $this->_getQueue()) {
-            $helper = Mage::helper('ddg');
-            $websiteId = $item->getWebsiteId();
-            $client = $helper->getWebsiteApiClient($websiteId);
-            $now = Mage::getSingleton('core/date')->gmtDate();
-            $error = false;
+    public function processQueue() {
+        //Set items to 0
+        $this->_totalItems = 0;
 
-            if ( //import requires file
-                $item->getImportType() == self::IMPORT_TYPE_CONTACT or
-                $item->getImportType() == self::IMPORT_TYPE_SUBSCRIBERS or
-                $item->getImportType() == self::IMPORT_TYPE_GUEST
-            ) {
-                if ($item->getImportMode() == self::MODE_CONTACT_DELETE) {
-                    //remove from account
-                    $client = Mage::helper('ddg')->getWebsiteApiClient($websiteId);
-                    $email = unserialize($item->getImportData());
-                    $apiContact = $client->postContacts($email);
-                    if (!isset($apiContact->message) && isset($apiContact->id)) {
-                        $result = $client->deleteContact($apiContact->id);
-                        if (isset($result->message)) {
-                            $error = true;
-                        }
-                    } elseif (isset($apiContact->message) && !isset($apiContact->id)) {
-                        $error = true;
-                        $result = $apiContact;
-                    }
-                } else {
-                    //address book
-                    $addressbook = '';
-                    if ($item->getImportType() == self::IMPORT_TYPE_CONTACT)
-                        $addressbook = $helper->getCustomerAddressBook($websiteId);
-                    if ($item->getImportType() == self::IMPORT_TYPE_SUBSCRIBERS)
-                        $addressbook = $helper->getSubscriberAddressBook($websiteId);
-                    if ($item->getImportType() == self::IMPORT_TYPE_GUEST)
-                        $addressbook = $helper->getGuestAddressBook($websiteId);
+        //Set bulk sync limit
+        $this->_bulkSyncLimit = Mage::helper('ddg')->getWebsiteConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_IMPORTER_BULK_LIMIT
+        );
 
-                    $file = $item->getImportFile();
-                    if (!empty($file) && !empty($addressbook)) {
-                        $result = $client->postAddressBookContactsImport($file, $addressbook);
-                        $fileHelper = Mage::helper('ddg/file');
-                        if (isset($result->message) && !isset($result->id))
-                            $error = true;
-                        elseif(isset($result->id))
-                            $fileHelper->archiveCSV($file);
-                    }
-                }
-            } elseif ($item->getImportMode() == self::MODE_SINGLE_DELETE) { //import to single delete
-                $importData = unserialize($item->getImportData());
-                $result = $client->deleteContactsTransactionalData($importData[0], $item->getImportType());
-                if (isset($result->message)) {
-                    $error = true;
-                }
-            } else {
-                $importData = unserialize($item->getImportData());
-                //catalog type and bulk mode
-                if (strpos($item->getImportType(), 'Catalog_') !== false && $item->getImportMode() == self::MODE_BULK) {
-                    $result = $client->postAccountTransactionalDataImport($importData, $item->getImportType());
-                    if (isset($result->message) && !isset($result->id)) {
-                        $error = true;
-                    }
-                } elseif ($item->getImportMode() == self::MODE_SINGLE) { // single contact import
-                    $result = $client->postContactsTransactionalData($importData, $item->getImportType());
-                    if (isset($result->message)) {
-                        $error = true;
-                    }
-                } elseif ($item->getImportMode() == self::MODE_CONTACT_EMAIL_UPDATE){
-                    $emailBefore = $importData['emailBefore'];
-                    $email = $importData['email'];
-                    $isSubscribed = $importData['isSubscribed'];
-                    $subscribersAddressBook = Mage::helper('ddg')->getWebsiteConfig(
-                        Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SUBSCRIBERS_ADDRESS_BOOK_ID, $websiteId);
-                    $result = $client->postContacts($emailBefore);
-                    //check for matching email
-                    if (isset($result->id)) {
-                        if ($email != $result->email) {
-                            $data = array(
-                                'Email' => $email,
-                                'EmailType' => 'Html'
-                            );
-                            //update the contact with same id - different email
-                            $client->updateContact($result->id, $data);
-                        }
-                        if (!$isSubscribed && $result->status == 'Subscribed') {
-                            $client->deleteAddressBookContact($subscribersAddressBook, $result->id);
-                        }
-                    } elseif (isset($result->message)) {
-                        $error = true;
-                        Mage::helper('ddg')->log('Email change error : ' . $result->message);
-                    }
-                } elseif ($item->getImportMode() == self::MODE_SUBSCRIBER_UPDATE){
-                    $email = $importData['email'];
-                    $id = $importData['id'];
-                    $contactEmail = Mage::getModel('ddg_automation/contact')->load($id);
-                    $result = $client->postContacts( $email );
-                    if ( isset( $result->id ) ) {
-                        $contactId = $result->id;
-                        $client->deleteAddressBookContact( $helper->getSubscriberAddressBook( $websiteId ), $contactId );
-                        $contactEmail->setContactId($contactId)
-                            ->save();
-                    } else {
-                        $contactEmail->setSuppressed( '1' )
-                            ->save();
-                    }
-                } elseif ($item->getImportMode() == self::MODE_SUBSCRIBER_RESUBSCRIBED){
-                    $email = $importData['email'];
-                    $apiContact = $client->postContacts( $email );
+        //Set priority
+        $this->_setPriority();
 
-                    //resubscribe suppressed contacts
-                    if (isset($apiContact->message) && $apiContact->message == Dotdigitalgroup_Email_Model_Apiconnector_Client::API_ERROR_CONTACT_SUPPRESSED) {
-                        $apiContact = $client->getContactByEmail($email);
-                        $client->postContactsResubscribe( $apiContact );
-                    }
-                } else { //bulk import transactional data
-                    $result = $client->postContactsTransactionalDataImport($importData, $item->getImportType());
-                    if (isset($result->message) && !isset($result->id)) {
-                        $error = true;
-                    }
+        //Check previous import status
+        $this->_checkImportStatus();
+
+        //Bulk priority. Process group 1 first
+        foreach($this->_bulkPriority as $bulk)
+        {
+            if($this->_totalItems < $bulk['limit'])
+            {
+                $collection = $this->_getQueue(
+                    $bulk['type'],
+                    $bulk['mode'],
+                    $bulk['limit'] - $this->_totalItems
+                );
+                if($collection->getSize()){
+                    $this->_totalItems += $collection->getSize();
+                    Mage::getModel($bulk['model'], $collection);
                 }
             }
-            //if curl error 28
-            $curlError = $client->getCurlError();
-            if ($curlError) {
-                $item->setMessage($curlError)
-                    ->setImportStatus(self::FAILED)
-                    ->save();
-            } else {
-                if (!$error) {
-                    if ($item->getImportMode() == self::MODE_SINGLE_DELETE or
-                        $item->getImportMode() == self::MODE_SINGLE or
-                        $item->getImportMode() == self::MODE_CONTACT_DELETE or
-                        $item->getImportMode() == self::MODE_CONTACT_EMAIL_UPDATE or
-                        $item->getImportMode() == self::MODE_SUBSCRIBER_RESUBSCRIBED or
-                        $item->getImportMode() == self::MODE_SUBSCRIBER_UPDATE
-                    ) {
-                        $item->setImportStatus(self::IMPORTED)
-                            ->setImportFinished($now)
-                            ->setImportStarted($now)
-                            ->setMessage('')
-                                ->save();
+        }
 
-                        //process again next item in queue
-                        $this->_processQueue();
-                    } elseif (isset($result->id) && !isset($result->message)) {
-                        $item->setImportStatus(self::IMPORTING)
-                            ->setImportId($result->id)
-                            ->setImportStarted($now)
-                            ->setMessage('')
-                            ->save();
-                    } else {
-	                    $message = (isset($result->message))? $result->message : 'Error unknown';
-                        $item->setImportStatus(self::FAILED)
-                            ->setMessage($message);
-
-                        if(isset($result->id))
-                            $item->setImportId($result->id);
-
-                        $item->save();
+        //Single/Update priority. Process group 2 if nothing from group 1 to process
+        if(empty($this->_totalItems)){
+            foreach($this->_singlePriority as $single)
+            {
+                if($this->_totalItems < $single['limit'])
+                {
+                    $collection = $this->_getQueue(
+                        $single['type'],
+                        $single['mode'],
+                        $single['limit'] - $this->_totalItems
+                    );
+                    if($collection->getSize()){
+                        $this->_totalItems += $collection->getSize();
+                        Mage::getModel($single['model'], $collection);
                     }
-                } elseif ($error) {
-
-	                $message = (isset($result->message))? $result->message : 'Error unknown';
-
-	                $item->setImportStatus(self::FAILED)
-                            ->setMessage($message);
-                    if (isset($result->id))
-                        $item->setImportId($result->id);
-
-	                $item->save();
                 }
             }
         }
     }
 
-    /**
-     * get queue items from importer
-     *
-     * @param bool $importing
-     * @return bool|Varien_Object
-     */
-    protected function _getQueue($importing = false)
+    protected function _setPriority()
+    {
+        /**
+         * Bulk
+         */
+
+        //Bulk Contact
+        $contact = array(
+            'model' => 'ddg_automation/sync_contact_bulk',
+            'mode'  => self::MODE_BULK,
+            'type'  => array(
+                        self::IMPORT_TYPE_CONTACT,
+                        self::IMPORT_TYPE_GUEST,
+                        self::IMPORT_TYPE_SUBSCRIBERS
+                    ),
+            'limit' => $this->_bulkSyncLimit
+        );
+        $order = $contact;
+
+        //Bulk Order
+        $order['model'] = 'ddg_automation/sync_td_bulk';
+        $order['type'] = self::IMPORT_TYPE_ORDERS;
+
+        $quote = $other = $order;
+
+        //Bulk Quote
+        $quote['type'] = self::IMPORT_TYPE_QUOTE;
+
+        //Bulk Other TD
+        $other['type'] = array(
+            'Catalog',
+            self::IMPORT_TYPE_REVIEWS,
+            self::IMPORT_TYPE_WISHLIST
+        );
+
+        /**
+         * Update
+         */
+
+        //Subscriber resubscribe
+        $subscriberResubscribe = array(
+            'model' => 'ddg_automation/sync_contact_update',
+            'mode'  => self::MODE_SUBSCRIBER_RESUBSCRIBED,
+            'type'  => self::IMPORT_TYPE_SUBSCRIBER_RESUBSCRIBED,
+            'limit' => self::SYNC_SINGLE_LIMIT_NUMBER
+        );
+
+        //Email Change
+        $emailChange = $subscriberResubscribe;
+        $emailChange['mode'] = self::MODE_CONTACT_EMAIL_UPDATE;
+        $emailChange['type'] = self::IMPORT_TYPE_CONTACT_UPDATE;
+
+        //Order Update
+        $orderUpdate = array(
+            'model' => 'ddg_automation/sync_td_update',
+            'mode'  => self::MODE_SINGLE,
+            'type'  => self::IMPORT_TYPE_ORDERS,
+            'limit' => self::SYNC_SINGLE_LIMIT_NUMBER
+        );
+
+        //Quote Update
+        $quoteUpdate = $orderUpdate;
+        $quoteUpdate['type'] = self::IMPORT_TYPE_QUOTE;
+
+        //Update Other TD
+        $updateOtherTd = $orderUpdate;
+        $updateOtherTd['type'] = array(
+            'Catalog',
+            self::IMPORT_TYPE_WISHLIST
+        );
+
+        /**
+         * Delete
+         */
+
+        //Contact Delete
+        $contactDelete = array(
+            'model' => 'ddg_automation/sync_contact_delete',
+            'mode'  => self::MODE_CONTACT_DELETE,
+            'type'  => self::IMPORT_TYPE_CONTACT,
+            'limit' => self::SYNC_SINGLE_LIMIT_NUMBER
+        );
+
+        //TD Delete
+        $tdDelete = $contactDelete;
+        $tdDelete['model'] = 'ddg_automation/sync_td_delete';
+        $tdDelete['mode']  = self::MODE_SINGLE_DELETE;
+        $tdDelete['type']  = array(
+            'Catalog',
+            self::IMPORT_TYPE_REVIEWS,
+            self::IMPORT_TYPE_WISHLIST,
+            self::IMPORT_TYPE_ORDERS,
+            self::IMPORT_TYPE_QUOTE
+        );
+
+
+        //Bulk Priority
+        $this->_bulkPriority = array(
+            $contact,
+            $order,
+            $quote,
+            $other
+        );
+
+        $this->_singlePriority = array(
+            $subscriberResubscribe,
+            $emailChange,
+            $orderUpdate,
+            $quoteUpdate,
+            $updateOtherTd,
+            $contactDelete,
+            $tdDelete
+        );
+
+    }
+
+    protected function _getQueue($importType, $importMode, $limit)
     {
         $collection = $this->getCollection();
 
-        //if true then return item with importing status
-        if ($importing)
-            $collection->addFieldToFilter('import_status', array('eq' => self::IMPORTING));
-        else
-            $collection->addFieldToFilter('import_status', array('eq' => self::NOT_IMPORTED));
-
-        $collection->setPageSize(1);
-        if ($collection->count()) {
-            return $collection->getFirstItem();
+        if(is_array($importType)){
+            $condition = array();
+            foreach($importType as $type){
+                if($type == 'Catalog')
+                    $condition[] = array('like' => $type . '%');
+                else
+                    $condition[] = array('eq' => $type);
+            }
+            $collection->addFieldToFilter('import_type', $condition);
         }
+        else
+            $collection->addFieldToFilter('import_type', array('eq' => $importType));
+
+        $collection->addFieldToFilter('import_mode', array('eq' => $importMode))
+            ->addFieldToFilter('import_status', array('eq' => self::NOT_IMPORTED))
+            ->setPageSize($limit)
+            ->setCurPage(1);
+
+        return $collection;
+    }
+
+    protected function _getImportingItems($limit)
+    {
+        $collection = $this->getCollection()
+            ->addFieldToFilter('import_status', array('eq' => self::IMPORTING))
+            ->setPageSize($limit)
+            ->setCurPage(1);
+
+        if($collection->getSize())
+            return $collection;
+
         return false;
     }
 
