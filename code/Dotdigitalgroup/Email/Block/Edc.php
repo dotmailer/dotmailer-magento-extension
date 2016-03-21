@@ -212,6 +212,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
             ->addAttributeToSelect(array('product_url', 'name', 'store_id', 'small_image', 'price'))
             ->addOrderedQty($from, $to)
             ->setOrder('ordered_qty', 'desc')
+            ->addWebsiteFilter(Mage::app()->getWebsite()->getId())
             ->setPageSize($limit);
 
         Mage::getSingleton('cataloginventory/stock')->addInStockFilterToCollection($productCollection);
