@@ -228,18 +228,6 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
     }
 
     /**
-     * Populate the tables (customer-email_contact, subscribers-email_contact) with missing ones.
-     */
-    public function populatecontactsAction()
-    {
-        Mage::getResourceModel('ddg_automation/contact')->populateAndCleanup();
-
-        Mage::getSingleton( 'adminhtml/session' )->addSuccess( "Contacts populated");
-
-        $this->_redirectReferer();
-    }
-
-    /**
      * Trigger to run the contact sync.
      */
     public function runcontactsyncAction()
