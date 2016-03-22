@@ -14,6 +14,7 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
     const MODE_SINGLE_DELETE = 'Single_Delete';
     const MODE_CONTACT_DELETE = 'Contact_Delete';
     const MODE_CONTACT_EMAIL_UPDATE = 'Contact_Email_Update';
+    const MODE_SUBSCRIBER_UPDATE = 'Subscriber_Update';
     const MODE_SUBSCRIBER_RESUBSCRIBED = 'Subscriber_Resubscribed';
 
     //import type
@@ -25,6 +26,7 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
     const IMPORT_TYPE_SUBSCRIBERS = 'Subscriber';
     const IMPORT_TYPE_GUEST = 'Guest';
     const IMPORT_TYPE_CONTACT_UPDATE = 'Contact';
+    const IMPORT_TYPE_SUBSCRIBER_UPDATE = 'Subscriber';
     const IMPORT_TYPE_SUBSCRIBER_RESUBSCRIBED = 'Subscriber';
 
     //sync limits
@@ -106,6 +108,7 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
         } catch (Exception $e) {
             Mage::logException($e);
         }
+        return false;
     }
 
     protected function _checkImportStatus()
@@ -292,6 +295,11 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
             'limit' => self::SYNC_SINGLE_LIMIT_NUMBER
         );
 
+        //Subscriber update/suppressed
+        $subscriberUpdate = $subscriberResubscribe;
+        $emailChange['mode'] = self::MODE_SUBSCRIBER_UPDATE;
+        $emailChange['type'] = self::IMPORT_TYPE_SUBSCRIBER_UPDATE;
+
         //Email Change
         $emailChange = $subscriberResubscribe;
         $emailChange['mode'] = self::MODE_CONTACT_EMAIL_UPDATE;
@@ -351,6 +359,7 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
 
         $this->_singlePriority = array(
             $subscriberResubscribe,
+            $subscriberUpdate,
             $emailChange,
             $orderUpdate,
             $quoteUpdate,
