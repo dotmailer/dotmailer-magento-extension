@@ -50,12 +50,19 @@ class Dotdigitalgroup_Email_Model_Sync_Contact_Update extends Dotdigitalgroup_Em
                     }
                 }elseif ($item->getImportMode() == Dotdigitalgroup_Email_Model_Importer::MODE_SUBSCRIBER_UPDATE){
                     $email = $importData['email'];
+                    $id = $importData['id'];
                     $result = $this->_client->postContacts($email);
                     if (isset($result->id)){
                         $contactId = $result->id;
                         $this->_client->deleteAddressBookContact(
                             Mage::helper('ddg')->getSubscriberAddressBook($websiteId), $contactId
                         );
+                    }else{
+                        $contactEmail = Mage::getModel('ddg_automation/contact')->load($id);
+                        if($contactEmail->getId()){
+                            $contactEmail->setSuppressed('1')
+                                ->save();
+                        }
                     }
                 }
 
