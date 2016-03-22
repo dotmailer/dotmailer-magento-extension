@@ -48,6 +48,15 @@ class Dotdigitalgroup_Email_Model_Sync_Contact_Update extends Dotdigitalgroup_Em
                         $apiContact = $this->_client->getContactByEmail($email);
                         $result = $this->_client->postContactsResubscribe( $apiContact );
                     }
+                }elseif ($item->getImportMode() == Dotdigitalgroup_Email_Model_Importer::MODE_SUBSCRIBER_UPDATE){
+                    $email = $importData['email'];
+                    $result = $this->_client->postContacts($email);
+                    if (isset($result->id)){
+                        $contactId = $result->id;
+                        $this->_client->deleteAddressBookContact(
+                            Mage::helper('ddg')->getSubscriberAddressBook($websiteId), $contactId
+                        );
+                    }
                 }
 
                 $this->_handleSingleItemAfterSync($item, $result);
