@@ -67,8 +67,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
 					);
 				}
 				$contactEmail->setIsSubscriber(null)
-					->setSubscriberStatus(Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED)
-					->setSuppressed(1);
+					->setSubscriberStatus(Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED);
 			}
 
 			// fix for a multiple hit of the observer
