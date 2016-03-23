@@ -28,10 +28,6 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
 
 			// only for subscribers
 			if ($subscriberStatus == Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED) {
-				//If already subscribed and imported skip
-				if($contactEmail->getIsSubscriber() && $contactEmail->getSubscriberImported())
-					return $this;
-
 				//Set contact as subscribed
 				$contactEmail->setSubscriberStatus($subscriberStatus)
 					->setIsSubscriber('1');
