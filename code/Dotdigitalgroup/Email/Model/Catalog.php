@@ -194,7 +194,6 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
      */
     protected function _exportInSingle($store, $collectionName, $websiteId)
     {
-        $helper            = Mage::helper('ddg');
         $this->_productIds = array();
 
         $products = $this->_getProductsToExport($store, true);
@@ -203,7 +202,6 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
                 $connectorProduct = Mage::getModel(
                     'ddg_automation/connector_product', $product
                 );
-                $helper->log('---------- Start catalog single sync ----------');
 
                 //register in queue with importer
                 $check = Mage::getModel('ddg_automation/importer')
