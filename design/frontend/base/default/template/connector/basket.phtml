@@ -1,15 +1,9 @@
-<?php
-$items = $this->getBasketItems();
-$helper = Mage::helper('core');
+<?php $items = $this->getBasketItems();
 ?>
 <?php if($items): ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-	<html xmlns="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
-    <head><title>Basket</title></head>
-    <body">
-    <?php
-        $dynamicStyle = $this->getDynamicStyle();
-    ?>
+
+    <body>
+    <?php $dynamicStyle = $this->getDynamicStyle(); ?>
     <style>
         .product-name{
             color: <?php echo $dynamicStyle['nameColor'];?>;
@@ -126,28 +120,19 @@ $helper = Mage::helper('core');
             <th class="other-text" style="border-bottom: 1px solid #cbd3d4;">Total</th>
         </tr>
 
-        <?php foreach($items as $one):?>
-            <?php
-            if($one->getParentItemId() != null)
-                continue;
-            $_product = Mage::getModel('catalog/product')->load($one->getProductId());
-
-            $inStock = ($_product->getStockItem()->getIsInStock())? 'In Stock' : 'Out of stock';
-            $total = $helper->currency($one->getBaseRowTotalInclTax());
-            $productUrl = $_product->getProductUrl();
-            $grandTotal = $helper->currency($this->getGrandTotal());
-            ?>
+        <?php foreach($items as $item):?>
             <tr>
                 <td style="padding: 1px; border-bottom: 1px solid #cbd3d4; border-right: 1px solid #cbd3d4;">
-                    <img alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>"
-	                src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(85);?>" width="85" height="85" align="middle" border="0">
+                    <img alt="<?php echo $this->stripTags($this->getImageLabel($item['product'], 'small_image'), null, true) ?>"
+                         src="<?php echo $this->helper('catalog/image')->init($item['product'], 'small_image')->resize(85);?>" width="85" height="85" align="middle" border="0">
                 </td>
                 <td  class="product-name" style="padding: 1px; border-bottom: 1px solid #cbd3d4; border-right: 1px solid #cbd3d4;">
-	                Product Name : <a class="proudct-url" href="<?php echo $productUrl;?>"><?php echo  $_product->getName()  . '</a></br>'. $inStock;?></td>
-                <td class="product-price" style="padding: 1px; border-bottom: 1px solid #cbd3d4; border-right: 1px solid #cbd3d4;"><?php echo (int)$one->getQty();?></td>
-                <td class="product-price" style="padding: 1px; border-bottom: 1px solid #cbd3d4;"><?php echo $total;?></td>
+                    Product Name : <a class="proudct-url" href="<?php echo $item['productUrl'];?>"><?php echo
+                        $this->escapeHtml($item['product']->getName())  . '</a></br>'. $item['inStock'];?></td>
+                <td class="product-price" style="padding: 1px; border-bottom: 1px solid #cbd3d4; border-right: 1px solid #cbd3d4;"><?php
+                    echo (int)$item['qty'];?></td>
+                <td class="product-price" style="padding: 1px; border-bottom: 1px solid #cbd3d4;"><?php echo $item['total'];?></td>
             </tr>
-
         <?php endforeach;?>
         <tr>
             <td style="padding: 1px; border-right: 1px solid #cbd3d4; border-bottom: 1px solid #cbd3d4;"></td>
@@ -155,7 +140,7 @@ $helper = Mage::helper('core');
 
             <td class="other-text" style="padding: 1px; border-right: 1px solid #cbd3d4; border-bottom: 1px solid #cbd3d4;">Order Total</td>
             <td class="other-text" style="padding: 1px; border-bottom: 1px solid #cbd3d4;">
-                <?php echo $grandTotal;?>
+                <?php echo $item['grandTotal'];?>
             </td>
         </tr>
         <?php if($this->canShowUrl()): ?>
@@ -168,10 +153,10 @@ $helper = Mage::helper('core');
                         <a href="<?php echo $this->getUrlForLink(); ?>" class="proudct-url">
                             <strong>
                                 <?php
-                                    if($text = $this->takeMeToCartTextForUrl())
-                                        echo $this->__($text);
-                                    else
-                                        echo $this->__('Take Me To My Basket');
+                                if($text = $this->takeMeToCartTextForUrl())
+                                    echo $this->__($text);
+                                else
+                                    echo $this->__('Take Me To My Basket');
                                 ?>
                             </strong>
                         </a>
@@ -180,6 +165,4 @@ $helper = Mage::helper('core');
             </tr>
         <?php endif; ?>
     </table>
-    </body>
-    </html>
 <?php endif;
