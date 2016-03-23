@@ -201,9 +201,6 @@ class Dotdigitalgroup_Email_Model_Quote extends Mage_Core_Model_Abstract
                             $website->getId()
                         );
                     if ($check) {
-                        $message = 'Quote updated : ' . $emailQuote->getQuoteId(
-                        );
-                        Mage::helper('ddg')->log($message);
                         $emailQuote->setModified(null)->save();
                         $this->_count++;
                     }
