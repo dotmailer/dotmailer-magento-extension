@@ -273,16 +273,21 @@ class Dotdigitalgroup_Email_EmailController
     protected function _checkMissingAndAdd()
     {
         $currentQuote    = Mage::getSingleton('checkout/session')->getQuote();
-        $currentSessionItems = $currentQuote->getAllItems();
-        $currentItemIds      = array();
-        foreach ($currentSessionItems as $currentSessionItem) {
-            $currentItemIds[] = $currentSessionItem->getId();
-        }
-        foreach ($this->_quote->getAllItems() as $item) {
-            if ( ! in_array($item->getId(), $currentItemIds)) {
-                $currentQuote->addItem($item);
+        $currentItemIds  = array();
+
+        if($currentQuote->getAllVisibleItems()){
+            $currentSessionItems = $currentQuote->getAllItems();
+            foreach ($currentSessionItems as $currentSessionItem) {
+                $currentItemIds[] = $currentSessionItem->getId();
             }
         }
-        $currentQuote->collectTotals()->save();
+        if($this->_quote->getAllVisibleItems()){
+            foreach ($this->_quote->getAllItems() as $item) {
+                if ( ! in_array($item->getId(), $currentItemIds)) {
+                    $currentQuote->addItem($item);
+                }
+            }
+            $currentQuote->collectTotals()->save();
+        }
     }
 }
