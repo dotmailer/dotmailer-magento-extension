@@ -212,18 +212,9 @@ class Dotdigitalgroup_Email_EmailController
         );
 
         //if customer is logged in then redirect to cart
-        if ($customerSession->isLoggedIn()) {
-            $checkoutSession = Mage::getSingleton('checkout/session');
-            if ($checkoutSession->getQuote()
-                && $checkoutSession->getQuote()->hasItems()
-            ) {
-                $quote = $checkoutSession->getQuote();
-                if ($this->_quote->getId() != $quote->getId()) {
-                    $this->_checkMissingAndAdd();
-                }
-            } else {
-                $this->_loadAndReplace();
-            }
+        if ($customerSession->isLoggedIn() && $customerSession->getCustomerId() == $this->_quote->getCustomerId()) {
+            //check session quote for missing items and add
+            $this->_checkMissingAndAdd();
 
             if ($configCartUrl) {
                 $url = $configCartUrl;
@@ -260,19 +251,10 @@ class Dotdigitalgroup_Email_EmailController
     }
 
     /**
-     * process guest basket
+     * process guest
      */
     protected function _handleGuestBasket()
     {
-        $checkoutSession = Mage::getSingleton('checkout/session');
-        if ($checkoutSession->getQuote()
-            && $checkoutSession->getQuote()->hasItems()
-        ) {
-            $this->_checkMissingAndAdd();
-        } else {
-            $this->_loadAndReplace();
-        }
-
         $configCartUrl = $this->_quote->getStore()->getWebsite()->getConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CONTENT_CART_URL
         );
@@ -290,35 +272,17 @@ class Dotdigitalgroup_Email_EmailController
      */
     protected function _checkMissingAndAdd()
     {
-        $checkoutSession = Mage::getSingleton('checkout/session');
-        $currentQuote    = $checkoutSession->getQuote();
-        if ($currentQuote->hasItems()) {
-            $currentSessionItems = $currentQuote->getAllItems();
-            $currentItemIds      = array();
-            foreach ($currentSessionItems as $currentSessionItem) {
-                $currentItemIds[] = $currentSessionItem->getId();
-            }
-            foreach ($this->_quote->getAllItems() as $item) {
-                if ( ! in_array($item->getId(), $currentItemIds)) {
-                    $currentQuote->addItem($item);
-                }
-            }
-            $currentQuote->collectTotals()->save();
-        } else {
-            $this->_loadAndReplace();
+        $currentQuote    = Mage::getSingleton('checkout/session')->getQuote();
+        $currentSessionItems = $currentQuote->getAllItems();
+        $currentItemIds      = array();
+        foreach ($currentSessionItems as $currentSessionItem) {
+            $currentItemIds[] = $currentSessionItem->getId();
         }
-    }
-
-    /**
-     * load quote and replace in session#1114
-     */
-    protected function _loadAndReplace()
-    {
-        $checkoutSession = Mage::getSingleton('checkout/session');
-        $quote           = Mage::getSingleton('sales/quote')->load(
-            $this->_quote->getId()
-        );
-        $quote->setIsActive(true)->save();
-        $checkoutSession->replaceQuote($quote);
+        foreach ($this->_quote->getAllItems() as $item) {
+            if ( ! in_array($item->getId(), $currentItemIds)) {
+                $currentQuote->addItem($item);
+            }
+        }
+        $currentQuote->collectTotals()->save();
     }
 }
