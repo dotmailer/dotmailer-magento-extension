@@ -133,7 +133,7 @@ class Dotdigitalgroup_Email_Model_Resource_Contact
         $select
             ->from(
                 array('customer' => $this->getReadConnection()->getTableName(
-                    $this->getTable('customer/customer')
+                    $this->getTable('customer/entity')
                 )),
                 array('customer_id' => 'entity_id', 'email', 'website_id',
                       'store_id')
