@@ -231,9 +231,6 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
                     $this->_count++;
                 }
                 //send wishlist as transactional data
-                $helper->log(
-                    '---------- Start wishlist single sync ----------'
-                );
                 $this->_start = microtime(true);
                 //register in queue with importer
                 $check = Mage::getModel('ddg_automation/importer')
@@ -246,10 +243,6 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
                 if ($check) {
                     $this->_wishlistIds[] = $wishlistId;
                 }
-                $message = 'Total time for wishlist single sync : ' . gmdate(
-                    "H:i:s", microtime(true) - $this->_start
-                );
-                $helper->log($message);
             } else {
                 //register in queue with importer
                 $check = Mage::getModel('ddg_automation/importer')
@@ -262,10 +255,6 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
                 if ($check) {
                     $this->_wishlistIds[] = $wishlistId;
                 }
-                $message = 'Total time for wishlist single sync : ' . gmdate(
-                    "H:i:s", microtime(true) - $this->_start
-                );
-                $helper->log($message);
             }
         }
         if ( ! empty($this->_wishlistIds)) {
