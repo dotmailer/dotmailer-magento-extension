@@ -11,7 +11,7 @@ First ensure you have modman installed (see here: https://github.com/colinmollen
 ...and run the following in your magento root:
 
 ```
-modman init
+modman init 
 modman clone https://github.com/dotmailer/dotmailer-magento-extension.git
 ```
 
