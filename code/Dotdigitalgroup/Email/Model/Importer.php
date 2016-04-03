@@ -181,13 +181,13 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
         $data = $client->getContactImportReportFaults($id);
 
         if ($data) {
-            $data = $this->_remove_utf8_bom($data);
+            $data = $this->_removeUtf8Bom($data);
             $fileName = Mage::getBaseDir('var') . DS . 'DmTempCsvFromApi.csv';
             $io = new Varien_Io_File();
             $io->open();
             $check = $io->write($fileName, $data);
             if ($check) {
-                $csvArray = $this->_csv_to_array($fileName);
+                $csvArray = $this->_csvToArray($fileName);
                 $io->rm($fileName);
                 Mage::getResourceModel('ddg_automation/contact')->unsubscribe($csvArray);
             } else {
@@ -223,26 +223,29 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
                 );
                 if($collection->getSize()){
                     $this->_totalItems += $collection->getSize();
-                    Mage::getModel($bulk['model'], $collection);
+                    $bulkModel = Mage::getModel($bulk['model'], $collection);
+                    $bulkModel->processCollection();
                 }
             }
         }
 
-        //Single/Update priority. Process group 2 if nothing from group 1 to process
-        if(empty($this->_totalItems)){
-            foreach($this->_singlePriority as $single)
+        //reset total items to 0
+        $this->_totalItems = 0;
+
+        //Single/Update priority
+        foreach($this->_singlePriority as $single)
+        {
+            if($this->_totalItems < $single['limit'])
             {
-                if($this->_totalItems < $single['limit'])
-                {
-                    $collection = $this->_getQueue(
-                        $single['type'],
-                        $single['mode'],
-                        $single['limit'] - $this->_totalItems
-                    );
-                    if($collection->getSize()){
-                        $this->_totalItems += $collection->getSize();
-                        Mage::getModel($single['model'], $collection);
-                    }
+                $collection = $this->_getQueue(
+                    $single['type'],
+                    $single['mode'],
+                    $single['limit'] - $this->_totalItems
+                );
+                if($collection->getSize()){
+                    $this->_totalItems += $collection->getSize();
+                    $singleModel = Mage::getModel($single['model'], $collection);
+                    $singleModel->processCollection();
                 }
             }
         }
@@ -408,7 +411,7 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
         return false;
     }
 
-    protected function _csv_to_array($filename)
+    protected function _csvToArray($filename)
     {
         if(!file_exists($filename) || !is_readable($filename))
             return FALSE;
@@ -436,7 +439,7 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
         return $contacts;
     }
 
-    protected function _remove_utf8_bom($text)
+    protected function _removeUtf8Bom($text)
     {
         $bom = pack('H*','EFBBBF');
         $text = preg_replace("/^$bom/", '', $text);

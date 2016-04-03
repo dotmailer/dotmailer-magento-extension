@@ -8,10 +8,9 @@ class Dotdigitalgroup_Email_Model_Sync_Contact_Bulk
     public function __construct($collection)
     {
         $this->_helper = Mage::helper('ddg');
-        $this->_processCollection($collection);
     }
 
-    protected function _processCollection($collection)
+    public function processCollection($collection)
     {
         foreach($collection as $item)
         {
@@ -67,8 +66,9 @@ class Dotdigitalgroup_Email_Model_Sync_Contact_Bulk
                     ->setMessage($message);
 
                 //If result id
-                if(isset($result->id))
+                if(isset($result->id)){
                     $item->setImportId($result->id);
+                }
 
                 $item->save();
             }
