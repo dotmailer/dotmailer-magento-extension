@@ -2,27 +2,26 @@
 
 class Dotdigitalgroup_Email_Model_Sync_Contact_Delete extends Dotdigitalgroup_Email_Model_Sync_Contact_Bulk
 {
-    public function __construct($collection)
-    {
-        parent::__construct($collection);
-    }
-
-    protected function _processCollection($collection)
+    public function processCollection($collection)
     {
         foreach($collection as $item)
         {
             $websiteId = $item->getWebsiteId();
             $email = unserialize($item->getImportData());
             $this->_client = $this->_helper->getWebsiteApiClient($websiteId);
+            $result = '';
 
             if ($this->_client) {
                 $apiContact = $this->_client->postContacts($email);
-                if (!isset($apiContact->message) && isset($apiContact->id))
+                if (!isset($apiContact->message) && isset($apiContact->id)){
                     $result = $this->_client->deleteContact($apiContact->id);
-                 elseif (isset($apiContact->message) && !isset($apiContact->id))
+                }elseif (isset($apiContact->message) && !isset($apiContact->id)){
                     $result = $apiContact;
+                }
 
-                $this->_handleSingleItemAfterSync($item, $result);
+                if($result){
+                    $this->_handleSingleItemAfterSync($item, $result);
+                }
             }
         }
     }

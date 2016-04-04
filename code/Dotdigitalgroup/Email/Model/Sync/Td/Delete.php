@@ -2,12 +2,7 @@
 
 class Dotdigitalgroup_Email_Model_Sync_Td_Delete extends Dotdigitalgroup_Email_Model_Sync_Contact_Delete
 {
-    public function __construct($collection)
-    {
-        parent::__construct($collection);
-    }
-
-    protected function _processCollection($collection)
+    public function processCollection($collection)
     {
         foreach($collection as $item)
         {
