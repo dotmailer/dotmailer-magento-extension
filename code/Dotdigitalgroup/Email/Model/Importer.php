@@ -257,29 +257,35 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
          * Bulk
          */
 
-        //Bulk Contact
-        $contact = array(
-            'model' => 'ddg_automation/sync_contact_bulk',
+        $defaultBulk = array(
+            'model' => '',
             'mode'  => self::MODE_BULK,
-            'type'  => array(
-                        self::IMPORT_TYPE_CONTACT,
-                        self::IMPORT_TYPE_GUEST,
-                        self::IMPORT_TYPE_SUBSCRIBERS
-                    ),
+            'type'  => '',
             'limit' => $this->_bulkSyncLimit
         );
-        $order = $contact;
+
+        //Contact Bulk
+        $contact = $defaultBulk;
+        $contact['model'] = 'ddg_automation/sync_contact_bulk';
+        $contact['type'] = array(
+            self::IMPORT_TYPE_CONTACT,
+            self::IMPORT_TYPE_GUEST,
+            self::IMPORT_TYPE_SUBSCRIBERS
+        );
 
         //Bulk Order
+        $order = $defaultBulk;
         $order['model'] = 'ddg_automation/sync_td_bulk';
         $order['type'] = self::IMPORT_TYPE_ORDERS;
 
-        $quote = $other = $order;
-
         //Bulk Quote
+        $quote = $defaultBulk;
+        $quote['model'] = 'ddg_automation/sync_td_bulk';
         $quote['type'] = self::IMPORT_TYPE_QUOTE;
 
         //Bulk Other TD
+        $other = $defaultBulk;
+        $other['model'] = 'ddg_automation/sync_td_bulk';
         $other['type'] = array(
             'Catalog',
             self::IMPORT_TYPE_REVIEWS,
@@ -290,38 +296,44 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
          * Update
          */
 
-        //Subscriber resubscribe
-        $subscriberResubscribe = array(
+        $defaultSingleUpdate = array(
             'model' => 'ddg_automation/sync_contact_update',
-            'mode'  => self::MODE_SUBSCRIBER_RESUBSCRIBED,
-            'type'  => self::IMPORT_TYPE_SUBSCRIBER_RESUBSCRIBED,
+            'mode'  => '',
+            'type'  => '',
             'limit' => self::SYNC_SINGLE_LIMIT_NUMBER
         );
 
+        //Subscriber resubscribe
+        $subscriberResubscribe = $defaultSingleUpdate;
+        $subscriberResubscribe['mode'] = self::MODE_SUBSCRIBER_RESUBSCRIBED;
+        $subscriberResubscribe['type'] = self::IMPORT_TYPE_SUBSCRIBER_RESUBSCRIBED;
+
         //Subscriber update/suppressed
-        $subscriberUpdate = $subscriberResubscribe;
+        $subscriberUpdate = $defaultSingleUpdate;
         $emailChange['mode'] = self::MODE_SUBSCRIBER_UPDATE;
         $emailChange['type'] = self::IMPORT_TYPE_SUBSCRIBER_UPDATE;
 
         //Email Change
-        $emailChange = $subscriberResubscribe;
+        $emailChange = $defaultSingleUpdate;
         $emailChange['mode'] = self::MODE_CONTACT_EMAIL_UPDATE;
         $emailChange['type'] = self::IMPORT_TYPE_CONTACT_UPDATE;
 
         //Order Update
-        $orderUpdate = array(
-            'model' => 'ddg_automation/sync_td_update',
-            'mode'  => self::MODE_SINGLE,
-            'type'  => self::IMPORT_TYPE_ORDERS,
-            'limit' => self::SYNC_SINGLE_LIMIT_NUMBER
-        );
+        $orderUpdate = $defaultSingleUpdate;
+        $orderUpdate['model'] = 'ddg_automation/sync_td_update';
+        $orderUpdate['mode'] = self::MODE_SINGLE;
+        $orderUpdate['type'] = self::IMPORT_TYPE_ORDERS;
 
         //Quote Update
-        $quoteUpdate = $orderUpdate;
+        $quoteUpdate = $defaultSingleUpdate;
+        $quoteUpdate['model'] = 'ddg_automation/sync_td_update';
+        $quoteUpdate['mode'] = self::MODE_SINGLE;
         $quoteUpdate['type'] = self::IMPORT_TYPE_QUOTE;
 
         //Update Other TD
-        $updateOtherTd = $orderUpdate;
+        $updateOtherTd = $defaultSingleUpdate;
+        $updateOtherTd['model'] = 'ddg_automation/sync_td_update';
+        $updateOtherTd['mode'] = self::MODE_SINGLE;
         $updateOtherTd['type'] = array(
             'Catalog',
             self::IMPORT_TYPE_WISHLIST
@@ -331,16 +343,21 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
          * Delete
          */
 
-        //Contact Delete
-        $contactDelete = array(
-            'model' => 'ddg_automation/sync_contact_delete',
-            'mode'  => self::MODE_CONTACT_DELETE,
-            'type'  => self::IMPORT_TYPE_CONTACT,
+        $defaultSingleDelete = array(
+            'model' => '',
+            'mode'  => '',
+            'type'  => '',
             'limit' => self::SYNC_SINGLE_LIMIT_NUMBER
         );
 
+        //Contact Delete
+        $contactDelete = $defaultSingleDelete;
+        $contactDelete['model'] = 'ddg_automation/sync_contact_delete';
+        $contactDelete['mode'] = self::MODE_CONTACT_DELETE;
+        $contactDelete['type'] = self::IMPORT_TYPE_CONTACT;
+
         //TD Delete
-        $tdDelete = $contactDelete;
+        $tdDelete = $defaultSingleDelete;
         $tdDelete['model'] = 'ddg_automation/sync_td_delete';
         $tdDelete['mode']  = self::MODE_SINGLE_DELETE;
         $tdDelete['type']  = array(
