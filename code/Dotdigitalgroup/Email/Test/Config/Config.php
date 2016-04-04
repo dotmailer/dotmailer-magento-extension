@@ -1,5 +1,5 @@
 <?php
-class IntegerNet_DevDashboard_Test_Config_Config extends EcomDev_PHPUnit_Test_Case_Config
+class Dotdigitalgroup_Email_Test_Config_Config extends EcomDev_PHPUnit_Test_Case_Config
 {
     const MODULE_NAME = 'Dotdigitalgroup_Email';
 
