@@ -43,7 +43,9 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
         }
         //sync proccessed
         if ($this->_countCustomers) {
-            $message = 'Total time for sync : ' . gmdate("H:i:s", microtime(true) - $this->_start) .
+            $message = 'Total time for sync : ' . gmdate(
+                    "H:i:s", microtime(true) - $this->_start
+                ) .
                 ', Total updated = ' . $this->_countCustomers;
             $helper->log($message);
             $message .= $result['message'];
@@ -336,7 +338,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
      */
     public function getCollection($customerIds, $websiteId = 0)
     {
-        $customerCollection             = Mage::getResourceModel(
+        $customerCollection          = Mage::getResourceModel(
             'customer/customer_collection'
         )
             ->addNameToSelect()
@@ -390,15 +392,15 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
                 'default_shipping', null, 'left'
             )
             ->addAttributeToFilter('entity_id', array('in' => $customerIds));
-        $customerLog                    = Mage::getSingleton('core/resource')
+        $customerLog                 = Mage::getSingleton('core/resource')
             ->getTableName(
                 'log_customer'
             );
         $salesFlatOrderGrid          = Mage::getSingleton('core/resource')
             ->getTableName('sales_flat_order_grid');
-        $salesFlatQuote               = Mage::getSingleton('core/resource')
+        $salesFlatQuote              = Mage::getSingleton('core/resource')
             ->getTableName('sales_flat_quote');
-        $salesFlatOrder               = Mage::getSingleton('core/resource')
+        $salesFlatOrder              = Mage::getSingleton('core/resource')
             ->getTableName('sales_flat_order');
         $salesFlatOrderItem          = Mage::getSingleton('core/resource')
             ->getTableName('sales_flat_order_item');
@@ -408,7 +410,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
             ->getTableName('eav_attribute_option_value');
         $catalogProductEntityInt     = Mage::getSingleton('core/resource')
             ->getTableName('catalog_product_entity_int');
-        $eavAttribute                  = Mage::getSingleton('core/resource')
+        $eavAttribute                = Mage::getSingleton('core/resource')
             ->getTableName('eav_attribute');
 
 

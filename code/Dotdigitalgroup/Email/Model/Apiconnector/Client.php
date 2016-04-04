@@ -208,8 +208,8 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
             curl_setopt(
                 $ch, CURLOPT_POSTFIELDS, array(
                     'file' => '@' . Mage::helper('ddg/file')->getFilePath(
-                        $filename
-                    )
+                            $filename
+                        )
                 )
             );
         }
@@ -480,8 +480,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
      */
     public function postDataFields($data, $type = 'String',
         $visibility = 'public', $defaultValue = false
-    ) 
-    {
+    ) {
         $url = $this->_apiEndpoint . self::REST_DATA_FILEDS;
         //set default value for the numeric datatype
         if ($type == 'numeric' && ! $defaultValue) {
@@ -772,8 +771,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
      */
     public function getContactsSuppressedSinceDate($dateString, $select = 1000,
         $skip = 0
-    ) 
-    {
+    ) {
         $url = $this->_apiEndpoint . self::REST_CONTACTS_SUPPRESSED_SINCE
             . $dateString . '?select=' . $select . '&skip=' . $skip;
         $this->setUrl($url)
@@ -806,8 +804,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
      */
     public function postContactsTransactionalDataImport($transactionalData,
         $collectionName = 'Orders'
-    ) 
-    {
+    ) {
         $orders = array();
         foreach ($transactionalData as $one) {
             if (isset($one->email)) {
@@ -850,8 +847,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
      */
     public function postContactsTransactionalData($data,
         $collectionName = 'Orders'
-    ) 
-    {
+    ) {
         $order = $this->getContactsTransactionalDataByKey(
             $collectionName, $data->id
         );
@@ -918,8 +914,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
      */
     public function deleteContactTransactionalData($email,
         $collectionName = 'Orders'
-    ) 
-    {
+    ) {
         $url = $this->_apiEndpoint . '/v2/contacts/' . $email
             . '/transactional-data/' . $collectionName;
         $this->setUrl($url)
@@ -1243,8 +1238,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
      */
     public function deleteContactsTransactionalData($key,
         $collectionName = 'Orders'
-    ) 
-    {
+    ) {
         $url = $this->_apiEndpoint . '/v2/contacts/transactional-data/'
             . $collectionName . '/' . $key;
         $this->setUrl($url)
@@ -1419,8 +1413,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
      */
     public function postAccountTransactionalDataImport($transactionalData,
         $collectionName = 'Catalog_Default'
-    ) 
-    {
+    ) {
         $orders = array();
         foreach ($transactionalData as $one) {
             if (isset($one->id)) {

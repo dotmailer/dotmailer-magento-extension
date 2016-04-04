@@ -384,8 +384,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
             ->setMessage('Looks Great.');
 
         $filePath = Mage::getModuleDir(
-            'etc', Dotdigitalgroup_Email_Helper_Config::MODULE_NAME
-        ) . DS . 'files.yaml';
+                'etc', Dotdigitalgroup_Email_Helper_Config::MODULE_NAME
+            ) . DS . 'files.yaml';
         $config   = Zend_Config_Yaml::decode(file_get_contents($filePath));
 
         /**
@@ -1009,7 +1009,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
             ->setMessage('Looks Great.');
 
         foreach (Mage::app()->getWebsites() as $website) {
-            $websiteName        = $website->getName();
+            $websiteName       = $website->getName();
             $abandonedCusomer1 = ($website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CARTS_ENABLED_1
             ))
@@ -1372,8 +1372,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                 $mapped++;
             }
             $tableData['Mapped Percentage'] = number_format(
-                (1 - $mapped / 32) * 100, 2
-            ) . ' %';
+                    (1 - $mapped / 32) * 100, 2
+                ) . ' %';
             //mapping not complete.
             if ( ! $passed) {
                 $url = Mage::helper('adminhtml')->getUrl(
@@ -2070,7 +2070,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
         //compatibility with the old versions
         if (version_compare(Mage::getVersion(), '1.6.2.0', '>')) {
             $version = 'Magento ' . Mage::getEdition() . ' ' . Mage::getVersion(
-            ) . 'V';
+                ) . 'V';
         } else {
             $version = 'Magento version : ' . Mage::getVersion() . 'V';
         }
@@ -2170,8 +2170,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
         if (function_exists('lcfirst') === false) {
 
             $method = strtolower(substr(uc_words($name, ''), 0, 1)) . substr(
-                uc_words($name, ''), 1
-            );
+                    uc_words($name, ''), 1
+                );
 
         } else {
             $method = lcfirst(uc_words($name, ''));

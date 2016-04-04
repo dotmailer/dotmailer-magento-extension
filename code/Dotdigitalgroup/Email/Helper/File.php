@@ -86,7 +86,6 @@ class Dotdigitalgroup_Email_Helper_File
         $fp = fopen($filepath, "a");
 
         // for some reason passing the preset delimiter/enclosure variables results in error
-        // $this->delimiter $this->enclosure
         if (fwrite($fp, $fqCsv) == 0) {
             Mage::throwException(
                 Mage::helper('ddg')->__('Problem writing CSV file')
@@ -136,8 +135,7 @@ class Dotdigitalgroup_Email_Helper_File
 
     protected function arrayToCsv(array &$fields, $delimiter, $enclosure,
         $encloseAll = false, $nullToMysqlNull = false
-    ) 
-    {
+    ) {
         $delimiterEsc = preg_quote($delimiter, '/');
         $enclosureEsc = preg_quote($enclosure, '/');
 
@@ -155,8 +153,8 @@ class Dotdigitalgroup_Email_Helper_File
                 )
             ) {
                 $output[] = $enclosure . str_replace(
-                    $enclosure, $enclosure . $enclosure, $field
-                ) . $enclosure;
+                        $enclosure, $enclosure . $enclosure, $field
+                    ) . $enclosure;
             } else {
                 $output[] = $field;
             }

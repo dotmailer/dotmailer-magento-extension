@@ -8,7 +8,7 @@
     document.observe('dom:loaded', function() {
         <?php foreach ($items as $item):?>
         <?php if($item->getParentItemId() != null) continue;?>
-_dmTrack("product", "<?php echo str_replace('"', ' ',  $item->getName())?>");
+_dmTrack("product", "<?php echo str_replace('"', ' ', $item->getName())?>");
         <?php endforeach;?>
 _dmTrack("CheckOutAmount", "<?php echo $total;?>");
     });

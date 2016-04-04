@@ -30,7 +30,7 @@ class Dotdigitalgroup_Email_Block_Order_Shipping
         }
 
         if ( ! $order->hasShipments()) {
-            //throw new Exception('TE - no shipments for order : '. $orderId);
+            
             Mage::helper('ddg')->log(
                 'TE - no shipments for order : ' . $order->getId()
             );

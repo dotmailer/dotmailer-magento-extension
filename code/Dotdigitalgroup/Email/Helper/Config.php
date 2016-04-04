@@ -300,8 +300,8 @@ class Dotdigitalgroup_Email_Helper_Config
             $website = Mage::app()->getWebsite($website);
 
             $baseUrl = $website->getConfig(
-                self::XML_PATH_CONNECTOR_CUSTOM_DOMAIN
-            ) . self::API_CONNECTOR_OAUTH_URL_AUTHORISE;
+                    self::XML_PATH_CONNECTOR_CUSTOM_DOMAIN
+                ) . self::API_CONNECTOR_OAUTH_URL_AUTHORISE;
 
         } else {
             $baseUrl = self::API_CONNECTOR_OAUTH_URL
@@ -341,8 +341,8 @@ class Dotdigitalgroup_Email_Helper_Config
             $website = Mage::app()->getWebsite($website);
 
             $tokenUrl = $website->getConfig(
-                self::XML_PATH_CONNECTOR_CUSTOM_DOMAIN
-            ) . self::API_CONNECTOR_OAUTH_URL_TOKEN;
+                    self::XML_PATH_CONNECTOR_CUSTOM_DOMAIN
+                ) . self::API_CONNECTOR_OAUTH_URL_TOKEN;
         } else {
 
             $tokenUrl = self::API_CONNECTOR_OAUTH_URL
@@ -364,8 +364,8 @@ class Dotdigitalgroup_Email_Helper_Config
             $website = Mage::app()->getWebsite($website);
 
             $logUserUrl = $website->getConfig(
-                self::XML_PATH_CONNECTOR_CUSTOM_DOMAIN
-            ) . self::API_CONNECTOR_OAUTH_URL_LOG_USER;
+                    self::XML_PATH_CONNECTOR_CUSTOM_DOMAIN
+                ) . self::API_CONNECTOR_OAUTH_URL_LOG_USER;
         } else {
 
             $logUserUrl = self::API_CONNECTOR_OAUTH_URL

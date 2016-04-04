@@ -5,8 +5,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Manualcontainer
 {
 
     protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element
-    ) 
-    {
+    ) {
         $this->setElement($element);
 
         return
