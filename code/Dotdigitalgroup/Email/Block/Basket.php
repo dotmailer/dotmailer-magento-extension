@@ -52,10 +52,8 @@ class Dotdigitalgroup_Email_Block_Basket extends Mage_Core_Block_Template
             if ($quoteItem->getParentItemId() != null) {
                 continue;
             }
-            $_product = Mage::getModel('catalog/product')->load(
-                $quoteItem->getProductId()
-            );
 
+            $_product    = $quoteItem->getProduct();
             $inStock     = ($_product->getStockItem()->getIsInStock())
                 ? 'In Stock'
                 : 'Out of stock';
