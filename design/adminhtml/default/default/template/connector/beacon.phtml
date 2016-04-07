@@ -9,7 +9,6 @@
 		var cronInstalled = "<?php echo $this->getCronInstalled();?>";
 		var websitesnames = encodeURIComponent('<?php echo $this->getWebsiteNames();?>');
 		var email = "<?php echo $this->getAccountEmail();?>";
-
 		var dmProtocol;
 		if (window.location.protocol.toLowerCase() == 'https:') {
 			dmProtocol = 'https:';
@@ -18,11 +17,10 @@
 		}
 		var dmUrl = dmProtocol + "//integration.dotmailerformagento.co.uk/install/?domain=" + domain + "&apiusername=" + apiusername + "&mage=" + mageVersion +
 				"&email=" + email + "&connector=" + connectorVersion +"&features=" + features + "&cron=" + cronInstalled + "&websitenames=" + websitesnames;
-
-		document.write('<scr' + 'ipt type="text/javascript" src="' + dmUrl + '"></scr' + 'ipt>');
+		var dmscript = document.createElement( 'script' );
+		dmscript.type = 'text/javascript';
+		dmscript.src = dmUrl;
+		$("row_connector_api_credentials_api_enabled").insert( dmscript );
 	})();
 	/* ]]> */
 </script>
-
-
-
