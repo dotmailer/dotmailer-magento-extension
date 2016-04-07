@@ -89,13 +89,6 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
                     }
                 }
             }
-
-            //check api endpoint again
-            if ( ! $apiEndpoint) {
-                throw new Exception(
-                    'API endpoint cannot be empty. Re-save api credentials to retrieve API endpoint.'
-                );
-            }
         }
 
         $this->_apiEndpoint = $apiEndpoint;
