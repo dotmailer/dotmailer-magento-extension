@@ -90,9 +90,6 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Observer
                 }
             }
             $config->cleanCache();
-            Mage::getSingleton('adminhtml/session')->addSuccess(
-                Mage::helper('ddg')->__('API Credentials Valid.')
-            );
         }
 
         return $this;
