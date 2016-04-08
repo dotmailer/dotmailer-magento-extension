@@ -592,7 +592,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function rayLog($message, $filename = 'apiconnector/client.php',
         $line = 1, $tags = array()
-    ) 
+    )
     {
         //check if raygun has code enabled
         if ( ! $this->raygunEnabled()) {
@@ -758,7 +758,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function updateDataFields($email, Mage_Core_Model_Website $website,
         $storeName
-    ) 
+    )
     {
         $data = array();
         if ($storeName = $website->getConfig(
@@ -1067,7 +1067,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         $info   = $client->getAccountInfo();
         $email  = '';
 
-        if (isset($info->properties)) {
+        if ($info && isset($info->properties)) {
             $properties = $info->properties;
 
             foreach ($properties as $property) {
@@ -1116,8 +1116,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getLogFileContent($filename = 'connector_api.log')
     {
-        $pathLogfile = Mage::getBaseDir('var') . DS . 'log' . DS
-            . $filename;;
+        $pathLogfile = Mage::getBaseDir('log') . DS . $filename;
         //tail the length file content
         $lengthBefore = 500000;
 
