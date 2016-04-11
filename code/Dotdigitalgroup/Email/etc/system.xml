@@ -16,8 +16,28 @@
             <show_in_website>1</show_in_website>
             <show_in_store>0</show_in_store>
             <groups>
+                <trial translate="label" module="ddg">
+                    <label>Create a free dotmailer trial now</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>5</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <expanded>1</expanded>
+                    <fields>
+                        <enabled translate="label" module="ddg">
+                            <label>Enabled</label>
+                            <frontend_type>text</frontend_type>
+                            <frontend_model>ddg_automation/adminhtml_system_config_trial</frontend_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </enabled>
+                    </fields>
+                </trial>
                 <api translate="label" module="ddg">
-                    <label>Settings</label>
+                    <label>Already a dotmailer customer?</label>
                     <frontend_type>text</frontend_type>
                     <sort_order>10</sort_order>
                     <show_in_default>1</show_in_default>

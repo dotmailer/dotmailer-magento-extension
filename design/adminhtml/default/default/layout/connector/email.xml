@@ -2,16 +2,20 @@
 <config>
     <adminhtml_system_config_edit>
         <reference name="head">
-            <action method="addCss"><name>connector/config.css</name></action>
+            <action method="addCss">
+                <name>connector/config.css</name>
+            </action>
         </reference>
     </adminhtml_system_config_edit>
     <adminhtml_email_dashboard_index>
         <reference name="head">
-            <action method="addCss"><name>connector/dashboard.css</name></action>
+            <action method="addCss">
+                <name>connector/dashboard.css</name>
+            </action>
         </reference>
         <reference name="left">
-            <block type="ddg_automation/adminhtml_dashboard_switcher" name="store_switcher" as="store_switcher" />
-            <block type="ddg_automation/adminhtml_dashboard_tabs" name="tabs" as="ddg_tabs" />
+            <block type="ddg_automation/adminhtml_dashboard_switcher" name="store_switcher" as="store_switcher"/>
+            <block type="ddg_automation/adminhtml_dashboard_tabs" name="tabs" as="ddg_tabs"/>
         </reference>
         <reference name="content">
             <block type="adminhtml/widget_container"/>
@@ -51,7 +55,9 @@
         <reference name="content">
             <block type="ddg_automation/adminhtml_contact" name="ddg_automation">
                 <block type="adminhtml/store_switcher" name="store_switcher" as="store_switcher">
-                    <action method="setUseConfirm"><params>0</params></action>
+                    <action method="setUseConfirm">
+                        <params>0</params>
+                    </action>
                 </block>
             </block>
         </reference>
@@ -75,7 +81,9 @@
         <reference name="content">
             <block type="ddg_automation/adminhtml_campaign" name="email_campaign">
                 <block type="adminhtml/store_switcher" name="store_switcher" as="store_switcher">
-                    <action method="setUseConfirm"><params>0</params></action>
+                    <action method="setUseConfirm">
+                        <params>0</params>
+                    </action>
                 </block>
             </block>
         </reference>
@@ -94,7 +102,9 @@
         <reference name="content">
             <block type="ddg_automation/adminhtml_automation" name="ddg_automation">
                 <block type="adminhtml/store_switcher" name="store_switcher" as="store_switcher">
-                    <action method="setUseConfirm"><params>0</params></action>
+                    <action method="setUseConfirm">
+                        <params>0</params>
+                    </action>
                 </block>
             </block>
         </reference>
@@ -113,7 +123,9 @@
         <reference name="content">
             <block type="ddg_automation/adminhtml_automation_edit" name="ddg_automation">
                 <block type="adminhtml/store_switcher" name="store_switcher" as="store_switcher">
-                    <action method="setUseConfirm"><params>0</params></action>
+                    <action method="setUseConfirm">
+                        <params>0</params>
+                    </action>
                 </block>
             </block>
         </reference>
@@ -128,6 +140,15 @@
             <action method="addJs">
                 <script>connector/selector.js</script>
             </action>
+            <action method="addJs">
+                <script>connector/jquery-1.10.1.min.js</script>
+            </action>
+            <action method="addJs">
+                <script>connector/jquery.fancybox.pack.js</script>
+            </action>
+            <action method="addCss">
+                <name>connector/fancybox/jquery.fancybox.css</name>
+            </action>
         </reference>
         <reference name="before_body_end">
             <block type="ddg_automation/adminhtml_system_installation" name="ddg.adminhtml.installation"
@@ -137,7 +158,7 @@
     </adminhtml_system_config_edit>
     <default>
         <reference name="content">
-            <block type="core/template" name="ddg-appcues-admin" template="connector/appcues.phtml" />
+            <block type="core/template" name="ddg-appcues-admin" template="connector/appcues.phtml"/>
         </reference>
     </default>
     <adminhtml_email_rules_index>
@@ -148,10 +169,16 @@
     <adminhtml_email_rules_edit>
         <reference name="left">
             <block type="ddg_automation/adminhtml_rules_edit_tabs" name="ddg_rules_tabs">
-                <block type="ddg_automation/adminhtml_rules_edit_tab_main" name="ddg_rule_edit_tab_main" />
+                <block type="ddg_automation/adminhtml_rules_edit_tab_main" name="ddg_rule_edit_tab_main"/>
                 <block type="ddg_automation/adminhtml_rules_edit_tab_conditions" name="ddg_rule_edit_tab_conditions"/>
-                <action method="addTab"><name>main_section</name><block>ddg_rule_edit_tab_main</block></action>
-                <action method="addTab"><name>conditions_section</name><block>ddg_rule_edit_tab_conditions</block></action>
+                <action method="addTab">
+                    <name>main_section</name>
+                    <block>ddg_rule_edit_tab_main</block>
+                </action>
+                <action method="addTab">
+                    <name>conditions_section</name>
+                    <block>ddg_rule_edit_tab_conditions</block>
+                </action>
             </block>
         </reference>
         <reference name="content">

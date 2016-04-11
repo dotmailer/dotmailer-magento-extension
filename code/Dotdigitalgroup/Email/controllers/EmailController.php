@@ -116,8 +116,8 @@ class Dotdigitalgroup_Email_EmailController
      */
     public function callbackAction()
     {
-        $code      = $this->getRequest()->getParam('code', false);
-        $userId    = $this->getRequest()->getParam('state');
+        $code = $this->getRequest()->getParam('code', false);
+        $userId = $this->getRequest()->getParam('state');
         $adminUser = Mage::getModel('admin/user')->load($userId);
 
 
@@ -127,9 +127,9 @@ class Dotdigitalgroup_Email_EmailController
             );
             //callback url
             $callback = $baseUrl . 'connector/email/callback';
-            $data     = 'client_id=' . Mage::getStoreConfig(
-                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CLIENT_ID
-            ) .
+            $data = 'client_id=' . Mage::getStoreConfig(
+                    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CLIENT_ID
+                ) .
                 '&client_secret=' . Mage::getStoreConfig(
                     Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CLIENT_SECRET_ID
                 ) .
@@ -139,7 +139,7 @@ class Dotdigitalgroup_Email_EmailController
 
 
             $url = Mage::helper('ddg/config')->getTokenUrl();
-            $ch  = curl_init();
+            $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_TIMEOUT, 10);
@@ -180,14 +180,14 @@ class Dotdigitalgroup_Email_EmailController
     {
         $quoteId = $this->getRequest()->getParam('quote_id');
         //no quote id redirect to base url
-        if ( ! $quoteId) {
+        if (!$quoteId) {
             $this->_redirectUrl(Mage::getBaseUrl());
         }
 
         $quoteModel = Mage::getModel('sales/quote')->load($quoteId);
 
         //no quote id redirect to base url
-        if ( ! $quoteModel->getId()) {
+        if (!$quoteModel->getId()) {
             $this->_redirectUrl(Mage::getBaseUrl());
         }
 
@@ -207,7 +207,7 @@ class Dotdigitalgroup_Email_EmailController
     protected function _handleCustomerBasket()
     {
         $customerSession = Mage::getSingleton('customer/session');
-        $configCartUrl   = $this->_quote->getStore()->getWebsite()->getConfig(
+        $configCartUrl = $this->_quote->getStore()->getWebsite()->getConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CONTENT_CART_URL
         );
 
@@ -272,22 +272,78 @@ class Dotdigitalgroup_Email_EmailController
      */
     protected function _checkMissingAndAdd()
     {
-        $currentQuote    = Mage::getSingleton('checkout/session')->getQuote();
-        $currentItemIds  = array();
+        $currentQuote = Mage::getSingleton('checkout/session')->getQuote();
+        $currentItemIds = array();
 
-        if($currentQuote->getAllVisibleItems()){
+        if ($currentQuote->getAllVisibleItems()) {
             $currentSessionItems = $currentQuote->getAllItems();
             foreach ($currentSessionItems as $currentSessionItem) {
                 $currentItemIds[] = $currentSessionItem->getId();
             }
         }
-        if($this->_quote->getAllVisibleItems()){
+        if ($this->_quote->getAllVisibleItems()) {
             foreach ($this->_quote->getAllItems() as $item) {
-                if ( ! in_array($item->getId(), $currentItemIds)) {
+                if (!in_array($item->getId(), $currentItemIds)) {
                     $currentQuote->addItem($item);
                 }
             }
             $currentQuote->collectTotals()->save();
         }
+    }
+
+    public function accountcallbackAction()
+    {
+        $params = $this->getRequest()->getParams();
+        $helper = Mage::helper('ddg');
+        if (!empty($params['accountId']) && !empty($params['apiUser']) && !empty($params['pass']) && !empty($params['secret'])) {
+            if ($params['secret'] == Dotdigitalgroup_Email_Helper_Config::API_CONNECTOR_TRIAL_FORM_SECRET) {
+                $apiConfigStatus = $helper->saveApiCreds($params['apiUser'], $params['pass']);
+                $dataFieldsStatus = $helper->setupDataFields();
+                $addressBookStatus = $helper->createAddressBooks();
+                $syncStatus = $helper->enableSyncForTrial();
+                if ($apiConfigStatus && $dataFieldsStatus && $addressBookStatus && $syncStatus) {
+                    $this->sendAjaxResponse(false, $this->_getSuccessHtml());
+                } else {
+                    $this->sendAjaxResponse(true, $this->_getErrorHtml());
+                }
+            }
+        }
+        $this->sendAjaxResponse(true, 'Error');
+    }
+
+    public function sendAjaxResponse($error, $msg)
+    {
+        header('Content-Type: application/json');
+        echo $this->getRequest()->getParam('callback') . "(" . json_encode(
+                array(
+                    'err' => $error,
+                    'message' => $msg
+                )
+            ) . ")";
+        die;
+    }
+
+    protected function _getSuccessHtml()
+    {
+        return
+            "<div class='modal-page'>
+                <div class='success'></div>
+                <h2 class='center'>Congratulations your dotmailer account is now ready, time to make your marketing awesome</h2>
+                <div class='center'>
+                    <input type='submit' class='center' value='Start making money' />
+                </div>
+            </div>";
+    }
+
+    protected function _getErrorHtml()
+    {
+        return
+            "<div class='modal-page'>
+                <div class='fail'></div>
+                <h2 class='center'>Sorry, something went wrong whilst trying to create your new dotmailer account</h2>
+                <div class='center'>
+                    <input type='submit' class='secondary center' value='Contact support@dotmailer.com' />
+                </div>
+            </div>";
     }
 }
