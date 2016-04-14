@@ -256,6 +256,16 @@ class Dotdigitalgroup_Email_Model_Connector_Datafield
             'type' => 'string',
             'visibility' => 'private',
         ),
+        'billing_company' => array(
+            'name' => 'BILLING_COMPANY',
+            'type' => 'string',
+            'visibility' => 'private',
+        ),
+        'delivery_company' => array(
+            'name' => 'DELIVERY_COMPANY',
+            'type' => 'string',
+            'visibility' => 'private',
+        )
     );
 
     /**

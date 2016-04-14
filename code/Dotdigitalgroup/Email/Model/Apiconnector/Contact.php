@@ -275,12 +275,14 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
             ->joinAttribute('billing_postcode',     'customer_address/postcode',    'default_billing', null, 'left')
             ->joinAttribute('billing_telephone',    'customer_address/telephone',   'default_billing', null, 'left')
             ->joinAttribute('billing_region',       'customer_address/region',      'default_billing', null, 'left')
+            ->joinAttribute('billing_company', 'customer_address/company', 'default_billing', null, 'left')
             ->joinAttribute('shipping_street',      'customer_address/street',      'default_shipping', null, 'left')
             ->joinAttribute('shipping_city',        'customer_address/city',        'default_shipping', null, 'left')
             ->joinAttribute('shipping_country_code','customer_address/country_id',  'default_shipping', null, 'left')
             ->joinAttribute('shipping_postcode',    'customer_address/postcode',    'default_shipping', null, 'left')
             ->joinAttribute('shipping_telephone',   'customer_address/telephone',   'default_shipping', null, 'left')
             ->joinAttribute('shipping_region',      'customer_address/region',      'default_shipping', null, 'left')
+            ->joinAttribute('shipping_company', 'customer_address/company', 'default_shipping', null, 'left')
             ->addAttributeToFilter('entity_id', array('in' => $customerIds));
         $customer_log = Mage::getSingleton('core/resource')->getTableName('log_customer');
         $sales_flat_order_grid = Mage::getSingleton('core/resource')->getTableName('sales_flat_order_grid');
