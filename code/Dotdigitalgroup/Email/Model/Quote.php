@@ -167,11 +167,12 @@ class Dotdigitalgroup_Email_Model_Quote extends Mage_Core_Model_Abstract
     }
 
     /**
-     * update quotes for website in single
+     * Update quotes for website in single.
      *
      * @param Mage_Core_Model_Website $website
      */
-    protected function _exportQuoteForWebsiteInSingle(Mage_Core_Model_Website $website
+    protected function _exportQuoteForWebsiteInSingle(
+        Mage_Core_Model_Website $website
     ) {
         try {
             $emailQuoteIds = array();
@@ -182,6 +183,10 @@ class Dotdigitalgroup_Email_Model_Quote extends Mage_Core_Model_Abstract
             $collection    = $this->_getQuoteToImport($website, $limit, true);
 
             $ids    = $collection->getColumnValues('quote_id');
+            //no single quote found
+            if (empty($ids)) {
+                return;
+            }
             $quotes = Mage::getModel('sales/quote')
                 ->getCollection()
                 ->addFieldToFilter('entity_id', array('in' => $ids));
