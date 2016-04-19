@@ -8,6 +8,7 @@ Full support documentation and setup guides available here - https://support.dot
 This module uses modman
 
 First ensure you have modman installed (see here: https://github.com/colinmollenhour/modman#installation)
+
 ...and run the following in your magento root:
 
 ```

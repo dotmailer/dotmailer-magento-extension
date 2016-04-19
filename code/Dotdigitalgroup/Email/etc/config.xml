@@ -690,6 +690,8 @@
                 <custom_attributes></custom_attributes>
                 <validator></validator>
                 <last_increment_id></last_increment_id>
+                <billing_company></billing_company>
+                <delivery_company></delivery_company>
             </customer_data>
             <dynamic_datafield>
                 <datafield_name></datafield_name>
@@ -721,6 +723,7 @@
                 <memory_limit>0</memory_limit>
                 <batch_size>500</batch_size>
                 <orders>50</orders>
+                <importer_bulk_limit>1</importer_bulk_limit>
             </import_settings>
             <sync_settings>
                 <setup_data_fields></setup_data_fields>
