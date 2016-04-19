@@ -246,6 +246,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
             )
             ->addOrderedQty($from, $to)
             ->setOrder('ordered_qty', 'desc')
+            ->addWebsiteFilter(Mage::app()->getWebsite()->getId())
             ->setPageSize($limit);
 
         Mage::getSingleton('cataloginventory/stock')

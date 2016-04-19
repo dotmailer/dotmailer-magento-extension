@@ -92,7 +92,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
                 if ($products) {
                     //register in queue with importer
                     $check = $importer->registerQueue(
-                        Dotdigitalgroup_Email_Model_Importer::IMPORT_TYPE_CATALOG,
+                        'Catalog_Default',
                         $products,
                         Dotdigitalgroup_Email_Model_Importer::MODE_BULK,
                         Mage_Catalog_Model_Abstract::DEFAULT_STORE_ID
@@ -363,7 +363,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
             if ($scope == 1) {
                 //register in queue with importer
                 Mage::getModel('ddg_automation/importer')->registerQueue(
-                    Dotdigitalgroup_Email_Model_Importer::IMPORT_TYPE_CATALOG,
+                    'Catalog_Default',
                     array($key),
                     Dotdigitalgroup_Email_Model_Importer::MODE_SINGLE_DELETE,
                     Mage_Catalog_Model_Abstract::DEFAULT_STORE_ID
