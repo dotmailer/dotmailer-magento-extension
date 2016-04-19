@@ -301,6 +301,9 @@ class Dotdigitalgroup_Email_EmailController
                 $dataFieldsStatus = $helper->setupDataFields();
                 $addressBookStatus = $helper->createAddressBooks();
                 $syncStatus = $helper->enableSyncForTrial();
+                if (isset($params['apiEndpoint'])) {
+                    $helper->saveApiEndPoint($params['apiEndpoint']);
+                }
                 if ($apiConfigStatus && $dataFieldsStatus && $addressBookStatus && $syncStatus) {
                     $this->sendAjaxResponse(false, $this->_getSuccessHtml());
                 } else {
