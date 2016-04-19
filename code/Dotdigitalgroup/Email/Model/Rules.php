@@ -223,9 +223,9 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
             //set used to check later
             $this->_used[] = $attribute;
 
-            if($type == self::REVIEW && isset($this->_attributeMapForQuote[$attribute])){
+            if ($type == self::REVIEW && isset($this->_attributeMapForOrder[$attribute])) {
                 $attribute = $this->_attributeMapForOrder[$attribute];
-            }elseif($type == self::ABANDONED && isset($this->_attributeMapForOrder[$attribute])){
+            } elseif ($type == self::ABANDONED && isset($this->_attributeMapForQuote[$attribute])) {
                 $attribute = $this->_attributeMapForQuote[$attribute];
             }else{
                 $this->_productAttribute[] = $condition;
@@ -306,13 +306,15 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
             $column = array();
             $cond = array();
             foreach($fieldsConditions as $key => $fieldsCondition){
-                $column[] = $key;
+                $exp = new Zend_Db_Expr($key);
+                $column[] = $exp->__toString();
                 $cond[] = $fieldsCondition;
             }
             if(!empty($multiFieldsConditions)){
                 foreach($multiFieldsConditions as $key => $multiFieldsCondition){
                     if(in_array($key, $column)){
-                        $column[] = $key;
+                        $exp = new Zend_Db_Expr($key);
+                        $column[] = $exp;
                         $cond[] = $multiFieldsCondition;
                         continue;
                     }
@@ -339,7 +341,7 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
         if (empty($this->_productAttribute) or !$collection->getSize())
             return $collection;
 
-        foreach ($collection as $collectionItem) {
+        foreach ($collection as $key => $collectionItem) {
             $items = $collectionItem->getAllItems();
             foreach($items as $item){
                 //loaded product
@@ -374,7 +376,7 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
                             $attributeValue = $product->getAttributeText($attribute);
                             //evaluate conditions on values. if true then unset item from collection
                             if($this->_evaluate($value, $cond, $attributeValue)){
-                                $collection->removeItemByKey($collectionItem->getId());
+                                $collection->removeItemByKey($key);
                                 continue 3;
                             }
                         } else {
@@ -389,7 +391,7 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
                                 foreach ($attributeValue as $attrValue) {
                                     //evaluate conditions on values. if true then unset item from collection
                                     if ($this->_evaluate($value, $cond, $attrValue)) {
-                                        $collection->removeItemByKey($collectionItem->getId());
+                                        $collection->removeItemByKey($key);
                                         continue 3;
                                     }
                                 }
@@ -397,7 +399,7 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
                             else{
                                 //evaluate conditions on values. if true then unset item from collection
                                 if ($this->_evaluate($value, $cond, $attributeValue)) {
-                                    $collection->removeItemByKey($collectionItem->getId());
+                                    $collection->removeItemByKey($key);
                                     continue 3;
                                 }
                             }
@@ -432,6 +434,17 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
                 return $var1 >  $var2;
             case "lt":
                 return $var1 <  $var2;
+            case "like":
+                if (strpos($var2, $var1) !== false) {
+                    return true;
+                }
+                break;
+            case "nlike":
+                if (strpos($var2, $var1) === false) {
+                    return true;
+                }
+                break;
         }
+        return false;
     }
 }
