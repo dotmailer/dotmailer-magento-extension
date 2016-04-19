@@ -59,7 +59,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_RulesController
      */
     public function editAction()
     {
-        $id = $this->getRequest()->getParam('id');
+        $id         = $this->getRequest()->getParam('id');
         $emailRules = Mage::getModel('ddg_automation/rules');
 
         if ($id) {
@@ -73,14 +73,13 @@ class Dotdigitalgroup_Email_Adminhtml_Email_RulesController
 
                 return;
             }
-            //$emailRules->setCondition(unserialize($model->getCondition()));
         }
         $this->_title(
             $emailRules->getId()
                 ? $emailRules->getName()
                 : $this->__(
-                    'New Rule'
-                )
+                'New Rule'
+            )
         );
 
         // set entered data if was error when we do save

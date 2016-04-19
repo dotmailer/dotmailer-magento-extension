@@ -13,7 +13,7 @@
 		<div class="entry-edit-head collapseable ">
 
 			<a id="<?php echo $key;?>-head" class="<?php echo $data->getStyle();?>"  href="#" onclick="Fieldset.toggleCollapse('<?php echo $key;?>',
-				'<?php echo $this->getUrl('*/*/state') ;?>');return false;"><?php echo Mage::helper('ddg')->__($checkpoint) ?> </a>
+				'<?php echo $this->getUrl('*/*/state');?>');return false;"><?php echo Mage::helper('ddg')->__($checkpoint); ?> </a>
 
 		</div>
 		<input id="<?php echo $key;?>-state" name="config_state[<?php echo $key ;?>]" type="hidden" value="<?php echo $collapsable;?>">
