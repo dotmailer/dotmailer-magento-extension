@@ -87,18 +87,17 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
                         $config->cleanCache();
                         break;
                     }
-                    
-                    
-                    
-                    
                 }
             }
 
             //check api endpoint again
-            if ( ! $apiEndpoint) {
-                throw new Exception(
-                    'API endpoint cannot be empty. Re-save api credentials to retrieve API endpoint.'
-                );
+            if (!$apiEndpoint && isset($accountInfo->message)) {
+                $helper->log('API endpoint could not be saved. Error from api: ' . $accountInfo->message);
+                Mage::getSingleton('adminhtml/session')
+                    ->addWarning(
+                        'API endpoint cannot be saved. Error from api: ' . $accountInfo->message .
+                        ' Check credentials and re-save to save api endpoint. '
+                    );
             }
         }
 
