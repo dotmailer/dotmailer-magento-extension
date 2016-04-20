@@ -1784,6 +1784,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
     public function saveApiCreds($apiUser, $apiPass)
     {
         try {
+            $apiPass = Mage::helper('core')->encrypt($apiPass);
             $config = new Mage_Core_Model_Config();
             $config->saveConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED, '1');
             $config->saveConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_USERNAME, $apiUser);
