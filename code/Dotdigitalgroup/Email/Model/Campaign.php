@@ -121,8 +121,7 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
                     );
                     if (isset($response->message)) {
                         //update  the failed to send email message
-                        $campaign->setMessage($response->message)->setIsSent(1)
-                            ->save();
+                        $campaign->setMessage($response->message)->setIsSent(1);
                     }
                     $now = Mage::getSingleton('core/date')->gmtDate();
                     //record suscces
