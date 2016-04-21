@@ -1267,6 +1267,12 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         );
     }
 
+    /**
+     * generate url for iframe for trial account popup
+     *
+     * @return string
+     * @throws Mage_Core_Exception
+     */
     public function getIframeFormUrl()
     {
         $formUrl = Dotdigitalgroup_Email_Helper_Config::API_CONNECTOR_TRIAL_FORM_URL;
@@ -1289,6 +1295,12 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         return $url;
     }
 
+    /**
+     * get time zone id for trial account
+     *
+     * @return string
+     * @throws Mage_Core_Exception
+     */
     public function getTimeZoneId()
     {
         $timeZone = Mage::app()->getWebsite()->getConfig(Mage_Core_Model_Locale::XML_PATH_DEFAULT_TIMEZONE);
@@ -1737,6 +1749,11 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         return $result;
     }
 
+    /**
+     * get culture id needed for trial account
+     *
+     * @return mixed
+     */
     public function getCultureId()
     {
         $fallback = 'en_US';
@@ -1757,9 +1774,17 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         return $supportedCultures[$fallback];
     }
 
+    /**
+     * save api credentials
+     *
+     * @param $apiUser
+     * @param $apiPass
+     * @return bool
+     */
     public function saveApiCreds($apiUser, $apiPass)
     {
         try {
+            $apiPass = Mage::helper('core')->encrypt($apiPass);
             $config = new Mage_Core_Model_Config();
             $config->saveConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED, '1');
             $config->saveConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_USERNAME, $apiUser);
@@ -1772,6 +1797,11 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         }
     }
 
+    /**
+     * setup data fields
+     *
+     * @return bool
+     */
     public function setupDataFields()
     {
         $error = false;
@@ -1809,6 +1839,11 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         }
     }
 
+    /**
+     * create certain address books
+     *
+     * @return bool
+     */
     public function createAddressBooks()
     {
         $addressBooks = array(
@@ -1855,6 +1890,11 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         }
     }
 
+    /**
+     * enable certain syncs for newly created trial account
+     *
+     * @return bool
+     */
     public function enableSyncForTrial()
     {
         try {
@@ -1869,5 +1909,20 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
             Mage::logException($e);
             return false;
         }
+    }
+
+    /**
+     * save api endpoint
+     *
+     * @param $value
+     */
+    public function saveApiEndPoint($value)
+    {
+        $config = Mage::getConfig();
+        $config->saveConfig(
+            Dotdigitalgroup_Email_Helper_Config::PATH_FOR_API_ENDPOINT,
+            $value
+        );
+        $config->cleanCache();
     }
 }

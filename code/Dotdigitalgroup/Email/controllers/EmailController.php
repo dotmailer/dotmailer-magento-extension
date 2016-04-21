@@ -301,6 +301,9 @@ class Dotdigitalgroup_Email_EmailController
                 $dataFieldsStatus = $helper->setupDataFields();
                 $addressBookStatus = $helper->createAddressBooks();
                 $syncStatus = $helper->enableSyncForTrial();
+                if (isset($params['apiEndpoint'])) {
+                    $helper->saveApiEndPoint($params['apiEndpoint']);
+                }
                 if ($apiConfigStatus && $dataFieldsStatus && $addressBookStatus && $syncStatus) {
                     $this->sendAjaxResponse(false, $this->_getSuccessHtml());
                 } else {
@@ -342,7 +345,7 @@ class Dotdigitalgroup_Email_EmailController
                 <div class='fail'></div>
                 <h2 class='center'>Sorry, something went wrong whilst trying to create your new dotmailer account</h2>
                 <div class='center'>
-                    <input type='submit' class='secondary center' value='Contact support@dotmailer.com' />
+                    <a class='submit secondary center' href='mailto:support@dotmailer.com'>Contact support@dotmailer.com</a>
                 </div>
             </div>";
     }

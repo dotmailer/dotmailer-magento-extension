@@ -6,19 +6,18 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Config_Trial extends Mage_Adm
     {
         $html = '<a class="various fancybox.iframe" data-fancybox-type="iframe" href=' . Mage::helper('ddg')->getIframeFormUrl() . '>Open Trial Account</a>';
         $script = "
-            <script 'typ'>
+            <script>
                 var j = jQuery.noConflict();
                 j(document).ready(function() {
                     j('.various').fancybox({
-                        maxWidth	: 508,
-                        maxHeight	: 641,
+                        width	: 508,
+                        height	: 612,
+                        scrolling   : 'no',
                         fitToView	: false,
-                        width		: '100%',
-                        height		: '100%',
                         autoSize	: false,
                         closeClick	: false,
                         openEffect	: 'none',
-                        closeEffect	: 'none'
+                        closeEffect	: 'none',
                     });
                 });
             </script>
