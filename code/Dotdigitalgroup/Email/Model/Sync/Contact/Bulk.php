@@ -5,7 +5,7 @@ class Dotdigitalgroup_Email_Model_Sync_Contact_Bulk
     protected $_helper;
     protected $_client;
 
-    public function __construct($collection)
+    public function __construct()
     {
         $this->_helper = Mage::helper('ddg');
     }

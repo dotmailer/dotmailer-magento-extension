@@ -223,8 +223,8 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
                 );
                 if($collection->getSize()){
                     $this->_totalItems += $collection->getSize();
-                    $bulkModel = Mage::getModel($bulk['model'], $collection);
-                    $bulkModel->processCollection();
+                    $bulkModel = Mage::getModel($bulk['model']);
+                    $bulkModel->processCollection($collection);
                 }
             }
         }
@@ -244,8 +244,8 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
                 );
                 if($collection->getSize()){
                     $this->_totalItems += $collection->getSize();
-                    $singleModel = Mage::getModel($single['model'], $collection);
-                    $singleModel->processCollection();
+                    $singleModel = Mage::getModel($single['model']);
+                    $singleModel->processCollection($collection);
                 }
             }
         }
