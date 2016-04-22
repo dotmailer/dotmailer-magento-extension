@@ -155,7 +155,6 @@ class Dotdigitalgroup_Email_Helper_Dashboard extends Mage_Core_Helper_Abstract
             default:
             case 'models':
                 return Mage::getConfig()->getModelClassName($classGroup);
-                break;
         }
     }
 

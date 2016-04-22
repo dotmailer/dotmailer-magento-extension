@@ -196,8 +196,7 @@ class Dotdigitalgroup_Email_Block_Customer_Account_Books
      */
     public function canShowAnything()
     {
-        if ($this->getCanShowDataFields() or $this->getCanShowAdditionalBooks(
-        )
+        if ($this->getCanShowDataFields() or $this->getCanShowAdditionalBooks()
         ) {
             $books  = $this->getAdditionalBooksToShow();
             $fields = $this->getDataFieldsToShow();

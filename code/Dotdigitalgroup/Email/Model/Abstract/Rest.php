@@ -16,8 +16,7 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
     public $isNotJson = false;
 
     public function __construct($website = 0
-    ) // ($url = null, $verb = 'GET', $requestBody = null)
-    {
+    ) {
         $this->url           = null; //$url;
         $this->verb          = 'GET'; //$verb;
         $this->requestBody   = null; //$requestBody;
@@ -39,17 +38,17 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
 
     protected function prettyPrint($json)
     {
-        $result          = '';
-        $level           = 0;
-        $prevChar       = '';
-        $inQuotes       = false;
+        $result        = '';
+        $level         = 0;
+        $prevChar      = '';
+        $inQuotes      = false;
         $endsLineLevel = null;
-        $jsonLength     = strlen($json);
+        $jsonLength    = strlen($json);
 
         for ($i = 0; $i < $jsonLength; $i++) {
-            $char           = $json[$i];
+            $char         = $json[$i];
             $newLineLevel = null;
-            $post           = "";
+            $post         = "";
             if ($endsLineLevel !== null) {
                 $newLineLevel  = $endsLineLevel;
                 $endsLineLevel = null;
@@ -80,7 +79,7 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
                     case "\t":
                     case "\n":
                     case "\r":
-                        $char            = "";
+                        $char          = "";
                         $endsLineLevel = $newLineLevel;
                         $newLineLevel  = null;
                         break;

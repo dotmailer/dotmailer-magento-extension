@@ -27,7 +27,7 @@ class Dotdigitalgroup_Email_DynamicContentController
                 $appEmulation = Mage::getSingleton('core/app_emulation');
                 $appEmulation->startEnvironmentEmulation($storeId);
             } else {
-                //throw new Exception('TE invoice : order not found: ' . $orderId);
+
                 Mage::helper('ddg')->log('order not found: ' . $orderId);
                 $this->sendResponse();
                 Mage::throwException(

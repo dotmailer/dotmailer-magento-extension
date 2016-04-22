@@ -180,8 +180,7 @@ class Dotdigitalgroup_Email_Model_Sales_Order
      * @return array
      */
     public function getConnectorOrders($website, $limit = 100, $modified = false
-    ) 
-    {
+    ) {
         $orders     = $customers = array();
         $storeIds   = $website->getStoreIds();
         $orderModel = Mage::getModel('ddg_automation/order');
@@ -480,8 +479,7 @@ class Dotdigitalgroup_Email_Model_Sales_Order
      * @return bool|Varien_Object
      */
     public function getCustomerLastOrderId(Mage_Customer_Model_Customer $customer
-    ) 
-    {
+    ) {
         $storeIds   = Mage::app()->getWebsite($customer->getWebsiteId())
             ->getStoreIds();
         $collection = Mage::getModel('sales/order')->getCollection();
@@ -505,8 +503,7 @@ class Dotdigitalgroup_Email_Model_Sales_Order
      * @return bool|Varien_Object
      */
     public function getCustomerLastQuoteId(Mage_Customer_Model_Customer $customer
-    ) 
-    {
+    ) {
         $storeIds   = Mage::app()->getWebsite($customer->getWebsiteId())
             ->getStoreIds();
         $collection = Mage::getModel('sales/quote')->getCollection();

@@ -14,8 +14,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Sms_Smsmessagetwo
      * @return string
      */
     protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element
-    ) 
-    {
+    ) {
         $element->setData('placeholder', self::DEFAULT_TEXT);
         $element->setData(
             'after_element_html',

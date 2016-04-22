@@ -13,7 +13,6 @@ class Dotdigitalgroup_Email_Block_Coupon extends Mage_Core_Block_Template
     {
         $params = $this->getRequest()->getParams();
         if ( ! isset($params['id']) || ! isset($params['code'])) {
-            //throw new Exception('Coupon no id or code is set');
             Mage::helper('ddg')->log('Coupon no id or code is set');
 
             return false;
@@ -46,7 +45,7 @@ class Dotdigitalgroup_Email_Block_Coupon extends Mage_Core_Block_Template
             $rule->setCouponCodeGenerator($generator);
             $rule->setCouponType(Mage_SalesRule_Model_Rule::COUPON_TYPE_AUTO);
             //generate the coupon
-            $coupon = $rule->acquireCoupon();
+            $coupon     = $rule->acquireCoupon();
             $couponCode = $coupon->getCode();
             //save the type of coupon
             $couponModel = Mage::getModel('salesrule/coupon')->loadByCode(
@@ -68,8 +67,8 @@ class Dotdigitalgroup_Email_Block_Coupon extends Mage_Core_Block_Template
     {
         return explode(
             ',', Mage::getStoreConfig(
-                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_COUPON_STYLE
-            )
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_COUPON_STYLE
+        )
         );
     }
 
