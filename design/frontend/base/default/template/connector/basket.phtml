@@ -1,8 +1,5 @@
-<?php $items = $this->getBasketItems();
-?>
+<?php $items = $this->getBasketItems(); ?>
 <?php if($items): ?>
-
-    <body>
     <?php $dynamicStyle = $this->getDynamicStyle(); ?>
     <style>
         .product-name{
@@ -112,7 +109,7 @@
             td:before { font-weight: bold; }**/
         }
     </style>
-    <table style ='float:left; width:600px; border: 1px solid #cbd3d4; border-collapse: collapse; padding: 5px;' class="product-table">
+    <table class="product-table" style ='float:left; width:600px; border: 1px solid #cbd3d4; border-collapse: collapse; padding: 5px;'>
         <tr>
             <th class="other-text" style="border-bottom: 1px solid #cbd3d4; border-right: 1px solid #cbd3d4;"><?php echo $this->__("Image");?></th>
             <th class="other-text" style="border-bottom: 1px solid #cbd3d4; border-right: 1px solid #cbd3d4;"><?php echo $this->__("Description");?></th>
@@ -143,26 +140,17 @@
                 <?php echo $item['grandTotal'];?>
             </td>
         </tr>
-        <?php if($this->canShowUrl()): ?>
-            <tr>
-                <td class="other-text" style="padding: 1px;"></td>
-                <td class="other-text" style="padding: 1px;"></td>
-                <td class="other-text" style="padding: 1px;"></td>
-                <td class="other-text" style="padding: 1px;">
-                    <div align="center" style="padding: 5px;">
-                        <a href="<?php echo $this->getUrlForLink(); ?>" class="proudct-url">
-                            <strong>
-                                <?php
-                                if($text = $this->takeMeToCartTextForUrl())
-                                    echo $this->__($text);
-                                else
-                                    echo $this->__('Take Me To My Basket');
-                                ?>
-                            </strong>
-                        </a>
-                    </div>
-                </td>
-            </tr>
-        <?php endif; ?>
     </table>
+    <?php
+
+    if ($this->canShowUrl()) : ?>
+        <p style="text-align: center">
+            <a href="<?php echo $this->getUrlForLink(); ?>" class="proudct-url">
+                <strong>
+                    <?php
+                    $link = ($this->takeMeToCartTextForUrl())? $this->__($this->takeMeToCartTextForUrl()) : $this->__('Take Me To My Basket');
+                    echo $link;?>
+                </strong>
+            </a>
+    <?php endif; ?>
 <?php endif;

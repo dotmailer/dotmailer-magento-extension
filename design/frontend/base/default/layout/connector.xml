@@ -7,6 +7,9 @@
             <block type="core/template" name="easy.email.capture" as="easy.email.capture" template="connector/email_capture_init.phtml"/>
         </reference>
     </default>
+    <ddg_automation_email_basket>
+        <remove name="product.tooltip"/>
+    </ddg_automation_email_basket>
     <ddg_automation_feefo_score>
         <reference name="content">
             <block type="ddg_automation/feefo" name="connector_feefo_service_score" template="connector/feefo/score.phtml"/>
