@@ -20,15 +20,62 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Observer
         );
 
         /**
-         * check for addressbook mapping and disable if no address selected.
+         * Check for addressbook mapping and disable if no address selected.
          */
-        $this->_checkAddressBookMapping(
+        $this->checkAddressBookMapping(
             Mage::app()->getRequest()->getParam('website')
         );
 
         return $this;
     }
 
+    /**
+     * Check for mapping configuration, and disable subscriber/contact sync if not mapped.
+     *
+     * @param $website
+     */
+    protected function checkAddressBookMapping($website)
+    {
+
+        $helper                = Mage::helper('ddg');
+        $customerAddressBook   = $helper->getWebsiteConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMERS_ADDRESS_BOOK_ID,
+            $website
+        );
+        $subscriberAddressBook = $helper->getWebsiteConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SUBSCRIBERS_ADDRESS_BOOK_ID,
+            $website
+        );
+
+        if (! $customerAddressBook
+            && $helper->getWebsiteConfig(
+                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_CONTACT_ENABLED,
+                $website
+            )
+        ) {
+
+            $helper->disableConfigForWebsite(
+                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_CONTACT_ENABLED
+            );
+            Mage::getSingleton('adminhtml/session')->addNotice(
+                'The Contact Sync Disabled - No Addressbook Selected !'
+            );
+        }
+        if (! $subscriberAddressBook
+            && $helper->getWebsiteConfig(
+                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_SUBSCRIBER_ENABLED,
+                $website
+            )
+        ) {
+            $helper->disableConfigForWebsite(
+                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_SUBSCRIBER_ENABLED
+            );
+            Mage::getSingleton('adminhtml/session')->addNotice(
+                'The Subscriber Sync Disabled - No Addressbook Selected !'
+            );
+        }
+
+    }
 
     /**
      * API Credentials.
@@ -47,25 +94,29 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Observer
 
         $apiUsername = isset($groups['api']['fields']['username']['value'])
             ? $groups['api']['fields']['username']['value'] : false;
-        $apiPassword = isset($groups['api']['fields']['password']['value'])
-            ? $groups['api']['fields']['password']['value'] : false;
+        $scopeId     = 0;
+        if ($website = Mage::app()->getRequest()->getParam('website')) {
+            $scope   = 'websites';
+            $scopeId = Mage::app()->getWebsite($website)->getId();
+        } else {
+            $scope = "default";
+        }
+
+        $apiPassword = Mage::helper('ddg')->getApiPassword($website);
+
         //skip if the inherit option is selected
         if ($apiUsername && $apiPassword) {
             Mage::helper('ddg')->log('----VALIDATING ACCOUNT---');
             $testModel = Mage::getModel('ddg_automation/apiconnector_test');
-            $isValid   = $testModel->validate($apiUsername, $apiPassword);
-            $config    = Mage::getConfig();
-            if ( ! $isValid) {
+
+            $isValid = $testModel->validate($apiUsername, $apiPassword);
+            $config  = Mage::getConfig();
+
+
+            if (! $isValid) {
                 /**
                  * Disable invalid Api credentials
                  */
-                $scopeId = 0;
-                if ($website = Mage::app()->getRequest()->getParam('website')) {
-                    $scope   = 'websites';
-                    $scopeId = Mage::app()->getWebsite($website)->getId();
-                } else {
-                    $scope = "default";
-                }
                 $config->saveConfig(
                     Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED,
                     0, $scope, $scopeId
@@ -95,70 +146,6 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Observer
         return $this;
     }
 
-    protected function _checkAddressBookMapping($website)
-    {
-
-        $helper                = Mage::helper('ddg');
-        $customerAddressBook   = $helper->getWebsiteConfig(
-            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMERS_ADDRESS_BOOK_ID,
-            $website
-        );
-        $subscriberAddressBook = $helper->getWebsiteConfig(
-            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SUBSCRIBERS_ADDRESS_BOOK_ID,
-            $website
-        );
-
-        if ( ! $customerAddressBook
-            && $helper->getWebsiteConfig(
-                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_CONTACT_ENABLED,
-                $website
-            )
-        ) {
-
-            $helper->disableConfigForWebsite(
-                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_CONTACT_ENABLED
-            );
-            Mage::getSingleton('adminhtml/session')->addNotice(
-                'The Contact Sync Disabled - No Addressbook Selected !'
-            );
-        }
-        if ( ! $subscriberAddressBook
-            && $helper->getWebsiteConfig(
-                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_SUBSCRIBER_ENABLED,
-                $website
-            )
-        ) {
-            $helper->disableConfigForWebsite(
-                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_SUBSCRIBER_ENABLED
-            );
-            Mage::getSingleton('adminhtml/session')->addNotice(
-                'The Subscriber Sync Disabled - No Addressbook Selected !'
-            );
-        }
-
-    }
-
-    /**
-     * Check for name option in array.
-     *
-     * @param $name
-     * @param $data
-     *
-     * @return bool
-     */
-    protected function _checkForOption($name, $data)
-    {
-        //loop for all options
-        foreach ($data as $one) {
-
-            if ($one->name == $name) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     /**
      * Update Feed for latest releases.
      *
@@ -167,7 +154,6 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Observer
     {
         Mage::getModel('ddg_automation/feed')->checkForUpgrade();
     }
-
 
     /**
      * Add modified segment for contact.
@@ -182,7 +168,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Observer
         $customerId  = Mage::getSingleton('customer/session')->getCustomerId();
         $websiteId   = Mage::app()->getStore()->getWebsiteId();
 
-        if ( ! empty($segmentsIds) && $customerId) {
+        if (! empty($segmentsIds) && $customerId) {
             $this->addContactsFromWebsiteSegments(
                 $customerId, $segmentsIds, $websiteId
             );
@@ -190,7 +176,6 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Observer
 
         return $this;
     }
-
 
     /**
      * Add segment ids.
@@ -203,8 +188,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Observer
      */
     protected function addContactsFromWebsiteSegments($customerId, $segmentIds,
         $websiteId
-    ) 
-    {
+    ) {
 
         if (empty($segmentIds) || ! $customerId) {
             return $this;
@@ -227,16 +211,5 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Observer
         }
 
         return $this;
-    }
-
-    protected function getCustomerSegmentIdsForWebsite($customerId, $websiteId)
-    {
-        $segmentIds = Mage::getModel('ddg_automation/contact')->getCollection()
-            ->addFieldToFilter('website_id', $websiteId)
-            ->addFieldToFilter('customer_id', $customerId)
-            ->getFirstItem()
-            ->getSegmentIds();
-
-        return $segmentIds;
     }
 }
