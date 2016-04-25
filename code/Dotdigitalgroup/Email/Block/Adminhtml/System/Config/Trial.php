@@ -22,7 +22,11 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Config_Trial extends Mage_Adm
                         openEffect	: 'none',
                         closeEffect	: 'none',
                     });
-                });
+                    
+                    j(document).on('click', 'a.fancybox-close', function(){
+                        location.reload();
+                    });
+                }); 
             </script>
         ";
         return $html . $script;
