@@ -274,7 +274,7 @@ class Dotdigitalgroup_Email_Helper_Config
     /**
      * Trial Account
      */
-    const API_CONNECTOR_TRIAL_FORM_URL = 'http://magentosignup.dotmailer.com/';
+    const API_CONNECTOR_TRIAL_FORM_URL = 'https://magentosignup.dotmailer.com/';
     const API_CONNECTOR_TRIAL_FORM_SECRET = 'DmTrialFormSecret';
 
     /**
