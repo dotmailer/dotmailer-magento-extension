@@ -221,7 +221,6 @@ class Dotdigitalgroup_Email_Helper_Config
     /**
      * OAUTH
      */
-    const API_CONNECTOR_OAUTH_URL                           = 'https://my.dotmailer.com/';
     const API_CONNECTOR_OAUTH_URL_AUTHORISE                 = 'OAuth2/authorise.aspx?';
     const API_CONNECTOR_OAUTH_URL_TOKEN                     = 'OAuth2/Tokens.ashx';
     const API_CONNECTOR_OAUTH_URL_LOG_USER                  = '?oauthtoken=';
@@ -305,13 +304,28 @@ class Dotdigitalgroup_Email_Helper_Config
         if ($this->getAuthorizeLinkFlag($website)){
             $website = Mage::app()->getWebsite($website);
 
-            $baseUrl = $website->getConfig(self::XML_PATH_CONNECTOR_CUSTOM_DOMAIN) . self::API_CONNECTOR_OAUTH_URL_AUTHORISE;
-
+            $baseUrl = $website->getConfig(self::XML_PATH_CONNECTOR_CUSTOM_DOMAIN)
+                . self::API_CONNECTOR_OAUTH_URL_AUTHORISE;
         } else {
-            $baseUrl = self::API_CONNECTOR_OAUTH_URL .  self::API_CONNECTOR_OAUTH_URL_AUTHORISE;
+
+            $baseUrl = $this->getRegionAuthorize($website) .  self::API_CONNECTOR_OAUTH_URL_AUTHORISE;
         }
 
         return $baseUrl;
+    }
+
+    /**
+     * Region aware authorize link.
+     * @param $website
+     *
+     * @return mixed
+     */
+    public function getRegionAuthorize($website)
+    {
+        $baseRegionBaseUrl =  Mage::helper('ddg')->getWebsiteConfig(
+            Dotdigitalgroup_Email_Helper_Config::PATH_FOR_API_ENDPOINT, $website) . DS;
+
+        return $baseRegionBaseUrl;
     }
 
 	/**
@@ -340,7 +354,7 @@ class Dotdigitalgroup_Email_Helper_Config
             $tokenUrl = $website->getConfig(self::XML_PATH_CONNECTOR_CUSTOM_DOMAIN) . self::API_CONNECTOR_OAUTH_URL_TOKEN;
         } else {
 
-            $tokenUrl = self::API_CONNECTOR_OAUTH_URL . self::API_CONNECTOR_OAUTH_URL_TOKEN;
+            $tokenUrl = $this->getRegionAuthorize($website) . self::API_CONNECTOR_OAUTH_URL_TOKEN;
         }
 
         return $tokenUrl;
@@ -360,7 +374,7 @@ class Dotdigitalgroup_Email_Helper_Config
             $logUserUrl = $website->getConfig(self::XML_PATH_CONNECTOR_CUSTOM_DOMAIN) . self::API_CONNECTOR_OAUTH_URL_LOG_USER;
         } else {
 
-            $logUserUrl = self::API_CONNECTOR_OAUTH_URL . self::API_CONNECTOR_OAUTH_URL_LOG_USER;
+            $logUserUrl = $this->getRegionAuthorize($website) . self::API_CONNECTOR_OAUTH_URL_LOG_USER;
         }
         return $logUserUrl;
     }
