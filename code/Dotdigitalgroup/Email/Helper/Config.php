@@ -12,25 +12,6 @@ class Dotdigitalgroup_Email_Helper_Config
     const XML_PATH_CONNECTOR_API_PASSWORD                                       = 'connector_api_credentials/api/password';
 
     /**
-     * SMS SECTION.
-     */
-    //enabled
-    const XML_PATH_CONNECTOR_SMS_ENABLED_1                                      = 'connector_automation_studio/sms/sms_one_enabled';
-    const XML_PATH_CONNECTOR_SMS_ENABLED_2                                      = 'connector_automation_studio/sms/sms_two_enabled';
-    const XML_PATH_CONNECTOR_SMS_ENABLED_3                                      = 'connector_automation_studio/sms/sms_three_enabled';
-    const XML_PATH_CONNECTOR_SMS_ENABLED_4                                      = 'connector_automation_studio/sms/sms_four_enabled';
-    //status
-    const XML_PATH_CONNECTOR_SMS_STATUS_1                                       = 'connector_automation_studio/sms/sms_one_status';
-    const XML_PATH_CONNECTOR_SMS_STATUS_2                                       = 'connector_automation_studio/sms/sms_two_status';
-    const XML_PATH_CONNECTOR_SMS_STATUS_3                                       = 'connector_automation_studio/sms/sms_three_status';
-    const XML_PATH_CONNECTOR_SMS_STATUS_4                                       = 'connector_automation_studio/sms/sms_four_status';
-    //message
-    const XML_PATH_CONNECTOR_SMS_MESSAGE_1                                      = 'connector_automation_studio/sms/sms_one_message';
-    const XML_PATH_CONNECTOR_SMS_MESSAGE_2                                      = 'connector_automation_studio/sms/sms_two_message';
-    const XML_PATH_CONNECTOR_SMS_MESSAGE_3                                      = 'connector_automation_studio/sms/sms_three_message';
-    const XML_PATH_CONNECTOR_SMS_MESSAGE_4                                      = 'connector_automation_studio/sms/sms_four_message';
-
-    /**
      * SYNC SECTION.
      */
     const XML_PATH_CONNECTOR_SYNC_CONTACT_ENABLED                       = 'connector_sync_settings/sync/contact_enabled';

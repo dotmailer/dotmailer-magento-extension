@@ -18,7 +18,6 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
     const REST_CAMPAIGN_SEND = '/v2/campaigns/send';
     const REST_CONTACTS_SUPPRESSED_SINCE = '/v2/contacts/suppressed-since/';
     const REST_DATA_FIELDS_CAMPAIGNS = '/v2/campaigns';
-    const REST_SMS_MESSAGE_SEND_TO = '/v2/sms-messages/send-to/';
     const REST_CONTACTS_RESUBSCRIBE = '/v2/contacts/resubscribe';
     const REST_CAMPAIGN_FROM_ADDRESS_LIST = '/v2/custom-from-addresses';
     const REST_CREATE_CAMPAIGN = '/v2/campaigns';
@@ -952,40 +951,6 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
 
         return $response;
     }
-
-    /**
-     * Send a single SMS message.
-     *
-     * @param $telephoneNumber
-     * @param $message
-     *
-     * @return object
-     */
-    public function postSmsMessagesSendTo($telephoneNumber, $message)
-    {
-        $data = array('Message' => $message);
-        $url  = $this->_apiEndpoint . self::REST_SMS_MESSAGE_SEND_TO
-            . $telephoneNumber;
-        $this->setUrl($url)
-            ->setVerb('POST')
-            ->buildPostBody($data);
-
-        $response = $this->execute();
-        //log error
-        if (isset($response->message)
-            && ! in_array(
-                $response->message, $this->exludeMessages
-            )
-        ) {
-            $message = 'POST SMS MESSAGE SEND to ' . $telephoneNumber
-                . ' message: ' . $message . ' error: ' . $response->message;
-            Mage::helper('ddg')->log($message)
-                ->rayLog($response->message);
-        }
-
-        return $response;
-    }
-
 
     /**
      * Deletes multiple contacts from an address book.
