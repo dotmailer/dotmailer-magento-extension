@@ -75,8 +75,7 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
      * @return $this
      */
     public function handleCustomerRegiterSuccess(Varien_Event_Observer $observer
-    ) 
-    {
+    ) {
         /** @var $customer Mage_Customer_Model_Customer */
         $customer  = $observer->getEvent()->getCustomer();
         $websiteId = $customer->getWebsiteId();
@@ -194,17 +193,17 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
             $helper->setConnectorContactToReImport($customerId);
             //save review info in the table
             $this->_registerReview($dataObject);
-            $store     = Mage::app()->getStore($dataObject->getStoreId());
-            $storeName = $store->getName();
-            $website   = Mage::app()->getStore($store)->getWebsite();
-            $customerCollection  = Mage::getModel('customer/customer')->getCollection()
+            $store              = Mage::app()->getStore(
+                $dataObject->getStoreId()
+            );
+            $storeName          = $store->getName();
+            $website            = Mage::app()->getStore($store)->getWebsite();
+            $customerCollection = Mage::getModel('customer/customer')
+                ->getCollection()
                 ->addAttributeToSelect('email')
                 ->addAttributeToFilter('entity_id', $customerId);
-
-            $customer = $customerCollection->getSelect()->limit(1)->getFirstItem();
-
-
-
+            $customerCollection->getSelect()->limit(1);
+            $customer = $customerCollection->getFirstItem();
 
             //if api is not enabled
             if ( ! $website->getConfig(
