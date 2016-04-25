@@ -201,9 +201,7 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
         $this->_totalItems = 0;
 
         //Set bulk sync limit
-        $this->_bulkSyncLimit = Mage::helper('ddg')->getWebsiteConfig(
-            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_IMPORTER_BULK_LIMIT
-        );
+        $this->_bulkSyncLimit = 5;
 
         //Set priority
         $this->_setPriority();

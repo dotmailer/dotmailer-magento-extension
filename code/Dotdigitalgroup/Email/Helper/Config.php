@@ -237,7 +237,6 @@ class Dotdigitalgroup_Email_Helper_Config
 	const XML_PATH_CONNECTOR_DEBUG_API_REQUEST_LIMIT        = 'connector_developer_settings/debug/api_request_time_limit';
 	const XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT  = 'connector_developer_settings/import_settings/orders';
     const XML_PATH_CONNECTOR_IP_RESTRICTION_ADDRESSES       = 'connector_developer_settings/ip_restriction/ip_addresses';
-    const XML_PATH_CONNECTOR_IMPORTER_BULK_LIMIT            = 'connector_developer_settings/import_settings/importer_bulk_limit';
 
 	/**
      * Nosto
@@ -255,7 +254,7 @@ class Dotdigitalgroup_Email_Helper_Config
     /**
      * Trial Account
      */
-    const API_CONNECTOR_TRIAL_FORM_URL = 'http://magentosignup.dotmailer.com/';
+    const API_CONNECTOR_TRIAL_FORM_URL = 'https://magentosignup.dotmailer.com/';
     const API_CONNECTOR_TRIAL_FORM_SECRET = 'DmTrialFormSecret';
 
     /**
