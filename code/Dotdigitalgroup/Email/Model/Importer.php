@@ -187,9 +187,13 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
             $io->open();
             $check = $io->write($fileName, $data);
             if ($check) {
-                $csvArray = $this->_csvToArray($fileName);
-                $io->rm($fileName);
-                Mage::getResourceModel('ddg_automation/contact')->unsubscribe($csvArray);
+                try {
+                    $csvArray = $this->_csvToArray($fileName);
+                    $io->rm($fileName);
+                    Mage::getResourceModel('ddg_automation/contact')->unsubscribe($csvArray);
+                } catch (Exception $e) {
+                    Mage::logException($e);
+                }
             } else {
                 $helper->log('_processContactImportReportFaults: cannot save data to CSV file.');
             }

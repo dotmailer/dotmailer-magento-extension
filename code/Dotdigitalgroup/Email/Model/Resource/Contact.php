@@ -299,19 +299,17 @@ class Dotdigitalgroup_Email_Model_Resource_Contact
     public function unsubscribe($data)
     {
         $write  = $this->_getWriteAdapter();
-        $emails = '"' . implode('","', $data) . '"';
+        $emails = "'" . implode("','", $data) . "'";
 
         try {
             //un-subscribe from the email contact table.
-            $whereCondition = $write->quoteInto('email IN (?)', $emails);
-
             $write->update(
                 $this->getMainTable(),
                 array(
-                    'is_subscriber' => new Zend_Db_Expr('null'),
-                    'suppressed'    => '1'
+                    'subscriber_status' => Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED,
+                    'suppressed' => 1
                 ),
-                $whereCondition
+                "email IN($emails)"
             );
 
             // un-subscribe newsletter subscribers
