@@ -41,10 +41,8 @@ class Dotdigitalgroup_Email_Model_Sync_Contact_Bulk
         
         if(!$curlError){
             if (isset($result->message) && !isset($result->id)){
-                $message = (isset($result->message))? $result->message : 'Error unknown';
-
                 $item->setImportStatus(Dotdigitalgroup_Email_Model_Importer::FAILED)
-                    ->setMessage($message);
+                    ->setMessage($result->message);
 
                 $item->save();
             }
