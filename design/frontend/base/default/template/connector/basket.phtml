@@ -5,54 +5,55 @@
         .product-name{
             color: <?php echo $dynamicStyle['nameColor'];?>;
             font-size: <?php echo $dynamicStyle['fontSize'];?>;
-        <?php if(in_array('bold', $dynamicStyle['nameStyle'])): ?>
-            font-weight: bold;
-        <?php endif; ?>
-        <?php if(in_array('italic', $dynamicStyle['nameStyle'])): ?>
-            font-style: italic;
-        <?php endif; ?>
-        <?php if(in_array('underline', $dynamicStyle['nameStyle'])): ?>
-            text-decoration: underline;
-        <?php endif; ?>
+            <?php if (in_array('bold', $dynamicStyle['nameStyle'])) : ?>
+                font-weight: bold;
+            <?php endif; ?>
+            <?php if (in_array('italic', $dynamicStyle['nameStyle'])) : ?>
+                font-style: italic;
+            <?php endif; ?>
+            <?php if (in_array('underline', $dynamicStyle['nameStyle'])) : ?>
+                text-decoration: underline;
+            <?php endif; ?>
         }
         .product-price{
             color: <?php echo $dynamicStyle['priceColor'];?>;
             font-size: <?php echo $dynamicStyle['priceFontSize'];?>;
-        <?php if(in_array('bold', $dynamicStyle['priceStyle'])): ?>
-            font-weight: bold;
-        <?php endif; ?>
-        <?php if(in_array('italic', $dynamicStyle['priceStyle'])): ?>
-            font-style: italic;
-        <?php endif; ?>
-        <?php if(in_array('underline', $dynamicStyle['priceStyle'])): ?>
-            text-decoration: underline;
-        <?php endif; ?>
+            <?php if (in_array('bold', $dynamicStyle['priceStyle'])) : ?>
+                font-weight: bold;
+            <?php endif; ?>
+            <?php if (in_array('italic', $dynamicStyle['priceStyle'])) : ?>
+                font-style: italic;
+            <?php endif; ?>
+            <?php if (in_array('underline', $dynamicStyle['priceStyle'])) : ?>
+                text-decoration: underline;
+            <?php endif; ?>
         }
-        .proudct-url{
+        .product-url{
             color: <?php echo $dynamicStyle['urlColor'];?>;
             font-size: <?php echo $dynamicStyle['urlFontSize'];?>;
-        <?php if(in_array('bold', $dynamicStyle['linkStyle'])): ?>
-            font-weight: bold;
-        <?php endif; ?>
-        <?php if(in_array('italic', $dynamicStyle['linkStyle'])): ?>
-            font-style: italic;
-        <?php endif; ?>
-        <?php if(in_array('underline', $dynamicStyle['linkStyle'])): ?>
-            text-decoration: underline;
-        <?php endif; ?>
+
+            <?php if (in_array('bold', $dynamicStyle['linkStyle'])) : ?>
+                font-weight: bold;
+            <?php endif; ?>
+            <?php if (in_array('italic', $dynamicStyle['linkStyle'])) : ?>
+                font-style: italic;
+            <?php endif; ?>
+            <?php if (in_array('underline', $dynamicStyle['linkStyle'])) : ?>
+                text-decoration: underline;
+            <?php endif; ?>
         }
         .other-text{
             color: <?php echo $dynamicStyle['otherColor'];?>;
             font-size: <?php echo $dynamicStyle['otherFontSize'];?>;
-        <?php if(in_array('bold', $dynamicStyle['otherStyle'])): ?>
-            font-weight: bold;
-        <?php endif; ?>
-        <?php if(in_array('italic', $dynamicStyle['otherStyle'])): ?>
-            font-style: italic;
-        <?php endif; ?>
-        <?php if(in_array('underline', $dynamicStyle['otherStyle'])): ?>
-            text-decoration: underline;
-        <?php endif; ?>
+            <?php if (in_array('bold', $dynamicStyle['otherStyle'])) : ?>
+                font-weight: bold;
+            <?php endif; ?>
+            <?php if (in_array('italic', $dynamicStyle['otherStyle'])) : ?>
+                font-style: italic;
+            <?php endif; ?>
+            <?php if (in_array('underline', $dynamicStyle['otherStyle'])) : ?>
+                text-decoration: underline;
+            <?php endif; ?>
         }
         .product-table{
             font-family: <?php echo $dynamicStyle['docFont'];?>;
@@ -67,77 +68,87 @@
         .product-table td{
             width: 25%;
             padding-bottom: 10px;
+            text-align: center;
         }
+        tr.noborder td {
+            border: none!important;
+        }
+
         <?php echo $dynamicStyle['dynamicStyling'];?>
         /** Responsive  **/
         @media (max-width: 760px) {
             /* Force table to not be like tables anymore */
-            table, thead, tbody, th, td, tr {
+            .product-table table, .product-table thead, .product-table tbody,
+            .product-table th, .product-table td, .product-table tr {
                 display: block;
             }
-            .product-table td{
+
+            .product-table td {
                 width: 200px !important;
             }
-            .product-table{
+
+            .product-table {
                 width: auto !important;
+                margin: 0 auto;
+                float: none!important;
             }
-            tr {
+
+            .product-table tr {
                 border: none;
                 border-bottom: 1px solid #eee;
                 margin-bottom: 10px !important;
             }
-            td {
+
+            .product-table td {
                 border: none !important;
                 position: relative;
             }
-            td:before {
+
+            .quantity:before {
+                content: 'Quantity:';
+            }
+
+            .product-table td:before {
                 position: relative;
             }
-            tr th {
+
+            .product-table tr th {
                 display: none !important;
                 border: none !important;
             }
-            /** Does not work in email clients
-            td:nth-of-type(1):before { content: ""; }
-            td:nth-of-type(2):before { content: ""; }
-            td:nth-of-type(3):before { content: "Quantity: ";}
-            td:nth-of-type(4):before { content: "Total: "; }
-            tr:last-child td:nth-of-type(1):before { content: ""; }
-            tr:last-child td:nth-of-type(2):before { content: ""; }
-            tr:last-child td:nth-of-type(3):before { content: ""; }
-            tr:last-child td:nth-of-type(4):before { content: ""; }
-            td:before { font-weight: bold; }**/
+            .hidemob {
+                display: none!important;
+            }
+
         }
     </style>
     <table class="product-table" style ='float:left; width:600px; border: 1px solid #cbd3d4; border-collapse: collapse; padding: 5px;'>
         <tr>
-            <th class="other-text" style="border-bottom: 1px solid #cbd3d4; border-right: 1px solid #cbd3d4;"><?php echo $this->__("Image");?></th>
-            <th class="other-text" style="border-bottom: 1px solid #cbd3d4; border-right: 1px solid #cbd3d4;"><?php echo $this->__("Description");?></th>
-            <th class="other-text" style="border-bottom: 1px solid #cbd3d4; border-right: 1px solid #cbd3d4;"><?php echo $this->__("Quantity");?></th>
-            <th class="other-text" style="border-bottom: 1px solid #cbd3d4;">Total</th>
+            <th class="other-text" style="padding: 5px; border-bottom: 1px solid #cbd3d4; border-right: 1px solid #cbd3d4;"><?php echo $this->__("Image");?></th>
+            <th class="other-text" style="padding: 5px; border-bottom: 1px solid #cbd3d4; border-right: 1px solid #cbd3d4;"><?php echo $this->__("Description");?></th>
+            <th class="other-text" style="padding: 5px; border-bottom: 1px solid #cbd3d4; border-right: 1px solid #cbd3d4;"><?php echo $this->__("Quantity");?></th>
+            <th class="other-text" style="padding: 5px; border-bottom: 1px solid #cbd3d4;">Total</th>
         </tr>
-
         <?php foreach($items as $item):?>
             <tr>
-                <td style="padding: 1px; border-bottom: 1px solid #cbd3d4; border-right: 1px solid #cbd3d4;">
+                <td style="padding: 5px; border-bottom: 1px solid #cbd3d4; border-right: 1px solid #cbd3d4;">
                     <img alt="<?php echo $this->stripTags($this->getImageLabel($item['product'], 'small_image'), null, true) ?>"
                          src="<?php echo $this->helper('catalog/image')->init($item['product'], 'small_image')->resize(85);?>" width="85" height="85" align="middle" border="0">
                 </td>
                 <td  class="product-name" style="padding: 1px; border-bottom: 1px solid #cbd3d4; border-right: 1px solid #cbd3d4;">
-                    Product Name : <a class="proudct-url" href="<?php echo $item['productUrl'];?>"><?php echo
-                        $this->escapeHtml($item['product']->getName())  . '</a></br>'. $item['inStock'];?></td>
-                <td class="product-price" style="padding: 1px; border-bottom: 1px solid #cbd3d4; border-right: 1px solid #cbd3d4;"><?php
+                    <a class="product-url" href="<?php echo $item['productUrl'];?>"><?php echo
+                        $this->escapeHtml($item['product']->getName())  . '</a></br>' . $item['inStock'];?></td>
+                <td class="product-price quantity" style="padding: 1px; border-bottom: 1px solid #cbd3d4; border-right: 1px solid #cbd3d4;"><?php
                     echo (int)$item['qty'];?></td>
-                <td class="product-price" style="padding: 1px; border-bottom: 1px solid #cbd3d4;"><?php echo $item['total'];?></td>
+                <td class="product-price" style="padding: 5px; border-bottom: 1px solid #cbd3d4;"><?php echo $item['total'];?></td>
             </tr>
         <?php endforeach;?>
-        <tr>
-            <td style="padding: 1px; border-right: 1px solid #cbd3d4; border-bottom: 1px solid #cbd3d4;"></td>
-            <td style="padding: 1px; border-right: 1px solid #cbd3d4; border-bottom: 1px solid #cbd3d4;"></td>
-
-            <td class="other-text" style="padding: 1px; border-right: 1px solid #cbd3d4; border-bottom: 1px solid #cbd3d4;">Order Total</td>
-            <td class="other-text" style="padding: 1px; border-bottom: 1px solid #cbd3d4;">
-                <?php echo $item['grandTotal'];?>
+        <tr style="border: none!important;">
+            <td class="hidemob" style="border: none;"></td>
+            <td class="hidemob" style="border: none;"></td>
+            <td class="hidemob" style="border: none;"></td>
+            <td class="other-text" style="padding: 5px;">
+                <?php echo 'Order Total: ' . $item['grandTotal'];?>
             </td>
         </tr>
     </table>
@@ -145,7 +156,7 @@
 
     if ($this->canShowUrl()) : ?>
         <p style="text-align: center">
-            <a href="<?php echo $this->getUrlForLink(); ?>" class="proudct-url">
+            <a href="<?php echo $this->getUrlForLink(); ?>" class="product-url">
                 <strong>
                     <?php
                     $link = ($this->takeMeToCartTextForUrl())? $this->__($this->takeMeToCartTextForUrl()) : $this->__('Take Me To My Basket');
