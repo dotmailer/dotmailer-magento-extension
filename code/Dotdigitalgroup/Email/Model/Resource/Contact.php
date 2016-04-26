@@ -303,8 +303,14 @@ class Dotdigitalgroup_Email_Model_Resource_Contact
 
         try {
             //un-subscribe from the email contact table.
-            $sql = "UPDATE " . $this->getMainTable() . " SET subscriber_status=3, suppressed=1 WHERE email IN($emails)";
-            $write->query($sql);
+            $write->update(
+                $this->getMainTable(),
+                array(
+                    'subscriber_status' => Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED,
+                    'suppressed' => 1
+                ),
+                "email IN($emails)"
+            );
 
             // un-subscribe newsletter subscribers
             $newsletterCollection = Mage::getModel('newsletter/subscriber')
