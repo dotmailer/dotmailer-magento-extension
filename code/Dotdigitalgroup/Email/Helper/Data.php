@@ -1275,6 +1275,10 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getIframeFormUrl()
     {
+        if (!$this->isFrontendAdminSecure()) {
+
+        }
+
         $formUrl = Dotdigitalgroup_Email_Helper_Config::API_CONNECTOR_TRIAL_FORM_URL;
         $ipAddress = Mage::helper('core/http')->getRemoteAddr();
         $timezone = $this->getTimeZoneId();
@@ -1924,5 +1928,23 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
             $value
         );
         $config->cleanCache();
+    }
+
+    /**
+     * check if both frotnend and backend secure(HTTPS)
+     *
+     * @return bool
+     */
+    public function isFrontendAdminSecure()
+    {
+        $frontend = Mage::app()->getStore()->isFrontUrlSecure();
+        $admin = Mage::app()->getStore()->isAdminUrlSecure();
+        $current = Mage::app()->getStore()->isCurrentlySecure();
+
+        if ($frontend && $admin && $current) {
+            return true;
+        }
+
+        return false;
     }
 }

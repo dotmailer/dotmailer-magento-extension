@@ -38,35 +38,27 @@ class Dotdigitalgroup_Email_Model_Sync_Contact_Bulk
     protected function _handleItemAfterSync($item, $result, $file = false)
     {
         $curlError = $this->_checkCurlError($item);
-        
-        if(!$curlError){
-            if (isset($result->message)) {
-                //If result id
-                if (isset($result->id)) {
-                    $item->setImportId($result->id);
-                }
 
+        if (!$curlError) {
+            if (isset($result->message) && !isset($result->id)) {
                 $item->setImportStatus(Dotdigitalgroup_Email_Model_Importer::FAILED)
-                    ->setMessage($result->message)
-                    ->save();
-            } elseif (isset($result->id)) {
+                    ->setMessage($result->message);
+
+                $item->save();
+            } elseif (isset($result->id) && !isset($result->message)) {
                 //if file
                 if($file){
                     $fileHelper = Mage::helper('ddg/file');
                     $fileHelper->archiveCSV($file);
                 }
 
-                //If message
-                if (isset($result->message)) {
-                    $item->setMessage($result->message);
-                }
-
                 $item->setImportStatus(Dotdigitalgroup_Email_Model_Importer::IMPORTING)
                     ->setImportId($result->id)
                     ->setImportStarted(Mage::getSingleton('core/date')->gmtDate())
+                    ->setMessage('')
                     ->save();
             } else {
-                $message = (isset($result->message)) ? $result->message : 'Sync failed with no error returned';
+                $message = (isset($result->message)) ? $result->message : 'Error unknown';
                 $item->setImportStatus(Dotdigitalgroup_Email_Model_Importer::FAILED)
                     ->setMessage($message);
 
