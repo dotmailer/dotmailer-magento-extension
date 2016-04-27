@@ -14,9 +14,9 @@ class Dotdigitalgroup_Email_ProductsController
         //authenticate
         $this->authenticate();
         //skip order_id check for this actions
-        $skip       = array('push', 'nosto');
+        $skip       = array('push');
         $actionName = $this->getRequest()->getActionName();
-        if ( ! in_array($actionName, $skip)) {
+        if (! in_array($actionName, $skip)) {
             $orderId = $this->getRequest()->getParam('order_id', false);
             //check for order id param
             if ($orderId) {
@@ -82,24 +82,4 @@ class Dotdigitalgroup_Email_ProductsController
 
         $this->renderLayout();
     }
-
-    /**
-     * Nosto recommendation action.
-     */
-    public function nostoAction()
-    {
-        $this->loadLayout();
-
-        $html = $this->getLayout()->getBlock('connector_nosto_recommended')
-            ->toHtml();
-
-        //if empty than display our fallback products instead.
-        if (empty($html)) {
-            Mage::app()->getRequest()->setActionName('push');
-            $this->pushAction();
-        } else {
-            $this->renderLayout();
-        }
-    }
-
 }

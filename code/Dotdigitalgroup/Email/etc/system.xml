@@ -2071,32 +2071,6 @@
                         </products_chooser_container>
                     </fields>
                 </fallback_products>
-                <nosto_recommendation translate="label" module="ddg">
-                    <label>Nosto Recommendations</label>
-                    <sort_order>50</sort_order>
-                    <show_in_default>1</show_in_default>
-                    <show_in_website>1</show_in_website>
-                    <show_in_store>0</show_in_store>
-                    <fields>
-                        <api translate="label" module="ddg">
-                            <label>API key</label>
-                            <sort_order>10</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </api>
-                        <dynamic_url traslate="label" module="ddg">
-                            <label>Recommendation URL</label>
-                            <frontend_type>label</frontend_type>
-                            <frontend_model>ddg_automation/adminhtml_system_dynamic_nosto</frontend_model>
-                            <sort_order>20</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                            <comment><![CDATA[Replace @SLOT_NAME@ with the slot name created in your Nosto account.]]></comment>
-                        </dynamic_url>
-                    </fields>
-                </nosto_recommendation>
             </groups>
         </connector_dynamic_content>
         <connector_transactional_emails translate="label" module="ddg">

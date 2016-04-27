@@ -92,12 +92,6 @@
             <block type="ddg_automation/edc" name="connector_product_push" template="connector/product/list.phtml"/>
         </reference>
     </ddg_automation_products_push>
-    <ddg_automation_products_nosto>
-        <reference name="content">
-            <block type="ddg_automation/recommended_products" name="connector_nosto_recommended"
-                   template="connector/product/nosto.phtml"/>
-        </reference>
-    </ddg_automation_products_nosto>
     <checkout_onepage_success>
         <reference name="content">
             <block type="checkout/onepage_success" name="checkout.roi" as="connector.roi"
