@@ -112,7 +112,6 @@ class Dotdigitalgroup_Email_Helper_Config
      * Dynamic Content
      */
     const XML_PATH_CONNECTOR_DYNAMIC_CONTENT_PASSCODE               = 'connector_dynamic_content/external_dynamic_content_urls/passcode';
-    const XML_PATH_CONNECTOR_DYNAMIC_CONTENT_NOSTO                  = 'connector_dynamic_content/nosto_recommendation/api';
     const XML_PATH_CONNECTOR_DYNAMIC_CONTENT_WIHSLIST_DISPLAY       = 'connector_dynamic_content/products/wishlist_display_type';
 	const XML_PATH_CONNECTOR_DYNAMIC_CONTENT_REVIEW_DISPLAY_TYPE    = 'connector_dynamic_content/products/review_display_type';
 

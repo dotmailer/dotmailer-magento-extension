@@ -1250,40 +1250,6 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         return $result;
     }
 
-
-    public function getNostoProducts($slotName, $email)
-    {
-        $recommended = Dotdigitalgroup_Email_Helper_Config::API_ENDPOINT
-            . '/recommendations/email';
-        $token       = Mage::getStoreConfig(
-            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_CONTENT_NOSTO
-        );
-
-        //check for strin length
-        if (strlen($slotName) > 1 && strlen($email) > 1) {
-
-            $recommended .= '?elements=' . $slotName;
-            $recommended .= '&emails=' . $email;
-        }
-
-        $this->setApiUsername('')
-            ->setApiPassword($token)
-            ->setUrl($recommended)
-            ->setVerb('GET');
-
-        $result = $this->execute();
-
-        if (isset($result->message)) {
-            $message = $result->message;
-            Mage::helper('ddg')->log($message);
-            Mage::helper('ddg')->log(
-                "Nosto recommendation slot name : $slotName , email : $email"
-            );
-        }
-
-        return $result;
-    }
-
     /**
      * get contact address books
      *
