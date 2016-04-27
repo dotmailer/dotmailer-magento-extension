@@ -316,14 +316,13 @@ class Dotdigitalgroup_Email_EmailController
 
     public function sendAjaxResponse($error, $msg)
     {
-        header('Content-Type: application/json');
-        echo $this->getRequest()->getParam('callback') . "(" . json_encode(
-                array(
-                    'err' => $error,
-                    'message' => $msg
-                )
-            ) . ")";
-        die;
+        $message = array(
+            'err' => $error,
+            'message' => $msg
+        );
+        $this->getResponse()->setBody(
+            $this->getRequest()->getParam('callback') . "(" . Mage::helper('core')->jsonEncode($message) . ")"
+        );
     }
 
     protected function _getSuccessHtml()

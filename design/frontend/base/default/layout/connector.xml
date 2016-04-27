@@ -31,7 +31,7 @@
         </reference>
     </ddg_automation_products_crosssell>
     <ddg_automation_products_upsell>
-        <reference type="content">
+        <reference name="content">
             <block type="ddg_automation/recommended_products" name="connector_recommended_upsell"
                    template="connector/product/list.phtml"/>
         </reference>

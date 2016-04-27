@@ -38,14 +38,14 @@ class Dotdigitalgroup_Email_Model_Sync_Contact_Bulk
     protected function _handleItemAfterSync($item, $result, $file = false)
     {
         $curlError = $this->_checkCurlError($item);
-        
-        if(!$curlError){
-            if (isset($result->message)) {
+
+        if (!$curlError) {
+            if (isset($result->message) && !isset($result->id)) {
                 $item->setImportStatus(Dotdigitalgroup_Email_Model_Importer::FAILED)
                     ->setMessage($result->message);
 
                 $item->save();
-            } else {
+            } elseif (isset($result->id) && !isset($result->message)) {
                 //if file
                 if($file){
                     $fileHelper = Mage::helper('ddg/file');
@@ -57,6 +57,17 @@ class Dotdigitalgroup_Email_Model_Sync_Contact_Bulk
                     ->setImportStarted(Mage::getSingleton('core/date')->gmtDate())
                     ->setMessage('')
                     ->save();
+            } else {
+                $message = (isset($result->message)) ? $result->message : 'Error unknown';
+                $item->setImportStatus(Dotdigitalgroup_Email_Model_Importer::FAILED)
+                    ->setMessage($message);
+
+                //If result id
+                if (isset($result->id)) {
+                    $item->setImportId($result->id);
+                }
+
+                $item->save();
             }
         }
     }

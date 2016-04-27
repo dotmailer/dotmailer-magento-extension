@@ -315,7 +315,7 @@ class Dotdigitalgroup_Email_Model_Resource_Contact
             // un-subscribe newsletter subscribers
             $newsletterCollection = Mage::getModel('newsletter/subscriber')
                 ->getCollection()
-                ->addFieldToFilter('subscriber_email', array('in' => $emails));
+                ->addFieldToFilter('subscriber_email', array('in' => $data));
 
 
 

@@ -1925,4 +1925,22 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         );
         $config->cleanCache();
     }
+
+    /**
+     * check if both frotnend and backend secure(HTTPS)
+     *
+     * @return bool
+     */
+    public function isFrontendAdminSecure()
+    {
+        $frontend = Mage::app()->getStore()->isFrontUrlSecure();
+        $admin = Mage::app()->getStore()->isAdminUrlSecure();
+        $current = Mage::app()->getStore()->isCurrentlySecure();
+
+        if ($frontend && $admin && $current) {
+            return true;
+        }
+
+        return false;
+    }
 }
