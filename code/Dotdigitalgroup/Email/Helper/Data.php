@@ -1275,10 +1275,6 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getIframeFormUrl()
     {
-        if (!$this->isFrontendAdminSecure()) {
-
-        }
-
         $formUrl = Dotdigitalgroup_Email_Helper_Config::API_CONNECTOR_TRIAL_FORM_URL;
         $ipAddress = Mage::helper('core/http')->getRemoteAddr();
         $timezone = $this->getTimeZoneId();
