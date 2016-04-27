@@ -312,8 +312,8 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
 
         //Subscriber update/suppressed
         $subscriberUpdate = $defaultSingleUpdate;
-        $emailChange['mode'] = self::MODE_SUBSCRIBER_UPDATE;
-        $emailChange['type'] = self::IMPORT_TYPE_SUBSCRIBER_UPDATE;
+        $subscriberUpdate['mode'] = self::MODE_SUBSCRIBER_UPDATE;
+        $subscriberUpdate['type'] = self::IMPORT_TYPE_SUBSCRIBER_UPDATE;
 
         //Email Change
         $emailChange = $defaultSingleUpdate;
