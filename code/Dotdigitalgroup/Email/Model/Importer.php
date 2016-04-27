@@ -421,6 +421,7 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
     {
         $collection = $this->getCollection()
             ->addFieldToFilter('import_status', array('eq' => self::IMPORTING))
+            ->addFieldToFilter('import_id', array('neq' => ''))
             ->setPageSize($limit)
             ->setCurPage(1);
 

@@ -32,10 +32,8 @@ class Dotdigitalgroup_Email_Model_Sync_Contact_Delete extends Dotdigitalgroup_Em
 
         if(!$curlError){
             if (isset($result->message)){
-                $message = (isset($result->message))? $result->message : 'Error unknown';
-
                 $item->setImportStatus(Dotdigitalgroup_Email_Model_Importer::FAILED)
-                    ->setMessage($message)
+                    ->setMessage($result->message)
                     ->save();
             }else {
                 $now = Mage::getSingleton('core/date')->gmtDate();

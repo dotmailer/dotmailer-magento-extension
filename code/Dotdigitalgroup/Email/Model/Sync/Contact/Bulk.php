@@ -41,22 +41,41 @@ class Dotdigitalgroup_Email_Model_Sync_Contact_Bulk
         
         if(!$curlError){
             if (isset($result->message)) {
-                $item->setImportStatus(Dotdigitalgroup_Email_Model_Importer::FAILED)
-                    ->setMessage($result->message);
+                //If result id
+                if (isset($result->id)) {
+                    $item->setImportId($result->id);
+                }
 
-                $item->save();
-            } else {
+                $item->setImportStatus(Dotdigitalgroup_Email_Model_Importer::FAILED)
+                    ->setMessage($result->message)
+                    ->save();
+            } elseif (isset($result->id)) {
                 //if file
                 if($file){
                     $fileHelper = Mage::helper('ddg/file');
                     $fileHelper->archiveCSV($file);
                 }
 
+                //If message
+                if (isset($result->message)) {
+                    $item->setMessage($result->message);
+                }
+
                 $item->setImportStatus(Dotdigitalgroup_Email_Model_Importer::IMPORTING)
                     ->setImportId($result->id)
                     ->setImportStarted(Mage::getSingleton('core/date')->gmtDate())
-                    ->setMessage('')
                     ->save();
+            } else {
+                $message = (isset($result->message)) ? $result->message : 'Sync failed with no error returned';
+                $item->setImportStatus(Dotdigitalgroup_Email_Model_Importer::FAILED)
+                    ->setMessage($message);
+
+                //If result id
+                if (isset($result->id)) {
+                    $item->setImportId($result->id);
+                }
+
+                $item->save();
             }
         }
     }
