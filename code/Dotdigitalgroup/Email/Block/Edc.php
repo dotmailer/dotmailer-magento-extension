@@ -179,6 +179,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
         $productIds = $productItems->getColumnValues('product_id');
         //get product collection to check for salable
         $productCollection = Mage::getModel('catalog/product')->getCollection()
+            ->addAttributeToSelect('*')
             ->addFieldToFilter('entity_id', array('in' => $productIds));
         //show products only if is salable
         foreach ($productCollection as $product) {
@@ -246,6 +247,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
             )
             ->addOrderedQty($from, $to)
             ->setOrder('ordered_qty', 'desc')
+            ->addWebsiteFilter(Mage::app()->getWebsite()->getId())
             ->setPageSize($limit);
 
         Mage::getSingleton('cataloginventory/stock')

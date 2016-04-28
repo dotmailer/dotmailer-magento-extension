@@ -73,10 +73,6 @@ class Dotdigitalgroup_Email_Model_Sales_Order
             if ($numOrdersForSingleSync) {
                 $error = false;
                 foreach ($ordersForSingleSync as $order) {
-                    Mage::helper('ddg')->log(
-                        '--------- register Order sync in single with importer ---------- : '
-                        . $order->id
-                    );
                     //register in queue with importer
                     $check = Mage::getModel('ddg_automation/importer')
                         ->registerQueue(
@@ -88,9 +84,6 @@ class Dotdigitalgroup_Email_Model_Sales_Order
                     if ( ! $check) {
                         $error = true;
                     }
-                    Mage::helper('ddg')->log(
-                        '----------end order sync in single----------'
-                    );
                 }
                 //if no error then set imported
                 if ( ! $error) {

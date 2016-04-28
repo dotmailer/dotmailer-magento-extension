@@ -116,54 +116,6 @@ class Dotdigitalgroup_Email_Model_Resource_Contact
     }
 
     /**
-     * populate and cleanup
-     */
-    public function populateAndCleanup()
-    {
-        $write        = $this->_getWriteAdapter();
-        $contactTable = $this->getMainTable();
-        $select       = $write->select();
-
-        //populate customers to email_contact
-        $emailContacts = Mage::getModel('ddg_automation/contact')
-            ->getCollection()
-            ->getColumnValues('customer_id');
-        $emailContacts = implode(',', $emailContacts);
-
-        $select
-            ->from(
-                array('customer' => $this->getReadConnection()->getTableName(
-                    $this->getTable('customer/customer')
-                )),
-                array('customer_id' => 'entity_id', 'email', 'website_id',
-                      'store_id')
-            )
-            ->where("entity_id not in ($emailContacts)");
-
-        $insertArray = array('customer_id', 'email', 'website_id', 'store_id');
-        $sqlQuery    = $select->insertFromSelect(
-            $contactTable, $insertArray, false
-        );
-        $write->query($sqlQuery);
-
-        //remove contact with customer id set and no customer
-        $select->reset()
-            ->from(
-                array('c' => $contactTable),
-                array('c.customer_id')
-            )
-            ->joinLeft(
-                array('e' => $this->getReadConnection()->getTableName(
-                    $this->getTable('customer/customer')
-                )),
-                "c.customer_id = e.entity_id"
-            )
-            ->where('e.entity_id is NULL');
-        $deleteSql = $select->deleteFromSelect('c');
-        $write->query($deleteSql);
-    }
-
-    /**
      * Re-set all tables
      */
     public function resetAllTables()
@@ -347,25 +299,23 @@ class Dotdigitalgroup_Email_Model_Resource_Contact
     public function unsubscribe($data)
     {
         $write  = $this->_getWriteAdapter();
-        $emails = '"' . implode('","', $data) . '"';
+        $emails = "'" . implode("','", $data) . "'";
 
         try {
             //un-subscribe from the email contact table.
-            $whereCondition = $write->quoteInto('email IN (?)', $emails);
-
             $write->update(
                 $this->getMainTable(),
                 array(
-                    'is_subscriber' => new Zend_Db_Expr('null'),
-                    'suppressed'    => '1'
+                    'subscriber_status' => Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED,
+                    'suppressed' => 1
                 ),
-                $whereCondition
+                "email IN($emails)"
             );
 
             // un-subscribe newsletter subscribers
             $newsletterCollection = Mage::getModel('newsletter/subscriber')
                 ->getCollection()
-                ->addFieldToFilter('subscriber_email', array('in' => $emails));
+                ->addFieldToFilter('subscriber_email', array('in' => $data));
 
 
 

@@ -18,7 +18,6 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
     const REST_CAMPAIGN_SEND = '/v2/campaigns/send';
     const REST_CONTACTS_SUPPRESSED_SINCE = '/v2/contacts/suppressed-since/';
     const REST_DATA_FIELDS_CAMPAIGNS = '/v2/campaigns';
-    const REST_SMS_MESSAGE_SEND_TO = '/v2/sms-messages/send-to/';
     const REST_CONTACTS_RESUBSCRIBE = '/v2/contacts/resubscribe';
     const REST_CAMPAIGN_FROM_ADDRESS_LIST = '/v2/custom-from-addresses';
     const REST_CREATE_CAMPAIGN = '/v2/campaigns';
@@ -88,6 +87,16 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
                         break;
                     }
                 }
+            }
+
+            //check api endpoint again
+            if (!$apiEndpoint && isset($accountInfo->message)) {
+                $helper->log('API endpoint could not be saved. Error from api: ' . $accountInfo->message);
+                Mage::getSingleton('adminhtml/session')
+                    ->addWarning(
+                        'API endpoint cannot be saved. Error from api: ' . $accountInfo->message .
+                        ' Check credentials and re-save to save api endpoint. '
+                    );
             }
         }
 
@@ -944,40 +953,6 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
     }
 
     /**
-     * Send a single SMS message.
-     *
-     * @param $telephoneNumber
-     * @param $message
-     *
-     * @return object
-     */
-    public function postSmsMessagesSendTo($telephoneNumber, $message)
-    {
-        $data = array('Message' => $message);
-        $url  = $this->_apiEndpoint . self::REST_SMS_MESSAGE_SEND_TO
-            . $telephoneNumber;
-        $this->setUrl($url)
-            ->setVerb('POST')
-            ->buildPostBody($data);
-
-        $response = $this->execute();
-        //log error
-        if (isset($response->message)
-            && ! in_array(
-                $response->message, $this->exludeMessages
-            )
-        ) {
-            $message = 'POST SMS MESSAGE SEND to ' . $telephoneNumber
-                . ' message: ' . $message . ' error: ' . $response->message;
-            Mage::helper('ddg')->log($message)
-                ->rayLog($response->message);
-        }
-
-        return $response;
-    }
-
-
-    /**
      * Deletes multiple contacts from an address book.
      *
      * @param $addressBookId
@@ -1269,40 +1244,6 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         if (isset($result->message)) {
             Mage::helper('ddg')->log(
                 ' CAMPAIGN ATTACHMENT ' . $result->message
-            );
-        }
-
-        return $result;
-    }
-
-
-    public function getNostoProducts($slotName, $email)
-    {
-        $recommended = Dotdigitalgroup_Email_Helper_Config::API_ENDPOINT
-            . '/recommendations/email';
-        $token       = Mage::getStoreConfig(
-            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_CONTENT_NOSTO
-        );
-
-        //check for strin length
-        if (strlen($slotName) > 1 && strlen($email) > 1) {
-
-            $recommended .= '?elements=' . $slotName;
-            $recommended .= '&emails=' . $email;
-        }
-
-        $this->setApiUsername('')
-            ->setApiPassword($token)
-            ->setUrl($recommended)
-            ->setVerb('GET');
-
-        $result = $this->execute();
-
-        if (isset($result->message)) {
-            $message = $result->message;
-            Mage::helper('ddg')->log($message);
-            Mage::helper('ddg')->log(
-                "Nosto recommendation slot name : $slotName , email : $email"
             );
         }
 

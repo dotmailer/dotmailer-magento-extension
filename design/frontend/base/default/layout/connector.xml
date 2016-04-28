@@ -7,6 +7,9 @@
             <block type="core/template" name="easy.email.capture" as="easy.email.capture" template="connector/email_capture_init.phtml"/>
         </reference>
     </default>
+    <ddg_automation_email_basket>
+        <remove name="product.tooltip"/>
+    </ddg_automation_email_basket>
     <ddg_automation_feefo_score>
         <reference name="content">
             <block type="ddg_automation/feefo" name="connector_feefo_service_score" template="connector/feefo/score.phtml"/>
@@ -28,7 +31,7 @@
         </reference>
     </ddg_automation_products_crosssell>
     <ddg_automation_products_upsell>
-        <reference type="content">
+        <reference name="content">
             <block type="ddg_automation/recommended_products" name="connector_recommended_upsell"
                    template="connector/product/list.phtml"/>
         </reference>
@@ -89,12 +92,6 @@
             <block type="ddg_automation/edc" name="connector_product_push" template="connector/product/list.phtml"/>
         </reference>
     </ddg_automation_products_push>
-    <ddg_automation_products_nosto>
-        <reference name="content">
-            <block type="ddg_automation/recommended_products" name="connector_nosto_recommended"
-                   template="connector/product/nosto.phtml"/>
-        </reference>
-    </ddg_automation_products_nosto>
     <checkout_onepage_success>
         <reference name="content">
             <block type="checkout/onepage_success" name="checkout.roi" as="connector.roi"

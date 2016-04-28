@@ -367,6 +367,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
                 'billing_region', 'customer_address/region', 'default_billing',
                 null, 'left'
             )
+            ->joinAttribute('billing_company', 'customer_address/company', 'default_billing', null, 'left')
             ->joinAttribute(
                 'shipping_street', 'customer_address/street',
                 'default_shipping', null, 'left'
@@ -391,6 +392,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
                 'shipping_region', 'customer_address/region',
                 'default_shipping', null, 'left'
             )
+            ->joinAttribute('shipping_company', 'customer_address/company', 'default_shipping', null, 'left')
             ->addAttributeToFilter('entity_id', array('in' => $customerIds));
         $customerLog                 = Mage::getSingleton('core/resource')
             ->getTableName(
