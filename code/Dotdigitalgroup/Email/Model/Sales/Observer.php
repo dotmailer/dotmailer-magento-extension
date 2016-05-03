@@ -61,11 +61,6 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
                         Dotdigitalgroup_Email_Model_Contact::EMAIL_CONTACT_IMPORTED
                     );
                 }
-                $smsCampaign = Mage::getModel(
-                    'ddg_automation/sms_campaign', $order
-                );
-                $smsCampaign->setStatus($status);
-                $smsCampaign->sendSms();
             }
             // set back the current store
             $appEmulation->stopEnvironmentEmulation($initialEnvironmentInfo);

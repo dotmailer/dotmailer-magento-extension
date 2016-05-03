@@ -59,6 +59,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Automation_Grid
                 'type'    => 'options',
                 'options' => array(
                     'pending'                   => 'Pending',
+                    'suppressed'                => 'Suppressed',
                     'Active'                    => 'Active',
                     'Draft'                     => 'Draft',
                     'Deactivated'               => 'Deactivated',
