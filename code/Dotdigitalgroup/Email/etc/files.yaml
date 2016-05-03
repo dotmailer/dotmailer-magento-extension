@@ -98,10 +98,6 @@ block:
   - Adminhtml#System#Dynamic#Related.php
   - Adminhtml#System#Dynamic#Review.php
   - Adminhtml#System#Dynamic#Upsell.php
-  - Adminhtml#System#Sms#Smsmessagefour.php
-  - Adminhtml#System#Sms#Smsmessageone.php
-  - Adminhtml#System#Sms#Smsmessagethree.php
-  - Adminhtml#System#Sms#Smsmessagetwo.php
   - Adminhtml#System#Url#Creditmemoupdate.php
   - Adminhtml#System#Url#Creditmemoupdateguest.php
   - Adminhtml#System#Url#Customerconfirmation.php
@@ -204,7 +200,6 @@ model:
   - Sales#Observer.php
   - Sales#Order.php
   - Sales#Quote.php
-  - Sms#Campaign.php
   - Sweettooth#Observer.php
   - Campaign.php
   - Contact.php

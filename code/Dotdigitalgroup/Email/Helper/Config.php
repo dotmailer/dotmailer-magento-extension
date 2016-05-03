@@ -12,25 +12,6 @@ class Dotdigitalgroup_Email_Helper_Config
     const XML_PATH_CONNECTOR_API_PASSWORD                                       = 'connector_api_credentials/api/password';
 
     /**
-     * SMS SECTION.
-     */
-    //enabled
-    const XML_PATH_CONNECTOR_SMS_ENABLED_1                                      = 'connector_automation_studio/sms/sms_one_enabled';
-    const XML_PATH_CONNECTOR_SMS_ENABLED_2                                      = 'connector_automation_studio/sms/sms_two_enabled';
-    const XML_PATH_CONNECTOR_SMS_ENABLED_3                                      = 'connector_automation_studio/sms/sms_three_enabled';
-    const XML_PATH_CONNECTOR_SMS_ENABLED_4                                      = 'connector_automation_studio/sms/sms_four_enabled';
-    //status
-    const XML_PATH_CONNECTOR_SMS_STATUS_1                                       = 'connector_automation_studio/sms/sms_one_status';
-    const XML_PATH_CONNECTOR_SMS_STATUS_2                                       = 'connector_automation_studio/sms/sms_two_status';
-    const XML_PATH_CONNECTOR_SMS_STATUS_3                                       = 'connector_automation_studio/sms/sms_three_status';
-    const XML_PATH_CONNECTOR_SMS_STATUS_4                                       = 'connector_automation_studio/sms/sms_four_status';
-    //message
-    const XML_PATH_CONNECTOR_SMS_MESSAGE_1                                      = 'connector_automation_studio/sms/sms_one_message';
-    const XML_PATH_CONNECTOR_SMS_MESSAGE_2                                      = 'connector_automation_studio/sms/sms_two_message';
-    const XML_PATH_CONNECTOR_SMS_MESSAGE_3                                      = 'connector_automation_studio/sms/sms_three_message';
-    const XML_PATH_CONNECTOR_SMS_MESSAGE_4                                      = 'connector_automation_studio/sms/sms_four_message';
-
-    /**
      * SYNC SECTION.
      */
     const XML_PATH_CONNECTOR_SYNC_CONTACT_ENABLED                       = 'connector_sync_settings/sync/contact_enabled';
@@ -131,7 +112,6 @@ class Dotdigitalgroup_Email_Helper_Config
      * Dynamic Content
      */
     const XML_PATH_CONNECTOR_DYNAMIC_CONTENT_PASSCODE               = 'connector_dynamic_content/external_dynamic_content_urls/passcode';
-    const XML_PATH_CONNECTOR_DYNAMIC_CONTENT_NOSTO                  = 'connector_dynamic_content/nosto_recommendation/api';
     const XML_PATH_CONNECTOR_DYNAMIC_CONTENT_WIHSLIST_DISPLAY       = 'connector_dynamic_content/products/wishlist_display_type';
 	const XML_PATH_CONNECTOR_DYNAMIC_CONTENT_REVIEW_DISPLAY_TYPE    = 'connector_dynamic_content/products/review_display_type';
 
@@ -221,7 +201,6 @@ class Dotdigitalgroup_Email_Helper_Config
     /**
      * OAUTH
      */
-    const API_CONNECTOR_OAUTH_URL                           = 'https://my.dotmailer.com/';
     const API_CONNECTOR_OAUTH_URL_AUTHORISE                 = 'OAuth2/authorise.aspx?';
     const API_CONNECTOR_OAUTH_URL_TOKEN                     = 'OAuth2/Tokens.ashx';
     const API_CONNECTOR_OAUTH_URL_LOG_USER                  = '?oauthtoken=';
@@ -304,13 +283,28 @@ class Dotdigitalgroup_Email_Helper_Config
         if ($this->getAuthorizeLinkFlag($website)){
             $website = Mage::app()->getWebsite($website);
 
-            $baseUrl = $website->getConfig(self::XML_PATH_CONNECTOR_CUSTOM_DOMAIN) . self::API_CONNECTOR_OAUTH_URL_AUTHORISE;
-
+            $baseUrl = $website->getConfig(self::XML_PATH_CONNECTOR_CUSTOM_DOMAIN)
+                . self::API_CONNECTOR_OAUTH_URL_AUTHORISE;
         } else {
-            $baseUrl = self::API_CONNECTOR_OAUTH_URL .  self::API_CONNECTOR_OAUTH_URL_AUTHORISE;
+
+            $baseUrl = $this->getRegionAuthorize($website) .  self::API_CONNECTOR_OAUTH_URL_AUTHORISE;
         }
 
         return $baseUrl;
+    }
+
+    /**
+     * Region aware authorize link.
+     * @param $website
+     *
+     * @return mixed
+     */
+    public function getRegionAuthorize($website)
+    {
+        $baseRegionBaseUrl =  Mage::helper('ddg')->getWebsiteConfig(
+            Dotdigitalgroup_Email_Helper_Config::PATH_FOR_API_ENDPOINT, $website) . DS;
+
+        return $baseRegionBaseUrl;
     }
 
 	/**
@@ -339,7 +333,7 @@ class Dotdigitalgroup_Email_Helper_Config
             $tokenUrl = $website->getConfig(self::XML_PATH_CONNECTOR_CUSTOM_DOMAIN) . self::API_CONNECTOR_OAUTH_URL_TOKEN;
         } else {
 
-            $tokenUrl = self::API_CONNECTOR_OAUTH_URL . self::API_CONNECTOR_OAUTH_URL_TOKEN;
+            $tokenUrl = $this->getRegionAuthorize($website) . self::API_CONNECTOR_OAUTH_URL_TOKEN;
         }
 
         return $tokenUrl;
@@ -359,7 +353,7 @@ class Dotdigitalgroup_Email_Helper_Config
             $logUserUrl = $website->getConfig(self::XML_PATH_CONNECTOR_CUSTOM_DOMAIN) . self::API_CONNECTOR_OAUTH_URL_LOG_USER;
         } else {
 
-            $logUserUrl = self::API_CONNECTOR_OAUTH_URL . self::API_CONNECTOR_OAUTH_URL_LOG_USER;
+            $logUserUrl = $this->getRegionAuthorize($website) . self::API_CONNECTOR_OAUTH_URL_LOG_USER;
         }
         return $logUserUrl;
     }

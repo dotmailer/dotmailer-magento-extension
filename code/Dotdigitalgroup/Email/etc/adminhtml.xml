@@ -181,9 +181,6 @@
                                     <connector_reviews translate="title">
                                         <title><![CDATA[Reviews]]></title>
                                     </connector_reviews>
-                                    <connector_sms translate="title">
-                                        <title><![CDATA[Email SMS Section]]></title>
-                                    </connector_sms>
                                     <connector_dynamic_content translate="title">
                                         <title><![CDATA[Email Dynamic Content]]></title>
                                     </connector_dynamic_content>
