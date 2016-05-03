@@ -295,7 +295,7 @@ class Dotdigitalgroup_Email_EmailController
     {
         $params = $this->getRequest()->getParams();
         $helper = Mage::helper('ddg');
-        $error = true;
+        $error = false;
         if (!empty($params['accountId']) && !empty($params['apiUser']) && !empty($params['pass']) && !empty($params['secret'])) {
             if ($params['secret'] == Dotdigitalgroup_Email_Helper_Config::API_CONNECTOR_TRIAL_FORM_SECRET) {
                 $apiConfigStatus = $helper->saveApiCreds($params['apiUser'], $params['pass']);
@@ -306,13 +306,18 @@ class Dotdigitalgroup_Email_EmailController
                     $helper->saveApiEndPoint($params['apiEndpoint']);
                 }
                 if ($apiConfigStatus && $dataFieldsStatus && $addressBookStatus && $syncStatus) {
-                    $error = false;
                     $this->sendAjaxResponse(false, $this->_getSuccessHtml());
+                } else {
+                    $error = true;
                 }
+            } else {
+                $error = true;
             }
+        } else {
+            $error = true;
         }
 
-        //If error remains true then send error html
+        //If error true then send error html
         if ($error) {
             $this->sendAjaxResponse(true, $this->_getErrorHtml());
         }
