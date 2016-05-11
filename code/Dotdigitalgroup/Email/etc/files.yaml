@@ -92,7 +92,6 @@ block:
   - Adminhtml#System#Dynamic#Manualchooser.php
   - Adminhtml#System#Dynamic#Manualcontainer.php
   - Adminhtml#System#Dynamic#Mostviewed.php
-  - Adminhtml#System#Dynamic#Nosto.php
   - Adminhtml#System#Dynamic#Productpush.php
   - Adminhtml#System#Dynamic#Recentlyviewed.php
   - Adminhtml#System#Dynamic#Related.php
@@ -223,7 +222,6 @@ design:
   - frontend#base#default#layout#connector.xml
   - frontend#base#default#layout#mailcheck.xml
   - frontend#base#default#template#connector#product#list.phtml
-  - frontend#base#default#template#connector#product#nosto.phtml
   - frontend#base#default#template#connector#product#price.phtml
   - frontend#base#default#template#connector#basket.phtml
   - frontend#base#default#template#connector#coupon.phtml
