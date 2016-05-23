@@ -114,13 +114,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Importer_Grid
                 'escape' => true
             )
         )->addColumn(
-            'script', array(
-                'header'           => Mage::helper('ddg')->__('Script'),
-                'renderer'         => 'ddg_automation/adminhtml_column_renderer_script',
-                'column_css_class' => 'no-display',
-                'header_css_class' => 'no-display'
-            )
-        )->addColumn(
             'created_at', array(
                 'header' => Mage::helper('ddg')->__('Created At'),
                 'align'  => 'center',
