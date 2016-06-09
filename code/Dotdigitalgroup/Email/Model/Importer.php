@@ -150,6 +150,11 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
                                     $item->getImportType() == self::IMPORT_TYPE_GUEST
 
                                 ) {
+                                    if ($file = $item->getImportFile()) {
+                                        $fileHelper = Mage::helper('ddg/file');
+                                        $fileHelper->archiveCSV($file);
+                                    }
+                                    
                                     if ($item->getImportId()) {
                                         $this->_processContactImportReportFaults($item->getImportId(), $websiteId);
                                     }

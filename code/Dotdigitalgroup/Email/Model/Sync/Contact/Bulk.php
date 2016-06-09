@@ -30,12 +30,12 @@ class Dotdigitalgroup_Email_Model_Sync_Contact_Bulk
             $file = $item->getImportFile();
             if (!empty($file) && !empty($addressBook) && $this->_client) {
                 $result = $this->_client->postAddressBookContactsImport($file, $addressBook);
-                $this->_handleItemAfterSync($item, $result, $file);
+                $this->_handleItemAfterSync($item, $result);
             }
         }
     }
 
-    protected function _handleItemAfterSync($item, $result, $file = false)
+    protected function _handleItemAfterSync($item, $result)
     {
         $curlError = $this->_checkCurlError($item);
 
@@ -46,12 +46,6 @@ class Dotdigitalgroup_Email_Model_Sync_Contact_Bulk
 
                 $item->save();
             } elseif (isset($result->id) && !isset($result->message)) {
-                //if file
-                if($file){
-                    $fileHelper = Mage::helper('ddg/file');
-                    $fileHelper->archiveCSV($file);
-                }
-
                 $item->setImportStatus(Dotdigitalgroup_Email_Model_Importer::IMPORTING)
                     ->setImportId($result->id)
                     ->setImportStarted(Mage::getSingleton('core/date')->gmtDate())

@@ -318,6 +318,7 @@ class Dotdigitalgroup_Email_Model_Resource_Contact
                 ->addFieldToFilter('subscriber_email', array('in' => $data));
 
 
+            Mage::register('unsubscribeEmails', $data);
 
             foreach ($newsletterCollection as $subscriber) {
                 $subscriber->setSubscriberStatus(

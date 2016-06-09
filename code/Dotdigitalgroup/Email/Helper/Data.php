@@ -1280,16 +1280,14 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         $timezone = $this->getTimeZoneId();
         $culture = $this->getCultureId();
         $company = Mage::app()->getWebsite()->getConfig('general/store_information/name');
-        $callback = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB, true) . 'connector/email/accountcallback';
-        $secret = Dotdigitalgroup_Email_Helper_Config::API_CONNECTOR_TRIAL_FORM_SECRET;
+        $callback = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB, true) . 'connector/trial/accountcallback';
         //query params
         $params = array(
             'callback' => $callback,
             'company' => $company,
             'culture' => $culture,
             'timezone' => $timezone,
-            'ip' => $ipAddress,
-            'secret' => $secret
+            'ip' => $ipAddress
         );
         $url = $formUrl . '?' . http_build_query($params);
         return $url;
