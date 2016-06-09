@@ -56,4 +56,25 @@ class Dotdigitalgroup_Email_Model_Resource_Importer
             return $e;
         }
     }
+
+    /**
+     * delete completed records older then 30 days
+     *
+     * @return Exception|int
+     */
+    public function cleanup()
+    {
+        try {
+            $date = Mage::app()->getLocale()->date()->subDay(30)->toString('YYYY-MM-dd HH:mm:ss');
+            $conn = $this->_getWriteAdapter();
+            $num = $conn->delete(
+                $this->getMainTable(),
+                array('created_at < ?' => $date)
+            );
+
+            return $num;
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
 }
