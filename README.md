@@ -22,7 +22,7 @@ Don't forget to enable symlinks in:
 Facts
 -----
 - community & enterprise version.
-- current version - V.5.3.0 [config.xml](https://github.com/dotmailer/dotmailer-magento-extension/blob/master/code/Dotdigitalgroup/Email/etc/config.xml)
+- current version - V.6.0.0 [config.xml](https://github.com/dotmailer/dotmailer-magento-extension/blob/master/code/Dotdigitalgroup/Email/etc/config.xml)
 - also available on Magento Connect [link](http://www.magentocommerce.com/magento-connect/dotmailer-truly-integrated-email-marketing.html)
 
 Compatibility
@@ -31,6 +31,20 @@ Compatibility
 
 
 ### Upgrade notice
+
+### V6.0.0
+## Features
+ - New improved Importer.
+ - Express account creation.
+ - Api support region.
+ - Magento partner programme.
+
+## Bug fixes
+ - Transactional data disabled by Transactional Allowance.
+ - Abandoned carts template.
+ - Api username obscure validation.
+ - Update security on get basket content.
+ - Saving a review in admin.
 
 ### V5.3.0
 
