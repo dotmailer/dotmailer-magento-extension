@@ -39,11 +39,13 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     /**
      * Set key value data.
      *
+     * @param $key
      * @param $data
      */
-    public function setData($data)
+    public function setData($key, $data)
     {
-        $this->customerData[] = $data;
+        $data !== null ? $value = $data : $value = '';
+        $this->customerData[$key] = $value;
     }
 
     /**

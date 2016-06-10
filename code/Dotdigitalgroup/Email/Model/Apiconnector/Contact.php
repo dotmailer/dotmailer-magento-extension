@@ -138,7 +138,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
                 foreach ($customAttributes as $data) {
                     $attribute = $data['attribute'];
                     $value     = $customer->getData($attribute);
-                    $connectorCustomer->setData($value);
+                    $connectorCustomer->setData($data['datafield'], $value);
                 }
             }
 
@@ -281,7 +281,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
             foreach ($customAttributes as $data) {
                 $attribute = $data['attribute'];
                 $value     = $customer->getData($attribute);
-                $connectorCustomer->setData($value);
+                $connectorCustomer->setData($data['datafield'], $value);
             }
             //contact email and email type
             $connectorCustomer->setData($customer->getEmail());
