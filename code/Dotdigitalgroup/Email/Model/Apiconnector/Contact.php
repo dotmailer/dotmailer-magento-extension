@@ -143,8 +143,8 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
             }
 
             //contact email and email type
-            $connectorCustomer->setData($customer->getEmail());
-            $connectorCustomer->setData('Html');
+            $connectorCustomer->setData('Email', $customer->getEmail());
+            $connectorCustomer->setData('EmailType', 'Html');
             // save csv file data for customers
             $fileHelper->outputCSV(
                 $fileHelper->getFilePath($customersFile),
@@ -284,8 +284,8 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
                 $connectorCustomer->setData($data['datafield'], $value);
             }
             //contact email and email type
-            $connectorCustomer->setData($customer->getEmail());
-            $connectorCustomer->setData('Html');
+            $connectorCustomer->setData('Email', $customer->getEmail());
+            $connectorCustomer->setData('EmailType', 'Html');
             // save csv file data for customers
             $fileHelper->outputCSV(
                 $fileHelper->getFilePath($customersFile),
