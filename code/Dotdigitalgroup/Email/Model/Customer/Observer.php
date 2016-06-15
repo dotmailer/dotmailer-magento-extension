@@ -68,7 +68,7 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
     }
 
     /**
-     * Add new customers to the automation.
+     * Customer register success
      *
      * @param Varien_Event_Observer $observer
      *
@@ -80,7 +80,6 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
         $customer  = $observer->getEvent()->getCustomer();
         $websiteId = $customer->getWebsiteId();
         $website   = Mage::app()->getWebsite($websiteId);
-        $storeName = $customer->getStore()->getName();
 
 
         //if api is not enabled
@@ -91,32 +90,16 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
             return $this;
         }
 
-        try {
-            //program id must be map
-            $programId = Mage::helper('ddg')->getAutomationIdByType(
-                'XML_PATH_CONNECTOR_AUTOMATION_STUDIO_CUSTOMER', $websiteId
-            );
-            if ( ! $programId) {
-                return $this;
-            }
-            $email      = $customer->getEmail();
-            $automation = Mage::getModel('ddg_automation/automation');
-            $automation->setEmail($email)
-                ->setAutomationType(
-                    Dotdigitalgroup_Email_Model_Automation::AUTOMATION_TYPE_NEW_CUSTOMER
-                )
-                ->setEnrolmentStatus(
-                    Dotdigitalgroup_Email_Model_Automation::AUTOMATION_STATUS_PENDING
-                )
-                ->setTypeId($customer->getId())
-                ->setWebsiteId($websiteId)
-                ->setStoreName($storeName)
-                ->setProgramId($programId);
-
-            $automation->save();
-        } catch (Exception $e) {
-            Mage::logException($e);
+        //program id must be map
+        $programId = Mage::helper('ddg')->getAutomationIdByType(
+            'XML_PATH_CONNECTOR_AUTOMATION_STUDIO_CUSTOMER', $websiteId
+        );
+        if (!$programId) {
+            return $this;
         }
+
+        //do enrolment
+        $this->_automationEnrolment($customer, $programId);
 
         return $this;
     }
@@ -425,6 +408,78 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
             } catch (Exception $e) {
                 Mage::logException($e);
             }
+        }
+    }
+
+    /**
+     * Quote submit before observer
+     *
+     * @param Varien_Event_Observer $observer
+     * @return $this
+     */
+    public function handleQuoteSubmitBefore(Varien_Event_Observer $observer)
+    {
+        $quote = $observer->getEvent()->getQuote();
+        //set flag if no customer id before save.
+        if (!$quote->getCustomer()->getId()) {
+            $quote->setCheckIfCustomerIsNew(true);
+        }
+        return $this;
+    }
+
+    /**
+     * Quote submit success observer
+     *
+     * @param Varien_Event_Observer $observer
+     * @return $this
+     */
+    public function handleQuoteSubmitSuccess(Varien_Event_Observer $observer)
+    {
+        $quote = $observer->getEvent()->getQuote();
+        //check flag and also if now customer has an id. This means new customer.
+        if ($quote->getCustomer()->getId() && $quote->getCheckIfCustomerIsNew()) {
+            //program id must be map
+            $programId = Mage::helper('ddg')->getAutomationIdByType(
+                'XML_PATH_CONNECTOR_AUTOMATION_STUDIO_CUSTOMER', $quote->getCustomer()->getWebsiteId()
+            );
+            if (!$programId) {
+                return $this;
+            }
+
+            //do enrolment
+            $this->_automationEnrolment($quote->getCustomer(), $programId);
+        }
+        return $this;
+    }
+
+    /**
+     * Add new customers to the automation.
+     *
+     * @param $customer
+     * @param $programId
+     */
+    protected function _automationEnrolment($customer, $programId)
+    {
+        try {
+            $websiteId = $customer->getWebsiteId();
+
+            $email = $customer->getEmail();
+            $automation = Mage::getModel('ddg_automation/automation');
+            $automation->setEmail($email)
+                ->setAutomationType(
+                    Dotdigitalgroup_Email_Model_Automation::AUTOMATION_TYPE_NEW_CUSTOMER
+                )
+                ->setEnrolmentStatus(
+                    Dotdigitalgroup_Email_Model_Automation::AUTOMATION_STATUS_PENDING
+                )
+                ->setTypeId($customer->getId())
+                ->setWebsiteId($websiteId)
+                ->setStoreName($customer->getStore()->getName())
+                ->setProgramId($programId);
+
+            $automation->save();
+        } catch (Exception $e) {
+            Mage::logException($e);
         }
     }
 }
