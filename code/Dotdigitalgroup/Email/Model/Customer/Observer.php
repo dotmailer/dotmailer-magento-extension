@@ -421,8 +421,8 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
     {
         $quote = $observer->getEvent()->getQuote();
         //set flag if no customer id before save.
-        if (!$quote->getCustomer()->getId()) {
-            $quote->setCheckIfCustomerIsNew(true);
+        if (!$quote->getCustomerId()) {
+            $quote->setIfCustomerIsNew(1);
         }
         return $this;
     }
@@ -437,7 +437,7 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
     {
         $quote = $observer->getEvent()->getQuote();
         //check flag and also if now customer has an id. This means new customer.
-        if ($quote->getCustomer()->getId() && $quote->getCheckIfCustomerIsNew()) {
+        if ($quote->getCustomerId() && $quote->getIfCustomerIsNew()) {
             //program id must be map
             $programId = Mage::helper('ddg')->getAutomationIdByType(
                 'XML_PATH_CONNECTOR_AUTOMATION_STUDIO_CUSTOMER', $quote->getCustomer()->getWebsiteId()
