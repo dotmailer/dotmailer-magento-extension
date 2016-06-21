@@ -12,7 +12,10 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Sync_Catalog_Visibility
     {
         $options = Mage::getModel('catalog/product_visibility')->getAllOptions(
         );
-        array_shift($options);
+        if (is_array($options)) {
+            $options[0]['label'] = '---- Default Option ----';
+            $options[0]['value'] = '0';
+        }
 
         return $options;
     }

@@ -14,6 +14,10 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Advanced_Attributes
             ->getOrderTableDescription();
 
         $customFields = array();
+        $customFields[] = [
+            'label' => '---- Default Option ----',
+            'value' => '0',
+        ];
         foreach ($fields as $key => $field) {
             $customFields[] = array(
                 'value' => $field['COLUMN_NAME'],
