@@ -76,7 +76,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
     /**
      * @var array
      */
-    public $custom = array();
+    public $custom;
 
     /**
      * @var string
@@ -195,6 +195,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
         if ($customAttributes) {
             $fields = Mage::getResourceModel('ddg_automation/order')
                 ->getOrderTableDescription();
+            $this->custom = array();
             foreach ($customAttributes as $customAttribute) {
                 if (isset($fields[$customAttribute])) {
                     $field = $fields[$customAttribute];
