@@ -11,11 +11,8 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Sync_Catalog_Type
     public function toOptionArray()
     {
         $options = Mage::getModel('catalog/product_type')->getAllOptions();
-        if (is_array($options)) {
-            $options[0]['label'] = '---- Default Option ----';
-            $options[0]['value'] = '0';
-        }
-
+        $options[0]['label'] = '---- Default Option ----';
+        $options[0]['value'] = '0';
         return $options;
     }
 }

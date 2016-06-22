@@ -12,10 +12,10 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Orderstatus
     {
         $statuses = Mage::getSingleton('sales/order_config')->getStatuses();
         $options  = array();
-        $options[] = [
+        $options[] = array(
             'label' => '---- Default Option ----',
             'value' => '0',
-        ];
+        );
         foreach ($statuses as $code => $label) {
             $options[] = array(
                 'value' => $code,

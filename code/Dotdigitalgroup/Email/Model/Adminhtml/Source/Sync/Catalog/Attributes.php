@@ -14,10 +14,10 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Sync_Catalog_Attributes
             'catalog/product_attribute_collection'
         )->addVisibleFilter();
         $attributeArray = array();
-        $attributeArray[] = [
+        $attributeArray[] = array(
             'label' => '---- Default Option ----',
             'value' => '0',
-        ];
+        );
 
         //exclude these from showing in the options
         $exclude = array('gallery', 'image', 'media_gallery', 'small_image',
