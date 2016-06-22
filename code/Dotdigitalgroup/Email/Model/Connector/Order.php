@@ -494,6 +494,12 @@ class Dotdigitalgroup_Email_Model_Connector_Order
                                         $attribute_code
                                     );
                                     break;
+                                case 'date':
+                                    $date = new Zend_Date(
+                                        $product->getData($attribute_code), Zend_Date::ISO_8601
+                                    );
+                                    $value = $date->toString(Zend_Date::ISO_8601);
+                                    break;
                                 default:
                                     $value = $product->getData($attribute_code);
                                     break;
