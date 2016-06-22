@@ -167,6 +167,24 @@
                     </ddg_customer_register_success>
                 </observers>
             </customer_register_success>
+            <sales_model_service_quote_submit_before>
+                <observers>
+                    <ddg_sales_model_service_quote_submit_before>
+                        <type>singleton</type>
+                        <class>ddg_automation/customer_observer</class>
+                        <method>handleQuoteSubmitBefore</method>
+                    </ddg_sales_model_service_quote_submit_before>
+                </observers>
+            </sales_model_service_quote_submit_before>
+            <sales_model_service_quote_submit_success>
+                <observers>
+                    <ddg_sales_model_service_quote_submit_success>
+                        <type>singleton</type>
+                        <class>ddg_automation/customer_observer</class>
+                        <method>handleQuoteSubmitSuccess</method>
+                    </ddg_sales_model_service_quote_submit_success>
+                </observers>
+            </sales_model_service_quote_submit_success>
             <customer_delete_after>
                 <observers>
                     <ddg_customer_delete_after>
