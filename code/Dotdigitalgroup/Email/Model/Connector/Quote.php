@@ -74,7 +74,7 @@ class Dotdigitalgroup_Email_Model_Connector_Quote
     /**
      * @var array
      */
-    public $custom = array();
+    public $custom;
 
     protected $_attributeSet;
 
@@ -119,6 +119,7 @@ class Dotdigitalgroup_Email_Model_Connector_Quote
         if ($customAttributes) {
             $fields = Mage::getResourceModel('ddg_automation/quote')
                 ->getQuoteTableDescription();
+            $this->custom = array();
             foreach ($customAttributes as $customAttribute) {
                 if (isset($fields[$customAttribute])) {
                     $field = $fields[$customAttribute];
