@@ -68,7 +68,7 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
         foreach ($this->automationTypes as $type => $config) {
             $contacts = array();
             foreach (Mage::app()->getWebsites(true) as $website) {
-                $contacts[$website->getId()]['programmeId'] = $helper->getWebsiteConfig($config, $website);
+                $contacts[$website->getId()]['programId'] = $helper->getWebsiteConfig($config, $website);
             }
             //get collection from type
             $automationCollection = $this->getCollection()
@@ -101,7 +101,7 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
             }
             foreach ($contacts as $websiteId => $websiteContacts) {
                 if (isset($websiteContacts['contacts'])) {
-                    $this->programId = $websiteContacts['programmeId'];
+                    $this->programId = $websiteContacts['programId'];
                     $contactsArray = $websiteContacts['contacts'];
                     //only for subscribed contacts
                     if (!empty($contactsArray)
