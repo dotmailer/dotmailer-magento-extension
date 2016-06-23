@@ -100,35 +100,37 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
                 }
             }
             foreach ($contacts as $websiteId => $websiteContacts) {
-                $this->programId = $websiteContacts['programmeId'];
-                $contactsArray = $websiteContacts['contacts'];
-                //only for subscribed contacts
-                if (!empty($contactsArray)
-                    && $this->_checkCampignEnrolmentActive($this->programId)
-                ) {
-                    $result = $this->sendContactsToAutomation(
-                        array_values($contactsArray),
-                        $websiteId
-                    );
-                    //check for error message
-                    if (isset($result->message)) {
-                        $this->programStatus = 'Failed';
-                        $this->programMessage = $result->message;
+                if (isset($websiteContacts['contacts'])) {
+                    $this->programId = $websiteContacts['programmeId'];
+                    $contactsArray = $websiteContacts['contacts'];
+                    //only for subscribed contacts
+                    if (!empty($contactsArray)
+                        && $this->_checkCampignEnrolmentActive($this->programId)
+                    ) {
+                        $result = $this->sendContactsToAutomation(
+                            array_values($contactsArray),
+                            $websiteId
+                        );
+                        //check for error message
+                        if (isset($result->message)) {
+                            $this->programStatus = 'Failed';
+                            $this->programMessage = $result->message;
+                        }
+                        //program is not active
+                    } elseif ($this->programMessage
+                        == 'Error: ERROR_PROGRAM_NOT_ACTIVE '
+                    ) {
+                        $this->programStatus = 'Deactivated';
                     }
-                    //program is not active
-                } elseif ($this->programMessage
-                    == 'Error: ERROR_PROGRAM_NOT_ACTIVE '
-                ) {
-                    $this->programStatus = 'Deactivated';
-                }
-                //update contacts with the new status, and log the error message if failes
-                $num = $this->getResource()->updateContacts(
-                    $contactsArray, $this->programStatus, $this->programMessage
-                );
-                if ($num) {
-                    Mage::helper('ddg')->log(
-                        'Automation type : ' . $type . ', updated no : ' . $num
+                    //update contacts with the new status, and log the error message if failes
+                    $num = $this->getResource()->updateContacts(
+                        $contactsArray, $this->programStatus, $this->programMessage
                     );
+                    if ($num) {
+                        Mage::helper('ddg')->log(
+                            'Automation type : ' . $type . ', updated no : ' . $num
+                        );
+                    }
                 }
             }
         }
