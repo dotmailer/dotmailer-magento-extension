@@ -33,7 +33,9 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
         self::AUTOMATION_TYPE_NEW_REVIEW =>
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_REVIEW,
         self::AUTOMATION_TYPE_NEW_WISHLIST =>
-            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_WISHLIST
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_WISHLIST,
+        'order_automation_' =>
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_ORDER_STATUS
     );
 
     /**
@@ -74,8 +76,12 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
             $automationCollection = $this->getCollection()
                 ->addFieldToFilter(
                     'enrolment_status', self::AUTOMATION_STATUS_PENDING
-                )
-                ->addFieldToFilter('automation_type', $type);
+                );
+            if ($type == 'order_automation_') {
+                $automationCollection->addFieldToFilter('automation_type', array('like' => '%' . $type . '%'));
+            } else {
+                $automationCollection->addFieldToFilter('automation_type', $type);
+            }
             //limit because of the each contact request to get the id
             $automationCollection->getSelect()->limit($this->limit);
             foreach ($automationCollection as $automation) {
