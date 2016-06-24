@@ -127,7 +127,7 @@ class Dotdigitalgroup_Email_Block_Customer_Account_Books
     }
 
     /**
-     * getter for data fields to show. Fully processed.
+     * Get datafields to show. Fully processed.
      *
      * @return array
      */

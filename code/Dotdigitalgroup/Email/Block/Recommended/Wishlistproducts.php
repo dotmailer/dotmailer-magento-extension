@@ -1,12 +1,16 @@
 <?php
 
-class Dotdigitalgroup_Email_Block_Recommended_Wishlistproducts
-    extends Dotdigitalgroup_Email_Block_Edc
+class Dotdigitalgroup_Email_Block_Recommended_Wishlistproducts extends Dotdigitalgroup_Email_Block_Edc
 {
 
-    protected function _getWishlistItems()
+    /**
+     * Wishlist items.
+     * 
+     * @return array|Mage_Wishlist_Model_Mysql4_Item_Collection
+     */
+    protected function getWishlistItems()
     {
-        $wishlist = $this->_getWishlist();
+        $wishlist = $this->getWishlist();
         if ($wishlist && count($wishlist->getItemCollection())) {
             return $wishlist->getItemCollection();
         } else {
@@ -14,7 +18,12 @@ class Dotdigitalgroup_Email_Block_Recommended_Wishlistproducts
         }
     }
 
-    protected function _getWishlist()
+    /**
+     * Get wishlist for customer.
+     * 
+     * @return array|Mage_Wishlist_Model_Wishlist
+     */
+    protected function getWishlist()
     {
 
         //customer id param
@@ -32,7 +41,9 @@ class Dotdigitalgroup_Email_Block_Recommended_Wishlistproducts
     }
 
     /**
-     * get the products to display for table
+     * Get the products to display for table.
+     * @return array
+     * @throws Exception
      */
     public function getLoadedProductCollection()
     {
@@ -41,7 +52,7 @@ class Dotdigitalgroup_Email_Block_Recommended_Wishlistproducts
         //number of product items to be displayed
         $limit = Mage::helper('ddg/recommended')->getDisplayLimitByMode($mode);
 
-        $items = $this->_getWishlistItems();
+        $items = $this->getWishlistItems();
         $productsToDisplay = $this->getProductsToDisplay(
             $items, $limit, $mode, 'WISHLIST'
         );
