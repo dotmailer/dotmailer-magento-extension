@@ -104,7 +104,8 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Orders
             $storeIds = Mage::app()->getGroup($group)->getStoreIds();
             $collection->addFieldToFilter('store_id', array('in' => $storeIds));
         }
+        $collection->getSelect()->limit('1');
 
-        return $collection->setPageSize(1)->setCurPage(1)->getFirstItem();
+        return $collection->getFirstItem();
     }
 }
