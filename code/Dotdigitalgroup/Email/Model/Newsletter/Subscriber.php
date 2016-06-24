@@ -85,8 +85,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
      *
      * @return int
      */
-    public function exportSubscribersPerWebsite(Mage_Core_Model_Website $website
-    ) 
+    public function exportSubscribersPerWebsite(Mage_Core_Model_Website $website) 
     {
         $updated     = 0;
         $fileHelper  = Mage::helper('ddg/file');
