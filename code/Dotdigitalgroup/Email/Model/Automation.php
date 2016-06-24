@@ -21,6 +21,23 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
     public $programMessage;
     public $automationType;
 
+    public $automationTypes = array(
+        self::AUTOMATION_TYPE_NEW_CUSTOMER =>
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_CUSTOMER,
+        self::AUTOMATION_TYPE_NEW_SUBSCRIBER =>
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_SUBSCRIBER,
+        self::AUTOMATION_TYPE_NEW_ORDER =>
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_ORDER,
+        self::AUTOMATION_TYPE_NEW_GUEST_ORDER =>
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_GUEST_ORDER,
+        self::AUTOMATION_TYPE_NEW_REVIEW =>
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_REVIEW,
+        self::AUTOMATION_TYPE_NEW_WISHLIST =>
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_WISHLIST,
+        'order_automation_' =>
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_ORDER_STATUS
+    );
+
     /**
      * constructor
      */
@@ -48,36 +65,30 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
 
     public function enrollment()
     {
-        //automation statuses to filter
-        $automationCollection = $this->getCollection()
-            ->addFieldToSelect('automation_type')
-            ->addFieldToFilter(
-                'enrolment_status', self::AUTOMATION_STATUS_PENDING
-            );
-        $automationCollection->getSelect()->group('automation_type');
-        //active types
-        $automationTypes = $automationCollection->getColumnValues(
-            'automation_type'
-        );
+        $helper = Mage::helper('ddg');
         //send the campaign by each types
-        foreach ($automationTypes as $type) {
+        foreach ($this->automationTypes as $type => $config) {
             $contacts = array();
-            //reset the collection
-            $automationCollection->clear();
+            foreach (Mage::app()->getWebsites(true) as $website) {
+                $contacts[$website->getId()]['programId'] = $helper->getWebsiteConfig($config, $website);
+            }
+            //get collection from type
             $automationCollection = $this->getCollection()
                 ->addFieldToFilter(
                     'enrolment_status', self::AUTOMATION_STATUS_PENDING
-                )
-                ->addFieldToFilter('automation_type', $type);
+                );
+            if ($type == 'order_automation_') {
+                $automationCollection->addFieldToFilter('automation_type', array('like' => '%' . $type . '%'));
+            } else {
+                $automationCollection->addFieldToFilter('automation_type', $type);
+            }
             //limit because of the each contact request to get the id
             $automationCollection->getSelect()->limit($this->limit);
             foreach ($automationCollection as $automation) {
-                $type = $automation->getAutomationType();
                 //customerid, subscriberid, wishlistid..
                 $email           = $automation->getEmail();
                 $this->typeId    = $automation->getTypeId();
                 $this->websiteId = $automation->getWebsiteId();
-                $this->programId = $automation->getProgramId();
                 $this->storeName = $automation->getStoreName();
                 $contactId       = Mage::helper('ddg')->getContactId(
                     $email, $this->websiteId
@@ -88,41 +99,47 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
                     $this->updateDatafieldsByType(
                         $this->automationType, $email
                     );
-                    $contacts[$automation->getId()] = $contactId;
+                    $contacts[$automation->getWebsiteId()]['contacts'][$automation->getId()] = $contactId;
                 } else {
                     // the contact is suppressed or the request failed
                     $automation->setEnrolmentStatus('Suppressed')->save();
                 }
             }
-            //only for subscribed contacts
-            if ( ! empty($contacts) && $type != ''
-                && $this->_checkCampignEnrolmentActive($this->programId)
-            ) {
-                $result = $this->sendContactsToAutomation(
-                    array_values($contacts)
-                );
-                //check for error message
-                if (isset($result->message)) {
-                    $this->programStatus  = 'Failed';
-                    $this->programMessage = $result->message;
+            foreach ($contacts as $websiteId => $websiteContacts) {
+                if (isset($websiteContacts['contacts'])) {
+                    $this->programId = $websiteContacts['programId'];
+                    $contactsArray = $websiteContacts['contacts'];
+                    //only for subscribed contacts
+                    if (!empty($contactsArray)
+                        && $this->_checkCampignEnrolmentActive($this->programId)
+                    ) {
+                        $result = $this->sendContactsToAutomation(
+                            array_values($contactsArray),
+                            $websiteId
+                        );
+                        //check for error message
+                        if (isset($result->message)) {
+                            $this->programStatus = 'Failed';
+                            $this->programMessage = $result->message;
+                        }
+                        //program is not active
+                    } elseif ($this->programMessage
+                        == 'Error: ERROR_PROGRAM_NOT_ACTIVE '
+                    ) {
+                        $this->programStatus = 'Deactivated';
+                    }
+                    //update contacts with the new status, and log the error message if failes
+                    $num = $this->getResource()->updateContacts(
+                        $contactsArray, $this->programStatus, $this->programMessage
+                    );
+                    if ($num) {
+                        Mage::helper('ddg')->log(
+                            'Automation type : ' . $type . ', updated no : ' . $num
+                        );
+                    }
                 }
-                //program is not active
-            } elseif ($this->programMessage
-                == 'Error: ERROR_PROGRAM_NOT_ACTIVE '
-            ) {
-                $this->programStatus = 'Deactivated';
-            }
-            //update contacts with the new status, and log the error message if failes
-            $num = $this->getResource()->updateContacts(
-                $contacts, $this->programStatus, $this->programMessage
-            );
-            if ($num) {
-                Mage::helper('ddg')->log(
-                    'Automation type : ' . $type . ', updated no : ' . $num
-                );
             }
         }
-
     }
 
     /**
@@ -264,12 +281,13 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
      * Enrol contacts for a program.
      *
      * @param $contacts
+     * @param $websiteId
      *
      * @return null
      */
-    public function sendContactsToAutomation($contacts)
+    public function sendContactsToAutomation($contacts, $websiteId)
     {
-        $client = Mage::helper('ddg')->getWebsiteApiClient($this->websiteId);
+        $client = Mage::helper('ddg')->getWebsiteApiClient($websiteId);
         $data   = array(
             'Contacts'     => $contacts,
             'ProgramId'    => $this->programId,

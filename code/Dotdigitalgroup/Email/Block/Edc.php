@@ -395,7 +395,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
     }
 
     /**
-     * get products to display for order, wishlist and quote EDC
+     * Get products to display for order, wishlist and quote EDC.
      *
      * @param $items
      * @param $limit

@@ -254,7 +254,6 @@ class Dotdigitalgroup_Email_Helper_Config
      * Trial Account
      */
     const API_CONNECTOR_TRIAL_FORM_URL = 'https://magentosignup.dotmailer.com/';
-    const API_CONNECTOR_TRIAL_FORM_SECRET = 'DmTrialFormSecret';
 
     /**
      * @param int $website
@@ -301,10 +300,12 @@ class Dotdigitalgroup_Email_Helper_Config
      */
     public function getRegionAuthorize($website)
     {
-        $baseRegionBaseUrl =  Mage::helper('ddg')->getWebsiteConfig(
+        $apiEndpoint =  Mage::helper('ddg')->getWebsiteConfig(
             Dotdigitalgroup_Email_Helper_Config::PATH_FOR_API_ENDPOINT, $website) . DS;
+        //replace the api with the app prefix from the domain name
+        $regionBaseUrl = str_replace('api', 'app',$apiEndpoint);
 
-        return $baseRegionBaseUrl;
+        return $regionBaseUrl;
     }
 
 	/**

@@ -76,7 +76,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
     /**
      * @var array
      */
-    public $custom = array();
+    public $custom;
 
     /**
      * @var string
@@ -195,6 +195,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
         if ($customAttributes) {
             $fields = Mage::getResourceModel('ddg_automation/order')
                 ->getOrderTableDescription();
+            $this->custom = array();
             foreach ($customAttributes as $customAttribute) {
                 if (isset($fields[$customAttribute])) {
                     $field = $fields[$customAttribute];
@@ -492,6 +493,12 @@ class Dotdigitalgroup_Email_Model_Connector_Order
                                     $value = $product->getAttributeText(
                                         $attribute_code
                                     );
+                                    break;
+                                case 'date':
+                                    $date = new Zend_Date(
+                                        $product->getData($attribute_code), Zend_Date::ISO_8601
+                                    );
+                                    $value = $date->toString(Zend_Date::ISO_8601);
                                     break;
                                 default:
                                     $value = $product->getData($attribute_code);

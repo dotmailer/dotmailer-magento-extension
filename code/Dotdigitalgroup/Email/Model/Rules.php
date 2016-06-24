@@ -324,7 +324,7 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
                 foreach ($multiFieldsConditions as $key => $multiFieldsCondition) {
                     if (in_array($key, $column)) {
                         $exp = new Zend_Db_Expr($key);
-                        $column[] = $exp;
+                        $column[] = $exp->__toString();
                         $cond[] = $multiFieldsCondition;
                         continue;
                     }

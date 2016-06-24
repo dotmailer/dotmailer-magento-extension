@@ -23,7 +23,7 @@ class Dotdigitalgroup_Email_Block_Basket extends Mage_Core_Block_Template
         }
 
         $quoteId    = $params['quote_id'];
-        $quoteModel = Mage::getModel('sales/quote')->load($quoteId);
+        $quoteModel = Mage::getModel('sales/quote')->loadByIdWithoutStore($quoteId);
 
         //check for any quote for this email, don't want to render further
         if ( ! $quoteModel->getId()) {

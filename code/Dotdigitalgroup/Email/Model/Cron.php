@@ -148,14 +148,26 @@ class Dotdigitalgroup_Email_Model_Cron
      */
     public function cleaning()
     {
+        //Clean tables
+        $resourceModels = array(
+            'automation' => 'ddg_automation/automation',
+            'importer' => 'ddg_automation/importer',
+            'campaign' => 'ddg_automation/campaign'
+        );
+        $message = 'Cleaning cronjob result :';
+        foreach ($resourceModels as $key => $resourceModel) {
+            $result = Mage::getResourceModel($resourceModel)->cleanup();
+            $message .= " $result records removed from $key .";
+        }
+
         $helper         = Mage::helper('ddg/file');
         $archivedFolder = $helper->getArchiveFolder();
         $result         = $helper->deleteDir($archivedFolder);
-        $message        = 'Cleaning cronjob result : ' . $result;
+        $message .= ' Deleting archived folder result : ' . $result;
         $helper->log($message);
         Mage::helper('ddg')->rayLog($message, 'model/cron.php');
 
-        return $result;
+        return $message;
     }
 
 

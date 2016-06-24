@@ -116,6 +116,38 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
                     $campaign->getEmail(), $websiteId
                 );
                 if (is_numeric($contactId)) {
+                    //update data fields for order review camapigns
+                    if ($campaign->getEventName() == 'Order Review') {
+                        $website = Mage::app()->getWebsite($websiteId);
+                        $order = Mage::getModel('sales/order')->loadByIncrementId($campaign->getOrderIncrementId());
+
+                        if ($lastOrderId = $website->getConfig(
+                            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_LAST_ORDER_ID
+                        )
+                        ) {
+                            $data[] = array(
+                                'Key' => $lastOrderId,
+                                'Value' => $order->getId()
+                            );
+                        }
+                        if ($orderIncrementId = $website->getConfig(
+                            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_LAST_ORDER_INCREMENT_ID
+                        )
+                        ) {
+                            $data[] = array(
+                                'Key' => $orderIncrementId,
+                                'Value' => $order->getIncrementId()
+                            );
+                        }
+
+                        if (!empty($data)) {
+                            //update data fields
+                            $client->updateContactDatafieldsByEmail(
+                                $email, $data
+                            );
+                        }
+                    }
+
                     $response = $client->postCampaignsSend(
                         $campaignId, array($contactId)
                     );
