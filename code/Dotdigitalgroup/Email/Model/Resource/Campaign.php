@@ -78,4 +78,57 @@ class Dotdigitalgroup_Email_Model_Resource_Campaign
             return $e;
         }
     }
+
+    /**
+     * Set error message
+     *
+     * @param $campaignId
+     * @param $message
+     */
+    public function setMessage($campaignId, $message)
+    {
+        try {
+            $now = Mage::getSingleton('core/date')->gmtDate();
+            $conn = $this->_getWriteAdapter();
+            $conn->update(
+                $this->getMainTable(),
+                array(
+                    'message' => $message,
+                    'is_sent' => 1,
+                    'sent_at' => $now
+                ),
+                array('campaign_id = ?' => $campaignId)
+            );
+        } catch (Exception $e) {
+            Mage::logException($e);
+        }
+    }
+
+    /**
+     * Set sent
+     *
+     * @param $campaignId
+     * @param bool $sendId
+     */
+    public function setSent($campaignId, $sendId = false)
+    {
+        try {
+            $now = Mage::getSingleton('core/date')->gmtDate();
+            $bind = array(
+                'is_sent' => 1,
+                'sent_at' => $now
+            );
+            if ($sendId) {
+                $bind['send_id'] = $sendId;
+            }
+            $conn = $this->_getWriteAdapter();
+            $conn->update(
+                $this->getMainTable(),
+                $bind,
+                array('campaign_id = ?' => $campaignId)
+            );
+        } catch (Exception $e) {
+            Mage::logException($e);
+        }
+    }
 }

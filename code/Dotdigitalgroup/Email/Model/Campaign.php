@@ -32,6 +32,9 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
     //error messages
     const SEND_EMAIL_CONTACT_ID_MISSING = 'Error : missing contact id - will try later to send ';
 
+    //single call contact limit
+    const SEND_EMAIL_CONTACT_LIMIT = 10;
+
     /**
      * constructor
      */
@@ -85,103 +88,116 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
      */
     public function sendCampaigns()
     {
-        //grab the emails not send
-        $emailsToSend = $this->_getEmailCampaigns();
+        /** @var Mage_Core_Model_Website $website */
+        foreach (Mage::app()->getWebsites(true) as $website) {
+            $emailsToSend = $this->_getEmailCampaigns($website->getStoreIds());
+            $campaignsToSend = array();
+            foreach ($emailsToSend as $campaign) {
 
-        foreach ($emailsToSend as $campaign) {
-
-            $email      = $campaign->getEmail();
-            $storeId    = $campaign->getStoreId();
-            $campaignId = $campaign->getCampaignId();
-            $store      = Mage::app()->getStore($storeId);
-            $websiteId  = $store->getWebsiteId();
-
-
-            if ( ! $campaignId) {
-                $campaign->setMessage('Missing campaign id: ' . $campaignId)
-                    ->setIsSent(1)
-                    ->save();
-                continue;
-            } elseif ( ! $email) {
-                $campaign->setMessage('Missing email : ' . $email)
-                    ->setIsSent(1)
-                    ->save();
-                continue;
-            }
-            try {
+                $email = $campaign->getEmail();
+                $campaignId = $campaign->getCampaignId();
+                $websiteId = $website->getId();
                 $client    = Mage::helper('ddg')->getWebsiteApiClient(
                     $websiteId
                 );
-                $contactId = Mage::helper('ddg')->getContactId(
-                    $campaign->getEmail(), $websiteId
-                );
-                if (is_numeric($contactId)) {
-                    //update data fields for order review camapigns
-                    if ($campaign->getEventName() == 'Order Review') {
-                        $website = Mage::app()->getWebsite($websiteId);
-                        $order = Mage::getModel('sales/order')->loadByIncrementId($campaign->getOrderIncrementId());
 
-                        if ($lastOrderId = $website->getConfig(
-                            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_LAST_ORDER_ID
-                        )
-                        ) {
-                            $data[] = array(
-                                'Key' => $lastOrderId,
-                                'Value' => $order->getId()
-                            );
-                        }
-                        if ($orderIncrementId = $website->getConfig(
-                            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_LAST_ORDER_INCREMENT_ID
-                        )
-                        ) {
-                            $data[] = array(
-                                'Key' => $orderIncrementId,
-                                'Value' => $order->getIncrementId()
-                            );
-                        }
-
-                        if (!empty($data)) {
-                            //update data fields
-                            $client->updateContactDatafieldsByEmail(
-                                $email, $data
-                            );
-                        }
+                //Only if valid client is returned
+                if ($client) {
+                    if (!$campaignId) {
+                        $campaign->setMessage('Missing campaign id: ' . $campaignId)
+                            ->setIsSent(1)
+                            ->save();
+                        continue;
+                    } elseif (!$email) {
+                        $campaign->setMessage('Missing email : ' . $email)
+                            ->setIsSent(1)
+                            ->save();
+                        continue;
                     }
 
+                    $campaignsToSend[$campaignId]['client'] = $client;
+                    try {
+                        $contactId = Mage::helper('ddg')->getContactId(
+                            $campaign->getEmail(), $websiteId
+                        );
+                        if (is_numeric($contactId)) {
+                            //update data fields for order review camapigns
+                            if ($campaign->getEventName() == 'Order Review') {
+                                $order = Mage::getModel('sales/order')->loadByIncrementId($campaign->getOrderIncrementId());
+
+                                if ($lastOrderId = $website->getConfig(
+                                    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_LAST_ORDER_ID
+                                )
+                                ) {
+                                    $data[] = array(
+                                        'Key' => $lastOrderId,
+                                        'Value' => $order->getId()
+                                    );
+                                }
+                                if ($orderIncrementId = $website->getConfig(
+                                    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_LAST_ORDER_INCREMENT_ID
+                                )
+                                ) {
+                                    $data[] = array(
+                                        'Key' => $orderIncrementId,
+                                        'Value' => $order->getIncrementId()
+                                    );
+                                }
+
+                                if (!empty($data)) {
+                                    //update data fields
+                                    $client->updateContactDatafieldsByEmail(
+                                        $email, $data
+                                    );
+                                }
+                            }
+                            $campaignsToSend[$campaignId]['contacts'][] = $contactId;
+                        } else {
+                            //update the failed to send email message error message from post contact
+                            $campaign->setContactMessage($contactId)->setIsSent(1)
+                                ->save();
+                        }
+                    } catch (Exception $e) {
+                        Mage::logException($e);
+                    }
+                }
+            }
+            foreach ($campaignsToSend as $campaignId => $data) {
+                if (isset($data['contacts']) && isset($data['client'])) {
+                    $contacts = $data['contacts'];
+                    $client = $data['client'];
                     $response = $client->postCampaignsSend(
-                        $campaignId, array($contactId)
+                        $campaignId, $contacts
                     );
                     if (isset($response->message)) {
                         //update  the failed to send email message
-                        $campaign->setMessage($response->message)->setIsSent(1);
+                        $this->getResource()->setMessage($campaignId, $response->message);
+                    } else {
+                        //Set sent with/without send id
+                        if (isset($response->id)) {
+                            $this->getResource()->setSent($campaignId, $response->id);
+                        } else {
+                            $this->getResource()->setSent($campaignId);
+                        }
                     }
-                    $now = Mage::getSingleton('core/date')->gmtDate();
-                    //record suscces
-                    $campaign->setIsSent(1)
-                        ->setMessage(null)
-                        ->setSentAt($now)
-                        ->save();
-                } else {
-                    //update  the failed to send email message- error message from post contact
-                    $campaign->setContactMessage($contactId)->setIsSent(1)
-                        ->save();
                 }
-            } catch (Exception $e) {
-                Mage::logException($e);
             }
         }
     }
 
     /**
-     * @return mixed
+     * @param $storeIds
+     * @return Dotdigitalgroup_Email_Model_Resource_Campaign_Collection
      */
-    protected function _getEmailCampaigns()
+    protected function _getEmailCampaigns($storeIds)
     {
         $emailCollection = $this->getCollection();
         $emailCollection->addFieldToFilter('is_sent', array('null' => true))
-            ->addFieldToFilter('campaign_id', array('notnull' => true));
-        $emailCollection->getSelect()->order('campaign_id');
-
+            ->addFieldToFilter('campaign_id', array('notnull' => true))
+            ->addFieldToFilter('store_id', array('in' => $storeIds));
+        $emailCollection->getSelect()
+            ->order('campaign_id')
+            ->limit(self::SEND_EMAIL_CONTACT_LIMIT);
         return $emailCollection;
     }
 }
