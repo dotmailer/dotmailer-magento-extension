@@ -78,6 +78,15 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Campaign_Grid
                                                      'filterCallbackContact')
             )
         )->addColumn(
+            'send_id', array(
+                'header' => Mage::helper('ddg')->__('Send Id'),
+                'align' => 'left',
+                'width' => '300px',
+                'index' => 'send_id',
+                'type' => 'text',
+                'escape' => true
+            )
+        )->addColumn(
             'message', array(
                 'header' => Mage::helper('ddg')->__('Send Message'),
                 'align'  => 'left',
