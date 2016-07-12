@@ -178,9 +178,11 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         $response = $client->postContacts($email);
 
         if (isset($response->message)) {
-            $contact->setEmailImported(1)
-                ->setSuppressed(1)
-                ->save();
+            $contact->setEmailImported(1);
+            if ($response->message == 'ERROR_CONTACT_SUPPRESSED') {
+                $contact->setSuppressed(1);
+            }
+            $contact->save();
             return false;
         }
         //save contact id
