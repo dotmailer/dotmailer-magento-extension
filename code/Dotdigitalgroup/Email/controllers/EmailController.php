@@ -224,7 +224,7 @@ class Dotdigitalgroup_Email_EmailController
                 );
             }
 
-            $this->_redirectUrl($url);
+            $this->_redirectUrl($url . $this->_getExtraParams());
         } else {
             //set after auth url. customer will be redirected to cart after successful login
             if ($configCartUrl) {
@@ -246,7 +246,7 @@ class Dotdigitalgroup_Email_EmailController
             } else {
                 $loginUrl = 'customer/account/login';
             }
-            $this->_redirectUrl($this->_quote->getStore()->getUrl($loginUrl));
+            $this->_redirectUrl($this->_quote->getStore()->getUrl($loginUrl) . $this->_getExtraParams());
         }
     }
 
@@ -264,7 +264,7 @@ class Dotdigitalgroup_Email_EmailController
         } else {
             $url = 'checkout/cart';
         }
-        $this->_redirectUrl($this->_quote->getStore()->getUrl($url));
+        $this->_redirectUrl($this->_quote->getStore()->getUrl($url) . $this->_getExtraParams());
     }
 
     /**
@@ -289,5 +289,22 @@ class Dotdigitalgroup_Email_EmailController
             }
             $currentQuote->collectTotals()->save();
         }
+    }
+
+    /**
+     * @return string
+     */
+    protected function _getExtraParams()
+    {
+        $paramString = '';
+
+        if (count($_REQUEST) > 0) {
+            $paramString .= '?';
+            foreach ($_REQUEST as $k => $value) {
+                $paramString .= $k . '=' . $value . '&';
+            }
+        }
+
+        return rtrim($paramString, '&');
     }
 }
