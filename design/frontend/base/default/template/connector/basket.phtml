@@ -2,6 +2,9 @@
 <?php if($items): ?>
     <?php $dynamicStyle = $this->getDynamicStyle(); ?>
     <style>
+        .price-box p {
+            margin: 0;
+        }
         .product-name{
             color: <?php echo $dynamicStyle['nameColor'];?>;
             font-size: <?php echo $dynamicStyle['fontSize'];?>;
@@ -133,7 +136,8 @@
             <tr>
                 <td style="padding: 5px; border-bottom: 1px solid #cbd3d4; border-right: 1px solid #cbd3d4;">
                     <img alt="<?php echo $this->stripTags($this->getImageLabel($item['product'], 'small_image'), null, true) ?>"
-                         src="<?php echo $this->helper('catalog/image')->init($item['product'], 'small_image')->resize(85);?>" width="85" height="85" align="middle" border="0">
+                         src="<?php echo $this->getProductImage($_product); ?>" width="85" height="85" align="middle"
+                         border="0">
                 </td>
                 <td  class="product-name" style="padding: 1px; border-bottom: 1px solid #cbd3d4; border-right: 1px solid #cbd3d4;">
                     <a class="product-url" href="<?php echo $item['productUrl'];?>"><?php echo
