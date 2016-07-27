@@ -419,15 +419,15 @@ $select      = $installer->getConnection()->select()
     ->from(
         array('subscriber' => $installer->getTable('newsletter/subscriber')),
         array(
+            'customer_id',
             'email' => 'subscriber_email',
             'col2'  => new Zend_Db_Expr('1'),
             'col3'  => new Zend_Db_Expr('1'),
             'store_id'
         )
     )
-    ->where('customer_id =?', 0)
     ->where('subscriber_status =?', 1);
-$insertArray = array('email', 'is_subscriber', 'subscriber_status', 'store_id');
+$insertArray = array('customer_id', 'email', 'is_subscriber', 'subscriber_status', 'store_id');
 $sqlQuery    = $select->insertFromSelect($contactTable, $insertArray, false);
 $installer->getConnection()->query($sqlQuery);
 
