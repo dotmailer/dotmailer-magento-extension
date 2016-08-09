@@ -518,19 +518,19 @@
         <connector_dynamic_content>
             <products>
                 <related_display_type>grid</related_display_type>
-                <related_items_to_display>2</related_items_to_display>
+                <related_items_to_display>4</related_items_to_display>
                 <upsell_display_type>grid</upsell_display_type>
-                <upsell_items_to_display>2</upsell_items_to_display>
+                <upsell_items_to_display>4</upsell_items_to_display>
                 <crosssell_display_type>grid</crosssell_display_type>
-                <crosssell_items_to_display>2</crosssell_items_to_display>
+                <crosssell_items_to_display>4</crosssell_items_to_display>
                 <bestsellers_display_type>grid</bestsellers_display_type>
-                <bestsellers_items_to_display>2</bestsellers_items_to_display>
+                <bestsellers_items_to_display>4</bestsellers_items_to_display>
                 <bestsellers_time_period></bestsellers_time_period>
                 <most_viewed_display_type>grid</most_viewed_display_type>
-                <most_viewed_items_to_display>2</most_viewed_items_to_display>
+                <most_viewed_items_to_display>4</most_viewed_items_to_display>
                 <most_viewed_time_period></most_viewed_time_period>
                 <recently_viewed_display_type>grid</recently_viewed_display_type>
-                <recently_viewed_items_to_display>2</recently_viewed_items_to_display>
+                <recently_viewed_items_to_display>4</recently_viewed_items_to_display>
                 <review_display_type>grid</review_display_type>
                 <wishlist_display_type>grid</wishlist_display_type>
             </products>
@@ -567,7 +567,7 @@
             </external_dynamic_content_urls>
             <manual_product_search>
                 <display_type>list</display_type>
-                <items_to_display>2</items_to_display>
+                <items_to_display>4</items_to_display>
                 <products_push_items></products_push_items>
             </manual_product_search>
             <fallback_products>
@@ -759,7 +759,7 @@
                 <test_connect></test_connect>
             </oauth>
             <ip_restriction>
-                <ip_addresses>94.143.111.1,94.143.111.2,94.143.111.3,104.208.235.109</ip_addresses>
+                <ip_addresses></ip_addresses>
             </ip_restriction>
             <cron_schedules>
                 <importer>*/5 * * * *</importer>
