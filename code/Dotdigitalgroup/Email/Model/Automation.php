@@ -107,6 +107,8 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
                         // the contact is suppressed or the request failed
                         $automation->setEnrolmentStatus('Suppressed')->save();
                     }
+                } else {
+                    unset($contacts[$this->websiteId]);
                 }
             }
             foreach ($contacts as $websiteId => $websiteContacts) {
