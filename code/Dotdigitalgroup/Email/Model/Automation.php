@@ -90,19 +90,23 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
                 $this->typeId    = $automation->getTypeId();
                 $this->websiteId = $automation->getWebsiteId();
                 $this->storeName = $automation->getStoreName();
-                $contactId       = Mage::helper('ddg')->getContactId(
-                    $email, $this->websiteId
-                );
-                //contact id is valid, can update datafields
-                if ($contactId) {
-                    //need to update datafields
-                    $this->updateDatafieldsByType(
-                        $this->automationType, $email
+
+                //Only if api is enabled and credentials are filled
+                if ($helper->getWebsiteApiClient($this->websiteId)) {
+                    $contactId = Mage::helper('ddg')->getContactId(
+                        $email, $this->websiteId
                     );
-                    $contacts[$automation->getWebsiteId()]['contacts'][$automation->getId()] = $contactId;
-                } else {
-                    // the contact is suppressed or the request failed
-                    $automation->setEnrolmentStatus('Suppressed')->save();
+                    //contact id is valid, can update datafields
+                    if ($contactId) {
+                        //need to update datafields
+                        $this->updateDatafieldsByType(
+                            $this->automationType, $email
+                        );
+                        $contacts[$automation->getWebsiteId()]['contacts'][$automation->getId()] = $contactId;
+                    } else {
+                        // the contact is suppressed or the request failed
+                        $automation->setEnrolmentStatus('Suppressed')->save();
+                    }
                 }
             }
             foreach ($contacts as $websiteId => $websiteContacts) {
