@@ -34,7 +34,7 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_REVIEW,
         self::AUTOMATION_TYPE_NEW_WISHLIST =>
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_WISHLIST,
-        'order_automation_' =>
+        'order_status_automation' =>
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_ORDER_STATUS
     );
 
@@ -77,8 +77,11 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
                 ->addFieldToFilter(
                     'enrolment_status', self::AUTOMATION_STATUS_PENDING
                 );
-            if ($type == 'order_automation_') {
-                $automationCollection->addFieldToFilter('automation_type', array('like' => '%' . $type . '%'));
+            if ($type == 'order_status_automation') {
+                $automationCollection->addFieldToFilter(
+                    'automation_type',
+                    array('like' => '%' . 'order_automation_' . '%')
+                );
             } else {
                 $automationCollection->addFieldToFilter('automation_type', $type);
             }
