@@ -3,9 +3,22 @@
 class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
 {
 
+    /**
+     * @var int
+     */
     protected $_start;
+    /**
+     *
+     * @var array
+     */
     protected $_wishlists;
+    /**
+     * @var int
+     */
     protected $_count = 0;
+    /**
+     * @var array
+     */
     protected $_wishlistIds;
 
     /**
@@ -18,7 +31,7 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
     }
 
     /**
-     * @return $this|Mage_Core_Model_Abstract
+     * @return $this
      */
     protected function _beforeSave()
     {
@@ -51,6 +64,11 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
         return false;
     }
 
+    /**
+     * Sync wishlists.
+     *
+     * @return array
+     */
     public function sync()
     {
         $response = array('success' => true, 'message' => '');
@@ -103,11 +121,16 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
                 $this->_exportWishlistForWebsiteInSingle($website);
             }
         }
-        $response['message'] = "wishlist updated: " . $this->_count;
+        $response['message'] = "Wishlists updated: " . $this->_count;
 
         return $response;
     }
 
+    /**
+     * Sync single wishlist.
+     *
+     * @param Mage_Core_Model_Website $website
+     */
     protected function _exportWishlistForWebsite(Mage_Core_Model_Website $website)
     {
         //reset wishlists
@@ -131,7 +154,7 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
             $collection->getSelect()
                 ->joinLeft(
                     array('c' => Mage::getSingleton('core/resource')
-                        ->getTableName('customer_entity')),
+                        ->getTableName('customer/entity')),
                     'c.entity_id = customer_id',
                     array('email', 'store_id')
                 );
@@ -166,9 +189,15 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
         }
     }
 
-    protected function _getWishlistToImport(Mage_Core_Model_Website $website,
-        $limit = 100
-    ) 
+    /**
+     * Get wishlists pending for sync.
+     *
+     * @param Mage_Core_Model_Website $website
+     * @param int                     $limit
+     *
+     * @return Mage_Eav_Model_Entity_Collection_Abstract
+     */
+    protected function _getWishlistToImport(Mage_Core_Model_Website $website, $limit = 100)
     {
         $collection = $this->getCollection()
             ->addFieldToFilter('wishlist_imported', array('null' => true))
@@ -182,8 +211,12 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
         return $collection;
     }
 
-    protected function _exportWishlistForWebsiteInSingle(Mage_Core_Model_Website $website
-    ) 
+    /**
+     * Get wishlists pending for sync.
+     *
+     * @param Mage_Core_Model_Website $website
+     */
+    protected function _exportWishlistForWebsiteInSingle(Mage_Core_Model_Website $website)
     {
         $helper             = Mage::helper('ddg');
         $limit              = $helper->getWebsiteConfig(
@@ -201,7 +234,8 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
             ->addFieldToFilter('wishlist_id', array('in' => $wishlistIds));
         $wishlistCollection->getSelect()
             ->joinLeft(
-                array('c' => 'customer_entity'),
+                array('c' => Mage::getSingleton('core/resource')
+                    ->getTableName('customer/entity')),
                 'c.entity_id = customer_id',
                 array('email', 'store_id')
             );
@@ -262,9 +296,15 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
         }
     }
 
-    protected function _getModifiedWishlistToImport(Mage_Core_Model_Website $website,
-        $limit = 100
-    ) 
+    /**
+     * Get wishlists marked as modified.
+     *
+     * @param Mage_Core_Model_Website $website
+     * @param int                     $limit
+     *
+     * @return mixed
+     */
+    protected function _getModifiedWishlistToImport(Mage_Core_Model_Website $website, $limit = 100)
     {
         $collection = $this->getCollection()
             ->addFieldToFilter('wishlist_modified', 1)
