@@ -164,26 +164,31 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
         if ($type == self::ABANDONED) {
             $collection->getSelect()
                 ->joinLeft(
-                    array('quote_address' => 'sales_flat_quote_address'),
+                    array('quote_address' => Mage::getSingleton('core/resource')
+                        ->getTableName('sales_flat_quote_address')),
                     "main_table.entity_id = quote_address.quote_id",
                     array('shipping_method', 'country_id', 'city', 'region_id')
                 )->joinLeft(
-                    array('quote_payment' => 'sales_flat_quote_payment'),
+                    array('quote_payment' => Mage::getSingleton('core/resource')
+                        ->getTableName('sales_flat_quote_payment')),
                     "main_table.entity_id = quote_payment.quote_id",
                     array('method')
                 )->where('address_type = ?', 'shipping');
         } elseif ($type == self::REVIEW) {
             $collection->getSelect()
                 ->join(
-                    array('order_address' => 'sales_flat_order_address'),
+                    array('order_address' => Mage::getSingleton('core/resource')
+                        ->getTableName('sales_flat_order_address')),
                     "main_table.entity_id = order_address.parent_id",
                     array('country_id', 'city', 'region_id')
                 )->join(
-                    array('order_payment' => 'sales_flat_order_payment'),
+                    array('order_payment' => Mage::getSingleton('core/resource')
+                        ->getTableName('sales_flat_order_payment')),
                     "main_table.entity_id = order_payment.parent_id",
                     array('method')
                 )->join(
-                    array('quote' => 'sales_flat_quote'),
+                    array('quote' => Mage::getSingleton('core/resource')
+                        ->getTableName('sales_flat_quote')),
                     "main_table.quote_id = quote.entity_id",
                     array('items_qty')
                 )->where('order_address.address_type = ?', 'shipping');
