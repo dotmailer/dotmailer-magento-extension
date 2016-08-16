@@ -108,8 +108,7 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
         return $response;
     }
 
-    protected function _exportWishlistForWebsite(Mage_Core_Model_Website $website
-    ) 
+    protected function _exportWishlistForWebsite(Mage_Core_Model_Website $website)
     {
         //reset wishlists
         $this->_wishlists   = array();
@@ -131,7 +130,8 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
 
             $collection->getSelect()
                 ->joinLeft(
-                    array('c' => 'customer_entity'),
+                    array('c' => Mage::getSingleton('core/resource')
+                        ->getTableName('customer_entity')),
                     'c.entity_id = customer_id',
                     array('email', 'store_id')
                 );
