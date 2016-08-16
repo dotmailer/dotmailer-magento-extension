@@ -360,7 +360,8 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
         if ($category->getId()) {
             $productCollection->getSelect()
                 ->joinLeft(
-                    array("ccpi" => 'catalog_category_product_index'),
+                    array("ccpi" => Mage::getSingleton('core/resource')
+                        ->getTableName('catalog_category_product_index')),
                     "e.entity_id = ccpi.product_id",
                     array("category_id")
                 )
