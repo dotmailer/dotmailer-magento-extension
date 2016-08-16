@@ -214,7 +214,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
         $productCollection = Mage::getResourceModel(
             'catalog/product_collection'
         )
-            ->addMinimalPrice()
+            ->addPriceData()
             ->addAttributeToFilter('entity_id', array('in' => $productIds))
             ->addAttributeToSelect(
                 array('product_url', 'name', 'store_id', 'small_image', 'price')
@@ -331,7 +331,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
         $productCollection = Mage::getResourceModel(
             'catalog/product_collection'
         )
-            ->addMinimalPrice()
+            ->addPriceData()
             ->addIdFilter($productIds)
             ->addAttributeToSelect(
                 array('product_url', 'name', 'store_id', 'small_image', 'price')
@@ -448,7 +448,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
 
                 $recommendedProducts = Mage::getModel('catalog/product')
                     ->getCollection()
-                    ->addMinimalPrice()
+                    ->addPriceData()
                     ->addIdFilter($recommendedProducts)
                     ->addAttributeToSelect(
                         array('product_url', 'name', 'store_id', 'small_image',
@@ -482,7 +482,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
                 ->getFallbackIds();
             $productCollection = Mage::getModel('catalog/product')
                 ->getCollection()
-                ->addMinimalPrice()
+                ->addPriceData()
                 ->addIdFilter($fallbackIds)
                 ->addAttributeToSelect(
                     array('product_url', 'name', 'store_id', 'small_image',
