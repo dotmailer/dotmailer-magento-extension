@@ -125,7 +125,7 @@ class Dotdigitalgroup_Email_Model_Resource_Contact
             //remove dotmailer code from core_resource table
             $cond = $conn->quoteInto('code = ?', 'email_connector_setup');
             $conn->delete(
-                $this->getReadConnection()->getTableName('core_resource'), $cond
+                Mage::getSingleton('core/resource')->getTableName('core_resource'), $cond
             );
 
             //clean cache
@@ -317,10 +317,8 @@ class Dotdigitalgroup_Email_Model_Resource_Contact
                 ->getCollection()
                 ->addFieldToFilter('subscriber_email', array('in' => $data));
 
-
-            Mage::register('unsubscribeEmails', $data);
-
             foreach ($newsletterCollection as $subscriber) {
+                Mage::register('unsubscribeEmail', $subscriber->getSubscriberEmail());
                 $subscriber->setSubscriberStatus(
                     Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED
                 )

@@ -10,6 +10,8 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
     const AUTOMATION_TYPE_NEW_REVIEW = 'review_automation';
     const AUTOMATION_TYPE_NEW_WISHLIST = 'wishlist_automation';
     const AUTOMATION_STATUS_PENDING = 'pending';
+    const ORDER_STATUS_AUTOMATION = 'order_automation_';
+
     //automation enrolment limit
     public $limit = 100;
     public $email;
@@ -34,7 +36,7 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_REVIEW,
         self::AUTOMATION_TYPE_NEW_WISHLIST =>
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_WISHLIST,
-        'order_automation_' =>
+        self::ORDER_STATUS_AUTOMATION =>
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_ORDER_STATUS
     );
 
@@ -78,7 +80,10 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
                     'enrolment_status', self::AUTOMATION_STATUS_PENDING
                 );
             if ($type == 'order_automation_') {
-                $automationCollection->addFieldToFilter('automation_type', array('like' => '%' . $type . '%'));
+                $automationCollection->addFieldToFilter(
+                    'automation_type',
+                    array('like' => '%' . $type . '%')
+                );
             } else {
                 $automationCollection->addFieldToFilter('automation_type', $type);
             }
@@ -90,19 +95,25 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
                 $this->typeId    = $automation->getTypeId();
                 $this->websiteId = $automation->getWebsiteId();
                 $this->storeName = $automation->getStoreName();
-                $contactId       = Mage::helper('ddg')->getContactId(
-                    $email, $this->websiteId
-                );
-                //contact id is valid, can update datafields
-                if ($contactId) {
-                    //need to update datafields
-                    $this->updateDatafieldsByType(
-                        $this->automationType, $email
+
+                //Only if api is enabled and credentials are filled
+                if ($helper->getWebsiteApiClient($this->websiteId)) {
+                    $contactId = Mage::helper('ddg')->getContactId(
+                        $email, $this->websiteId
                     );
-                    $contacts[$automation->getWebsiteId()]['contacts'][$automation->getId()] = $contactId;
+                    //contact id is valid, can update datafields
+                    if ($contactId) {
+                        //need to update datafields
+                        $this->updateDatafieldsByType(
+                            $this->automationType, $email
+                        );
+                        $contacts[$automation->getWebsiteId()]['contacts'][$automation->getId()] = $contactId;
+                    } else {
+                        // the contact is suppressed or the request failed
+                        $automation->setEnrolmentStatus('Suppressed')->save();
+                    }
                 } else {
-                    // the contact is suppressed or the request failed
-                    $automation->setEnrolmentStatus('Suppressed')->save();
+                    unset($contacts[$this->websiteId]);
                 }
             }
             foreach ($contacts as $websiteId => $websiteContacts) {

@@ -9,6 +9,9 @@ $products = $this->getLoadedProductCollection();
 	$dynamicStyle = Mage::helper('ddg')->getDynamicStyles();
     ?>
     <style>
+        .price-box p {
+            margin: 0;
+        }
         .product-name{
             color: <?php echo $dynamicStyle['nameColor'];?>;
             font-size: <?php echo $dynamicStyle['fontSize'];?>;
@@ -103,8 +106,10 @@ $products = $this->getLoadedProductCollection();
 
     <td style="vertical-align: text-top; padding-right: 2px;">
         <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>"
-           class="product-image"><img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(135); ?>"
-			width="140" height="135" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" align="middle" /></a>
+           class="product-image"><img src="<?php echo $this->getProductImage($_product) ?>"
+                                      width="85" height="85"
+                                      alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'),
+                                          null, true) ?>" align="middle"/></a>
 
         <div class="product-name" align="center"><b><?php echo $this->escapeHtml(substr($_product->getName(), 0, 40));?></b></div>
         <div class="product-price" align="center"><?php echo $this->getPriceHtml($_product, true) ?></div>

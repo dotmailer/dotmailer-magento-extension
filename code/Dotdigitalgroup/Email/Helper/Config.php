@@ -153,6 +153,7 @@ class Dotdigitalgroup_Email_Helper_Config
     const XML_PATH_CONNECTOR_DYNAMIC_COUPON_STYLE           = 'connector_configuration/dynamic_content_style/coupon_style';
     const XML_PATH_CONNECTOR_DYNAMIC_COUPON_FONT            = 'connector_configuration/dynamic_content_style/coupon_font_picker';
     const XML_PATH_CONNECTOR_DYNAMIC_COUPON_BG_COLOR        = 'connector_configuration/dynamic_content_style/coupon_doc_color';
+    const XML_PATH_CONNECTOR_DYNAMIC_PRODUCT_IMAGE = 'connector_configuration/dynamic_content_style/product_image';
 
     //Catalog
     const XML_PATH_CONNECTOR_SYNC_CATALOG_VALUES            = 'connector_configuration/catalog_sync/catalog_values';

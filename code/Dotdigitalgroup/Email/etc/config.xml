@@ -628,6 +628,7 @@
                 <coupon_style></coupon_style>
                 <coupon_font_picker><![CDATA[Arial, Helvetica, sans-serif]]></coupon_font_picker>
                 <coupon_doc_color><![CDATA[#FFFFFF]]></coupon_doc_color>
+                <product_image>0</product_image>
             </dynamic_content_style>
             <dynamic_content_edit>
                 <link_text></link_text>
