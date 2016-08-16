@@ -183,7 +183,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
         $productIds = $productItems->getColumnValues('product_id');
         //get product collection to check for salable
         $productCollection = Mage::getModel('catalog/product')->getCollection()
-            ->addMinimalPrice()
+            ->addPriceData()
             ->addAttributeToSelect('*')
             ->addFieldToFilter('entity_id', array('in' => $productIds));
         //show products only if is salable
