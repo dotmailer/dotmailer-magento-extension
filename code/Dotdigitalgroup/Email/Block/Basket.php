@@ -144,10 +144,10 @@ class Dotdigitalgroup_Email_Block_Basket extends Mage_Core_Block_Template
             $parentIds = Mage::getModel('catalog/product_type_configurable')->getParentIdsByChild($product->getId());
             if (!empty($parentIds)) {
                 $parentProduct = Mage::getModel('catalog/product')->load($parentIds[0]);
-                return $this->helper('catalog/image')->init($parentProduct, 'small_image')->resize(135);
+                return $this->helper('catalog/image')->init($parentProduct, 'small_image')->resize(85);
             }
         }
-        return $this->helper('catalog/image')->init($product, 'small_image')->resize(135);
+        return $this->helper('catalog/image')->init($product, 'small_image')->resize(85);
     }
 
 }
