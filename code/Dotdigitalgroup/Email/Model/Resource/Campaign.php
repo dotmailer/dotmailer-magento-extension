@@ -82,22 +82,29 @@ class Dotdigitalgroup_Email_Model_Resource_Campaign
     /**
      * Set error message
      *
-     * @param $campaignId
+     * @param $ids
      * @param $message
+     * @param $sendId
      */
-    public function setMessage($campaignId, $message)
+    public function setMessage($ids, $message, $sendId = false)
     {
         try {
+            $ids = implode("', '", $ids);
+            if ($sendId) {
+                $map = 'send_id';
+            } else {
+                $map = 'id';
+            }
             $now = Mage::getSingleton('core/date')->gmtDate();
             $conn = $this->_getWriteAdapter();
             $conn->update(
                 $this->getMainTable(),
                 array(
                     'message' => $message,
-                    'is_sent' => 1,
+                    'send_status' => Dotdigitalgroup_Email_Model_Campaign::FAILED,
                     'sent_at' => $now
                 ),
-                array('campaign_id = ?' => $campaignId)
+                array("$map in ('$ids')")
             );
         } catch (Exception $e) {
             Mage::logException($e);
@@ -107,20 +114,40 @@ class Dotdigitalgroup_Email_Model_Resource_Campaign
     /**
      * Set sent
      *
-     * @param $campaignId
      * @param bool $sendId
      */
-    public function setSent($campaignId, $sendId = false)
+    public function setSent($sendId)
     {
         try {
             $now = Mage::getSingleton('core/date')->gmtDate();
             $bind = array(
-                'is_sent' => 1,
+                'send_status' => Dotdigitalgroup_Email_Model_Campaign::SENT,
                 'sent_at' => $now
             );
-            if ($sendId) {
-                $bind['send_id'] = $sendId;
-            }
+            $conn = $this->_getWriteAdapter();
+            $conn->update(
+                $this->getMainTable(),
+                $bind,
+                array('send_id = ?' => $sendId)
+            );
+        } catch (Exception $e) {
+            Mage::logException($e);
+        }
+    }
+
+    /**
+     * Set processing
+     *
+     * @param $campaignId
+     * @param bool $sendId
+     */
+    public function setProcessing($campaignId, $sendId)
+    {
+        try {
+            $bind = array(
+                'send_status' => Dotdigitalgroup_Email_Model_Campaign::PROCESSING,
+                'send_id' => $sendId
+            );
             $conn = $this->_getWriteAdapter();
             $conn->update(
                 $this->getMainTable(),
