@@ -511,6 +511,10 @@ class Dotdigitalgroup_Email_Model_Connector_Order
                             if (is_string($value)) {
                                 $attributes[][$attribute_code]
                                     = $this->_limitLength($value);
+                            } elseif(is_array($value)) { // check for multi select values
+                            	$value = implode($value, ', ');
+                                $attributes[][$attribute_code]
+                                    = $this->_limitLength($value);
                             }
                         }
                     }
