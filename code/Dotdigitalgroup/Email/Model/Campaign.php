@@ -28,6 +28,10 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
     const XML_PATH_GUEST_LOSTBASKET_2_CAMPAIGN = 'connector_lost_baskets/guests/campaign_2';
     const XML_PATH_GUEST_LOSTBASKET_3_CAMPAIGN = 'connector_lost_baskets/guests/campaign_3';
 
+    const PENDING = 0;
+    const PROCESSING = 1;
+    const SENT = 2;
+    const FAILED = 3;
 
     //error messages
     const SEND_EMAIL_CONTACT_ID_MISSING = 'Error : missing contact id - will try later to send ';
@@ -83,6 +87,21 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
     }
 
 
+    private function _checkSendStatus($website)
+    {
+        $campaigns = $this->_getEmailCampaigns($website->getStoreIds(), self::PROCESSING, true);
+        foreach ($campaigns as $campaign) {
+            $client = Mage::helper('ddg')->getWebsiteApiClient($website);
+            $response = $client->getSendStatus($campaign->getSendId());
+            if (isset($response->message)) {
+                //update  the failed to send email message
+                $this->getResource()->setMessage(array($campaign->getSendId()), $response->message);
+            } elseif ($response->status == 'Sent') {
+                $this->getResource()->setSent($campaign->getSendId());
+            }
+        }
+    }
+
     /**
      * Sending the campaigns.
      */
@@ -90,6 +109,9 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
     {
         /** @var Mage_Core_Model_Website $website */
         foreach (Mage::app()->getWebsites(true) as $website) {
+            //check send status for processing
+            $this->_checkSendStatus($website);
+            //start send process
             $emailsToSend = $this->_getEmailCampaigns($website->getStoreIds());
             $campaignsToSend = array();
             foreach ($emailsToSend as $campaign) {
@@ -105,12 +127,12 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
                 if ($client) {
                     if (!$campaignId) {
                         $campaign->setMessage('Missing campaign id: ' . $campaignId)
-                            ->setIsSent(1)
+                            ->setSendStatus(self::FAILED)
                             ->save();
                         continue;
                     } elseif (!$email) {
-                        $campaign->setMessage('Missing email : ' . $email)
-                            ->setIsSent(1)
+                        $campaign->setMessage('Missing email')
+                            ->setSendStatus(self::FAILED)
                             ->save();
                         continue;
                     }
@@ -152,9 +174,11 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
                                 }
                             }
                             $campaignsToSend[$campaignId]['contacts'][] = $contactId;
+                            $campaignsToSend[$campaignId]['ids'][] = $campaign->getId();
                         } else {
-                            //update the failed to send email message error message from post contact
-                            $campaign->setContactMessage($contactId)->setIsSent(1)
+                            //update the failed to send email message error message
+                            $campaign->setSendStatus(self::FAILED)
+                                ->setMessage('contact id returned is not numeric for email ' . $email)
                                 ->save();
                         }
                     } catch (Exception $e) {
@@ -171,14 +195,12 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
                     );
                     if (isset($response->message)) {
                         //update  the failed to send email message
-                        $this->getResource()->setMessage($campaignId, $response->message);
+                        $this->getResource()->setMessage($data['ids'], $response->message);
+                    } elseif (isset($response->id)) {
+                        $this->getResource()->setProcessing($campaignId, $response->id);
                     } else {
-                        //Set sent with/without send id
-                        if (isset($response->id)) {
-                            $this->getResource()->setSent($campaignId, $response->id);
-                        } else {
-                            $this->getResource()->setSent($campaignId);
-                        }
+                        //update  the failed to send email message
+                        $this->getResource()->setMessage($data['ids'], 'No send id returned.');
                     }
                 }
             }
@@ -186,18 +208,32 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
     }
 
     /**
+     * Get campaign collection
+     *
      * @param $storeIds
+     * @param $sendStatus
+     * @param $sendIdCheck
      * @return Dotdigitalgroup_Email_Model_Resource_Campaign_Collection
      */
-    protected function _getEmailCampaigns($storeIds)
+    protected function _getEmailCampaigns($storeIds, $sendStatus = 0, $sendIdCheck = false)
     {
         $emailCollection = $this->getCollection();
-        $emailCollection->addFieldToFilter('is_sent', array('null' => true))
+        $emailCollection->addFieldToFilter('send_status', array('eq' => $sendStatus))
             ->addFieldToFilter('campaign_id', array('notnull' => true))
             ->addFieldToFilter('store_id', array('in' => $storeIds));
-        $emailCollection->getSelect()
-            ->order('campaign_id')
-            ->limit(self::SEND_EMAIL_CONTACT_LIMIT);
+
+        //check for send id
+        if ($sendIdCheck) {
+            $emailCollection->addFieldToFilter('send_id', array('notnull' => true))
+                ->getSelect()
+                ->group('send_id');
+        } else {
+            $emailCollection->getSelect()
+                ->order('campaign_id');
+        }
+
+
+        $emailCollection->getSelect()->limit(self::SEND_EMAIL_CONTACT_LIMIT);
         return $emailCollection;
     }
 }

@@ -295,9 +295,14 @@ class Dotdigitalgroup_Email_Model_Resource_Contact
         );
 
     }
-
+    
     public function unsubscribe($data)
     {
+        //if empty return null
+        if (empty($data)) {
+            return;
+        }
+
         $write  = $this->_getWriteAdapter();
         $emails = "'" . implode("','", $data) . "'";
 
