@@ -60,12 +60,12 @@
                             <action>adminhtml/email_importer</action>
                         </email_connector_importer>
                         <email_connector_campaign translate="title">
-                            <title>Email Status</title>
+                            <title>Campaign Sends</title>
                             <sort_order>80</sort_order>
                             <action>adminhtml/email_campaign</action>
                         </email_connector_campaign>
                         <email_connector_automation translate="title">
-                            <title>Automation Status</title>
+                            <title>Automation Enrolments</title>
                             <sort_order>90</sort_order>
                             <action>adminhtml/email_automation</action>
                         </email_connector_automation>
