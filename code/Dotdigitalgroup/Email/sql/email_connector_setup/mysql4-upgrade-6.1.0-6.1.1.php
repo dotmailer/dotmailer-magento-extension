@@ -50,4 +50,10 @@ $installer->getConnection()->query($updateSql);
 //remove column
 $installer->getConnection()->dropColumn($campaignTable, 'is_sent');
 
+$installer->getConnection()->addIndex(
+    $campaignTable,
+    $installer->getIdxName($campaignTable, array('send_status')),
+    array('send_status')
+);
+
 $installer->endSetup();
