@@ -185,8 +185,10 @@ class Dotdigitalgroup_Email_Helper_Config
     const XML_PATH_CONNECTOR_AUTOMATION_STUDIO_REVIEW        = 'connector_automation_studio/visitor_automation/review_automation';
     const XML_PATH_CONNECTOR_AUTOMATION_STUDIO_WISHLIST      = 'connector_automation_studio/visitor_automation/wishlist_automation';
     const XML_PATH_CONNECTOR_AUTOMATION_STUDIO_ORDER_STATUS  = 'connector_automation_studio/order_status_automation/status_to_automation';
+    const XML_PATH_CONNECTOR_AUTOMATION_STUDIO_NEW_ORDER = 'connector_automation_studio/visitor_automation/first_order_automation';
 
-	//PRODUCT REVIEW REMINDER.
+
+    //PRODUCT REVIEW REMINDER.
 	const XML_PATH_AUTOMATION_REVIEW_STATUS                  = 'connector_automation_studio/review_settings/status';
 	const XML_PATH_AUTOMATION_REVIEW_DELAY                   = 'connector_automation_studio/review_settings/delay';
 	const XML_PATH_AUTOMATION_REVIEW_CAMPAIGN                = 'connector_automation_studio/review_settings/campaign';

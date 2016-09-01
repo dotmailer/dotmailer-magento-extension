@@ -11,6 +11,7 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
     const AUTOMATION_TYPE_NEW_WISHLIST = 'wishlist_automation';
     const AUTOMATION_STATUS_PENDING = 'pending';
     const ORDER_STATUS_AUTOMATION = 'order_automation_';
+    const AUTOMATION_TYPE_CUSTOMER_FIRST_ORDER = 'first_order_automation';
 
     //automation enrolment limit
     public $limit = 100;
@@ -37,7 +38,9 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
         self::AUTOMATION_TYPE_NEW_WISHLIST =>
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_WISHLIST,
         self::ORDER_STATUS_AUTOMATION =>
-            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_ORDER_STATUS
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_ORDER_STATUS,
+        self::AUTOMATION_TYPE_CUSTOMER_FIRST_ORDER =>
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_NEW_ORDER
     );
 
     /**
@@ -162,22 +165,15 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
     {
         switch ($type) {
             case self::AUTOMATION_TYPE_NEW_CUSTOMER :
-                $this->_updateDefaultDatafields($email);
-                break;
             case self::AUTOMATION_TYPE_NEW_SUBSCRIBER :
+            case self::AUTOMATION_TYPE_NEW_WISHLIST :
                 $this->_updateDefaultDatafields($email);
                 break;
             case self::AUTOMATION_TYPE_NEW_ORDER :
-                $this->_updateNewOrderDatafields();
-                break;
-            case self::AUTOMATION_TYPE_NEW_GUEST_ORDER:
-                $this->_updateNewOrderDatafields();
-                break;
+            case self::AUTOMATION_TYPE_NEW_GUEST_ORDER :
             case self::AUTOMATION_TYPE_NEW_REVIEW :
+            case self::AUTOMATION_TYPE_CUSTOMER_FIRST_ORDER :
                 $this->_updateNewOrderDatafields();
-                break;
-            case self::AUTOMATION_TYPE_NEW_WISHLIST:
-                $this->_updateDefaultDatafields($email);
                 break;
             default:
                 $this->_updateDefaultDatafields($email);
