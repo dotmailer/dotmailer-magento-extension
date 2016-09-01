@@ -143,29 +143,31 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
             $automationType
                          = Dotdigitalgroup_Email_Model_Automation::AUTOMATION_TYPE_NEW_ORDER;
 
-            //If customer's first order
-            $orders = Mage::getModel('sales/order')
-                ->getCollection()
-                ->addFieldToFilter('customer_id', $order->getCustomerId());
+            if ($order->getCustomerId()) {
+                //If customer's first order
+                $orders = Mage::getModel('sales/order')
+                    ->getCollection()
+                    ->addFieldToFilter('customer_id', $order->getCustomerId());
 
-            if ($orders->getSize() == 1) {
-                $automationTypeNewOrder
-                    = Dotdigitalgroup_Email_Model_Automation::AUTOMATION_TYPE_CUSTOMER_FIRST_ORDER;
-                $programIdNewOrder = Mage::helper('ddg')->getAutomationIdByType(
-                    'XML_PATH_CONNECTOR_AUTOMATION_STUDIO_NEW_ORDER', $order->getWebsiteId()
-                );
+                if ($orders->getSize() == 1) {
+                    $automationTypeNewOrder
+                        = Dotdigitalgroup_Email_Model_Automation::AUTOMATION_TYPE_CUSTOMER_FIRST_ORDER;
+                    $programIdNewOrder = Mage::helper('ddg')->getAutomationIdByType(
+                        'XML_PATH_CONNECTOR_AUTOMATION_STUDIO_NEW_ORDER', $order->getWebsiteId()
+                    );
 
-                //send to automation queue
-                $this->_doAutomationEnrolment(
-                    array(
-                        'programId' => $programIdNewOrder,
-                        'automationType' => $automationTypeNewOrder,
-                        'email' => $email,
-                        'order_id' => $order->getId(),
-                        'website_id' => $website->getId(),
-                        'store_name' => $storeName
-                    )
-                );
+                    //send to automation queue
+                    $this->_doAutomationEnrolment(
+                        array(
+                            'programId' => $programIdNewOrder,
+                            'automationType' => $automationTypeNewOrder,
+                            'email' => $email,
+                            'order_id' => $order->getId(),
+                            'website_id' => $website->getId(),
+                            'store_name' => $storeName
+                        )
+                    );
+                }
             }
         }
 
