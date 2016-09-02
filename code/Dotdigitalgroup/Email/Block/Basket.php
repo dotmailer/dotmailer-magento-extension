@@ -44,7 +44,7 @@ class Dotdigitalgroup_Email_Block_Basket extends Mage_Core_Block_Template
         $appEmulation = Mage::getSingleton('core/app_emulation');
         $appEmulation->startEnvironmentEmulation($storeId);
 
-        $quoteItems = $quoteModel->getAllItems();
+        $quoteItems = $quoteModel->getAllVisibleItems();
 
         $itemsData = array();
 
