@@ -44,15 +44,11 @@ class Dotdigitalgroup_Email_Block_Basket extends Mage_Core_Block_Template
         $appEmulation = Mage::getSingleton('core/app_emulation');
         $appEmulation->startEnvironmentEmulation($storeId);
 
-        $quoteItems = $quoteModel->getAllItems();
+        $quoteItems = $quoteModel->getAllVisibleItems();
 
         $itemsData = array();
 
         foreach ($quoteItems as $quoteItem) {
-            if ($quoteItem->getParentItemId() != null) {
-                continue;
-            }
-
             $_product    = $quoteItem->getProduct();
             $inStock     = ($_product->getStockItem()->getIsInStock())
                 ? 'In Stock'
