@@ -393,7 +393,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
                 Mage::helper('ddg')->__('no current_quote found for EDC')
             );
         }
-        $quoteItems = $quoteModel->getAllItems();
+        $quoteItems = $quoteModel->getAllVisibleItems();
 
         $productsToDisplay = $this->getProductsToDisplay(
             $quoteItems, $limit, $mode, 'QUOTE'
