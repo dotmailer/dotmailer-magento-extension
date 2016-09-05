@@ -3150,8 +3150,8 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
-                            <comment>Enter ip addresses separated by comma (,). Always keep these ip's. For R1 : 94.143.111.1 94.143.111.2, 94.143.111.3.
-                                For R2 : 104.208.235.109 to stay secure, empty list will ignore security check.</comment>
+                            <comment><![CDATA[Enter IP addresses separated by comma (,). An empty list will ignore any security check. Please ensure you keep the latest dotmailer IP ranges included
+                                <a href="https://support.dotmailer.com/hc/en-gb/articles/216282318-Security-settings#ip"> here</a>.]]></comment>
                         </ip_addresses>
                     </fields>
                 </ip_restriction>
