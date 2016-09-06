@@ -48,12 +48,18 @@ class Dotdigitalgroup_Email_Block_Coupon extends Mage_Core_Block_Template
             $coupon     = $rule->acquireCoupon();
             $couponCode = $coupon->getCode();
             //save the type of coupon
-            $couponModel = Mage::getModel('salesrule/coupon')->loadByCode(
-                $couponCode
-            );
-            $couponModel->setType(
-                Mage_SalesRule_Model_Rule::COUPON_TYPE_NO_COUPON
-            );
+            $couponModel = Mage::getModel('salesrule/coupon')
+                ->loadByCode(
+                    $couponCode
+                );
+            $couponModel->setType(Mage_SalesRule_Model_Rule::COUPON_TYPE_NO_COUPON)
+                ->setAddedByDotmailer(1);
+
+            if (isset($params['expiration_date']) && $params['expiration_date'] != null) {
+                $couponModel->setExpirationDate($params['expiration_date']);
+            } elseif ($rule->getToDate()) {
+                $couponModel->setExpirationDate($rule->getToDate());
+            }
             $couponModel->save();
 
             return $couponCode;
