@@ -335,4 +335,20 @@ class Dotdigitalgroup_Email_Model_Resource_Contact
             Mage::logException($e);
         }
     }
+
+    /**
+     * insert multiple contacts to table
+     *
+     * @param $data
+     */
+    public function insert($data)
+    {
+        try {
+            $write = $this->_getWriteAdapter();
+            $write->insertMultiple($this->getMainTable(), $data);
+        } catch (Exception $e) {
+            Mage::throwException($e->getMessage());
+            Mage::logException($e);
+        }
+    }
 }
