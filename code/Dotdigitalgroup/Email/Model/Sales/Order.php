@@ -26,6 +26,7 @@ class Dotdigitalgroup_Email_Model_Sales_Order
     protected $_orderIds;
     protected $_orderReminderReviewArray = array();
     protected $_orderIdsForSingleSync;
+    protected $_guests = array();
 
     /**
      * initial sync the transactional data
@@ -91,6 +92,12 @@ class Dotdigitalgroup_Email_Model_Sales_Order
                 }
             }
             unset($this->_accounts[$account->getApiUsername()]);
+        }
+        /**
+         * Add guest to contacts table.
+         */
+        if (!empty($this->_guests)) {
+            Mage::getResourceModel('ddg_automation/contact')->insert($this->_guests);
         }
 
         if ($this->_countOrders) {
@@ -217,11 +224,15 @@ class Dotdigitalgroup_Email_Model_Sales_Order
                 $storeId   = $order->getStoreId();
                 $websiteId = Mage::app()->getStore($storeId)->getWebsiteId();
                 /**
-                 * Add guest to contacts table.
+                 * Add guest to array to add to contacts table.
                  */
                 if ($order->getCustomerIsGuest()) {
-                    $this->_createGuestContact(
-                        $order->getCustomerEmail(), $websiteId, $storeId
+                    //add guest to the list
+                    $this->_guests[] = array(
+                        'email' => $order->getCustomerEmail(),
+                        'website_id' => $websiteId,
+                        'store_id' => $storeId,
+                        'is_guest' => 1
                     );
                 }
                 if ($order->getId()) {
@@ -243,86 +254,6 @@ class Dotdigitalgroup_Email_Model_Sales_Order
 
         return $orders;
     }
-
-    /**
-     * Create a guest contact.
-     *
-     * @param $email
-     * @param $websiteId
-     * @param $storeId
-     *
-     * @return bool
-     */
-    protected function _createGuestContact($email, $websiteId, $storeId)
-    {
-
-        try {
-            $client = Mage::helper('ddg')->getWebsiteApiClient($websiteId);
-            //no api credentials or the guest has no been mapped
-            if ( ! $client
-                || ! $addressBookId = Mage::helper('ddg')->getGuestAddressBook(
-                    $websiteId
-                )
-            ) {
-                return false;
-            }
-
-            $contactModel = Mage::getModel('ddg_automation/contact')
-                ->loadByCustomerEmail($email, $websiteId);
-
-            //check if contact is not suppressed
-            if ( ! $contactModel->getSuppressed()) {
-                //check if contact exists, create if not
-                $contactApi = $client->postContacts($email);
-
-                //contact is suppressed cannot add to address book, mark as suppressed.
-                if (isset($contactApi->message)
-                    && $contactApi->message
-                    == 'Contact is suppressed. ERROR_CONTACT_SUPPRESSED'
-                ) {
-                    //mark new contacts as guest.
-                    if ($contactModel->isObjectNew()) {
-                        $contactModel->setIsGuest(1);
-                    }
-                    $contactModel->setSuppressed(1);
-                    $contactModel->save();
-
-                    return false;
-                }
-                //add guest to address book
-                $response = $client->postAddressBookContacts(
-                    $addressBookId, $contactApi
-                );
-                //set contact as was found as guest and
-                $contactModel->setIsGuest(1)
-                    ->setStoreId($storeId)
-                    ->setEmailImported(1);
-                //contact id
-                if (isset($contactApi->id)) {
-                    $contactModel->setContactId();
-                }
-                //mark the contact as surpressed
-                if (isset($response->message)
-                    && $response->message
-                    == 'Contact is suppressed. ERROR_CONTACT_SUPPRESSED'
-                ) {
-                    $contactModel->setSuppressed(1);
-                }
-                //save
-                $contactModel->save();
-            }
-
-            Mage::helper('ddg')->log(
-                '-- guest found : ' . $email . ' website : ' . $websiteId
-                . ' ,store : ' . $storeId
-            );
-        } catch (Exception $e) {
-            Mage::logException($e);
-        }
-
-        return true;
-    }
-
 
     /**
      * create product reminder campaigns
