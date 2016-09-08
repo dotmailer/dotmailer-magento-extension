@@ -56,4 +56,13 @@ $installer->getConnection()->addIndex(
     array('send_status')
 );
 
+$installer->getConnection()->addColumn(
+    $installer->getTable('salesrule/coupon'), 'added_by_dotmailer', array(
+        'type' => Varien_Db_Ddl_Table::TYPE_SMALLINT,
+        'nullable' => true,
+        'default' => null,
+        'comment' => '1 = Added by dotmailer',
+    )
+);
+
 $installer->endSetup();

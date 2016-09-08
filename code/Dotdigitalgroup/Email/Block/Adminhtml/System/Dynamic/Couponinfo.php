@@ -21,7 +21,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Couponinfo
 
         //full url
         $text = $baseUrl . 'connector/email/coupon/id/[INSERT ID HERE]/code/'
-            . $code . '/@EMAIL@';
+            . $code . '/expiration_date/YYYY-MM-DD/@EMAIL@';
 
         $element->setData('value', $text);
         $element->setData('disabled', 'disabled');
