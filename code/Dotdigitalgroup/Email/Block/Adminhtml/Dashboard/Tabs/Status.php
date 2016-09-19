@@ -1834,84 +1834,86 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
             $websiteName = $website->getName();
             $client      = Mage::helper('ddg')->getWebsiteApiClient($website);
 
-            //customer carts
-            $customerCampaign1 = $website->getConfig(
-                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CAMPAIGN_1
-            );
-            $customerCampaign2 = $website->getConfig(
-                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CAMPAIGN_2
-            );
-            $customerCampaign3 = $website->getConfig(
-                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CAMPAIGN_3
-            );
+            if ($client instanceof Dotdigitalgroup_Email_Model_Apiconnector_Client) {
+                //customer carts
+                $customerCampaign1 = $website->getConfig(
+                    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CAMPAIGN_1
+                );
+                $customerCampaign2 = $website->getConfig(
+                    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CAMPAIGN_2
+                );
+                $customerCampaign3 = $website->getConfig(
+                    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CAMPAIGN_3
+                );
 
-            //guests carts
-            $guestCampaign1 = $website->getConfig(
-                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_GUEST_ABANDONED_CAMPAIGN_1
-            );
-            $guestCampaign2 = $website->getConfig(
-                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_GUEST_ABANDONED_CAMPAIGN_2
-            );
-            $guestCampaign3 = $website->getConfig(
-                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_GUEST_ABANDONED_CAMPAIGN_3
-            );
-
-
-            //date customer carts
-
-            $cusDateSent1 = ($customerCampaign1) ? $client->getCampaignSummary(
-                $customerCampaign1
-            ) : '';
-            $cusDateSent2 = ($customerCampaign2) ? $client->getCampaignSummary(
-                $customerCampaign2
-            ) : '';
-            $cusDateSent3 = ($customerCampaign3) ? $client->getCampaignSummary(
-                $customerCampaign3
-            ) : '';
-
-            //date guest carts
-            $resGuest1 = ($guestCampaign1) ? $client->getCampaignSummary(
-                $guestCampaign1
-            ) : '';
-            $resGuest2 = ($guestCampaign2) ? $client->getCampaignSummary(
-                $guestCampaign2
-            ) : '';
-            $resGuest3 = ($guestCampaign3) ? $client->getCampaignSummary(
-                $guestCampaign3
-            ) : '';
-
-            /**
-             * Customers.
-             */
-            $customerCampaign1 = (isset($cusDateSent1->dateSent)
-                ? $cusDateSent1->dateSent : 'Not Sent/Selected');
-            $customerCampaign2 = (isset($cusDateSent2->dateSent)
-                ? $cusDateSent2->dateSent : 'Not Sent/Selected');
-            $customerCampaign3 = (isset($cusDateSent3->dateSent)
-                ? $cusDateSent3->dateSent : 'Not Sent/Selected');
-
-            /**
-             * Guests.
-             */
-            $guestCampaign1 = (isset($resGuest1->dateSent)
-                ? $resGuest1->dateSent : 'Not Sent/Selected');
-            $guestCampaign2 = (isset($resGuest2->dateSent)
-                ? $resGuest2->dateSent : 'Not Sent/Selected');
-            $guestCampaign3 = (isset($resGuest3->dateSent)
-                ? $resGuest3->dateSent : 'Not Sent/Selected');
+                //guests carts
+                $guestCampaign1 = $website->getConfig(
+                    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_GUEST_ABANDONED_CAMPAIGN_1
+                );
+                $guestCampaign2 = $website->getConfig(
+                    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_GUEST_ABANDONED_CAMPAIGN_2
+                );
+                $guestCampaign3 = $website->getConfig(
+                    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_GUEST_ABANDONED_CAMPAIGN_3
+                );
 
 
-            $resultContent->setTable(
-                array(
-                    'Website'             => $websiteName,
-                    'Customer Campaign 1' => $customerCampaign1,
-                    'Customer Campaign 2' => $customerCampaign2,
-                    'Customer Campaign 3' => $customerCampaign3,
-                    'Guest Campaign 1'    => $guestCampaign1,
-                    'Guest Campaign 2'    => $guestCampaign2,
-                    'Guest Campaign 3'    => $guestCampaign3
-                )
-            );
+                //date customer carts
+
+                $cusDateSent1 = ($customerCampaign1) ? $client->getCampaignSummary(
+                    $customerCampaign1
+                ) : '';
+                $cusDateSent2 = ($customerCampaign2) ? $client->getCampaignSummary(
+                    $customerCampaign2
+                ) : '';
+                $cusDateSent3 = ($customerCampaign3) ? $client->getCampaignSummary(
+                    $customerCampaign3
+                ) : '';
+
+                //date guest carts
+                $resGuest1 = ($guestCampaign1) ? $client->getCampaignSummary(
+                    $guestCampaign1
+                ) : '';
+                $resGuest2 = ($guestCampaign2) ? $client->getCampaignSummary(
+                    $guestCampaign2
+                ) : '';
+                $resGuest3 = ($guestCampaign3) ? $client->getCampaignSummary(
+                    $guestCampaign3
+                ) : '';
+
+                /**
+                 * Customers.
+                 */
+                $customerCampaign1 = (isset($cusDateSent1->dateSent)
+                    ? $cusDateSent1->dateSent : 'Not Sent/Selected');
+                $customerCampaign2 = (isset($cusDateSent2->dateSent)
+                    ? $cusDateSent2->dateSent : 'Not Sent/Selected');
+                $customerCampaign3 = (isset($cusDateSent3->dateSent)
+                    ? $cusDateSent3->dateSent : 'Not Sent/Selected');
+
+                /**
+                 * Guests.
+                 */
+                $guestCampaign1 = (isset($resGuest1->dateSent)
+                    ? $resGuest1->dateSent : 'Not Sent/Selected');
+                $guestCampaign2 = (isset($resGuest2->dateSent)
+                    ? $resGuest2->dateSent : 'Not Sent/Selected');
+                $guestCampaign3 = (isset($resGuest3->dateSent)
+                    ? $resGuest3->dateSent : 'Not Sent/Selected');
+
+
+                $resultContent->setTable(
+                    array(
+                        'Website' => $websiteName,
+                        'Customer Campaign 1' => $customerCampaign1,
+                        'Customer Campaign 2' => $customerCampaign2,
+                        'Customer Campaign 3' => $customerCampaign3,
+                        'Guest Campaign 1' => $guestCampaign1,
+                        'Guest Campaign 2' => $guestCampaign2,
+                        'Guest Campaign 3' => $guestCampaign3
+                    )
+                );
+            }
         }
 
         return $resultContent;

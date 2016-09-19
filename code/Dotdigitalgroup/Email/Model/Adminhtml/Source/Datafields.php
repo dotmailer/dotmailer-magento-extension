@@ -21,7 +21,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Datafields
         $client  = $helper->getWebsiteApiClient($website);
 
         //get datafields options
-        if ($helper->isEnabled($website)) {
+        if ($helper->isEnabled($website) && $client instanceof Dotdigitalgroup_Email_Model_Apiconnector_Client) {
 
             $savedDatafields = Mage::registry('datafields');
 

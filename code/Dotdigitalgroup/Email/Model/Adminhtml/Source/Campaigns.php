@@ -29,11 +29,10 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Campaigns
         }
 
         $enabled = Mage::helper('ddg')->isEnabled($website);
+        $client = Mage::helper('ddg')->getWebsiteApiClient($website);
 
         //api enabled get campaigns
-        if ($enabled) {
-            $client = Mage::helper('ddg')->getWebsiteApiClient($website);
-
+        if ($enabled && $client instanceof Dotdigitalgroup_Email_Model_Apiconnector_Client) {
             $savedCampaigns = Mage::registry('savedcampigns');
 
             //get campaigns from registry

@@ -22,9 +22,10 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Automation_Programme
         $fields[] = array('value' => '0',
                           'label' => Mage::helper('ddg')->__('-- Disabled --'));
 
-        if (Mage::helper('ddg')->isEnabled($website)) {
-
-            $client     = Mage::helper('ddg')->getWebsiteApiClient($website);
+        $client = Mage::helper('ddg')->getWebsiteApiClient($website);
+        if (Mage::helper('ddg')->isEnabled($website)
+            && $client instanceof Dotdigitalgroup_Email_Model_Apiconnector_Client
+        ) {
             $programmes = $client->getPrograms();
             if ($programmes) {
                 foreach ($programmes as $one) {
