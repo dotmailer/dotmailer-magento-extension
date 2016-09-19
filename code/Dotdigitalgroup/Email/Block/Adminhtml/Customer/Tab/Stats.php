@@ -19,22 +19,24 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Customer_Tab_Stats
         $website  = $customer->getStore()->getWebsite();
 
         $client  = Mage::helper('ddg')->getWebsiteApiClient($website);
-        $contact = $client->postContacts($email);
-        if ( ! isset($contact->message)) {
-            $locale   = Mage::app()->getLocale()->getLocale();
-            $date     = Zend_Date::now($locale)->subDay(30);
-            $response = $client->getCampaignsWithActivitySinceDate(
-                $date->toString(Zend_Date::ISO_8601)
-            );
-            if ( ! isset($response->message) && is_array($response)) {
-                foreach ($response as $one) {
-                    $result = $client->getCampaignActivityByContactId(
-                        $one->id, $contact->id
-                    );
-                    if ( ! empty($result) && ! isset($result->message)
-                        && ! is_null($result)
-                    ) {
-                        $this->_stat[$one->name] = $result;
+        if ($client instanceof Dotdigitalgroup_Email_Model_Apiconnector_Client) {
+            $contact = $client->postContacts($email);
+            if (!isset($contact->message)) {
+                $locale = Mage::app()->getLocale()->getLocale();
+                $date = Zend_Date::now($locale)->subDay(30);
+                $response = $client->getCampaignsWithActivitySinceDate(
+                    $date->toString(Zend_Date::ISO_8601)
+                );
+                if (!isset($response->message) && is_array($response)) {
+                    foreach ($response as $one) {
+                        $result = $client->getCampaignActivityByContactId(
+                            $one->id, $contact->id
+                        );
+                        if (!empty($result) && !isset($result->message)
+                            && !is_null($result)
+                        ) {
+                            $this->_stat[$one->name] = $result;
+                        }
                     }
                 }
             }

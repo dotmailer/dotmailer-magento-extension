@@ -175,6 +175,10 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         }
 
         $client = $this->getWebsiteApiClient($websiteId);
+        if ($client === false) {
+            return false;
+        }
+
         $response = $client->postContacts($email);
 
         if (isset($response->message)) {
@@ -790,7 +794,9 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         if (!empty($data)) {
             //update data fields
             $client = $this->getWebsiteApiClient($website);
-            $client->updateContactDatafieldsByEmail($email, $data);
+            if ($client instanceof Dotdigitalgroup_Email_Model_Apiconnector_Client) {
+                $client->updateContactDatafieldsByEmail($email, $data);
+            }
         }
     }
 
@@ -836,8 +842,10 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
             'Key' => $quoteIdField,
             'Value' => $quoteId
         );
-        //update datafields for conctact
-        $client->updateContactDatafieldsByEmail($email, $data);
+        if ($client instanceof Dotdigitalgroup_Email_Model_Apiconnector_Client) {
+            //update datafields for conctact
+            $client->updateContactDatafieldsByEmail($email, $data);
+        }
     }
 
     /**
@@ -1033,7 +1041,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         // id config data mapped
         $field = $this->getAbandonedProductName();
 
-        if ($field) {
+        if ($field && $client instanceof Dotdigitalgroup_Email_Model_Apiconnector_Client) {
             $data[] = array(
                 'Key' => $field,
                 'Value' => $name
@@ -1067,11 +1075,14 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      *
      * @param int $website
      *
-     * @return string
+     * @return bool|string
      */
     public function getAccountEmail($website = 0)
     {
         $client = $this->getWebsiteApiClient($website);
+        if ($client === false) {
+            return false;
+        }
         $info = $client->getAccountInfo();
         $email = '';
 

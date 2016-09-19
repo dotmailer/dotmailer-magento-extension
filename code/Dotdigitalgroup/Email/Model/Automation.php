@@ -252,9 +252,11 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
         if ( ! empty($data)) {
             //update data fields
             $client = Mage::helper('ddg')->getWebsiteApiClient($website);
-            $client->updateContactDatafieldsByEmail(
-                $order->getCustomerEmail(), $data
-            );
+            if ($client instanceof Dotdigitalgroup_Email_Model_Apiconnector_Client) {
+                $client->updateContactDatafieldsByEmail(
+                    $order->getCustomerEmail(), $data
+                );
+            }
         }
     }
 
@@ -272,6 +274,10 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
             return false;
         }
         $client  = Mage::helper('ddg')->getWebsiteApiClient($this->websiteId);
+        if ($client === false) {
+            return false;
+        }
+
         $program = $client->getProgramById($programId);
         //program status
         if (isset($program->status)) {
@@ -290,11 +296,15 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
      * @param $contacts
      * @param $websiteId
      *
-     * @return null
+     * @return bool|null
      */
     public function sendContactsToAutomation($contacts, $websiteId)
     {
         $client = Mage::helper('ddg')->getWebsiteApiClient($websiteId);
+        if ($client === false) {
+            return false;
+        }
+
         $data   = array(
             'Contacts'     => $contacts,
             'ProgramId'    => $this->programId,

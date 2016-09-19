@@ -24,6 +24,9 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Publicdatafields
         $helper  = Mage::helper('ddg');
         $website = $this->getWebsite();
         $client  = $helper->getWebsiteApiClient($website);
+        if ($client === false) {
+            return array();
+        }
 
         //grab the datafields request and save to register
         $datafields = $client->getDataFields();
