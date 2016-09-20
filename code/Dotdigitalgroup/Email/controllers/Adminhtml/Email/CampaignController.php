@@ -117,4 +117,14 @@ class Dotdigitalgroup_Email_Adminhtml_Email_CampaignController
         );
     }
 
+    public function exportCsvAction()
+    {
+        $fileName = 'campaign.csv';
+        $content  = $this->getLayout()->createBlock(
+            'ddg_automation/adminhtml_campaign_grid'
+        )
+            ->getCsvFile();
+        $this->_prepareDownloadResponse($fileName, $content);
+    }
+
 }
