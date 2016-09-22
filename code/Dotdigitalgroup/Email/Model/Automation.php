@@ -120,7 +120,11 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
                 $this->typeId    = $automation->getTypeId();
                 $this->websiteId = $automation->getWebsiteId();
                 $this->storeName = $automation->getStoreName();
-
+                $typeDouble = $type;
+                //Set type to generic automation status if type contains constant value
+                if (strpos($typeDouble, self::ORDER_STATUS_AUTOMATION) !== false) {
+                    $typeDouble = self::ORDER_STATUS_AUTOMATION;
+                }
                 //Only if api is enabled and credentials are filled
                 if ($helper->getWebsiteApiClient($this->websiteId)) {
                     $contactId = Mage::helper('ddg')->getContactId(
@@ -130,7 +134,7 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
                     if ($contactId) {
                         //need to update datafields
                         $this->updateDatafieldsByType(
-                            $this->automationType, $email
+                            $typeDouble, $email
                         );
                         $contacts[$automation->getWebsiteId()]['contacts'][$automation->getId()] = $contactId;
                     } else {
@@ -195,6 +199,7 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
             case self::AUTOMATION_TYPE_NEW_GUEST_ORDER :
             case self::AUTOMATION_TYPE_NEW_REVIEW :
             case self::AUTOMATION_TYPE_CUSTOMER_FIRST_ORDER :
+            case self::ORDER_STATUS_AUTOMATION :
                 $this->_updateNewOrderDatafields();
                 break;
             default:
