@@ -37,8 +37,6 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_REVIEW,
         self::AUTOMATION_TYPE_NEW_WISHLIST =>
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_WISHLIST,
-        self::ORDER_STATUS_AUTOMATION =>
-            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_ORDER_STATUS,
         self::AUTOMATION_TYPE_CUSTOMER_FIRST_ORDER =>
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_NEW_ORDER
     );
@@ -68,28 +66,52 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
         return $this;
     }
 
+    /**
+     * Automation enrollment
+     */
     public function enrollment()
     {
+        $automationOrderStatusCollection = $this->getCollection()
+            ->addFieldToFilter(
+                'enrolment_status', self::AUTOMATION_STATUS_PENDING
+            );
+        $automationOrderStatusCollection
+            ->addFieldToFilter(
+                'automation_type',
+                array('like' => '%' . 'order_automation_' . '%')
+            )->getSelect()->group('automation_type');
+
+        $statusTypes
+            = $automationOrderStatusCollection->getColumnValues('automation_type');
+        foreach ($statusTypes as $type) {
+            $this->automationTypes[$type]
+                = Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_ORDER_STATUS;
+        }
         $helper = Mage::helper('ddg');
         //send the campaign by each types
         foreach ($this->automationTypes as $type => $config) {
             $contacts = array();
             foreach (Mage::app()->getWebsites(true) as $website) {
-                $contacts[$website->getId()]['programId'] = $helper->getWebsiteConfig($config, $website);
+                $configValue
+                    = unserialize($helper->getWebsiteConfig($config, $website));
+                if (is_array($configValue) && !empty($configValue)) {
+                    foreach ($configValue as $one) {
+                        if (strpos($type, $one['status']) !== false) {
+                            $contacts[$website->getId()]['programId']
+                                = $one['automation'];
+                        }
+                    }
+                } else {
+                    $contacts[$website->getId()]['programId']
+                        = $helper->getWebsiteConfig($config, $website);
+                }
             }
             //get collection from type
             $automationCollection = $this->getCollection()
                 ->addFieldToFilter(
                     'enrolment_status', self::AUTOMATION_STATUS_PENDING
                 );
-            if ($type == 'order_automation_') {
-                $automationCollection->addFieldToFilter(
-                    'automation_type',
-                    array('like' => '%' . $type . '%')
-                );
-            } else {
-                $automationCollection->addFieldToFilter('automation_type', $type);
-            }
+            $automationCollection->addFieldToFilter('automation_type', $type);
             //limit because of the each contact request to get the id
             $automationCollection->getSelect()->limit($this->limit);
             foreach ($automationCollection as $automation) {
