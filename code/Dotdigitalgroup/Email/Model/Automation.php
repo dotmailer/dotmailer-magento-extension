@@ -92,13 +92,15 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
         foreach ($this->automationTypes as $type => $config) {
             $contacts = array();
             foreach (Mage::app()->getWebsites(true) as $website) {
-                $configValue
-                    = unserialize($helper->getWebsiteConfig($config, $website));
-                if (is_array($configValue) && !empty($configValue)) {
-                    foreach ($configValue as $one) {
-                        if (strpos($type, $one['status']) !== false) {
-                            $contacts[$website->getId()]['programId']
-                                = $one['automation'];
+                if (strpos($type, self::ORDER_STATUS_AUTOMATION) !== false) {
+                    $configValue
+                        = unserialize($helper->getWebsiteConfig($config, $website));
+                    if (is_array($configValue) && !empty($configValue)) {
+                        foreach ($configValue as $one) {
+                            if (strpos($type, $one['status']) !== false) {
+                                $contacts[$website->getId()]['programId']
+                                    = $one['automation'];
+                            }
                         }
                     }
                 } else {
