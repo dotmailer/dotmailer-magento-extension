@@ -30,10 +30,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
             'order_syncing'                      => 'Orders Syncing',
             'custom_order_attributes'            => 'Custom Order Attributes',
             'quote_enabled'                      => 'Quote Sync Enabled',
-            'quote_syncing'                      => 'Quote Syncing',
-            'custom_quote_attributes'            => 'Custom Quote Attributes',
             'last_abandoned_cart_sent_day'       => 'Last Abandoned Cart Sent Day',
-            'easy_email_capture_enabled'         => 'Easy Email Capture Enabled',
             'disable_newsletter_success_enabled' => 'Disable Newsletter Success Enabled',
             'system_information'                 => 'System Information'
 
@@ -1616,91 +1613,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
     }
 
     /**
-     * check if any custom quote attribute selected
-     *
-     * @return Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Content
-     */
-    public function customQuoteAttributes()
-    {
-        $resultContent = Mage::getModel(
-            'ddg_automation/adminhtml_dashboard_content'
-        );
-        $resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
-            ->setTitle('Custom Quote Attributes : ')
-            ->setMessage('Selected.');
-
-        foreach (Mage::app()->getWebsites() as $website) {
-            $websiteName          = $website->getName();
-            $customQuoteAttribute = ($website->getConfig(
-                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOM_QUOTE_ATTRIBUTES
-            )) ? true : false;
-
-            if ($customQuoteAttribute !== true) {
-                $resultContent->setStyle(self::CONNECTOR_DASHBOARD_FAILED)
-                    ->setTitle(
-                        'Custom quote attribute not selected (ignore if you do not want to import custom quote attributes) :'
-                    )
-                    ->setMessage('')
-                    ->setTable(
-                        array(
-                            'Website' => $websiteName,
-                            'Status'  => 'No Custom Quote Attribute Selected'
-                        )
-                    );
-            }
-        }
-
-        return $resultContent;
-    }
-
-    /**
-     * Check if any quote are imported.
-     *
-     * @return Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Content
-     */
-    public function quoteSyncing()
-    {
-        $resultContent = Mage::getModel(
-            'ddg_automation/adminhtml_dashboard_content'
-        );
-        $resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
-            ->setTitle('Quote Syncing : ')
-            ->setMessage('Looks Great.');
-
-        foreach (Mage::app()->getWebsites() as $website) {
-            $websiteName = $website->getName();
-            $storeIds    = $website->getStoreIds();
-
-            if (empty($storeIds)) {
-                continue;
-            }
-
-            //number of quote marked as imported
-            $numQuotes = Mage::getModel('ddg_automation/quote')->getCollection()
-                ->addFieldToFilter('imported', 1)
-                ->addFieldToFilter('store_id', array('in', $storeIds))->getSize(
-                );
-
-            if ( ! $numQuotes) {
-                $resultContent->setStyle(self::CONNECTOR_DASHBOARD_FAILED)
-                    ->setTitle(
-                        'Quote Syncing (ignore if you have reset quote for re-import) :'
-                    )
-                    ->setMessage('')
-                    ->setTable(
-                        array(
-                            'Website' => $websiteName,
-                            'Status'  => 'No Imported Quotes Found'
-                        )
-                    );
-            }
-        }
-
-        return $resultContent;
-
-    }
-
-    /**
      * review sync enabled.
      *
      * @return Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Content
@@ -2169,53 +2081,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
         }
 
         return $method;
-    }
-
-    /**
-     * easy email capture enabled
-     *
-     * @return Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Content
-     */
-    public function easyEmailCaptureEnabled()
-    {
-        $resultContent = Mage::getModel(
-            'ddg_automation/adminhtml_dashboard_content'
-        );
-        $resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
-            ->setTitle('Easy Email Capture : ')
-            ->setMessage('Enabled.');
-
-        foreach (Mage::app()->getWebsites() as $website) {
-            $websiteName = $website->getName();
-            $enabled     = ($website->getConfig(
-                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_EMAIL_CAPTURE
-            ))
-                ? true
-                :
-                'Disabled';
-
-            if ($enabled !== true) {
-                $url = Mage::helper('adminhtml')->getUrl(
-                    '*/connector/enablewebsiteconfiguration',
-                    array('path'    => 'XML_PATH_CONNECTOR_EMAIL_CAPTURE',
-                          'website' => $website->getId())
-                );
-                $resultContent->setStyle(self::CONNECTOR_DASHBOARD_FAILED)
-                    ->setMessage(
-                        'Don\'t forget to enable if you want to enable easy email capture.'
-                    )
-                    ->setTable(
-                        array(
-                            'Website'  => $websiteName,
-                            'Status'   => $enabled,
-                            'Fast Fix' => 'Click  <a href="' . $url
-                                . '">here </a>to enable.'
-                        )
-                    );
-            }
-        }
-
-        return $resultContent;
     }
 
     /**
