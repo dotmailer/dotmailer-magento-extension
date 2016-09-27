@@ -578,18 +578,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                 )
             );
 
-            //number of customers not match, try to update
-            if ($countCustomers != $countCustomerContacts) {
-
-                $url  = Mage::helper('adminhtml')->getUrl(
-                    '*/connector/populatecontacts',
-                    array('type' => 'customers', 'website' => $website->getId())
-                );
-                $link = ' <a href="' . $url . '"> populate</a>';
-                $tableData['Status']
-                      = 'Customers not matching the contact table. ' . $link;
-                //customers not synced yet
-            } elseif ($countCustomers > $countCustomerContacts + $suppressed) {
+            if ($countCustomers > $countCustomerContacts + $suppressed) {
                 $tableData['Status'] = 'Syncing..';
                 //all customers syned.
             } else {
