@@ -190,7 +190,7 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
         return $this;
     }
 
-    private function _doAutomationEnrolment($data)
+    protected function _doAutomationEnrolment($data)
     {
         //the program is not mappped
         if (!$data['programId']) {
