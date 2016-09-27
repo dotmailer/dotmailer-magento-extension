@@ -1371,6 +1371,20 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                 $passed = false;
                 $mapped++;
             }
+            if (!$website->getConfig(
+                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_BILLING_COMPANY_NAME
+            )
+            ) {
+                $passed = false;
+                $mapped++;
+            }
+            if (!$website->getConfig(
+                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_DELIVERY_COMPANY_NAME
+            )
+            ) {
+                $passed = false;
+                $mapped++;
+            }
             $tableData['Mapped Percentage'] = number_format(
                     (1 - $mapped / 32) * 100, 2
                 ) . ' %';
