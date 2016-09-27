@@ -1525,4 +1525,32 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
 
         return $response;
     }
+
+    /**
+     * Gets the send status using send ID.
+     *
+     * @param $id
+     * @return object
+     */
+    public function getSendStatus($id)
+    {
+        $url = $this->_apiEndpoint . self::REST_CAMPAIGN_SEND . '/' . $id;
+        $this->setUrl($url)
+            ->setVerb('GET');
+
+        $response = $this->execute();
+        //log error
+        if (isset($response->message)
+            && !in_array(
+                $response->message, $this->exludeMessages
+            )
+        ) {
+            $message = 'GETS THE SEND STATUS USING SEND ID: '
+                . $response->message;
+            Mage::helper('ddg')->log($message)
+                ->rayLog($response->message);
+        }
+
+        return $response;
+    }
 }

@@ -42,11 +42,13 @@ class Dotdigitalgroup_Email_Adminhtml_System_Email_TemplateController
             $client            = Mage::helper('ddg')->getWebsiteApiClient(
                 Mage::app()->getWebsite()
             );
-            $connectorTemplate = $client->getApiTemplate($connectorTemplateId);
-            if (isset($connectorTemplate->id)) {
-                $template->setTemplateText($connectorTemplate->htmlContent);
+            if ($client instanceof Dotdigitalgroup_Email_Model_Apiconnector_Client) {
+                $connectorTemplate = $client->getApiTemplate($connectorTemplateId);
+                if (isset($connectorTemplate->id)) {
+                    $template->setTemplateText($connectorTemplate->htmlContent);
+                }
+                $template->setTemplateStyles('');
             }
-            $template->setTemplateStyles('');
         }
 
         $this->getResponse()->setBody(

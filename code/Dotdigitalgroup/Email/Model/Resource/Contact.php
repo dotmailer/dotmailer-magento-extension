@@ -125,7 +125,7 @@ class Dotdigitalgroup_Email_Model_Resource_Contact
             //remove dotmailer code from core_resource table
             $cond = $conn->quoteInto('code = ?', 'email_connector_setup');
             $conn->delete(
-                $this->getReadConnection()->getTableName('core_resource'), $cond
+                Mage::getSingleton('core/resource')->getTableName('core_resource'), $cond
             );
 
             //clean cache
@@ -295,9 +295,14 @@ class Dotdigitalgroup_Email_Model_Resource_Contact
         );
 
     }
-
+    
     public function unsubscribe($data)
     {
+        //if empty return null
+        if (empty($data)) {
+            return;
+        }
+
         $write  = $this->_getWriteAdapter();
         $emails = "'" . implode("','", $data) . "'";
 
@@ -317,16 +322,30 @@ class Dotdigitalgroup_Email_Model_Resource_Contact
                 ->getCollection()
                 ->addFieldToFilter('subscriber_email', array('in' => $data));
 
-
-            Mage::register('unsubscribeEmails', $data);
-
             foreach ($newsletterCollection as $subscriber) {
+                Mage::register('unsubscribeEmail', $subscriber->getSubscriberEmail());
                 $subscriber->setSubscriberStatus(
                     Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED
                 )
                     ->save();
             }
 
+        } catch (Exception $e) {
+            Mage::throwException($e->getMessage());
+            Mage::logException($e);
+        }
+    }
+
+    /**
+     * insert multiple contacts to table
+     *
+     * @param $data
+     */
+    public function insert($data)
+    {
+        try {
+            $write = $this->_getWriteAdapter();
+            $write->insertMultiple($this->getMainTable(), $data);
         } catch (Exception $e) {
             Mage::throwException($e->getMessage());
             Mage::logException($e);

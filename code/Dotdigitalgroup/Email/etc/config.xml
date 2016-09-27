@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Dotdigitalgroup_Email>
-            <version>6.1.0</version>
+            <version>6.1.1</version>
         </Dotdigitalgroup_Email>
     </modules>
     <frontend>
@@ -122,6 +122,12 @@
                     <email>Dotdigitalgroup_Email_Model_Email</email>
                 </rewrite>
             </core>
+            <salesrule_resource>
+                <rewrite>
+                    <rule_collection>Dotdigitalgroup_Email_Model_Resource_Rule_Collection</rule_collection>
+                    <coupon>Dotdigitalgroup_Email_Model_Resource_Coupon</coupon>
+                </rewrite>
+            </salesrule_resource>
         </models>
         <helpers>
             <ddg>
@@ -341,6 +347,15 @@
             </updates>
         </layout>
         <events>
+            <core_block_abstract_to_html_before>
+                <observers>
+                    <ddg_add_column_expiration_date>
+                        <type>singleton</type>
+                        <class>ddg_automation/observer</class>
+                        <method>beforeBlockToHtml</method>
+                    </ddg_add_column_expiration_date>
+                </observers>
+            </core_block_abstract_to_html_before>
             <controller_action_predispatch>
                 <observers>
                     <ddg_feed>
@@ -495,6 +510,7 @@
                 <guest_order_automation>0</guest_order_automation>
                 <review_automation>0</review_automation>
                 <wishlist_automation>0</wishlist_automation>
+                <first_order_automation>0</first_order_automation>
             </visitor_automation>
             <order_status_automation>
                 <status_to_automation></status_to_automation>
@@ -518,19 +534,19 @@
         <connector_dynamic_content>
             <products>
                 <related_display_type>grid</related_display_type>
-                <related_items_to_display>2</related_items_to_display>
+                <related_items_to_display>4</related_items_to_display>
                 <upsell_display_type>grid</upsell_display_type>
-                <upsell_items_to_display>2</upsell_items_to_display>
+                <upsell_items_to_display>4</upsell_items_to_display>
                 <crosssell_display_type>grid</crosssell_display_type>
-                <crosssell_items_to_display>2</crosssell_items_to_display>
+                <crosssell_items_to_display>4</crosssell_items_to_display>
                 <bestsellers_display_type>grid</bestsellers_display_type>
-                <bestsellers_items_to_display>2</bestsellers_items_to_display>
+                <bestsellers_items_to_display>4</bestsellers_items_to_display>
                 <bestsellers_time_period></bestsellers_time_period>
                 <most_viewed_display_type>grid</most_viewed_display_type>
-                <most_viewed_items_to_display>2</most_viewed_items_to_display>
+                <most_viewed_items_to_display>4</most_viewed_items_to_display>
                 <most_viewed_time_period></most_viewed_time_period>
                 <recently_viewed_display_type>grid</recently_viewed_display_type>
-                <recently_viewed_items_to_display>2</recently_viewed_items_to_display>
+                <recently_viewed_items_to_display>4</recently_viewed_items_to_display>
                 <review_display_type>grid</review_display_type>
                 <wishlist_display_type>grid</wishlist_display_type>
             </products>
@@ -567,7 +583,7 @@
             </external_dynamic_content_urls>
             <manual_product_search>
                 <display_type>list</display_type>
-                <items_to_display>2</items_to_display>
+                <items_to_display>4</items_to_display>
                 <products_push_items></products_push_items>
             </manual_product_search>
             <fallback_products>
@@ -628,6 +644,7 @@
                 <coupon_style></coupon_style>
                 <coupon_font_picker><![CDATA[Arial, Helvetica, sans-serif]]></coupon_font_picker>
                 <coupon_doc_color><![CDATA[#FFFFFF]]></coupon_doc_color>
+                <product_image>0</product_image>
             </dynamic_content_style>
             <dynamic_content_edit>
                 <link_text></link_text>

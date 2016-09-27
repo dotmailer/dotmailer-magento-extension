@@ -26,7 +26,7 @@ class Dotdigitalgroup_Email_Block_Recommended_Products
             ->getDisplayLimitByMode(
                 $mode
             );
-        $orderItems        = $orderModel->getAllItems();
+        $orderItems = $orderModel->getAllVisibleItems();
         $productsToDisplay = $this->getProductsToDisplay(
             $orderItems, $limit, $mode, 'PRODUCT'
         );

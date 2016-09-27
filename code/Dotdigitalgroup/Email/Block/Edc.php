@@ -103,7 +103,11 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
      */
     public function getPriceHtml($product)
     {
-        $this->setTemplate('connector/product/price.phtml');
+        if ($product->getTypeId() == 'bundle') {
+            $this->setTemplate('connector/product/bundle_price.phtml');
+        } else {
+            $this->setTemplate('connector/product/price.phtml');
+        }
         $this->setProduct($product);
 
         return $this->toHtml();
@@ -179,6 +183,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
         $productIds = $productItems->getColumnValues('product_id');
         //get product collection to check for salable
         $productCollection = Mage::getModel('catalog/product')->getCollection()
+            ->addPriceData()
             ->addAttributeToSelect('*')
             ->addFieldToFilter('entity_id', array('in' => $productIds));
         //show products only if is salable
@@ -209,6 +214,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
         $productCollection = Mage::getResourceModel(
             'catalog/product_collection'
         )
+            ->addPriceData()
             ->addAttributeToFilter('entity_id', array('in' => $productIds))
             ->addAttributeToSelect(
                 array('product_url', 'name', 'store_id', 'small_image', 'price')
@@ -325,6 +331,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
         $productCollection = Mage::getResourceModel(
             'catalog/product_collection'
         )
+            ->addPriceData()
             ->addIdFilter($productIds)
             ->addAttributeToSelect(
                 array('product_url', 'name', 'store_id', 'small_image', 'price')
@@ -353,7 +360,8 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
         if ($category->getId()) {
             $productCollection->getSelect()
                 ->joinLeft(
-                    array("ccpi" => 'catalog_category_product_index'),
+                    array("ccpi" => Mage::getSingleton('core/resource')
+                        ->getTableName('catalog_category_product_index')),
                     "e.entity_id = ccpi.product_id",
                     array("category_id")
                 )
@@ -385,7 +393,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
                 Mage::helper('ddg')->__('no current_quote found for EDC')
             );
         }
-        $quoteItems = $quoteModel->getAllItems();
+        $quoteItems = $quoteModel->getAllVisibleItems();
 
         $productsToDisplay = $this->getProductsToDisplay(
             $quoteItems, $limit, $mode, 'QUOTE'
@@ -440,6 +448,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
 
                 $recommendedProducts = Mage::getModel('catalog/product')
                     ->getCollection()
+                    ->addPriceData()
                     ->addIdFilter($recommendedProducts)
                     ->addAttributeToSelect(
                         array('product_url', 'name', 'store_id', 'small_image',
@@ -473,6 +482,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
                 ->getFallbackIds();
             $productCollection = Mage::getModel('catalog/product')
                 ->getCollection()
+                ->addPriceData()
                 ->addIdFilter($fallbackIds)
                 ->addAttributeToSelect(
                     array('product_url', 'name', 'store_id', 'small_image',
@@ -492,5 +502,20 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
         }
 
         return $productsToDisplay;
+    }
+
+    public function getProductImage($product)
+    {
+        $helper = Mage::helper('ddg');
+        if ($helper->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_PRODUCT_IMAGE)
+            && $product->getTypeId() == "simple"
+        ) {
+            $parentIds = Mage::getModel('catalog/product_type_configurable')->getParentIdsByChild($product->getId());
+            if (!empty($parentIds)) {
+                $parentProduct = Mage::getModel('catalog/product')->load($parentIds[0]);
+                return $this->helper('catalog/image')->init($parentProduct, 'small_image')->resize(135);
+            }
+        }
+        return $this->helper('catalog/image')->init($product, 'small_image')->resize(135);
     }
 }

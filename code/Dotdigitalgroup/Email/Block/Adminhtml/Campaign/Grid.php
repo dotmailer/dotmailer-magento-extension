@@ -60,22 +60,30 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Campaign_Grid
                 'escape' => true
             )
         )->addColumn(
-            'is_sent', array(
+            'send_status', array(
                 'header'                    => Mage::helper('ddg')->__(
-                    'Is Sent'
+                    'Send Status'
                 ),
                 'align'                     => 'center',
                 'width'                     => '20px',
-                'index'                     => 'is_sent',
+                'index' => 'send_status',
                 'escape'                    => true,
                 'type'                      => 'options',
-                'renderer'                  => 'ddg_automation/adminhtml_column_renderer_imported',
                 'options'                   => array(
-                    '1'    => 'Is Send',
-                    'null' => 'Not Send'
-                ),
-                'filter_condition_callback' => array($this,
-                                                     'filterCallbackContact')
+                    Dotdigitalgroup_Email_Model_Campaign::PENDING => 'Pending',
+                    Dotdigitalgroup_Email_Model_Campaign::PROCESSING => 'Processing',
+                    Dotdigitalgroup_Email_Model_Campaign::SENT => 'Sent',
+                    Dotdigitalgroup_Email_Model_Campaign::FAILED => 'Failed'
+                )
+            )
+        )->addColumn(
+            'send_id', array(
+                'header' => Mage::helper('ddg')->__('Send Id'),
+                'align' => 'left',
+                'width' => '300px',
+                'index' => 'send_id',
+                'type' => 'text',
+                'escape' => true
             )
         )->addColumn(
             'message', array(

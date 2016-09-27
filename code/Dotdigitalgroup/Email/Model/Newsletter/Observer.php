@@ -48,9 +48,11 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
 
                 //not subscribed
             } else {
-                $unsubscribeEmails = Mage::registry('unsubscribeEmails');
-                if (is_array($unsubscribeEmails)) {
-                    if (in_array($email, $unsubscribeEmails)) {
+                $unsubscribeEmail = Mage::registry('unsubscribeEmail');
+                if ($unsubscribeEmail) {
+                    //un-register
+                    Mage::unregister('unsubscribeEmail');
+                    if ($email == $unsubscribeEmail) {
                         return $this;
                     }
                 }

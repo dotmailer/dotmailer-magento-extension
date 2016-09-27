@@ -103,7 +103,9 @@ class Dotdigitalgroup_Email_Model_Connector_Order
 
         $this->purchase_date   = $created_at->toString(Zend_Date::ISO_8601);
         $this->delivery_method = $orderData->getShippingDescription();
-        $this->delivery_total  = $orderData->getShippingAmount();
+        $this->delivery_total = (float)number_format(
+            $orderData->getShippingAmount(), 2, '.', ''
+        );
         $this->currency        = $orderData->getStoreCurrencyCode();
 
         if ($payment = $orderData->getPayment()) {
@@ -507,6 +509,10 @@ class Dotdigitalgroup_Email_Model_Connector_Order
 
                             // check limit on text and assign value to array
                             if (is_string($value)) {
+                                $attributes[][$attribute_code]
+                                    = $this->_limitLength($value);
+                            } elseif(is_array($value)) { // check for multi select values
+                            	$value = implode($value, ', ');
                                 $attributes[][$attribute_code]
                                     = $this->_limitLength($value);
                             }

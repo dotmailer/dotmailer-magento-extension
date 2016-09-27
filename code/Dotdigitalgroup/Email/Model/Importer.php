@@ -183,24 +183,25 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
     {
         $helper = Mage::helper('ddg');
         $client = $helper->getWebsiteApiClient($websiteId);
-        $data = $client->getContactImportReportFaults($id);
-
-        if ($data) {
-            $data = $this->_removeUtf8Bom($data);
-            $fileName = Mage::getBaseDir('var') . DS . 'DmTempCsvFromApi.csv';
-            $io = new Varien_Io_File();
-            $io->open();
-            $check = $io->write($fileName, $data);
-            if ($check) {
-                try {
-                    $csvArray = $this->_csvToArray($fileName);
-                    $io->rm($fileName);
-                    Mage::getResourceModel('ddg_automation/contact')->unsubscribe($csvArray);
-                } catch (Exception $e) {
-                    Mage::logException($e);
+        if ($client instanceof Dotdigitalgroup_Email_Model_Apiconnector_Client) {
+            $data = $client->getContactImportReportFaults($id);
+            if ($data) {
+                $data = $this->_removeUtf8Bom($data);
+                $fileName = Mage::getBaseDir('var') . DS . 'DmTempCsvFromApi.csv';
+                $io = new Varien_Io_File();
+                $io->open();
+                $check = $io->write($fileName, $data);
+                if ($check) {
+                    try {
+                        $csvArray = $this->_csvToArray($fileName);
+                        $io->rm($fileName);
+                        Mage::getResourceModel('ddg_automation/contact')->unsubscribe($csvArray);
+                    } catch (Exception $e) {
+                        Mage::logException($e);
+                    }
+                } else {
+                    $helper->log('_processContactImportReportFaults: cannot save data to CSV file.');
                 }
-            } else {
-                $helper->log('_processContactImportReportFaults: cannot save data to CSV file.');
             }
         }
     }

@@ -151,7 +151,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
         //api client for this website
         $client = Mage::helper('ddg')->getWebsiteApiClient($website);
         //only if all data is available
-        if ($name && $type && $access) {
+        if ($name && $type && $access && $client instanceof Dotdigitalgroup_Email_Model_Apiconnector_Client) {
             //create datafield
             $response = $client->postDataFields($name, $type, $access, $default);
             //error creating datafield message
@@ -179,7 +179,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
         $visibility = $this->getRequest()->getParam('visibility');
         $website  = $this->getRequest()->getParam('website', 0);
         $client = Mage::helper('ddg')->getWebsiteApiClient($website);
-        if (strlen($addressBookName)) {
+        if (strlen($addressBookName) && $client instanceof Dotdigitalgroup_Email_Model_Apiconnector_Client) {
             $response = $client->postAddressBooks($addressBookName, $visibility);
             if (isset($response->message))
                 Mage::getSingleton('adminhtml/session')->addError($response->message);

@@ -76,10 +76,10 @@ class Dotdigitalgroup_Email_Model_Customer_Wishlist_Item
      */
     public function setPrice($product)
     {
-        $this->_price = $product->getFinalPrice();
+        $this->_price = (float)number_format($product->getFinalPrice(), 2, '.', '');
         $total        = $this->_price * $this->_qty;
 
-        $this->_totalValueOfProduct = number_format($total, 2, '.', ',');
+        $this->_totalValueOfProduct = (float)number_format($total, 2, '.', '');
 
         return $this;
     }

@@ -10,6 +10,9 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
     const AUTOMATION_TYPE_NEW_REVIEW = 'review_automation';
     const AUTOMATION_TYPE_NEW_WISHLIST = 'wishlist_automation';
     const AUTOMATION_STATUS_PENDING = 'pending';
+    const ORDER_STATUS_AUTOMATION = 'order_automation_';
+    const AUTOMATION_TYPE_CUSTOMER_FIRST_ORDER = 'first_order_automation';
+
     //automation enrolment limit
     public $limit = 100;
     public $email;
@@ -34,8 +37,8 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_REVIEW,
         self::AUTOMATION_TYPE_NEW_WISHLIST =>
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_WISHLIST,
-        'order_automation_' =>
-            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_ORDER_STATUS
+        self::AUTOMATION_TYPE_CUSTOMER_FIRST_ORDER =>
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_NEW_ORDER
     );
 
     /**
@@ -63,25 +66,54 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
         return $this;
     }
 
+    /**
+     * Automation enrollment
+     */
     public function enrollment()
     {
+        $automationOrderStatusCollection = $this->getCollection()
+            ->addFieldToFilter(
+                'enrolment_status', self::AUTOMATION_STATUS_PENDING
+            );
+        $automationOrderStatusCollection
+            ->addFieldToFilter(
+                'automation_type',
+                array('like' => '%' . 'order_automation_' . '%')
+            )->getSelect()->group('automation_type');
+
+        $statusTypes
+            = $automationOrderStatusCollection->getColumnValues('automation_type');
+        foreach ($statusTypes as $type) {
+            $this->automationTypes[$type]
+                = Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_ORDER_STATUS;
+        }
         $helper = Mage::helper('ddg');
         //send the campaign by each types
         foreach ($this->automationTypes as $type => $config) {
             $contacts = array();
             foreach (Mage::app()->getWebsites(true) as $website) {
-                $contacts[$website->getId()]['programId'] = $helper->getWebsiteConfig($config, $website);
+                if (strpos($type, self::ORDER_STATUS_AUTOMATION) !== false) {
+                    $configValue
+                        = unserialize($helper->getWebsiteConfig($config, $website));
+                    if (is_array($configValue) && !empty($configValue)) {
+                        foreach ($configValue as $one) {
+                            if (strpos($type, $one['status']) !== false) {
+                                $contacts[$website->getId()]['programId']
+                                    = $one['automation'];
+                            }
+                        }
+                    }
+                } else {
+                    $contacts[$website->getId()]['programId']
+                        = $helper->getWebsiteConfig($config, $website);
+                }
             }
             //get collection from type
             $automationCollection = $this->getCollection()
                 ->addFieldToFilter(
                     'enrolment_status', self::AUTOMATION_STATUS_PENDING
                 );
-            if ($type == 'order_automation_') {
-                $automationCollection->addFieldToFilter('automation_type', array('like' => '%' . $type . '%'));
-            } else {
-                $automationCollection->addFieldToFilter('automation_type', $type);
-            }
+            $automationCollection->addFieldToFilter('automation_type', $type);
             //limit because of the each contact request to get the id
             $automationCollection->getSelect()->limit($this->limit);
             foreach ($automationCollection as $automation) {
@@ -90,19 +122,29 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
                 $this->typeId    = $automation->getTypeId();
                 $this->websiteId = $automation->getWebsiteId();
                 $this->storeName = $automation->getStoreName();
-                $contactId       = Mage::helper('ddg')->getContactId(
-                    $email, $this->websiteId
-                );
-                //contact id is valid, can update datafields
-                if ($contactId) {
-                    //need to update datafields
-                    $this->updateDatafieldsByType(
-                        $this->automationType, $email
+                $typeDouble = $type;
+                //Set type to generic automation status if type contains constant value
+                if (strpos($typeDouble, self::ORDER_STATUS_AUTOMATION) !== false) {
+                    $typeDouble = self::ORDER_STATUS_AUTOMATION;
+                }
+                //Only if api is enabled and credentials are filled
+                if ($helper->getWebsiteApiClient($this->websiteId)) {
+                    $contactId = Mage::helper('ddg')->getContactId(
+                        $email, $this->websiteId
                     );
-                    $contacts[$automation->getWebsiteId()]['contacts'][$automation->getId()] = $contactId;
+                    //contact id is valid, can update datafields
+                    if ($contactId) {
+                        //need to update datafields
+                        $this->updateDatafieldsByType(
+                            $typeDouble, $email
+                        );
+                        $contacts[$automation->getWebsiteId()]['contacts'][$automation->getId()] = $contactId;
+                    } else {
+                        // the contact is suppressed or the request failed
+                        $automation->setEnrolmentStatus('Suppressed')->save();
+                    }
                 } else {
-                    // the contact is suppressed or the request failed
-                    $automation->setEnrolmentStatus('Suppressed')->save();
+                    unset($contacts[$this->websiteId]);
                 }
             }
             foreach ($contacts as $websiteId => $websiteContacts) {
@@ -151,22 +193,16 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
     {
         switch ($type) {
             case self::AUTOMATION_TYPE_NEW_CUSTOMER :
-                $this->_updateDefaultDatafields($email);
-                break;
             case self::AUTOMATION_TYPE_NEW_SUBSCRIBER :
+            case self::AUTOMATION_TYPE_NEW_WISHLIST :
                 $this->_updateDefaultDatafields($email);
                 break;
             case self::AUTOMATION_TYPE_NEW_ORDER :
-                $this->_updateNewOrderDatafields();
-                break;
-            case self::AUTOMATION_TYPE_NEW_GUEST_ORDER:
-                $this->_updateNewOrderDatafields();
-                break;
+            case self::AUTOMATION_TYPE_NEW_GUEST_ORDER :
             case self::AUTOMATION_TYPE_NEW_REVIEW :
+            case self::AUTOMATION_TYPE_CUSTOMER_FIRST_ORDER :
+            case self::ORDER_STATUS_AUTOMATION :
                 $this->_updateNewOrderDatafields();
-                break;
-            case self::AUTOMATION_TYPE_NEW_WISHLIST:
-                $this->_updateDefaultDatafields($email);
                 break;
             default:
                 $this->_updateDefaultDatafields($email);
@@ -245,9 +281,11 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
         if ( ! empty($data)) {
             //update data fields
             $client = Mage::helper('ddg')->getWebsiteApiClient($website);
-            $client->updateContactDatafieldsByEmail(
-                $order->getCustomerEmail(), $data
-            );
+            if ($client instanceof Dotdigitalgroup_Email_Model_Apiconnector_Client) {
+                $client->updateContactDatafieldsByEmail(
+                    $order->getCustomerEmail(), $data
+                );
+            }
         }
     }
 
@@ -265,6 +303,10 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
             return false;
         }
         $client  = Mage::helper('ddg')->getWebsiteApiClient($this->websiteId);
+        if ($client === false) {
+            return false;
+        }
+
         $program = $client->getProgramById($programId);
         //program status
         if (isset($program->status)) {
@@ -283,11 +325,15 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
      * @param $contacts
      * @param $websiteId
      *
-     * @return null
+     * @return bool|null
      */
     public function sendContactsToAutomation($contacts, $websiteId)
     {
         $client = Mage::helper('ddg')->getWebsiteApiClient($websiteId);
+        if ($client === false) {
+            return false;
+        }
+
         $data   = array(
             'Contacts'     => $contacts,
             'ProgramId'    => $this->programId,

@@ -30,10 +30,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
             'order_syncing'                      => 'Orders Syncing',
             'custom_order_attributes'            => 'Custom Order Attributes',
             'quote_enabled'                      => 'Quote Sync Enabled',
-            'quote_syncing'                      => 'Quote Syncing',
-            'custom_quote_attributes'            => 'Custom Quote Attributes',
             'last_abandoned_cart_sent_day'       => 'Last Abandoned Cart Sent Day',
-            'easy_email_capture_enabled'         => 'Easy Email Capture Enabled',
             'disable_newsletter_success_enabled' => 'Disable Newsletter Success Enabled',
             'system_information'                 => 'System Information'
 
@@ -578,18 +575,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                 )
             );
 
-            //number of customers not match, try to update
-            if ($countCustomers != $countCustomerContacts) {
-
-                $url  = Mage::helper('adminhtml')->getUrl(
-                    '*/connector/populatecontacts',
-                    array('type' => 'customers', 'website' => $website->getId())
-                );
-                $link = ' <a href="' . $url . '"> populate</a>';
-                $tableData['Status']
-                      = 'Customers not matching the contact table. ' . $link;
-                //customers not synced yet
-            } elseif ($countCustomers > $countCustomerContacts + $suppressed) {
+            if ($countCustomers > $countCustomerContacts + $suppressed) {
                 $tableData['Status'] = 'Syncing..';
                 //all customers syned.
             } else {
@@ -1371,6 +1357,20 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                 $passed = false;
                 $mapped++;
             }
+            if (!$website->getConfig(
+                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_BILLING_COMPANY_NAME
+            )
+            ) {
+                $passed = false;
+                $mapped++;
+            }
+            if (!$website->getConfig(
+                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_DELIVERY_COMPANY_NAME
+            )
+            ) {
+                $passed = false;
+                $mapped++;
+            }
             $tableData['Mapped Percentage'] = number_format(
                     (1 - $mapped / 32) * 100, 2
                 ) . ' %';
@@ -1627,91 +1627,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
     }
 
     /**
-     * check if any custom quote attribute selected
-     *
-     * @return Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Content
-     */
-    public function customQuoteAttributes()
-    {
-        $resultContent = Mage::getModel(
-            'ddg_automation/adminhtml_dashboard_content'
-        );
-        $resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
-            ->setTitle('Custom Quote Attributes : ')
-            ->setMessage('Selected.');
-
-        foreach (Mage::app()->getWebsites() as $website) {
-            $websiteName          = $website->getName();
-            $customQuoteAttribute = ($website->getConfig(
-                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOM_QUOTE_ATTRIBUTES
-            )) ? true : false;
-
-            if ($customQuoteAttribute !== true) {
-                $resultContent->setStyle(self::CONNECTOR_DASHBOARD_FAILED)
-                    ->setTitle(
-                        'Custom quote attribute not selected (ignore if you do not want to import custom quote attributes) :'
-                    )
-                    ->setMessage('')
-                    ->setTable(
-                        array(
-                            'Website' => $websiteName,
-                            'Status'  => 'No Custom Quote Attribute Selected'
-                        )
-                    );
-            }
-        }
-
-        return $resultContent;
-    }
-
-    /**
-     * Check if any quote are imported.
-     *
-     * @return Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Content
-     */
-    public function quoteSyncing()
-    {
-        $resultContent = Mage::getModel(
-            'ddg_automation/adminhtml_dashboard_content'
-        );
-        $resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
-            ->setTitle('Quote Syncing : ')
-            ->setMessage('Looks Great.');
-
-        foreach (Mage::app()->getWebsites() as $website) {
-            $websiteName = $website->getName();
-            $storeIds    = $website->getStoreIds();
-
-            if (empty($storeIds)) {
-                continue;
-            }
-
-            //number of quote marked as imported
-            $numQuotes = Mage::getModel('ddg_automation/quote')->getCollection()
-                ->addFieldToFilter('imported', 1)
-                ->addFieldToFilter('store_id', array('in', $storeIds))->getSize(
-                );
-
-            if ( ! $numQuotes) {
-                $resultContent->setStyle(self::CONNECTOR_DASHBOARD_FAILED)
-                    ->setTitle(
-                        'Quote Syncing (ignore if you have reset quote for re-import) :'
-                    )
-                    ->setMessage('')
-                    ->setTable(
-                        array(
-                            'Website' => $websiteName,
-                            'Status'  => 'No Imported Quotes Found'
-                        )
-                    );
-            }
-        }
-
-        return $resultContent;
-
-    }
-
-    /**
      * review sync enabled.
      *
      * @return Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Content
@@ -1834,84 +1749,86 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
             $websiteName = $website->getName();
             $client      = Mage::helper('ddg')->getWebsiteApiClient($website);
 
-            //customer carts
-            $customerCampaign1 = $website->getConfig(
-                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CAMPAIGN_1
-            );
-            $customerCampaign2 = $website->getConfig(
-                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CAMPAIGN_2
-            );
-            $customerCampaign3 = $website->getConfig(
-                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CAMPAIGN_3
-            );
+            if ($client instanceof Dotdigitalgroup_Email_Model_Apiconnector_Client) {
+                //customer carts
+                $customerCampaign1 = $website->getConfig(
+                    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CAMPAIGN_1
+                );
+                $customerCampaign2 = $website->getConfig(
+                    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CAMPAIGN_2
+                );
+                $customerCampaign3 = $website->getConfig(
+                    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CAMPAIGN_3
+                );
 
-            //guests carts
-            $guestCampaign1 = $website->getConfig(
-                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_GUEST_ABANDONED_CAMPAIGN_1
-            );
-            $guestCampaign2 = $website->getConfig(
-                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_GUEST_ABANDONED_CAMPAIGN_2
-            );
-            $guestCampaign3 = $website->getConfig(
-                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_GUEST_ABANDONED_CAMPAIGN_3
-            );
-
-
-            //date customer carts
-
-            $cusDateSent1 = ($customerCampaign1) ? $client->getCampaignSummary(
-                $customerCampaign1
-            ) : '';
-            $cusDateSent2 = ($customerCampaign2) ? $client->getCampaignSummary(
-                $customerCampaign2
-            ) : '';
-            $cusDateSent3 = ($customerCampaign3) ? $client->getCampaignSummary(
-                $customerCampaign3
-            ) : '';
-
-            //date guest carts
-            $resGuest1 = ($guestCampaign1) ? $client->getCampaignSummary(
-                $guestCampaign1
-            ) : '';
-            $resGuest2 = ($guestCampaign2) ? $client->getCampaignSummary(
-                $guestCampaign2
-            ) : '';
-            $resGuest3 = ($guestCampaign3) ? $client->getCampaignSummary(
-                $guestCampaign3
-            ) : '';
-
-            /**
-             * Customers.
-             */
-            $customerCampaign1 = (isset($cusDateSent1->dateSent)
-                ? $cusDateSent1->dateSent : 'Not Sent/Selected');
-            $customerCampaign2 = (isset($cusDateSent2->dateSent)
-                ? $cusDateSent2->dateSent : 'Not Sent/Selected');
-            $customerCampaign3 = (isset($cusDateSent3->dateSent)
-                ? $cusDateSent3->dateSent : 'Not Sent/Selected');
-
-            /**
-             * Guests.
-             */
-            $guestCampaign1 = (isset($resGuest1->dateSent)
-                ? $resGuest1->dateSent : 'Not Sent/Selected');
-            $guestCampaign2 = (isset($resGuest2->dateSent)
-                ? $resGuest2->dateSent : 'Not Sent/Selected');
-            $guestCampaign3 = (isset($resGuest3->dateSent)
-                ? $resGuest3->dateSent : 'Not Sent/Selected');
+                //guests carts
+                $guestCampaign1 = $website->getConfig(
+                    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_GUEST_ABANDONED_CAMPAIGN_1
+                );
+                $guestCampaign2 = $website->getConfig(
+                    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_GUEST_ABANDONED_CAMPAIGN_2
+                );
+                $guestCampaign3 = $website->getConfig(
+                    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_GUEST_ABANDONED_CAMPAIGN_3
+                );
 
 
-            $resultContent->setTable(
-                array(
-                    'Website'             => $websiteName,
-                    'Customer Campaign 1' => $customerCampaign1,
-                    'Customer Campaign 2' => $customerCampaign2,
-                    'Customer Campaign 3' => $customerCampaign3,
-                    'Guest Campaign 1'    => $guestCampaign1,
-                    'Guest Campaign 2'    => $guestCampaign2,
-                    'Guest Campaign 3'    => $guestCampaign3
-                )
-            );
+                //date customer carts
+
+                $cusDateSent1 = ($customerCampaign1) ? $client->getCampaignSummary(
+                    $customerCampaign1
+                ) : '';
+                $cusDateSent2 = ($customerCampaign2) ? $client->getCampaignSummary(
+                    $customerCampaign2
+                ) : '';
+                $cusDateSent3 = ($customerCampaign3) ? $client->getCampaignSummary(
+                    $customerCampaign3
+                ) : '';
+
+                //date guest carts
+                $resGuest1 = ($guestCampaign1) ? $client->getCampaignSummary(
+                    $guestCampaign1
+                ) : '';
+                $resGuest2 = ($guestCampaign2) ? $client->getCampaignSummary(
+                    $guestCampaign2
+                ) : '';
+                $resGuest3 = ($guestCampaign3) ? $client->getCampaignSummary(
+                    $guestCampaign3
+                ) : '';
+
+                /**
+                 * Customers.
+                 */
+                $customerCampaign1 = (isset($cusDateSent1->dateSent)
+                    ? $cusDateSent1->dateSent : 'Not Sent/Selected');
+                $customerCampaign2 = (isset($cusDateSent2->dateSent)
+                    ? $cusDateSent2->dateSent : 'Not Sent/Selected');
+                $customerCampaign3 = (isset($cusDateSent3->dateSent)
+                    ? $cusDateSent3->dateSent : 'Not Sent/Selected');
+
+                /**
+                 * Guests.
+                 */
+                $guestCampaign1 = (isset($resGuest1->dateSent)
+                    ? $resGuest1->dateSent : 'Not Sent/Selected');
+                $guestCampaign2 = (isset($resGuest2->dateSent)
+                    ? $resGuest2->dateSent : 'Not Sent/Selected');
+                $guestCampaign3 = (isset($resGuest3->dateSent)
+                    ? $resGuest3->dateSent : 'Not Sent/Selected');
+
+
+                $resultContent->setTable(
+                    array(
+                        'Website' => $websiteName,
+                        'Customer Campaign 1' => $customerCampaign1,
+                        'Customer Campaign 2' => $customerCampaign2,
+                        'Customer Campaign 3' => $customerCampaign3,
+                        'Guest Campaign 1' => $guestCampaign1,
+                        'Guest Campaign 2' => $guestCampaign2,
+                        'Guest Campaign 3' => $guestCampaign3
+                    )
+                );
+            }
         }
 
         return $resultContent;
@@ -2178,53 +2095,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
         }
 
         return $method;
-    }
-
-    /**
-     * easy email capture enabled
-     *
-     * @return Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Content
-     */
-    public function easyEmailCaptureEnabled()
-    {
-        $resultContent = Mage::getModel(
-            'ddg_automation/adminhtml_dashboard_content'
-        );
-        $resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
-            ->setTitle('Easy Email Capture : ')
-            ->setMessage('Enabled.');
-
-        foreach (Mage::app()->getWebsites() as $website) {
-            $websiteName = $website->getName();
-            $enabled     = ($website->getConfig(
-                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_EMAIL_CAPTURE
-            ))
-                ? true
-                :
-                'Disabled';
-
-            if ($enabled !== true) {
-                $url = Mage::helper('adminhtml')->getUrl(
-                    '*/connector/enablewebsiteconfiguration',
-                    array('path'    => 'XML_PATH_CONNECTOR_EMAIL_CAPTURE',
-                          'website' => $website->getId())
-                );
-                $resultContent->setStyle(self::CONNECTOR_DASHBOARD_FAILED)
-                    ->setMessage(
-                        'Don\'t forget to enable if you want to enable easy email capture.'
-                    )
-                    ->setTable(
-                        array(
-                            'Website'  => $websiteName,
-                            'Status'   => $enabled,
-                            'Fast Fix' => 'Click  <a href="' . $url
-                                . '">here </a>to enable.'
-                        )
-                    );
-            }
-        }
-
-        return $resultContent;
     }
 
     /**

@@ -44,15 +44,11 @@ class Dotdigitalgroup_Email_Block_Basket extends Mage_Core_Block_Template
         $appEmulation = Mage::getSingleton('core/app_emulation');
         $appEmulation->startEnvironmentEmulation($storeId);
 
-        $quoteItems = $quoteModel->getAllItems();
+        $quoteItems = $quoteModel->getAllVisibleItems();
 
         $itemsData = array();
 
         foreach ($quoteItems as $quoteItem) {
-            if ($quoteItem->getParentItemId() != null) {
-                continue;
-            }
-
             $_product    = $quoteItem->getProduct();
             $inStock     = ($_product->getStockItem()->getIsInStock())
                 ? 'In Stock'
@@ -133,6 +129,21 @@ class Dotdigitalgroup_Email_Block_Basket extends Mage_Core_Block_Template
         $dynamicStyle = Mage::helper('ddg')->getDynamicStyles();
 
         return $dynamicStyle;
+    }
+
+    public function getProductImage($product)
+    {
+        $helper = Mage::helper('ddg');
+        if ($helper->getWebsiteConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_PRODUCT_IMAGE)
+            && $product->getTypeId() == "simple"
+        ) {
+            $parentIds = Mage::getModel('catalog/product_type_configurable')->getParentIdsByChild($product->getId());
+            if (!empty($parentIds)) {
+                $parentProduct = Mage::getModel('catalog/product')->load($parentIds[0]);
+                return $this->helper('catalog/image')->init($parentProduct, 'small_image')->resize(85);
+            }
+        }
+        return $this->helper('catalog/image')->init($product, 'small_image')->resize(85);
     }
 
 }
