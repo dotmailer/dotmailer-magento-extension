@@ -36,7 +36,18 @@ class Dotdigitalgroup_Email_Model_Resource_Coupon extends Mage_SalesRule_Model_R
             $this->_getWriteAdapter()->update(
                 $this->getTable('salesrule/coupon'),
                 $updateArray,
-                array('rule_id = ?' => $rule->getId(), 'added_by_dotmailer is null')
+                array('rule_id = ?' => $rule->getId(), 'generated_by_dotmailer is null')
+            );
+        }
+
+        //update coupons added by dotmailer. not to change expiration date
+        $dotmailerUpdateArray = $updateArray;
+        unset($dotmailerUpdateArray['expiration_date']);
+        if (!empty($dotmailerUpdateArray)) {
+            $this->_getWriteAdapter()->update(
+                $this->getTable('salesrule/coupon'),
+                $dotmailerUpdateArray,
+                array('rule_id = ?' => $rule->getId(), 'generated_by_dotmailer is 1')
             );
         }
 
