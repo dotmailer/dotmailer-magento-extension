@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class Dotdigitalgroup_Email_Model_Rules
+ */
 class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
 {
     const ABANDONED = 1;
@@ -13,24 +16,23 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
     protected $_used = array();
 
     /**
-     * constructor
+     * Constructor.
      */
     public function _construct()
     {
         $this->_defaultOptions = Mage::getModel('ddg_automation/adminhtml_source_rules_type')->defaultOptions();
-        $this->_conditionMap =
-            array(
+
+        $this->_conditionMap = array(
                 'eq' => 'neq',
                 'neq' => 'eq',
-                'gteq' => 'lteq',
-                'lteq' => 'gteq',
-                'gt' => 'lt',
-                'lt' => 'gt',
+                'gteq' => 'lt',
+                'lteq' => 'gt',
+                'gt' => 'lteq',
+                'lt' => 'gteq',
                 'like' => 'nlike',
                 'nlike' => 'like'
             );
-        $this->_attributeMapForQuote =
-            array(
+        $this->_attributeMapForQuote = array(
                 'method' => 'method',
                 'shipping_method' => 'shipping_method',
                 'country_id' => 'country_id',
@@ -43,8 +45,7 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
                 'items_qty' => 'main_table.items_qty',
                 'customer_email' => 'main_table.customer_email',
             );
-        $this->_attributeMapForOrder =
-            array(
+        $this->_attributeMapForOrder = array(
                 'method' => 'method',
                 'shipping_method' => 'main_table.shipping_method',
                 'country_id' => 'country_id',
