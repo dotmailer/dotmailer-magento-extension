@@ -226,7 +226,9 @@ class Dotdigitalgroup_Email_Model_Sales_Order
                 /**
                  * Add guest to array to add to contacts table.
                  */
-                if ($order->getCustomerIsGuest()) {
+                if ($order->getCustomerIsGuest()
+                    && $order->getCustomerEmail()
+                ) {
                     //add guest to the list
                     $this->_guests[] = array(
                         'email' => $order->getCustomerEmail(),

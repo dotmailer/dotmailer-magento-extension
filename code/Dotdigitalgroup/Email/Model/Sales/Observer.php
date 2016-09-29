@@ -175,44 +175,39 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
             $programType, $order->getWebsiteId()
         );
 
-        //send to automation queue
-        $this->_doAutomationEnrolment(
-            array(
-                'programId' => $programId,
-                'automationType' => $automationType,
-                'email' => $email,
-                'order_id' => $order->getId(),
-                'website_id' => $website->getId(),
-                'store_name' => $storeName
-            )
-        );
+        if ($programId) {
+            //send to automation queue
+            $this->_doAutomationEnrolment(
+                array(
+                    'programId' => $programId,
+                    'automationType' => $automationType,
+                    'email' => $email,
+                    'order_id' => $order->getId(),
+                    'website_id' => $website->getId(),
+                    'store_name' => $storeName
+                )
+            );
+        }
 
         return $this;
     }
 
     protected function _doAutomationEnrolment($data)
     {
-        //the program is not mappped
-        if (!$data['programId']) {
-            Mage::log(
-                'automation type : ' . $data['automationType'] . ' program id not found'
-            );
-        } else {
-            try {
-                $automation = Mage::getModel('ddg_automation/automation');
-                $automation->setEmail($data['email'])
-                    ->setAutomationType($data['automationType'])
-                    ->setEnrolmentStatus(
-                        Dotdigitalgroup_Email_Model_Automation::AUTOMATION_STATUS_PENDING
-                    )
-                    ->setTypeId($data['order_id'])
-                    ->setWebsiteId($data['website_id'])
-                    ->setStoreName($data['store_name'])
-                    ->setProgramId($data['programId'])
-                    ->save();
-            } catch (Exception $e) {
-                Mage::logException($e);
-            }
+        try {
+            $automation = Mage::getModel('ddg_automation/automation');
+            $automation->setEmail($data['email'])
+                ->setAutomationType($data['automationType'])
+                ->setEnrolmentStatus(
+                    Dotdigitalgroup_Email_Model_Automation::AUTOMATION_STATUS_PENDING
+                )
+                ->setTypeId($data['order_id'])
+                ->setWebsiteId($data['website_id'])
+                ->setStoreName($data['store_name'])
+                ->setProgramId($data['programId'])
+                ->save();
+        } catch (Exception $e) {
+            Mage::logException($e);
         }
     }
 

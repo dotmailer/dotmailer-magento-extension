@@ -835,8 +835,11 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
     public function updateLastQuoteId($quoteId, $email, $websiteId)
     {
         $client = $this->getWebsiteApiClient($websiteId);
-        //last quote id config data mapped
-        $quoteIdField = $this->getLastQuoteId();
+        //last quote id config data mapped from website level config
+        $quoteIdField = $this->getWebsiteConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_MAPPING_LAST_QUOTE_ID,
+            $websiteId
+        );
 
         $data[] = array(
             'Key' => $quoteIdField,
