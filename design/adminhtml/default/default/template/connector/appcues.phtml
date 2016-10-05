@@ -1,2 +1,5 @@
-<link rel="stylesheet" type="text/css" href="//fast.appcues.com/appcues.min.css" />
-<script src="//fast.appcues.com/568.js" data-user-id="<?php echo (Mage::getSingleton('admin/session')->getUser())? Mage::getSingleton('admin/session')->getUser()->getEmail() : ''; ?>"></script>
+<?php if ($this->canRunScript()): ?>
+    <link rel="stylesheet" type="text/css" href="//fast.appcues.com/appcues.min.css"/>
+    <script src="//fast.appcues.com/568.js"
+            data-user-id="<?php echo (Mage::getSingleton('admin/session')->getUser()) ? Mage::getSingleton('admin/session')->getUser()->getEmail() : ''; ?>"></script>
+<?php endif; ?>
