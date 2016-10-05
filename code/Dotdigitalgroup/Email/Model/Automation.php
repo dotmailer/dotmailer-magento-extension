@@ -170,13 +170,13 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
                     ) {
                         $this->programStatus = 'Deactivated';
                     }
-                    //update contacts with the new status, and log the error message if failes
+                    //update contacts with the new status, and log the error message if fails
                     $num = $this->getResource()->updateContacts(
                         $contactsArray, $this->programStatus, $this->programMessage
                     );
                     if ($num) {
                         Mage::helper('ddg')->log(
-                            'Automation type : ' . $type . ', updated no : ' . $num
+                            'Automation type : ' . $type . ', enrolled : ' . $num
                         );
                     }
                 }
