@@ -158,7 +158,8 @@
     </adminhtml_system_config_edit>
     <default>
         <reference name="content">
-            <block type="core/template" name="ddg-appcues-admin" template="connector/appcues.phtml"/>
+            <block type="ddg_automation/adminhtml_system_appcues" name="ddg-appcues-admin"
+                   template="connector/appcues.phtml"/>
         </reference>
     </default>
     <adminhtml_email_rules_index>
