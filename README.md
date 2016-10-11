@@ -38,10 +38,12 @@ Compatibility
  - Improve finding guests. Guest will be added in bulk to the table.
  - Add new automation for first customer order event.
  - EDC include all product types to have an image and inlcude the price range available for the product.   
+
 ###### Bug fixes
  - EDC fixed the prefix for table names.
  - Fix unsubscribeEmail register already exists.
  - New installation do not get the customers mark as subscribers.
+
 ###### Improvements
  - Appcues script will run in admin on connector pages only.
  - Improve the index for the email campaing table.
