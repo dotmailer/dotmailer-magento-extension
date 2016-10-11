@@ -30,59 +30,64 @@ Compatibility
 - Magento >= 1.6.2
 
 
-### Upgrade notice
+# Upgrade notice
 
-### V6.0.0
+# V6.2.0
+###### Features
+ - Coupon EDC expiration date. You can set the expiration date for coupon included into the URL
+ - Improve finding guests. Guest will be added in bulk to the table.
+ - Add new automation for first customer order event.
+ - EDC include all product types to have an image and inlcude the price range available for the product.   
+###### Bug fixes
+ - EDC fixed the prefix for table names.
+ - Fix unsubscribeEmail register already exists.
+ - New installation do not get the customers mark as subscribers.
+###### Improvements
+ - Appcues script will run in admin on connector pages only.
+ - Improve the index for the email campaing table.
+ - Allow to include Order multiselect attributes. 
+
+# V6.0.0
 ## Features
  - New improved Importer.
  - Express account creation.
  - Api support region.
  - Magento partner programme.
-
 ## Bug fixes
  - Transactional data disabled by Transactional Allowance.
  - Abandoned carts template.
  - Api username obscure validation.
  - Update security on get basket content.
  - Saving a review in admin.
-
-### V5.3.0
-
+ 
+# V5.3.0
 ## Features
  - Support for dotmailer regions
-
 ## Bug fixes
  - Bug fixed for fatal error on manual sync
-
 ## Improvments
  - Magento code audit changes x3
  - Email validation on ajax call
 
-### V5.2.0
-
+# V5.2.0
 ## Features
  - Run Importer Button.
  - Cron timings for diffrent settings to run cronjobs.
-
 ## Bug fixes
  - Rule condition for abandoned carts.
-
 ## Improvments
  - Refactor EDC pages.
  - New "Suppressed by you" into suppresion list.
  - New suppressed contacts sync.
  - More Code Audit changes.
 
-
-### V5.1.0
-
+# V5.1.0
 ## Bug fixes
  - Audit changes A1 - A14
  - Skip website if no store assigned
  - Manufacturer attribute
  - Raygun - change the title message to non unique
  - Exclusion rules ajax call protocol fix
-
 ## Features
  - Abandoned Product Name
  - Importer API Enchased
@@ -92,18 +97,12 @@ Compatibility
  - System log viewer
  - Single deletes for importer
 
-
-### V5.0.4
-
+# V5.0.4
 ## Bug fixes
-
  - Increased the cron sync times to 15 minutes.
 
-
-### V5.0.3
-
+# V5.0.3
 ## Bug fixes
-
  - Magento code audit. Brins a lot of performance and architectural imrovements.
  - Fixed fatal error on quote single sync
  - Fixed oAuth redirect
@@ -120,28 +119,20 @@ Compatibility
  - Fixed duplicate review entries. Only approved review will saved for sync.
  - Fixed contact sync. Check if manufacturer attribute exist before calling for it otherwise Magento throws an error and sync fails.
 
-
-### V5.0.2
-
+# V5.0.2
 ## Bug fixes
-
  - Fixed fatal error while doing single sync. Key does not exist/not an object.
  - Fixed rewrite of sendNewAccountEmail function to call parent without default values.
  - Fixed OAUTH disconnect link
  - Contact sync check if manufacturer attribute exist before pulling value. 
 
-### V5.0.1
-
+# V5.0.1
 ## Bug fixes
-
  - Fixed upgrade script so it does not get skipped
  - Added ACL to required controllers
 
-
-### V5.0.0
-  
+# V5.0.0
 ## Features
- 
  -  New Data Importer
  -  Abandoned cart exclusion rules
  -  Review request exclusion rules
@@ -163,9 +154,7 @@ Compatibility
  -  Automation enrollment based on order status
  -  Reset Tables button
  -  IP restrictions on EDC pages
-
 ## Bug fixes
- 
  -  Reduced default batch size and more frequent batching
  -  Custom order attributes not syncing
  -  Performance improvements to all data syncs
@@ -186,7 +175,6 @@ Compatibility
  -  Fix for rec's per item logic for EDC pages
 
 ### V4.0.0
-
 ## Features
  - Transactional email.
  - Dashboard display conflict checker.
@@ -199,17 +187,16 @@ Compatibility
  - Use dotmailer template for transactional emails.
  - Wishlist EDC with related, upsell and crosssell.
  - Customer trend data.
- 
+
 ## Bug fixes
 
  - Sync limits lowered to 5000 contacts and 200 orders.
  - Review is submited before it's approved.
  - Abandoned Carts triggered from the "LAST_QUOTE_ID".
 
-### V3.3.0
+# V3.3.0
 
 ## Features
-
 - Nosto Integration.
 - Easy Email Capture(trademark).
 - Reviews.
@@ -217,10 +204,7 @@ Compatibility
 - Wishlists.
 - Disable Newsletter Success.
 - Disable Customer Success.
-
-
 ## Bug fixed
-
 - Cleaning phpspecs standards.
 - Checkout awareness for abandoned carts.
 - Compatibility with the older versions 1.6.2(full compatibility).
@@ -228,16 +212,10 @@ Compatibility
 - Bestsellers will select and filter the sealable items in collection.
 - Not enough coupons generated.
 
-
-
-
-### V3.2.0
-
+# V3.2.0
 - Transactional Emails Refactor.
 - System Status Dashboard
-
 ## Features
-
 - System Status Dashboard.
 - RFM Analisys.
 - Api Status.
@@ -248,9 +226,7 @@ Compatibility
 - Log for all API calls.
 - Alternative abandoned baskets.
 - Mailcheck integration
-
 ## Bug fixed
-
 - Magor Refactoring.
 - Cover all the code with testing.
 - Automation when subscriber is not imported yet.
@@ -271,7 +247,7 @@ Compatibility
 - Ajax reset of the contacts for an updated addressbooks.
 
 
-### V3.1.0
+# V3.1.0
 
 ## Automation
 
@@ -293,7 +269,7 @@ Compatibility
 
 
 
-### V.3.0.3
+# V3.0.3
 
 ## Single customer sync.
 
@@ -301,7 +277,7 @@ Compatibility
 * ROI fix
 * Code standards refactoring
 
-### V.3.0.2
+# V3.0.2
 
 ## Automation Studio.
 
@@ -310,7 +286,7 @@ Compatibility
 * Tracking code SSL fix
 
 
-### V.3.0.1
+# V3.0.1
 
 ## Transactional Emails Post Release Update.
 
@@ -320,7 +296,7 @@ Compatibility
 * Manully map the customer ID field
 * Emails Reports enchase with website id field
 
-### V.3.0.0 : 
+# V3.0.0
 
 ## Transactional Emails.
 
@@ -368,14 +344,9 @@ Compatibility
 * Transactional data key.
 * Reset orders direct query.
 * Naming convention for connector compatibility.
-
-
-
-#### V.2.0.5 : 
+# V.2.0.5 
 * Use the Order statuses to send the SMS.
-
-#### V.2.0.4 :
-
+# V.2.0.4 
 * Reset subscriber_imported for reimport.
 * Suppressed contacts button in admin settings.
 * Cleaned the dotmailer_order_imported from db.
@@ -384,9 +355,7 @@ Compatibility
 * Website id table update for null values.
 * Ignore deleted sales orders from email_order table.
 * Dropping number of subscribers from address book.
-
-
-#### V.2.0.3 :
+# V.2.0.3 
 * Delete transactional data using email address.
 * Subscriber Sync - fix the contact id when to unsubscribe.
 * Subscriber Sync Empty Request.
