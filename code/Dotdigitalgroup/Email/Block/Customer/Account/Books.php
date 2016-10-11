@@ -218,7 +218,7 @@ class Dotdigitalgroup_Email_Block_Customer_Account_Books
         $contact = $this->_getApiClient()->getContactByEmail(
             $this->getCustomer()->getEmail()
         );
-        if ($contact->id) {
+        if (isset($contact->id)) {
             $this->_getCustomerSession()->setConnectorContactId($contact->id);
             $this->contactId = $contact->id;
         } else {
