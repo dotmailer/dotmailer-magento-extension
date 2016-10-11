@@ -65,4 +65,7 @@ $installer->getConnection()->addColumn(
     )
 );
 
+//clear cache
+Mage::app()->cleanCache();
+
 $installer->endSetup();
