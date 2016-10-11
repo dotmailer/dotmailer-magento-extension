@@ -43,6 +43,8 @@ Compatibility
  - EDC fixed the prefix for table names.
  - Fix unsubscribeEmail register already exists.
  - New installation do not get the customers mark as subscribers.
+ - Automation program enrollment without unserialized is failing.
+ - Exclution Rules conditional mapping fix.   
 
 ###### Improvements
  - Appcues script will run in admin on connector pages only.
