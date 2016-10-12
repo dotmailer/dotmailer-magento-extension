@@ -55,8 +55,10 @@ class Dotdigitalgroup_Email_Block_Coupon extends Mage_Core_Block_Template
             $couponModel->setType(Mage_SalesRule_Model_Rule::COUPON_TYPE_NO_COUPON)
                 ->setGeneratedByDotmailer(1);
 
-            if ($this->validateDate($params['expiration_date'])) {
-                $couponModel->setExpirationDate($params['expiration_date']);
+            if (is_numeric($params['expire_days'])) {
+                $locale = Mage::app()->getLocale()->getLocale();
+                $expirationDate = Zend_Date::now($locale)->addDay($params['expire_days']);
+                $couponModel->setExpirationDate($expirationDate->toString('yyyy-MM-dd HH:mm'));
             } elseif ($rule->getToDate()) {
                 $couponModel->setExpirationDate($rule->getToDate());
             }
@@ -65,22 +67,6 @@ class Dotdigitalgroup_Email_Block_Coupon extends Mage_Core_Block_Template
             return $couponCode;
         }
 
-        return false;
-    }
-
-    /**
-     * Validate date
-     *
-     * @param $date
-     * @return bool
-     */
-    protected function validateDate($date)
-    {
-        $validator = new Zend_Validate_Date();
-        if (isset($date) && $date != '' && $validator->isValid($date)) {
-            return true;
-        }
-        Mage::helper('ddg')->log('Date ' . $date . ' is not valid date');
         return false;
     }
 
