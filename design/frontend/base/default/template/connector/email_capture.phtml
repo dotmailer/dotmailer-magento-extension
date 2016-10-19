@@ -1,9 +1,5 @@
 
-<?php
-$isSecure  = Mage::app()->getStore()->isCurrentlySecure();
-$isSecure  ? $secureUrl = true : $secureUrl = false;
-$baseUrl   = Mage::app()->getStore()->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK, $secureUrl);
-?>
+<?php $baseUrl = Mage::app()->getStore()->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK, true); ?>
 
 <script type="text/javascript">
     //Email Capture For Quote
