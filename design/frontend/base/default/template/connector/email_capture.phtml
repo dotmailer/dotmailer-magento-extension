@@ -1,8 +1,7 @@
 
 <?php
 $isSecure  = Mage::app()->getStore()->isCurrentlySecure();
-$isSecure  ? $secureUrl = true : $secureUrl = false;
-$baseUrl   = Mage::app()->getStore()->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK, $secureUrl);
+$baseUrl   = Mage::app()->getStore()->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK, $isSecure);
 ?>
 
 <script type="text/javascript">
