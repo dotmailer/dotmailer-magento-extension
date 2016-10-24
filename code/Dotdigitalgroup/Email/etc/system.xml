@@ -2123,6 +2123,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <backend_model>ddg_automation/adminhtml_model_transactional_host</backend_model>
                             <depends><send_mode>smtp</send_mode></depends>
                         </host>
                         <username translate="label" module="ddg">
@@ -2131,6 +2132,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
+                            <backend_model>ddg_automation/adminhtml_model_transactional_username</backend_model>
                         </username>
                         <password translate="label" module="ddg">
                             <label>Password</label>
