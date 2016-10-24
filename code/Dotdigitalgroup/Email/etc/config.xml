@@ -627,21 +627,21 @@
                 <dynamic_syling><![CDATA[table{font-family: Arial, Helvetica, sans-serif; font-size:12px;}]]></dynamic_syling>
                 <name_color><![CDATA[#000000]]></name_color>
                 <name_font_size><![CDATA[12px]]></name_font_size>
-                <name_style></name_style>
+                <name_style><![CDATA[nostyle]]></name_style>
                 <price_color><![CDATA[#000000]]></price_color>
                 <price_font_size><![CDATA[12px]]></price_font_size>
-                <price_style></price_style>
+                <price_style><![CDATA[nostyle]]></price_style>
                 <link_color><![CDATA[#000000]]></link_color>
                 <link_font_size><![CDATA[12px]]></link_font_size>
-                <link_style></link_style>
+                <link_style><![CDATA[nostyle]]></link_style>
                 <other_color><![CDATA[#000000]]></other_color>
                 <other_font_size><![CDATA[14px]]></other_font_size>
-                <other_style></other_style>
+                <other_style><![CDATA[nostyle]]></other_style>
                 <font_picker><![CDATA[Arial, Helvetica, sans-serif]]></font_picker>
                 <doc_color><![CDATA[#FFFFFF]]></doc_color>
                 <coupon_color><![CDATA[#000000]]></coupon_color>
                 <coupon_font_size><![CDATA[14px]]></coupon_font_size>
-                <coupon_style></coupon_style>
+                <coupon_style><![CDATA[nostyle]]></coupon_style>
                 <coupon_font_picker><![CDATA[Arial, Helvetica, sans-serif]]></coupon_font_picker>
                 <coupon_doc_color><![CDATA[#FFFFFF]]></coupon_doc_color>
                 <product_image>0</product_image>
