@@ -2375,6 +2375,7 @@
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>0</show_in_store>
+                    <frontend_model>ddg_automation/adminhtml_system_dynamic_fieldset</frontend_model>
                     <fields>
                         <dynamic_syling translate="label" module="ddg">
                             <label>Dynamic Styling</label>
