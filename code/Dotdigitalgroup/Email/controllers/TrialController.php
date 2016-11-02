@@ -3,7 +3,12 @@
 class Dotdigitalgroup_Email_TrialController
     extends Mage_Core_Controller_Front_Action
 {
+
     protected $_params;
+
+    /**
+     * @var array
+     */
     protected $_ipRange = array(
         '104.40.179.234',
         '104.40.159.161',
@@ -57,8 +62,6 @@ class Dotdigitalgroup_Email_TrialController
     }
 
     /**
-     * send ajax response
-     *
      * @param $error
      * @param $msg
      */
@@ -71,7 +74,6 @@ class Dotdigitalgroup_Email_TrialController
         $this->getResponse()->setBody(
             $this->getRequest()->getParam('callback') . "(" . Mage::helper('core')->jsonEncode($message) . ")"
         )->sendResponse();
-        exit;
     }
 
     /**

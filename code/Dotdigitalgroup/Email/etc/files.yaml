@@ -235,8 +235,6 @@ design:
 skin:
   - adminhtml#default#default#connector#dashboard.css
   - frontend#base#default#js#mailcheck#init.js
-lib:
-  - Raygun4php#RaygunClient.php
 js:
   - connector#selector.js
   - mailcheck#magentoMailcheck.js

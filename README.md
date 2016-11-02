@@ -32,6 +32,10 @@ Compatibility
 
 # Upgrade notice
 
+# V6.2.1
+###### Improvements
+ - Removed Raygun integration.
+
 # V6.2.0
 ###### Features
  - Coupon EDC expiration date. You can set the expiration date for coupon included into the URL
