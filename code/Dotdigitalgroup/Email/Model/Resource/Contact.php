@@ -81,7 +81,6 @@ class Dotdigitalgroup_Email_Model_Resource_Contact
             return $num;
         } catch (Exception $e) {
             Mage::logException($e);
-            Mage::helper('ddg')->sendRaygunException($e);
         }
     }
 

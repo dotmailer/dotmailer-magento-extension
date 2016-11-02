@@ -95,7 +95,6 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
 
         } catch (Exception $e) {
             Mage::logException($e);
-            Mage::helper('ddg')->getRaygunClient()->SendException($e, array(Mage::getBaseUrl('web')));
         }
         return $this;
     }
