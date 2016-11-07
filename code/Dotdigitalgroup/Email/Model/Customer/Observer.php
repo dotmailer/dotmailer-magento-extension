@@ -29,8 +29,10 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
             Mage::register($email . '_customer_save', $email);
 
             $emailBefore = $customer->getOrigData('email');
+            empty($emailBefore) ? $emailAddress = $email : $emailAddress = $emailBefore;
 
             $contactModel = Mage::getModel('ddg_automation/contact')
+                ->loadByCustomerEmail($emailAddress, $websiteId);
 
             //email change detection
             if ($emailBefore && $email != $emailBefore) {
