@@ -27,8 +27,7 @@ class Dotdigitalgroup_Email_QuoteproductsController
                     $appEmulation->startEnvironmentEmulation($storeId);
                 } else {
                     $message = 'Dynamic : Quote not found: ' . $quoteId;
-                    Mage::helper('ddg')->log($message)
-                        ->rayLog($message);
+                    Mage::helper('ddg')->log($message);
                 }
             } else {
                 Mage::helper('ddg')->log(

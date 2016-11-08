@@ -33,7 +33,6 @@ class Dotdigitalgroup_Email_Model_Resource_Contact
             return $num;
         } catch (Exception $e) {
             Mage::logException($e);
-            Mage::helper('ddg')->rayLog($e);
         }
     }
 
@@ -57,7 +56,6 @@ class Dotdigitalgroup_Email_Model_Resource_Contact
             return $num;
         } catch (Exception $e) {
             Mage::logException($e);
-            Mage::helper('ddg')->rayLog($e);
         }
     }
 
@@ -110,7 +108,6 @@ class Dotdigitalgroup_Email_Model_Resource_Contact
             return $num;
         } catch (Exception $e) {
             Mage::logException($e);
-            Mage::helper('ddg')->rayLog($e);
         }
     }
 

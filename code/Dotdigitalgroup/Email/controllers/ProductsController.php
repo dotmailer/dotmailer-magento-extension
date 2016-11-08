@@ -30,8 +30,7 @@ class Dotdigitalgroup_Email_ProductsController
                     $appEmulation->startEnvironmentEmulation($storeId);
                 } else {
                     $message = 'Dynamic : order not found: ' . $orderId;
-                    Mage::helper('ddg')->log($message)
-                        ->rayLog($message);
+                    Mage::helper('ddg')->log($message);
                 }
             } else {
                 Mage::helper('ddg')->log(
