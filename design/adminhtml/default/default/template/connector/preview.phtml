@@ -37,7 +37,9 @@
     $j(document).ready(function () {
         var s = $j("#ddg-edc-preview");
         var pos = s.position();
+        $j("#connector_configuration_dynamic_content_style").attr("style", "");
         var max = $j(document).outerHeight() - $j("#connector_configuration_dynamic_content_style").outerHeight() - 250;
+        $j("#connector_configuration_dynamic_content_style").attr("style", "display: none;");
         $j(window).scroll(function () {
             var windowpos = $j(window).scrollTop();
             if (windowpos >= pos.top && windowpos < max) {
