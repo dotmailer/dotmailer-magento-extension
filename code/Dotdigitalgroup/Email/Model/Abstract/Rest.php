@@ -197,8 +197,7 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
                 //check for slow queries
                 if ($time > $limit) {
                     //log the slow queries
-                    Mage::helper('ddg')->log($message)
-                        ->rayLog($message);
+                    Mage::helper('ddg')->log($message);
                 }
             }
         }
@@ -500,8 +499,7 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
         if ( ! empty($this->curlError)) {
             //log curl error
             $message = 'CURL ERROR ' . $this->curlError;
-            Mage::helper('ddg')->log($message)
-                ->rayLog($message, 'apiconnector/rest.php', __LINE__);
+            Mage::helper('ddg')->log($message);
 
             return $this->curlError;
         }

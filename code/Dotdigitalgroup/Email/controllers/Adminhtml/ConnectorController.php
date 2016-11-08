@@ -166,7 +166,6 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
         } else {
             $message = 'Name ' . $name . ', type ' . $type . ' default ' . $default . 'access ' . $access;
             Mage::getSingleton('adminhtml/session')->addError('Datafield cannot be empty.');
-            Mage::helper('ddg')->rayLog($message);
         }
     }
 
