@@ -238,8 +238,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
                 . ', CONTACT IMPORT : ' . ' filename ' . $filename
                 . ' Username ' . $this->getApiUsername() . $result->message;
             $helper->log($message);
-            Mage::helper('ddg')->log($result)
-                ->rayLog($result->message);
+            Mage::helper('ddg')->log($result);
         }
 
         return $result;
@@ -271,8 +270,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         ) {
             $message = 'POST ADDRESS BOOK CONTACTS ' . $url . ', '
                 . $response->message;
-            Mage::helper('ddg')->log($message)
-                ->rayLog($response->message);
+            Mage::helper('ddg')->log($message);
         }
 
         return $response;
@@ -319,8 +317,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         ) {
             $message = 'GET CONTACTS IMPORT REPORT  . ' . $url . ' message : '
                 . $response->message;
-            Mage::helper('ddg')->log($message)
-                ->rayLog($response->message);
+            Mage::helper('ddg')->log($message);
         }
 
         return $response;
@@ -349,8 +346,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         ) {
             $message = 'GET CONTACT BY email : ' . $email . ' '
                 . $response->message;
-            Mage::helper('ddg')->log($message)
-                ->rayLog($response->message);
+            Mage::helper('ddg')->log($message);
         }
 
         return $response;
@@ -376,8 +372,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         ) {
             $message = 'GET ALL ADDRESS BOOKS : ' . $url . ', '
                 . $response->message;
-            Mage::helper('ddg')->log($message)
-                ->rayLog($response->message);
+            Mage::helper('ddg')->log($message);
         }
 
         return $response;
@@ -436,8 +431,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         ) {
             $message = 'Postaddressbooks ' . $response->message . ', url :'
                 . $url;
-            Mage::helper('ddg')->log($message)
-                ->rayLog($response->message);
+            Mage::helper('ddg')->log($message);
         }
 
         return $response;
@@ -463,8 +457,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         ) {
             $message = 'GET CAMPAIGNS ' . $response->message . ' api user : '
                 . $this->getApiUsername();
-            Mage::helper('ddg')->log($message)
-                ->rayLog($response->message);
+            Mage::helper('ddg')->log($message);
         }
 
         return $response;
@@ -513,8 +506,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         ) {
             $message = 'POST CREATE DATAFIELDS ' . $response->message;
             Mage::helper('ddg')->log($message)
-                ->log($data)
-                ->rayLog($response->message);
+                ->log($data);
         }
 
         return $response;
@@ -541,8 +533,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
             )
         ) {
             $message = 'DELETE DATA FIELD :' . $name . ' ' . $response->message;
-            Mage::helper('ddg')->log($message)
-                ->rayLog($response->message);
+            Mage::helper('ddg')->log($message);
         }
 
         return $response;
@@ -567,8 +558,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
             )
         ) {
             $message = 'GET ALL DATAFIELDS ' . $response->message;
-            Mage::helper('ddg')->log($message)
-                ->rayLog($response->message);
+            Mage::helper('ddg')->log($message);
         }
 
         return $response;
@@ -599,8 +589,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
             $message = 'ERROR : UPDATE SINGLE CONTACT : ' . $url . ' message : '
                 . $response->message;
             Mage::helper('ddg')->log($message)
-                ->log($data)
-                ->rayLog($response->message);
+                ->log($data);
         }
 
         return $response;
@@ -627,8 +616,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
             )
         ) {
             $message = 'DELETE CONTACT : ' . $url . ', ' . $response->message;
-            Mage::helper('ddg')->log($message)
-                ->rayLog($response->message);
+            Mage::helper('ddg')->log($message);
         }
 
         return $response;
@@ -673,8 +661,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
             $message = 'ERROR: UPDATE CONTACT DATAFIELD ' . $url . ' message : '
                 . $response->message;
             Mage::helper('ddg')->log($message)
-                ->log($data)
-                ->rayLog($response->message);
+                ->log($data);
         }
 
         return $response;
@@ -710,8 +697,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         ) {
             $message = 'SENDING CAMPAIGN ' . $response->message;
             Mage::helper('ddg')->log($message)
-                ->log($data)
-                ->rayLog($response->message);
+                ->log($data);
         }
 
         return $response;
@@ -754,8 +740,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
             )
         ) {
             $message = 'CREATE A NEW CONTACT : ' . $response->message;
-            Mage::helper('ddg')->log($message)
-                ->rayLog($response->message);
+            Mage::helper('ddg')->log($message);
         }
 
         return $response;
@@ -789,8 +774,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
             $message = 'GET CONTACTS SUPPRESSED SINSE : ' . $dateString
                 . ' select ' . $select . ' skip : ' . $skip . '   response : '
                 . $response->message;
-            Mage::helper('ddg')->log($message)
-                ->rayLog($response->message);
+            Mage::helper('ddg')->log($message);
         }
 
         return $response;
@@ -831,8 +815,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
             )
         ) {
             $message = ' SEND MULTI TRANSACTIONAL DATA ' . $response->message;
-            Mage::helper('ddg')->log($message)
-                ->rayLog($response->message);
+            Mage::helper('ddg')->log($message);
         }
 
         return $response;
@@ -881,8 +864,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
             $message = 'POST CONTACTS TRANSACTIONAL DATA  '
                 . $response->message;
             Mage::helper('ddg')->log($message)
-                ->log($apiData)
-                ->rayLog($response->message);
+                ->log($apiData);
         }
 
         return $response;
@@ -945,8 +927,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         ) {
             $message = 'GET ACCOUNT INFO for api user : '
                 . $this->getApiUsername() . ' ' . $response->message;
-            Mage::helper('ddg')->log($message)
-                ->rayLog($response->message);
+            Mage::helper('ddg')->log($message);
         }
 
         return $response;
@@ -978,8 +959,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         ) {
             $message = 'DELETE BULK ADDRESS BOOK CONTACTS ' . $response->message
                 . ' address book ' . $addressBookId;
-            Mage::helper('ddg')->log($message)
-                ->rayLog($response->message);
+            Mage::helper('ddg')->log($message);
         }
 
         return $response;
@@ -1013,8 +993,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
             $message = 'Resubscribe : ' . $url . ', message :'
                 . $response->message;
             Mage::helper('ddg')->log($message)
-                ->log($data)
-                ->rayLog($response->message);
+                ->log($data);
         }
 
         return $response;
@@ -1042,8 +1021,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         ) {
             $message = 'GET CampaignFromAddressList ' . $response->message
                 . ' api user : ' . $this->getApiUsername();
-            Mage::helper('ddg')->log($message)
-                ->rayLog($response->message);
+            Mage::helper('ddg')->log($message);
         }
 
         return $response;
@@ -1072,8 +1050,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
             )
         ) {
             $message = ' CREATE CAMPAIGN ' . $response->message;
-            Mage::helper('ddg')->log($message)
-                ->rayLog($response->message);
+            Mage::helper('ddg')->log($message);
         }
 
         return $response;
@@ -1098,8 +1075,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
             )
         ) {
             $message = 'Get programmes : ' . $response->message;
-            Mage::helper('ddg')->log($message)
-                ->rayLog($response->message);
+            Mage::helper('ddg')->log($message);
         }
 
         return $response;
@@ -1129,8 +1105,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         ) {
             $message = 'Post programs enrolments : ' . $response->message;
             Mage::helper('ddg')->log($message)
-                ->log($data)
-                ->rayLog($response->message);
+                ->log($data);
         }
 
         return $response;
@@ -1158,8 +1133,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
             )
         ) {
             $message = 'Get program by id  ' . $id . ', ' . $response->message;
-            Mage::helper('ddg')->log($message)
-                ->rayLog($response->message);
+            Mage::helper('ddg')->log($message);
         }
 
         return $response;
@@ -1189,8 +1163,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         ) {
             $message = 'Get Campaign Summary ' . $response->message
                 . '  ,url : ' . $url;
-            Mage::helper('ddg')->log($message)
-                ->rayLog($response->message);
+            Mage::helper('ddg')->log($message);
         }
 
         return $response;
@@ -1273,8 +1246,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         ) {
             $message = 'GET CONTACTS ADDRESS BOOKS contact: ' . $contactId
                 . $response->message;
-            Mage::helper('ddg')->log($message)
-                ->rayLog($response->message);
+            Mage::helper('ddg')->log($message);
         }
 
         return $response;
@@ -1301,8 +1273,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
             )
         ) {
             $message = 'GET API CONTACT LIST ' . $response->message;
-            Mage::helper('ddg')->log($message)
-                ->rayLog($response->message);
+            Mage::helper('ddg')->log($message);
         }
 
         return $response;
@@ -1330,8 +1301,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
             )
         ) {
             $message = 'GET API CONTACT LIST ' . $response->message;
-            Mage::helper('ddg')->log($message)
-                ->rayLog($response->message);
+            Mage::helper('ddg')->log($message);
         }
 
         return $response;
@@ -1373,8 +1343,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         ) {
             $message = ' SEND MULTI TRANSACTIONAL DATA TO ACCOUNT'
                 . $response->message;
-            Mage::helper('ddg')->log($message)
-                ->rayLog($response->message);
+            Mage::helper('ddg')->log($message);
         }
 
         return $response;
@@ -1397,8 +1366,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         ) {
             $message = 'GET CAMPAIGNS WITH ACTIVITY SINCE DATE '
                 . $response->message;
-            Mage::helper('ddg')->log($message)
-                ->rayLog($response->message);
+            Mage::helper('ddg')->log($message);
         }
 
         return $response;
@@ -1421,8 +1389,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         ) {
             $message = 'GET CAMPAIGN ACTIVITY BY CONTACT ID '
                 . $response->message;
-            Mage::helper('ddg')->log($message)
-                ->rayLog($response->message);
+            Mage::helper('ddg')->log($message);
         }
 
         return $response;
@@ -1450,8 +1417,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
             )
         ) {
             $message = 'GET CONTACTS IMPORT BY IMPORT ID ' . $response->message;
-            Mage::helper('ddg')->log($message)
-                ->rayLog($response->message);
+            Mage::helper('ddg')->log($message);
         }
 
         return $response;
@@ -1481,8 +1447,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         ) {
             $message = 'GET CONTACTS TRANSACTIONAL DATA IMPORT BY IMPORT ID '
                 . $response->message;
-            Mage::helper('ddg')->log($message)
-                ->rayLog($response->message);
+            Mage::helper('ddg')->log($message);
         }
 
         return $response;
@@ -1516,8 +1481,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
             ) {
                 $message = 'GET CONTACT IMPORT REPORT FAULTS: '
                     . $response->message;
-                Mage::helper('ddg')->log($message)
-                    ->rayLog($response->message);
+                Mage::helper('ddg')->log($message);
             }
 
             return false;
@@ -1547,8 +1511,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         ) {
             $message = 'GETS THE SEND STATUS USING SEND ID: '
                 . $response->message;
-            Mage::helper('ddg')->log($message)
-                ->rayLog($response->message);
+            Mage::helper('ddg')->log($message);
         }
 
         return $response;

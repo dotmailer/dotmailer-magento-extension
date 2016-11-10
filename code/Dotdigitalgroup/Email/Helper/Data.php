@@ -44,9 +44,6 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_CONTENT_PASSCODE
             )
         ) {
-            $this->getRaygunClient()->Send(
-                'Authentication failed with code :' . $authRequest
-            );
 
             return false;
         }
@@ -565,87 +562,6 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * Create new raygun client.
-     *
-     * @return bool|\Raygun4php\RaygunClient
-     */
-    public function getRaygunClient()
-    {
-        $code = Mage::getstoreConfig(
-            Dotdigitalgroup_Email_Helper_Config::XML_PATH_RAYGUN_APPLICATION_CODE
-        );
-
-        if ($this->raygunEnabled()) {
-            //use async mode for sending.
-            $async = Mage::getStoreConfigFlag(
-                Dotdigitalgroup_Email_Helper_Config::XML_PATH_RAYGUN_APPLICATION_ASYNC
-            );
-            require_once Mage::getBaseDir('lib') . DS . 'Raygun4php' . DS
-                . 'RaygunClient.php';
-
-            return new Raygun4php\RaygunClient($code, $async);
-        }
-
-        return false;
-    }
-
-    /**
-     * Raygun logs.
-     *
-     * @param        $message
-     * @param string $filename
-     * @param int $line
-     * @param array $tags
-     *
-     * @return int|null
-     */
-    public function rayLog(
-        $message,
-        $filename = 'apiconnector/client.php',
-        $line = 1,
-        $tags = array()
-    ) {
-        //check if raygun has code enabled
-        if (!$this->raygunEnabled()) {
-            return;
-        }
-
-        $baseUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);
-
-        if (empty($tags)) {
-            $tags = array(
-                $baseUrl,
-                Mage::getVersion()
-            );
-        }
-
-        $client = $this->getRaygunClient();
-        //user, firstname, lastname, email, annonim, uuid
-        $client->SetUser($baseUrl, null, null, $this->getApiUsername());
-        $client->SetVersion($this->getConnectorVersion());
-        $client->SendError(100, $message, $filename, $line, $tags);
-    }
-
-
-    /**
-     * check for raygun application and if enabled.
-     *
-     * @param int $websiteId
-     *
-     * @return mixed
-     * @throws Mage_Core_Exception
-     */
-    public function raygunEnabled($websiteId = 0)
-    {
-        $website = Mage::app()->getWebsite($websiteId);
-
-        return (bool)$website->getConfig(
-            Dotdigitalgroup_Email_Helper_Config::XML_PATH_RAYGUN_APPLICATION_CODE
-        );
-
-    }
-
-    /**
      * Generate the baseurl for the default store
      * dynamic content will be displayed
      *
@@ -849,78 +765,6 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
             //update datafields for conctact
             $client->updateContactDatafieldsByEmail($email, $data);
         }
-    }
-
-    /**
-     * Remove code and disable Raygun.
-     */
-    public function disableRaygun()
-    {
-        $config = Mage::getModel('core/config');
-        $config->saveConfig(
-            Dotdigitalgroup_Email_Helper_Config::XML_PATH_RAYGUN_APPLICATION_CODE,
-            ''
-        );
-        Mage::getConfig()->cleanCache();
-    }
-
-    public function enableRaygunCode()
-    {
-        $curl = new Varien_Http_Adapter_Curl();
-        $curl->setConfig(
-            array(
-                'timeout' => 2
-            )
-        );
-        $curl->write(
-            Zend_Http_Client::GET,
-            Dotdigitalgroup_Email_Helper_Config::RAYGUN_API_CODE_URL, '1.0'
-        );
-        $data = $curl->read();
-
-        if ($data === false) {
-            return false;
-        }
-        $data = preg_split('/^\r?$/m', $data, 2);
-        $data = trim($data[1]);
-        $curl->close();
-
-        $xml = new SimpleXMLElement($data);
-        $raygunCode = $xml->code;
-
-        //not found
-        if (!$raygunCode) {
-            return;
-        }
-
-        $config = Mage::getModel('core/config');
-        $config->saveConfig(
-            Dotdigitalgroup_Email_Helper_Config::XML_PATH_RAYGUN_APPLICATION_CODE,
-            $raygunCode
-        );
-    }
-
-    /**
-     * Send the exception to raygun.
-     *
-     * @param $e Exception
-     */
-    public function sendRaygunException($e)
-    {
-        if (!$this->raygunEnabled()) {
-            return;
-        }
-        $baseUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);
-        $tags = array(
-            $baseUrl,
-            Mage::getVersion()
-        );
-
-        $client = $this->getRaygunClient();
-        //user, firstname, lastname, email, annonim, uuid
-        $client->SetUser($baseUrl, null, null, $this->getApiUsername());
-        $client->SetVersion($this->getConnectorVersion());
-        $client->SendException($e, $tags);
     }
 
     /**

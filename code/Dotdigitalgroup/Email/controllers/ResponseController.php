@@ -29,12 +29,20 @@ class Dotdigitalgroup_Email_ResponseController
         }
     }
 
+    /**
+     * @param      $output
+     * @param bool $flag
+     *
+     * @throws Exception
+     */
     protected function checkContentNotEmpty($output, $flag = true)
     {
         try {
             if (strlen($output) < 3 && $flag == false) {
                 $this->sendResponse();
-            } elseif ($flag && strpos($output, '<table') === false) {
+
+            } elseif ($flag && strpos($output, '<table') !== false) {
+
                 $this->sendResponse();
             }
         } catch (Exception $e) {

@@ -165,7 +165,7 @@ class Dotdigitalgroup_Email_Model_Cron
         $result         = $helper->deleteDir($archivedFolder);
         $message .= ' Deleting archived folder result : ' . $result;
         $helper->log($message);
-        Mage::helper('ddg')->rayLog($message, 'model/cron.php');
+        Mage::helper('ddg');
 
         return $message;
     }

@@ -156,12 +156,7 @@ class Dotdigitalgroup_Email_EmailController
 
             $response = json_decode(curl_exec($ch));
             if ($response === false) {
-                Mage::helper('ddg')->log("Error Number: " . curl_errno($ch))
-                    ->rayLog(
-                        'Automaion studio number not found : ' . serialize(
-                            $response
-                        )
-                    );
+                Mage::helper('ddg')->log("Error Number: " . curl_errno($ch));
             }
 
             //save the refresh token to the admin user
