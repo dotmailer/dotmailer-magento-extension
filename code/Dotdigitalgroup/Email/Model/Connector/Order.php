@@ -32,7 +32,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
      */
     public $delivery_address = array();
     /**
-     * @var string
+     * @var array
      */
     public $billing_address = array();
     /**
