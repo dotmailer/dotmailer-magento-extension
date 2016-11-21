@@ -25,6 +25,6 @@ class Dotdigitalgroup_Email_Model_Customer extends Mage_Customer_Model_Customer
             return;
         }
 
-        parent::sendNewAccountEmail($type, $backUrl, $storeId);
+        parent::sendNewAccountEmail($type, $backUrl, $storeId, $password);
     }
 }
