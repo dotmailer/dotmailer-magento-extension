@@ -9,11 +9,12 @@ class Dotdigitalgroup_Email_Model_Customer extends Mage_Customer_Model_Customer
      * @param string $type
      * @param string $backUrl
      * @param string $storeId
+     * @param string $password
      *
      * @return Mage_Customer_Model_Customer|void
      */
     public function sendNewAccountEmail($type = 'registered', $backUrl = '',
-        $storeId = '0'
+        $storeId = '0', , $password = NULL
     ) 
     {
         if (Mage::getStoreConfig(
