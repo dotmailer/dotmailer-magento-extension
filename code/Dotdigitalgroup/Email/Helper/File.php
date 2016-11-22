@@ -181,12 +181,18 @@ class Dotdigitalgroup_Email_Helper_File
             array_map($class_func, glob($path . '/*')) == rmdir($path);
     }
 
+    /**
+     * Get website datafields for subscriber
+     *
+     * @param $website
+     * @return array|mixed
+     */
     public function getWebsiteSalesDataFields($website)
     {
         $subscriberDataFileds = array(
             'website_name' => '',
             'store_name' => '',
-            'number_od_orders' => '',
+            'number_of_orders' => '',
             'average_order_value' => '',
             'total_spend' => '',
             'last_order_date' => '',
