@@ -28,13 +28,13 @@ class Dotdigitalgroup_Email_Model_Connector_Order
      */
     public $purchase_date;
     /**
-     * @var string
+     * @var array
      */
-    public $delivery_address;
+    public $delivery_address = array();
     /**
-     * @var string
+     * @var array
      */
-    public $billing_address;
+    public $billing_address = array();
     /**
      * @var array
      */
@@ -76,7 +76,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
     /**
      * @var array
      */
-    public $custom;
+    public $custom = array();
 
     /**
      * @var string
