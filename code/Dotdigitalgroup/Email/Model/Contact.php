@@ -107,10 +107,11 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
      *
      * @param     $website
      * @param int $limit
+     * @param boolean $isCustomerCheck
      *
      * @return Dotdigitalgroup_Email_Model_Resource_Contact_Collection
      */
-    public function getSubscribersToImport($website, $limit = 1000)
+    public function getSubscribersToImport($website, $limit = 1000, $isCustomerCheck = true)
     {
 
         $storeIds = $website->getStoreIds();
@@ -119,7 +120,21 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
             ->addFieldToFilter('subscriber_imported', array('null' => true))
             ->addFieldToFilter('store_id', array('in' => $storeIds));
 
+        if ($isCustomerCheck) {
+            $collection->addFieldToFilter('customer_id', array('neq' => 0));
+        } else {
+            $collection->addFieldToFilter('customer_id', array('eq' => 0));
+        }
+
         $collection->getSelect()->limit($limit);
+
+        return $collection;
+    }
+
+    public function getSubscribersToImportFromEmails($emails)
+    {
+        $collection = $this->getCollection()
+            ->addFieldToFilter('email', array('in' => $emails));
 
         return $collection;
     }
