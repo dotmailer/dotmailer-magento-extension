@@ -92,10 +92,10 @@ class Dotdigitalgroup_Email_Model_Connector_Order
      */
     public function setOrderData(Mage_Sales_Model_Order $orderData)
     {
-        $this->id         = $orderData->getIncrementId();
-        $this->quote_id   = $orderData->getQuoteId();
-        $this->email      = $orderData->getCustomerEmail();
-        $this->store_name = $orderData->getStoreName();
+        $this->id         = (string)$orderData->getIncrementId();
+        $this->quote_id   = (string)$orderData->getQuoteId();
+        $this->email      = (string)$orderData->getCustomerEmail();
+        $this->store_name = (string)$orderData->getStoreName();
 
         $created_at = new Zend_Date(
             $orderData->getCreatedAt(), Zend_Date::ISO_8601
@@ -111,7 +111,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
         if ($payment = $orderData->getPayment()) {
             $this->payment = $payment->getMethodInstance()->getTitle();
         }
-        $this->couponCode = $orderData->getCouponCode();
+        $this->couponCode = (string)$orderData->getCouponCode();
 
         //set order custom attributes
         $this->_setOrderCustomAttributes($orderData);
@@ -132,7 +132,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
             $orderData->getData('grand_total') - $orderData->getTotalRefunded()
         );
         $this->order_total      = (float)number_format($orderTotal, 2, '.', '');
-        $this->order_status     = $orderData->getStatus();
+        $this->order_status     = (string)$orderData->getStatus();
     }
 
     /**
