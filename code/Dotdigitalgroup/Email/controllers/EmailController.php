@@ -46,9 +46,9 @@ class Dotdigitalgroup_Email_EmailController
                 'template' => 'connector/coupon.phtml'
             )
         );
-        $this->checkContentNotEmpty($coupon->toHtml(), false);
         $this->getLayout()->getBlock('content')->append($coupon);
         $this->renderLayout();
+        $this->checkContentNotEmpty($this->getLayout()->getOutput(), false);
     }
 
     /**
