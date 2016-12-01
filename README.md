@@ -32,6 +32,11 @@ Compatibility
 
 # Upgrade notice
 
+# V6.2.3
+###### Bug fixes
+ - Double coupon codes generated.
+ - Strict data type for orders.
+
 # V6.2.1
 ###### Improvements
  - Removed Raygun integration.
