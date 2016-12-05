@@ -347,4 +347,19 @@ class Dotdigitalgroup_Email_Model_Resource_Contact
             Mage::logException($e);
         }
     }
+
+    /**
+     * Update subscriber imported
+     *
+     * @param $subscribers
+     */
+    public function updateSubscribers($subscribers)
+    {
+        $write = $this->_getWriteAdapter();
+        $ids = implode(', ', $subscribers);
+        $write->update(
+            $this->getMainTable(), array('subscriber_imported' => 1),
+            "email_contact_id IN ($ids)"
+        );
+    }
 }

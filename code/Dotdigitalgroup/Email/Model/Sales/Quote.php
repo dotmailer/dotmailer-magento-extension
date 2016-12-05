@@ -344,6 +344,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
                 'main_table.customer_id', array('notnull' => true)
             );
         }
+        $salesCollection->addFieldToFilter('main_table.updated_at', $updated);
 
         //process rules on collection
         $ruleModel       = Mage::getModel('ddg_automation/rules');
@@ -351,7 +352,6 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
             $salesCollection, Dotdigitalgroup_Email_Model_Rules::ABANDONED,
             Mage::app()->getStore($storeId)->getWebsiteId()
         );
-        $salesCollection->addFieldToFilter('main_table.updated_at', $updated);
 
         return $salesCollection;
     }
