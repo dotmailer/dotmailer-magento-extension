@@ -43,6 +43,8 @@ class Dotdigitalgroup_Email_Model_Sync_Contact_Update extends Dotdigitalgroup_Em
                     {
                         $apiContact = $this->_client->getContactByEmail($email);
                         $result = $this->_client->postContactsResubscribe( $apiContact );
+                    } else {
+                        $result = new StdClass;
                     }
                 }elseif ($item->getImportMode() == Dotdigitalgroup_Email_Model_Importer::MODE_SUBSCRIBER_UPDATE){
                     $email = $importData['email'];
