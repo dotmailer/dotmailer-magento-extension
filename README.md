@@ -32,6 +32,10 @@ Compatibility
 
 # Upgrade notice
 
+# V6.2.4
+###### Bug fixes
+ - EDC table content check fix.
+
 # V6.2.3
 ###### Bug fixes
  - Double coupon codes generated.
