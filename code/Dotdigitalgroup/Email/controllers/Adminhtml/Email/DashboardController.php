@@ -9,16 +9,21 @@ class Dotdigitalgroup_Email_Adminhtml_Email_DashboardController
      */
     public function postDispatch()
     {
+        $currentWebsiteId = Mage::app()->getRequest()->getParam('website');
+
         //check the api valid for any of the website
         foreach (Mage::app()->getWebsites(true) as $website) {
 
-            $passed = Mage::helper('ddg')->isEnabled($website);
+            if($currentWebsiteId == $website->getId()) {
 
-            if ( ! $passed) {
-                $this->_redirect(
-                    '*/system_config/edit',
-                    array('section' => 'connector_api_credentials')
-                );
+                $passed = Mage::helper('ddg')->isEnabled($website);
+
+                if ( ! $passed) {
+                    $this->_redirect(
+                        '*/system_config/edit',
+                        array('section' => 'connector_api_credentials', 'website' => $website->getCode())
+                    );
+                }
             }
         }
 
