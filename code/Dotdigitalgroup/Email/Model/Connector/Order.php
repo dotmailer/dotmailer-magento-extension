@@ -187,6 +187,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
      */
     protected function _setOrderCustomAttributes($orderData)
     {
+    	$this->custom = array();
 
         $helper           = Mage::helper('ddg');
         $website          = Mage::app()->getStore($orderData->getStore())
@@ -197,7 +198,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
         if ($customAttributes) {
             $fields = Mage::getResourceModel('ddg_automation/order')
                 ->getOrderTableDescription();
-            $this->custom = array();
+            
             foreach ($customAttributes as $customAttribute) {
                 if (isset($fields[$customAttribute])) {
                     $field = $fields[$customAttribute];
