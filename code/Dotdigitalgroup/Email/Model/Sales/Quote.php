@@ -152,8 +152,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
                                     ->setWebsiteId($websiteId)
                                     ->setSendStatus(
                                         Dotdigitalgroup_Email_Model_Campaign::PENDING
-                                    )
-                                    ->save();
+                                    )->save();
                             }
                         }
                     }

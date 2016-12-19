@@ -49,8 +49,7 @@ class Dotdigitalgroup_Email_Model_Resource_Campaign
             $num  = $conn->update(
                 $this->getMainTable(),
                 array(
-                    '
-                    send_status' => Dotdigitalgroup_Email_Model_Campaign::PENDING
+                    'send_status' => Dotdigitalgroup_Email_Model_Campaign::PENDING
                 ),
                 array('id IN(?)' => $campaignIds)
             );
