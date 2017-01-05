@@ -271,13 +271,12 @@ class Dotdigitalgroup_Email_EmailController
         $currentQuote = Mage::getSingleton('checkout/session')->getQuote();
         $currentItemIds = array();
 
-        if ($currentQuote->getAllVisibleItems()) {
+        if ($currentQuote->hasItems()) {
             $currentSessionItems = $currentQuote->getAllItems();
             foreach ($currentSessionItems as $currentSessionItem) {
                 $currentItemIds[] = $currentSessionItem->getId();
             }
-        }
-        if ($this->_quote->getAllVisibleItems()) {
+
             foreach ($this->_quote->getAllItems() as $item) {
                 if (!in_array($item->getId(), $currentItemIds)) {
                     $currentQuote->addItem($item);
