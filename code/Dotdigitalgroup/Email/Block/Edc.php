@@ -185,6 +185,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
         $productCollection = Mage::getModel('catalog/product')->getCollection()
             ->addPriceData()
             ->addAttributeToSelect('*')
+            ->addAttributeToSelect('VISIBILITY', array('neq' => Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE))
             ->addFieldToFilter('entity_id', array('in' => $productIds));
         //show products only if is salable
         foreach ($productCollection as $product) {
@@ -216,6 +217,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
         )
             ->addPriceData()
             ->addAttributeToFilter('entity_id', array('in' => $productIds))
+            ->addAttributeToSelect('VISIBILITY', array('neq' => Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE))
             ->addAttributeToSelect(
                 array('product_url', 'name', 'store_id', 'small_image', 'price')
             )
@@ -248,6 +250,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
         $productCollection = Mage::getResourceModel(
             'reports/product_collection'
         )
+            ->addAttributeToSelect('VISIBILITY', array('neq' => Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE))
             ->addAttributeToSelect(
                 array('product_url', 'name', 'store_id', 'small_image', 'price')
             )
@@ -333,6 +336,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
         )
             ->addPriceData()
             ->addIdFilter($productIds)
+            ->addAttributeToSelect('VISIBILITY', array('neq' => Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE))
             ->addAttributeToSelect(
                 array('product_url', 'name', 'store_id', 'small_image', 'price')
             );
