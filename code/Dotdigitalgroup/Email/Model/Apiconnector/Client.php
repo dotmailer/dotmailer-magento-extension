@@ -826,17 +826,19 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
      *
      * @param        $data
      * @param string $collectionName
+     * @param boolean $catalogCheck = false
      *
      * @return null
      * @throws Exception
      */
     public function postContactsTransactionalData($data,
-        $collectionName = 'Orders'
+        $collectionName = 'Orders',
+        $catalogCheck = false
     ) {
         $order = $this->getContactsTransactionalDataByKey(
             $collectionName, $data->id
         );
-        if (isset($order->message)
+        if (!isset($order->key) || isset($order->message)
             && $order->message == self::API_ERROR_TRANS_NOT_EXISTS
         ) {
             $url = $this->_apiEndpoint . self::REST_TRANSACTIONAL_DATA
@@ -845,11 +847,19 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
             $url = $this->_apiEndpoint . self::REST_TRANSACTIONAL_DATA
                 . $collectionName . '/' . $order->key;
         }
-        $apiData = array(
-            'Key'               => $data->id,
-            'ContactIdentifier' => $data->email,
-            'Json'              => json_encode($data->expose())
-        );
+        if ($catalogCheck) {
+            $apiData = array(
+                'Key' => $data->id,
+                'ContactIdentifier' => 'account',
+                'Json' => json_encode($data->expose()),
+            );
+        } else {
+            $apiData = array(
+                'Key' => $data->id,
+                'ContactIdentifier' => $data->email,
+                'Json' => json_encode($data->expose()),
+            );
+        }
 
         $this->setUrl($url)
             ->setVerb('POST')

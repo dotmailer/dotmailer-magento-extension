@@ -207,21 +207,22 @@ class Dotdigitalgroup_Email_EmailController
         );
 
         //if customer is logged in then redirect to cart
-        if ($customerSession->isLoggedIn() && $customerSession->getCustomerId() == $this->_quote->getCustomerId()) {
+        if ($customerSession->isLoggedIn()
+            && $customerSession->getCustomerId() == $this->_quote->getCustomerId()
+        ) {
             //check session quote for missing items and add
             $this->_checkMissingAndAdd();
 
             if ($configCartUrl) {
                 $url = $configCartUrl;
             } else {
-                $url = $customerSession->getCustomer()->getStore()->getUrl(
-                    'checkout/cart'
-                );
+                $url = $this->_quote->getStore()->getUrl('checkout/cart');
             }
 
             $this->_redirectUrl($url);
         } else {
-            //set after auth url. customer will be redirected to cart after successful login
+            //set after auth url.
+            // customer will be redirected to cart after successful login
             if ($configCartUrl) {
                 $cartUrl = $configCartUrl;
             } else {
@@ -270,13 +271,12 @@ class Dotdigitalgroup_Email_EmailController
         $currentQuote = Mage::getSingleton('checkout/session')->getQuote();
         $currentItemIds = array();
 
-        if ($currentQuote->getAllVisibleItems()) {
+        if ($currentQuote->hasItems()) {
             $currentSessionItems = $currentQuote->getAllItems();
             foreach ($currentSessionItems as $currentSessionItem) {
                 $currentItemIds[] = $currentSessionItem->getId();
             }
-        }
-        if ($this->_quote->getAllVisibleItems()) {
+
             foreach ($this->_quote->getAllItems() as $item) {
                 if (!in_array($item->getId(), $currentItemIds)) {
                     $currentQuote->addItem($item);

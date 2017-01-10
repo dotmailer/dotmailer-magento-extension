@@ -980,10 +980,24 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      *
      * @return string
      */
-    public function getLogFileContent($filename = 'connector_api.log')
+    public function getLogFileContent($filename = 'connector')
     {
+        switch ($filename) {
+            case "connector":
+                $filename = 'connector_api.log';
+                break;
+            case "system":
+                $filename = $this->getWebsiteConfig('dev/log/file');
+                break;
+            case "exception":
+                $filename = $this->getWebsiteConfig('dev/log/exception_file');
+                break;
+            default:
+                return "Log file is not valid. Log file name is " . $filename;
+        }
+
         $pathLogfile = Mage::getBaseDir('var') . DS . 'log' . DS
-            . $filename;;
+            . $filename;
         //tail the length file content
         $lengthBefore = 500000;
 

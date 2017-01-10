@@ -150,7 +150,9 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
                                     ->setCampaignId($campaignId)
                                     ->setStoreId($storeId)
                                     ->setWebsiteId($websiteId)
-                                    ->setIsSent(null)->save();
+                                    ->setSendStatus(
+                                        Dotdigitalgroup_Email_Model_Campaign::PENDING
+                                    )->save();
                             }
                         }
                     }
@@ -244,7 +246,9 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
                                     ->setCampaignId($guestCampaignId)
                                     ->setStoreId($storeId)
                                     ->setWebsiteId($websiteId)
-                                    ->setIsSent(null)->save();
+                                    ->setSendStatus(
+                                        Dotdigitalgroup_Email_Model_Campaign::PENDING
+                                    )->save();
                             }
                         }
                     }

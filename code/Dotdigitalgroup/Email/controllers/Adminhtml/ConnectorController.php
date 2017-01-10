@@ -388,4 +388,30 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
     {
         return Mage::getSingleton('admin/session')->isAllowed('system/config/connector_developer_settings');
     }
+
+    public function logAction()
+    {
+        $logFile = $this->getRequest()->getParam('log');
+        $header = 'Marketing Automation Logs';
+        switch ($logFile) {
+            case "connector":
+                $header = 'Marketing Automation Logs';
+                break;
+            case "system":
+                $header = 'Magento System Log';
+                break;
+            case "exception":
+                $header = 'Magento Exception Log';
+                break;
+        }
+        $response = array(
+            'content' => nl2br(Mage::helper('core')->escapeHtml(
+                Mage::helper('ddg')->getLogFileContent($logFile))
+            ),
+            'header' => $header
+        );
+        $this->getResponse()->clearHeaders()->setHeader(
+            'Content-Type', 'application/json'
+        )->setBody(Mage::helper('core')->jsonEncode($response));
+    }
 }
