@@ -25,21 +25,34 @@ class Dotdigitalgroup_Email_Model_Resource_Order
     }
 
     /**
-     * Reset the email order for reimport.
+     * Reset the email order for re-import.
      *
+     * @param null $from
+     * @param null $to
      * @return int
      */
-    public function resetOrders()
+    public function resetOrders($from = null, $to = null)
     {
         try {
             $conn = $this->_getWriteAdapter();
+            if ($from && $to) {
+                $where = array(
+                    'updated_at >= ?' => $from . ' 00:00:00',
+                    'updated_at <= ?' => $to . ' 23:59:59',
+                    'email_imported is ?' => new Zend_Db_Expr('not null')
+                );
+            } else {
+                $where = $conn->quoteInto(
+                    'email_imported is ?', new Zend_Db_Expr('not null')
+                );
+            }
             $num  = $conn->update(
                 $this->getMainTable(),
-                array('email_imported' => new Zend_Db_Expr('null'),
-                      'modified'       => new Zend_Db_Expr('null')),
-                $conn->quoteInto(
-                    'email_imported is ?', new Zend_Db_Expr('not null')
-                )
+                array(
+                    'email_imported' => new Zend_Db_Expr('null'),
+                    'modified' => new Zend_Db_Expr('null')
+                ),
+                $where
             );
 
             return $num;

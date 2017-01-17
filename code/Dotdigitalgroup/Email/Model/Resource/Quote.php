@@ -27,16 +27,32 @@ class Dotdigitalgroup_Email_Model_Resource_Quote
     /**
      * Reset the email quote for re-import.
      *
+     * @param null $from
+     * @param null $to
      * @return int
      */
-    public function resetQuotes()
+    public function resetQuotes($from = null, $to = null)
     {
         $conn = $this->_getWriteAdapter();
         try {
+            if ($from && $to) {
+                $where = array(
+                    'updated_at >= ?' => $from . ' 00:00:00',
+                    'updated_at <= ?' => $to . ' 23:59:59',
+                    'imported is ?' => new Zend_Db_Expr('not null')
+                );
+            } else {
+                $where = $conn->quoteInto(
+                    'imported is ?', new Zend_Db_Expr('not null')
+                );
+            }
             $num = $conn->update(
                 $this->getMainTable(),
-                array('imported' => new Zend_Db_Expr('null'),
-                      'modified' => new Zend_Db_Expr('null'))
+                array(
+                    'imported' => new Zend_Db_Expr('null'),
+                    'modified' => new Zend_Db_Expr('null')
+                ),
+                $where
             );
 
             return $num;

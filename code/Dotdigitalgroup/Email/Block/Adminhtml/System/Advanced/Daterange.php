@@ -6,7 +6,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Advanced_Daterange
     protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element)
     {
         $date = new Varien_Data_Form_Element_Date;
-        $format = Mage::app()->getLocale()->getDateFormat(Mage_Core_Model_Locale::FORMAT_TYPE_SHORT);
+        $format = 'y-M-d';
         $ranges = array('from', 'to');
         $dateElements = '';
 
@@ -19,7 +19,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Advanced_Daterange
             $range = ucfirst($range);
             $date->setData($data);
             $date->setValue($element->getValue(), $format);
-            $date->setFormat(Mage::app()->getLocale()->getDateFormat(Mage_Core_Model_Locale::FORMAT_TYPE_SHORT));
+            $date->setFormat($format);
             $date->setForm($element->getForm());
             $dateElements .=
                 "<div style='width: 200px; margin-bottom: 2px;'>" .
@@ -34,26 +34,19 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Advanced_Daterange
                 j(document).ready(function() {
                     
                     function updateUrlParameter(uri, key, value) {
-                        // remove the hash part before operating on the uri
-                        var i = uri.indexOf('#');
-                        var hash = i === -1 ? ''  : uri.substr(i);
-                             uri = i === -1 ? uri : uri.substr(0, i);
-                    
                         var re = new RegExp('([?&])' + key + '=.*?(&|$)', 'i');
                         var separator = uri.indexOf('?') !== -1 ? '&' : '?';
                         if (uri.match(re)) {
-                            uri = uri.replace(re, '$1' + key + '=' + value + '$2');
-                        } else {
-                            uri = uri + separator + key + '=' + value;
+                            return uri.replace(re, '$1' + key + '=' + value + '$2');
                         }
-                        return uri + hash; 
+                        else {
+                            return uri + separator + key + '=' + value;
+                        }
                     }
                     
                     var elmToObserve = ['refresh_data_from', 'refresh_data_to'];
                     var elmToChange = 
                         [
-                            '#connector_developer_settings_sync_settings_reimport_customers',
-                            '#connector_developer_settings_sync_settings_reimport_subscribers',
                             '#connector_developer_settings_sync_settings_reimport_orders', 
                             '#connector_developer_settings_sync_settings_reimport_quotes', 
                             '#connector_developer_settings_sync_settings_reimport_reviews', 
@@ -61,6 +54,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Advanced_Daterange
                             '#connector_developer_settings_sync_settings_reimport_catalog'
                         ];
                     j.each(elmToObserve, function( key, value ) {
+                      j('#' + value).prop('disabled', true);
                       j('#' + value).change(function() {
                           j.each(elmToChange, function( k, v ) {
                               var str = j(v).attr('onclick');

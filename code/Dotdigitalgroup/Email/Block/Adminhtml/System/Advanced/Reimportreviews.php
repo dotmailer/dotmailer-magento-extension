@@ -14,11 +14,21 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Advanced_Reimportreviews
 
     protected function _getAddRowButtonHtml($title)
     {
-        $url = $this->getUrl("*/connector/resetreviews");
+        $url = $this->getUrl(
+            "*/connector/resetreviews",
+            array(
+                '_query' => array(
+                    'refresh_data_from' => '',
+                    'refresh_data_to' => '',
+                    'tmp' => ''
+                )
+            )
+        );
 
         return $this->getLayout()->createBlock('adminhtml/widget_button')
             ->setType('button')
             ->setLabel($this->__($title))
+            ->setId($this->getElement()->getId())
             ->setOnClick("window.location.href='" . $url . "'")
             ->toHtml();
     }
