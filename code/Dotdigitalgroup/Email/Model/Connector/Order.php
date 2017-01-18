@@ -56,7 +56,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
      *
      * @var string
      */
-    public $payment;
+    public $payment = '';
     /**
      * @var string
      */
@@ -109,7 +109,9 @@ class Dotdigitalgroup_Email_Model_Connector_Order
         $this->currency        = $orderData->getStoreCurrencyCode();
 
         if ($payment = $orderData->getPayment()) {
-            $this->payment = $payment->getMethodInstance()->getTitle();
+            if ($payment->getMethod()) {
+                $this->payment = $payment->getMethodInstance()->getTitle();
+            }
         }
         $this->couponCode = $orderData->getCouponCode();
 
