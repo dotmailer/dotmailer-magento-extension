@@ -47,7 +47,7 @@ class Dotdigitalgroup_Email_Model_Resource_Coupon extends Mage_SalesRule_Model_R
             $this->_getWriteAdapter()->update(
                 $this->getTable('salesrule/coupon'),
                 $dotmailerUpdateArray,
-                array('rule_id = ?' => $rule->getId(), 'generated_by_dotmailer is 1')
+                array('rule_id = ?' => $rule->getId(), 'generated_by_dotmailer = 1')
             );
         }
 
