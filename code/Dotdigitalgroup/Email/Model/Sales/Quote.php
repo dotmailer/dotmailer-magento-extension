@@ -105,6 +105,10 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
                             $email     = $quote->getCustomerEmail();
                             $websiteId = $store->getWebsiteId();
                             $quoteId   = $quote->getId();
+                            // update last quote id for the contact
+                            Mage::helper('ddg')->updateLastQuoteId(
+                                $quoteId, $email, $websiteId
+                            );
 
                             // update abandoned product name for contact
                             $items             = $quote->getAllItems();
@@ -196,6 +200,10 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
                             $email     = $quote->getCustomerEmail();
                             $websiteId = $store->getWebsiteId();
                             $quoteId   = $quote->getId();
+                            // update last quote id for the contact
+                            Mage::helper('ddg')->updateLastQuoteId(
+                                $quoteId, $email, $websiteId
+                            );
 
                             // update abandoned product name for contact
                             $items             = $quote->getAllItems();

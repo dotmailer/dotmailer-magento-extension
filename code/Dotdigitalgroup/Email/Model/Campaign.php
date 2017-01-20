@@ -172,13 +172,6 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
                                         $email, $data
                                     );
                                 }
-                            } elseif (strpos($campaign->getEventName(), 'Abandoned Cart') !== false) {
-                                if ($quoteId = $campaign->getQuoteId()) {
-                                    // update last quote id for the contacts
-                                    Mage::helper('ddg')->updateLastQuoteId(
-                                        $quoteId, $email, $websiteId
-                                    );
-                                }
                             }
                             $campaignsToSend[$campaignId]['contacts'][] = $contactId;
                             $campaignsToSend[$campaignId]['ids'][] = $campaign->getId();
