@@ -1011,7 +1011,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
 
         $contents = fread($handle, filesize($pathLogfile));
 
-        if (!$contents) {
+        if ($contents === false) {
             return "Log file is not readable or does not exist at this moment. File path is "
             . $pathLogfile;
         }
