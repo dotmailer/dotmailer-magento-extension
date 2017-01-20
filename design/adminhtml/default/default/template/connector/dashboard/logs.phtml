@@ -2,8 +2,10 @@
 	<label style="font-weight: bold" for="connector-log-selector">Select Log File:</label>
 	<select id="connector-log-selector" style="width: 20em">
 		<option value="connector">Marketing Automation Log</option>
-		<option value="system">Magento System Log</option>
-		<option value="exception">Magento Exception Log</option>
+        <?php if (Mage::helper('ddg')->getWebsiteConfig('dev/log/active')) : ?>
+            <option value="system">Magento System Log</option>
+            <option value="exception">Magento Exception Log</option>
+        <?php endif; ?>
 	</select>
     <button id="connector-log-reloader" style="margin-left: 5px;">
         <span>Reload</span>
