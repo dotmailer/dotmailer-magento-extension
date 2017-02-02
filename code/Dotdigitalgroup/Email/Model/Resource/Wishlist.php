@@ -16,16 +16,32 @@ class Dotdigitalgroup_Email_Model_Resource_Wishlist
     /**
      * Reset the email reviews for re-import.
      *
+     * @param null $from
+     * @param null $to
      * @return int
      */
-    public function reset()
+    public function reset($from = null, $to = null)
     {
         $conn = $this->_getWriteAdapter();
         try {
+            if ($from && $to) {
+                $where = array(
+                    'created_at >= ?' => $from . ' 00:00:00',
+                    'created_at <= ?' => $to . ' 23:59:59',
+                    'wishlist_imported is ?' => new Zend_Db_Expr('not null')
+                );
+            } else {
+                $where = $conn->quoteInto(
+                    'wishlist_imported is ?', new Zend_Db_Expr('not null')
+                );
+            }
             $num = $conn->update(
                 $this->getMainTable(),
-                array('wishlist_imported' => new Zend_Db_Expr('null'),
-                      'wishlist_modified' => new Zend_Db_Expr('null'))
+                array(
+                    'wishlist_imported' => new Zend_Db_Expr('null'),
+                    'wishlist_modified' => new Zend_Db_Expr('null')
+                ),
+                $where
             );
 
             return $num;

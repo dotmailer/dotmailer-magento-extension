@@ -1008,14 +1008,16 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
             return "Log file is not readable or does not exist at this moment. File path is "
             . $pathLogfile;
         }
+        $contents = '';
+        if (filesize($pathLogfile) > 0) {
+            $contents = fread($handle, filesize($pathLogfile));
 
-        $contents = fread($handle, filesize($pathLogfile));
-
-        if (!$contents) {
-            return "Log file is not readable or does not exist at this moment. File path is "
-            . $pathLogfile;
+            if ($contents === false) {
+                return "Log file is not readable or does not exist at this moment. File path is "
+                    . $pathLogfile;
+            }
+            fclose($handle);
         }
-        fclose($handle);
 
         return $contents;
     }

@@ -105,7 +105,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
                             $email     = $quote->getCustomerEmail();
                             $websiteId = $store->getWebsiteId();
                             $quoteId   = $quote->getId();
-                            // upate last quote id for the contact
+                            // update last quote id for the contact
                             Mage::helper('ddg')->updateLastQuoteId(
                                 $quoteId, $email, $websiteId
                             );
@@ -200,7 +200,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
                             $email     = $quote->getCustomerEmail();
                             $websiteId = $store->getWebsiteId();
                             $quoteId   = $quote->getId();
-                            // upate last quote id for the contact
+                            // update last quote id for the contact
                             Mage::helper('ddg')->updateLastQuoteId(
                                 $quoteId, $email, $websiteId
                             );

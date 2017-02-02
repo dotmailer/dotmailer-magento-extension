@@ -5,12 +5,16 @@ class Dotdigitalgroup_Email_Model_Customer_Guest
 
     protected $_countGuests = 0;
     protected $_start;
+    public $guest = array();
 
     /**
      * GUEST SYNC.
      */
     public function sync()
     {
+        //Find and create guest
+        $this->findAndCreateGuest();
+
         /** @var Dotdigitalgroup_Email_Helper_Data $helper */
         $helper       = Mage::helper('ddg');
         $this->_start = microtime(true);
@@ -42,6 +46,46 @@ class Dotdigitalgroup_Email_Model_Customer_Guest
                     "H:i:s", microtime(true) - $this->_start
                 )
             );
+        }
+    }
+
+    /**
+     * Find and create guests
+     */
+    public function findAndCreateGuest()
+    {
+        $contacts = Mage::getModel('ddg_automation/contact')
+            ->getCollection()
+            ->getColumnValues('email');
+
+        //get the order collection
+        $salesOrderCollection = Mage::getModel('sales/order')
+            ->getCollection()
+            ->addFieldToFilter('customer_is_guest', array('eq' => 1))
+            ->addFieldToFilter('customer_email', array('notnull' => true))
+            ->addFieldToFilter('customer_email', array('nin' => $contacts));
+
+        //group by email and store
+        $salesOrderCollection->getSelect()->group(array('customer_email', 'store_id'));
+
+        foreach ($salesOrderCollection as $order) {
+            $storeId = $order->getStoreId();
+            $websiteId = Mage::app()->getStore($storeId)->getWebsiteId();
+
+            //add guest to the list
+            $this->guests[] = [
+                'email' => $order->getCustomerEmail(),
+                'website_id' => $websiteId,
+                'store_id' => $storeId,
+                'is_guest' => 1
+            ];
+        }
+
+        /**
+         * Add guest to contacts table.
+         */
+        if (!empty($this->guests)) {
+            Mage::getResourceModel('ddg_automation/contact')->insert($this->guests);
         }
     }
 
