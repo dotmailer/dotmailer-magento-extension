@@ -37,8 +37,8 @@ class Dotdigitalgroup_Email_Model_Resource_Quote
         try {
             if ($from && $to) {
                 $where = array(
-                    'updated_at >= ?' => $from . ' 00:00:00',
-                    'updated_at <= ?' => $to . ' 23:59:59',
+                    'created_at >= ?' => $from . ' 00:00:00',
+                    'created_at <= ?' => $to . ' 23:59:59',
                     'imported is ?' => new Zend_Db_Expr('not null')
                 );
             } else {
