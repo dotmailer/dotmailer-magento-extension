@@ -689,12 +689,12 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         $storeName
     ) {
         $data = array();
-        if ($storeName = $website->getConfig(
+        if ($storeNameKey = $website->getConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_STORE_NAME
         )
         ) {
             $data[] = array(
-                'Key' => $storeName,
+                'Key' => $storeNameKey,
                 'Value' => $storeName
             );
         }
