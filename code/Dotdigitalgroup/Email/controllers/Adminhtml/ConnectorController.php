@@ -58,12 +58,12 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
     public function resetordersAction()
     {
         $params = $this->getRequest()->getParams();
-        if ($params['refresh_data_from'] && $params['refresh_data_to']) {
-            if (!$this->validateDateRange($params['refresh_data_from'], $params['refresh_data_to'])) {
+        if ($params['from'] && $params['to']) {
+            if (!$this->validateDateRange($params['from'], $params['to'])) {
                 return $this->_redirectReferer();
             }
             $num = Mage::getResourceModel('ddg_automation/order')
-                ->resetOrders($params['refresh_data_from'], $params['refresh_data_to']);
+                ->resetOrders($params['from'], $params['to']);
         } else {
             $num = Mage::getResourceModel('ddg_automation/order')
                 ->resetOrders();
@@ -359,12 +359,12 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
     public function resetquotesAction()
     {
         $params = $this->getRequest()->getParams();
-        if ($params['refresh_data_from'] && $params['refresh_data_to']) {
-            if (!$this->validateDateRange($params['refresh_data_from'], $params['refresh_data_to'])) {
+        if ($params['from'] && $params['to']) {
+            if (!$this->validateDateRange($params['from'], $params['to'])) {
                 return $this->_redirectReferer();
             }
             $num = Mage::getResourceModel('ddg_automation/quote')
-                ->resetQuotes($params['refresh_data_from'], $params['refresh_data_to']);
+                ->resetQuotes($params['from'], $params['to']);
         } else {
             $num = Mage::getResourceModel('ddg_automation/quote')->resetQuotes();
         }
@@ -379,12 +379,12 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
     public function resetreviewsAction()
     {
         $params = $this->getRequest()->getParams();
-        if ($params['refresh_data_from'] && $params['refresh_data_to']) {
-            if (!$this->validateDateRange($params['refresh_data_from'], $params['refresh_data_to'])) {
+        if ($params['from'] && $params['to']) {
+            if (!$this->validateDateRange($params['from'], $params['to'])) {
                 return $this->_redirectReferer();
             }
             $num = Mage::getResourceModel('ddg_automation/review')
-                ->reset($params['refresh_data_from'], $params['refresh_data_to']);
+                ->reset($params['from'], $params['to']);
         } else {
             $num = Mage::getResourceModel('ddg_automation/review')->reset();
         }
@@ -399,12 +399,12 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
     public function resetwishlistsAction()
     {
         $params = $this->getRequest()->getParams();
-        if ($params['refresh_data_from'] && $params['refresh_data_to']) {
-            if (!$this->validateDateRange($params['refresh_data_from'], $params['refresh_data_to'])) {
+        if ($params['from'] && $params['to']) {
+            if (!$this->validateDateRange($params['from'], $params['to'])) {
                 return $this->_redirectReferer();
             }
             $num = Mage::getResourceModel('ddg_automation/wishlist')
-                ->reset($params['refresh_data_from'], $params['refresh_data_to']);
+                ->reset($params['from'], $params['to']);
         } else {
             $num = Mage::getResourceModel('ddg_automation/wishlist')->reset();
         }
@@ -429,12 +429,12 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
     public function resetcatalogAction()
     {
         $params = $this->getRequest()->getParams();
-        if ($params['refresh_data_from'] && $params['refresh_data_to']) {
-            if (!$this->validateDateRange($params['refresh_data_from'], $params['refresh_data_to'])) {
+        if ($params['from'] && $params['to']) {
+            if (!$this->validateDateRange($params['from'], $params['to'])) {
                 return $this->_redirectReferer();
             }
             $num = Mage::getResourceModel('ddg_automation/catalog')
-                ->reset($params['refresh_data_from'], $params['refresh_data_to']);
+                ->reset($params['from'], $params['to']);
         } else {
             $num = Mage::getResourceModel('ddg_automation/catalog')->reset();
         }

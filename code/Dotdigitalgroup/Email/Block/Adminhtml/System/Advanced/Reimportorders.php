@@ -18,9 +18,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Advanced_Reimportorders
             "*/connector/resetorders",
             array(
                 '_query' => array(
-                    'refresh_data_from' => '',
-                    'refresh_data_to' => '',
-                    'tmp' => ''
+                    'from' => '',
+                    'to' => '',
+                    'tp' => ''
                 )
             )
         );

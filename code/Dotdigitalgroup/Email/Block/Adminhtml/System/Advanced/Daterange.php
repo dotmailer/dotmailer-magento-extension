@@ -12,8 +12,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Advanced_Daterange
 
         foreach ($ranges as $range) {
             $data = array(
-                'name'      => 'refresh_data_' . $range,
-                'html_id'   => 'refresh_data_' . $range,
+                'name' => $range,
+                'html_id' => $range,
                 'image'     => $this->getSkinUrl('images/grid-cal.gif'),
             );
             $range = ucfirst($range);
@@ -44,7 +44,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Advanced_Daterange
                         }
                     }
                     
-                    var elmToObserve = ['refresh_data_from', 'refresh_data_to'];
+                    var elmToObserve = ['from', 'to'];
                     var elmToChange = 
                         [
                             '#connector_developer_settings_sync_settings_reimport_orders', 
