@@ -40,7 +40,11 @@
     //Reload every 10 seconds
     setInterval(makeAjaxCall, 10000);
     function makeAjaxCall() {
+        var original = 'loading-mask';
+        var invisible = 'invisible-loading-mask';
+        $(original).writeAttribute("id", invisible);
         doUpdate($('connector-log-selector').getValue());
+        $(invisible).writeAttribute("id", original);
     }
 
 	function doUpdate(log) {
