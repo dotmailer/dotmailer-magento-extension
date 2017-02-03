@@ -254,7 +254,6 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
         $productCollection = Mage::getResourceModel(
             'reports/product_collection'
         )
-            ->addAttributeToSelect('VISIBILITY', array('neq' => Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE))
             ->addAttributeToSelect(
                 array('product_url', 'name', 'store_id', 'small_image', 'price')
             )
