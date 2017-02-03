@@ -48,7 +48,9 @@ class Dotdigitalgroup_Email_Model_Resource_Campaign
             $conn = $this->_getWriteAdapter();
             $num  = $conn->update(
                 $this->getMainTable(),
-                array('is_sent' => new Zend_Db_Expr('null')),
+                array(
+                    'send_status' => Dotdigitalgroup_Email_Model_Campaign::PENDING
+                ),
                 array('id IN(?)' => $campaignIds)
             );
 

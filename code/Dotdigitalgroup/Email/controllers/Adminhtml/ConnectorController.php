@@ -57,14 +57,63 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
      */
     public function resetordersAction()
     {
-        $num = Mage::getResourceModel('ddg_automation/order')->resetOrders();
+        $params = $this->getRequest()->getParams();
+        if ($params['from'] && $params['to']) {
+            if (!$this->validateDateRange($params['from'], $params['to'])) {
+                return $this->_redirectReferer();
+            }
+            $num = Mage::getResourceModel('ddg_automation/order')
+                ->resetOrders($params['from'], $params['to']);
+        } else {
+            $num = Mage::getResourceModel('ddg_automation/order')
+                ->resetOrders();
+        }
 	    $message = '-- Reset Orders for Reimport : ' . $num;
         Mage::helper('ddg')->log($message);
 	    if (!$num)
             $message = 'Done.';
 	    Mage::getSingleton('adminhtml/session')->addSuccess($message);
 
-        $this->_redirectReferer();
+        return $this->_redirectReferer();
+    }
+
+    /**
+     * Validate date range
+     *
+     * @param $dateFrom
+     * @param $dateTo
+     * @return bool
+     */
+    public function validateDateRange($dateFrom, $dateTo)
+    {
+        if (!$this->validateDate($dateFrom) || !$this->validateDate($dateTo)) {
+            return $this->saveErrorInSession('From or To date is not a valid date.');
+        }
+        if (strtotime($dateFrom) > strtotime($dateTo)) {
+            return $this->saveErrorInSession('To Date cannot be earlier then From Date.');
+        }
+        return true;
+    }
+
+    /**
+     * Check if date is a valid date
+     *
+     * @param $date
+     * @return bool|DateTime
+     */
+    public function validateDate($date)
+    {
+        try {
+            return new DateTime($date);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function saveErrorInSession($msg)
+    {
+        Mage::getSingleton('adminhtml/session')->addError($msg);
+        return false;
     }
 
     /**
@@ -309,7 +358,16 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
      */
     public function resetquotesAction()
     {
-        $num = Mage::getResourceModel('ddg_automation/quote')->resetQuotes();
+        $params = $this->getRequest()->getParams();
+        if ($params['from'] && $params['to']) {
+            if (!$this->validateDateRange($params['from'], $params['to'])) {
+                return $this->_redirectReferer();
+            }
+            $num = Mage::getResourceModel('ddg_automation/quote')
+                ->resetQuotes($params['from'], $params['to']);
+        } else {
+            $num = Mage::getResourceModel('ddg_automation/quote')->resetQuotes();
+        }
         Mage::helper('ddg')->log('-- Reset Quotes for reimport : ' . $num);
         Mage::getSingleton('adminhtml/session')->addSuccess('Done.');
         $this->_redirectReferer();
@@ -320,7 +378,16 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
      */
     public function resetreviewsAction()
     {
-        $num = Mage::getResourceModel('ddg_automation/review')->reset();
+        $params = $this->getRequest()->getParams();
+        if ($params['from'] && $params['to']) {
+            if (!$this->validateDateRange($params['from'], $params['to'])) {
+                return $this->_redirectReferer();
+            }
+            $num = Mage::getResourceModel('ddg_automation/review')
+                ->reset($params['from'], $params['to']);
+        } else {
+            $num = Mage::getResourceModel('ddg_automation/review')->reset();
+        }
         Mage::helper('ddg')->log('-- Reset Reviews for reimport : ' . $num);
         Mage::getSingleton('adminhtml/session')->addSuccess('Done.');
         $this->_redirectReferer();
@@ -331,7 +398,16 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
      */
     public function resetwishlistsAction()
     {
-        $num = Mage::getResourceModel('ddg_automation/wishlist')->reset();
+        $params = $this->getRequest()->getParams();
+        if ($params['from'] && $params['to']) {
+            if (!$this->validateDateRange($params['from'], $params['to'])) {
+                return $this->_redirectReferer();
+            }
+            $num = Mage::getResourceModel('ddg_automation/wishlist')
+                ->reset($params['from'], $params['to']);
+        } else {
+            $num = Mage::getResourceModel('ddg_automation/wishlist')->reset();
+        }
         Mage::helper('ddg')->log('-- Reset Wishlist for reimport : ' . $num);
         Mage::getSingleton('adminhtml/session')->addSuccess('Done.');
         $this->_redirectReferer();
@@ -352,7 +428,16 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
      */
     public function resetcatalogAction()
     {
-        $num = Mage::getResourceModel('ddg_automation/catalog')->reset();
+        $params = $this->getRequest()->getParams();
+        if ($params['from'] && $params['to']) {
+            if (!$this->validateDateRange($params['from'], $params['to'])) {
+                return $this->_redirectReferer();
+            }
+            $num = Mage::getResourceModel('ddg_automation/catalog')
+                ->reset($params['from'], $params['to']);
+        } else {
+            $num = Mage::getResourceModel('ddg_automation/catalog')->reset();
+        }
         Mage::helper('ddg')->log('-- Reset Catalog for reimport : ' . $num);
         Mage::getSingleton('adminhtml/session')->addSuccess('Done.');
         $this->_redirectReferer();
@@ -387,5 +472,31 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
     protected function _isAllowed()
     {
         return Mage::getSingleton('admin/session')->isAllowed('system/config/connector_developer_settings');
+    }
+
+    public function logAction()
+    {
+        $logFile = $this->getRequest()->getParam('log');
+        $header = 'Marketing Automation Logs';
+        switch ($logFile) {
+            case "connector":
+                $header = 'Marketing Automation Logs';
+                break;
+            case "system":
+                $header = 'Magento System Log';
+                break;
+            case "exception":
+                $header = 'Magento Exception Log';
+                break;
+        }
+        $response = array(
+            'content' => nl2br(Mage::helper('core')->escapeHtml(
+                Mage::helper('ddg')->getLogFileContent($logFile))
+            ),
+            'header' => $header
+        );
+        $this->getResponse()->clearHeaders()->setHeader(
+            'Content-Type', 'application/json'
+        )->setBody(Mage::helper('core')->jsonEncode($response));
     }
 }

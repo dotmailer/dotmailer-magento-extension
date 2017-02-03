@@ -420,25 +420,35 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
          */
         $jsDir = Mage::getBaseDir('base') . DS . 'js';
 
-        /**
-         * lib dir
-         */
-        $libDir = Mage::getBaseDir('lib');
-
-        $filesToCheck = array($config['etc'], $config['controllers'],
-                              $config['sql'], $config['locale'],
-                              $config['block'],
-                              $config['helper'], $config['model'],
-                              $config['design'], $config['skin'],
-                              $config['lib'], $config['js']);
-        $pathToCheck  = array($etcDir, $controllerDir, $sqlDir, $localeDir,
-                              $blockDir, $helperDir,
-                              $modelDir, $designDir, $skinDir, $libDir, $jsDir);
+        $filesToCheck = array(
+            $config['etc'],
+            $config['controllers'],
+            $config['sql'],
+            $config['locale'],
+            $config['block'],
+            $config['helper'],
+            $config['model'],
+            $config['design'],
+            $config['skin'],
+            $config['js']
+        );
+        $pathToCheck  = array(
+            $etcDir,
+            $controllerDir,
+            $sqlDir,
+            $localeDir,
+            $blockDir,
+            $helperDir,
+            $modelDir,
+            $designDir,
+            $skinDir,
+            $jsDir
+        );
         foreach ($filesToCheck as $subdir) {
             foreach ($subdir as $path) {
                 $file = $pathToCheck[0] . DS . str_replace('#', DS, $path);
 
-                if ( ! file_exists($file)) {
+                if (! file_exists($file)) {
                     $resultContent->setStyle(self::CONNECTOR_DASHBOARD_FAILED)
                         ->setMessage('')
                         ->setHowto('File not found : ' . $file);

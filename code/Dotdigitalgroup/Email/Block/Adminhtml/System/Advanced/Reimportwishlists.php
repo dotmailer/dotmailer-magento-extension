@@ -14,11 +14,21 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Advanced_Reimportwishlists
 
     protected function _getAddRowButtonHtml($title)
     {
-        $url = $this->getUrl("*/connector/resetwishlists");
+        $url = $this->getUrl(
+            "*/connector/resetwishlists",
+            array(
+                '_query' => array(
+                    'from' => '',
+                    'to' => '',
+                    'tp' => ''
+                )
+            )
+        );
 
         return $this->getLayout()->createBlock('adminhtml/widget_button')
             ->setType('button')
             ->setLabel($this->__($title))
+            ->setId($this->getElement()->getId())
             ->setOnClick("window.location.href='" . $url . "'")
             ->toHtml();
     }

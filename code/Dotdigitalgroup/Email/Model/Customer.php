@@ -4,18 +4,18 @@ class Dotdigitalgroup_Email_Model_Customer extends Mage_Customer_Model_Customer
 {
 
     /**
-     * overwrites the default function
+     * Override - Send email with new account related information.
      *
      * @param string $type
      * @param string $backUrl
      * @param string $storeId
-     *
-     * @return Mage_Customer_Model_Customer|void
+     * @param null   $password
      */
     public function sendNewAccountEmail($type = 'registered', $backUrl = '',
-        $storeId = '0'
-    ) 
-    {
+        $storeId = '0',
+        $password = null
+    ) {
+
         if (Mage::getStoreConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DISABLE_CUSTOMER_SUCCESS,
             $storeId
@@ -24,6 +24,6 @@ class Dotdigitalgroup_Email_Model_Customer extends Mage_Customer_Model_Customer
             return;
         }
 
-        parent::sendNewAccountEmail($type, $backUrl, $storeId);
+        parent::sendNewAccountEmail($type, $backUrl, $storeId, $password);
     }
 }

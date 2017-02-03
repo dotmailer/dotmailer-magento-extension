@@ -689,12 +689,12 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         $storeName
     ) {
         $data = array();
-        if ($storeName = $website->getConfig(
+        if ($storeNameKey = $website->getConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_STORE_NAME
         )
         ) {
             $data[] = array(
-                'Key' => $storeName,
+                'Key' => $storeNameKey,
                 'Value' => $storeName
             );
         }
@@ -980,10 +980,24 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      *
      * @return string
      */
-    public function getLogFileContent($filename = 'connector_api.log')
+    public function getLogFileContent($filename = 'connector')
     {
+        switch ($filename) {
+            case "connector":
+                $filename = 'connector_api.log';
+                break;
+            case "system":
+                $filename = $this->getWebsiteConfig('dev/log/file');
+                break;
+            case "exception":
+                $filename = $this->getWebsiteConfig('dev/log/exception_file');
+                break;
+            default:
+                return "Log file is not valid. Log file name is " . $filename;
+        }
+
         $pathLogfile = Mage::getBaseDir('var') . DS . 'log' . DS
-            . $filename;;
+            . $filename;
         //tail the length file content
         $lengthBefore = 500000;
 
@@ -994,14 +1008,16 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
             return "Log file is not readable or does not exist at this moment. File path is "
             . $pathLogfile;
         }
+        $contents = '';
+        if (filesize($pathLogfile) > 0) {
+            $contents = fread($handle, filesize($pathLogfile));
 
-        $contents = fread($handle, filesize($pathLogfile));
-
-        if (!$contents) {
-            return "Log file is not readable or does not exist at this moment. File path is "
-            . $pathLogfile;
+            if ($contents === false) {
+                return "Log file is not readable or does not exist at this moment. File path is "
+                    . $pathLogfile;
+            }
+            fclose($handle);
         }
-        fclose($handle);
 
         return $contents;
     }

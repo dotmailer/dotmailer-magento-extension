@@ -295,13 +295,13 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
             if ($cond == 'null') {
                 if ($value == '1') {
                     if (isset($fieldsConditions[$attribute])) {
-                        $multiFieldsConditions[$attribute] = array('notnull' => true);
+                        $multiFieldsConditions[$attribute][] = array('notnull' => true);
                         continue;
                     }
                     $fieldsConditions[$attribute] = array('notnull' => true);
                 } elseif ($value == '0') {
                     if (isset($fieldsConditions[$attribute])) {
-                        $multiFieldsConditions[$attribute] = array($cond => true);;
+                        $multiFieldsConditions[$attribute][] = array($cond => true);;
                         continue;
                     }
                     $fieldsConditions[$attribute] = array($cond => true);
@@ -311,7 +311,7 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
                     $value = '%' . $value . '%';
                 }
                 if (isset($fieldsConditions[$attribute])) {
-                    $multiFieldsConditions[$attribute] = array($this->_conditionMap[$cond] => $value);
+                    $multiFieldsConditions[$attribute][] = array($this->_conditionMap[$cond] => $value);
                     continue;
                 }
                 $fieldsConditions[$attribute] = array($this->_conditionMap[$cond] => $value);
@@ -322,17 +322,12 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
             $column = array();
             $cond = array();
             foreach ($fieldsConditions as $key => $fieldsCondition) {
-                $exp = new Zend_Db_Expr($key);
-                $column[] = $exp->__toString();
+                $column[] = (string)$key;
                 $cond[] = $fieldsCondition;
-            }
-            if (!empty($multiFieldsConditions)) {
-                foreach ($multiFieldsConditions as $key => $multiFieldsCondition) {
-                    if (in_array($key, $column)) {
-                        $exp = new Zend_Db_Expr($key);
-                        $column[] = $exp->__toString();
+                if (!empty($multiFieldsConditions[$key])) {
+                    foreach ($multiFieldsConditions[$key] as $multiFieldsCondition) {
+                        $column[] = (string)$key;
                         $cond[] = $multiFieldsCondition;
-                        continue;
                     }
                 }
             }

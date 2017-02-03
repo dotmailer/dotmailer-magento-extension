@@ -22,13 +22,13 @@ class Dotdigitalgroup_Email_Model_Connector_Quote
      */
     public $created_date;
     /**
-     * @var string
+     * @var array
      */
-    public $delivery_address;
+    public $delivery_address = array();
     /**
-     * @var string
+     * @var array
      */
-    public $billing_address;
+    public $billing_address = array();
     /**
      * @var array
      */
@@ -48,7 +48,7 @@ class Dotdigitalgroup_Email_Model_Connector_Quote
     /**
      * @var array
      */
-    public $categories;
+    public $categories = array();
     /**
      * Payment name
      *
@@ -74,7 +74,7 @@ class Dotdigitalgroup_Email_Model_Connector_Quote
     /**
      * @var array
      */
-    public $custom;
+    public $custom = array();
 
     protected $_attributeSet;
 

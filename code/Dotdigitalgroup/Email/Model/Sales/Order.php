@@ -26,7 +26,6 @@ class Dotdigitalgroup_Email_Model_Sales_Order
     protected $_orderIds;
     protected $_orderReminderReviewArray = array();
     protected $_orderIdsForSingleSync;
-    protected $_guests = array();
 
     /**
      * initial sync the transactional data
@@ -92,12 +91,6 @@ class Dotdigitalgroup_Email_Model_Sales_Order
                 }
             }
             unset($this->_accounts[$account->getApiUsername()]);
-        }
-        /**
-         * Add guest to contacts table.
-         */
-        if (!empty($this->_guests)) {
-            Mage::getResourceModel('ddg_automation/contact')->insert($this->_guests);
         }
 
         if ($this->_countOrders) {
@@ -220,23 +213,6 @@ class Dotdigitalgroup_Email_Model_Sales_Order
             ->addFieldToFilter('entity_id', array('in' => $orderIds));
         try {
             foreach ($salesOrderCollection as $order) {
-
-                $storeId   = $order->getStoreId();
-                $websiteId = Mage::app()->getStore($storeId)->getWebsiteId();
-                /**
-                 * Add guest to array to add to contacts table.
-                 */
-                if ($order->getCustomerIsGuest()
-                    && $order->getCustomerEmail()
-                ) {
-                    //add guest to the list
-                    $this->_guests[] = array(
-                        'email' => $order->getCustomerEmail(),
-                        'website_id' => $websiteId,
-                        'store_id' => $storeId,
-                        'is_guest' => 1
-                    );
-                }
                 if ($order->getId()) {
                     $connectorOrder = Mage::getModel(
                         'ddg_automation/connector_order'

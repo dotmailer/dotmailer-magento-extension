@@ -53,8 +53,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs
         $this->addTab(
             'logs',
             array(
-                'label' => $this->__('Connector Logs'),
-                'title' => $this->__('Connector Logs'),
+                'label' => $this->__('View Logs'),
+                'title' => $this->__('View Logs'),
                 'url'   => $this->getUrl('*/*/logs'),
                 'class' => 'ajax',
             )
