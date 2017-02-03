@@ -4,6 +4,10 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
 {
 
     protected $_edcType;
+    protected $_visibility = array(
+        Mage_Catalog_Model_Product_Visibility::VISIBILITY_BOTH,
+        Mage_Catalog_Model_Product_Visibility::VISIBILITY_IN_CATALOG
+    );
 
     protected function _construct()
     {
@@ -185,7 +189,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
         $productCollection = Mage::getModel('catalog/product')->getCollection()
             ->addPriceData()
             ->addAttributeToSelect('*')
-            ->addAttributeToSelect('VISIBILITY', array('neq' => Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE))
+            ->addAttributeToFilter('visibility', $this->_visibility)
             ->addFieldToFilter('entity_id', array('in' => $productIds));
         //show products only if is salable
         foreach ($productCollection as $product) {
@@ -217,7 +221,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
         )
             ->addPriceData()
             ->addAttributeToFilter('entity_id', array('in' => $productIds))
-            ->addAttributeToSelect('VISIBILITY', array('neq' => Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE))
+            ->addAttributeToFilter('visibility', $this->_visibility)
             ->addAttributeToSelect(
                 array('product_url', 'name', 'store_id', 'small_image', 'price')
             )
@@ -250,7 +254,6 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
         $productCollection = Mage::getResourceModel(
             'reports/product_collection'
         )
-            ->addAttributeToSelect('VISIBILITY', array('neq' => Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE))
             ->addAttributeToSelect(
                 array('product_url', 'name', 'store_id', 'small_image', 'price')
             )
@@ -261,7 +264,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
 
         Mage::getSingleton('cataloginventory/stock')
             ->addInStockFilterToCollection($productCollection);
-        $productCollection->addAttributeToFilter('is_saleable', true);
+        $productCollection->addAttributeToFilter('is_saleable', true)->addAttributeToFilter('visibility', $this->_visibility);
 
         $catId   = Mage::app()->getRequest()->getParam('category_id', false);
         $catName = Mage::app()->getRequest()->getParam('category_name', false);
@@ -336,10 +339,10 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
         )
             ->addPriceData()
             ->addIdFilter($productIds)
-            ->addAttributeToSelect('VISIBILITY', array('neq' => Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE))
             ->addAttributeToSelect(
                 array('product_url', 'name', 'store_id', 'small_image', 'price')
-            );
+            )
+            ->addAttributeToFilter('visibility', $this->_visibility);
 
         foreach ($productCollection as $_product) {
             //add only salable products
