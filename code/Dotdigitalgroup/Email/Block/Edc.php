@@ -4,6 +4,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
 {
 
     protected $_edcType;
+    protected $_visibility = array(
         Mage_Catalog_Model_Product_Visibility::VISIBILITY_BOTH,
         Mage_Catalog_Model_Product_Visibility::VISIBILITY_IN_CATALOG
     );
