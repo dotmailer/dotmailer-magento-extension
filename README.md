@@ -33,6 +33,9 @@ Compatibility
 # Upgrade notice
 
 # V6.2.5
+###### Improvements
+ - Subscriber now can have datafields.
+ - Improvements on file view logger.   
 ###### Bug fixes
  - Orders import with custom options fix.
  - Remove Campaign "is_sent" column what is not used anymore.
