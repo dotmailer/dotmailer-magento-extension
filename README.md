@@ -33,6 +33,8 @@ Compatibility
 # Upgrade notice
 
 # V6.2.5
+###### Features
+ - Sync sales data fields for guest subscribers
 ###### Bug fixes
  - Orders import with custom options fix.
  - Remove Campaign "is_sent" column what is not used anymore.
