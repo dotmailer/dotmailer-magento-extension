@@ -70,7 +70,9 @@ class Dotdigitalgroup_Email_Model_Connector_Order
      */
     public $currency;
 
-
+    /**
+     * @var string
+     */
     public $couponCode;
 
     /**
