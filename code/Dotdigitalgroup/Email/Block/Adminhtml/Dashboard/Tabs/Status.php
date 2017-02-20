@@ -2070,8 +2070,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
     protected function _getAddressBookContacts($addressBook, $webiste)
     {
         $client = Mage::helper('ddg')->getWebsiteApiClient($webiste);
-
-        if ( ! $client && $addressBook) {
+        //check the client enabled and addressbook mapped
+        if (! $client || ! $addressBook) {
             return false;
         }
 
