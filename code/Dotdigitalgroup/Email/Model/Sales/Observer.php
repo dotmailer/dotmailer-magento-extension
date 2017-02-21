@@ -139,6 +139,12 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
                          = Dotdigitalgroup_Email_Model_Automation::AUTOMATION_TYPE_NEW_GUEST_ORDER;
         } else {
             // customer to automation mapped
+            $customerAutomationMapped 
+                = Mage::getStoreConfig('connector_automation_studio/visitor_automation/first_order_automation');
+            if( $customerAutomationMapped == '0' || is_null($customerAutomationMapped) ) {
+                return $this;
+            }
+
             $programType = 'XML_PATH_CONNECTOR_AUTOMATION_STUDIO_ORDER';
             $automationType
                          = Dotdigitalgroup_Email_Model_Automation::AUTOMATION_TYPE_NEW_ORDER;
