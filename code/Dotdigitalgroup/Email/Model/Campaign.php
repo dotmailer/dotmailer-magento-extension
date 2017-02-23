@@ -178,7 +178,7 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
                         } else {
                             //update the failed to send email message error message
                             $campaign->setSendStatus(self::FAILED)
-                                ->setMessage('contact id returned is not numeric for email ' . $email)
+                                ->setMessage('Send not permitted. Contact is suppressed.')
                                 ->save();
                         }
                     } catch (Exception $e) {
@@ -197,7 +197,7 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
                         //update  the failed to send email message
                         $this->getResource()->setMessage($data['ids'], $response->message);
                     } elseif (isset($response->id)) {
-                        $this->getResource()->setProcessing($campaignId, $response->id);
+                        $this->getResource()->setProcessing($data['ids'], $response->id);
                     } else {
                         //update  the failed to send email message
                         $this->getResource()->setMessage($data['ids'], 'No send id returned.');
