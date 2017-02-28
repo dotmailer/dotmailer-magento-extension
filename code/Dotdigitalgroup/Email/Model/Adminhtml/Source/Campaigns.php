@@ -20,9 +20,11 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Campaigns
         } else {
             $website = 0;
         }
-        $fields[] = array('value' => '0', 'label' => Mage::helper('ddg')->__(
-            '-- Please Select --'
-        ));
+
+        $fields[] = array(
+            'value' => '0',
+            'label' => Mage::helper('ddg')->__('-- Please Select --')
+        );
 
         if ($websiteName) {
             $website = Mage::app()->getWebsite($websiteName);
@@ -43,17 +45,16 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Campaigns
                 Mage::unregister('savedcampigns');
                 Mage::register('savedcampigns', $campaigns);
             }
-
+            //@codingStandardsIgnoreStart
             foreach ($campaigns as $one) {
                 if (isset($one->id)) {
                     $fields[] = array(
                         'value' => $one->id,
-                        'label' => Mage::helper('ddg')->__(
-                            addslashes($one->name)
-                        )
+                        'label' => Mage::helper('ddg')->__(addslashes($one->name))
                     );
                 }
             }
+            //@codingStandardsIgnoreEnd
         }
 
         return $fields;

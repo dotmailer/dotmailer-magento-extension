@@ -14,17 +14,13 @@ class Dotdigitalgroup_Email_Model_Controller_Observer
         $event = $observer->getEvent();
 
         //check for module name is a match for current request
-        if ($event->getControllerAction()->getRequest()->getModuleName()
-            == 'connector'
-        ) {
-
+        if ($event->getControllerAction()->getRequest()->getModuleName() == 'connector') {
             //check if the geoip module is installed
             $modules = Mage::getConfig()->getNode('modules')->children();
             $modulesArray = (array)$modules;
 
             //module installed make sure don't redirect
             if (isset($modulesArray['Sandfox_GeoIP'])) {
-
                 //order id param
                 $orderId = $event->getControllerAction()->getRequest()
                     ->getParam('order_id', false);
@@ -38,7 +34,6 @@ class Dotdigitalgroup_Email_Model_Controller_Observer
                         && $store->getName() != Mage::app()->getStore()
                             ->getName()
                     ) {
-
                         //redirect to original store
                         $event->getControllerAction()->getResponse()
                             ->setRedirect($store->getCurrentUrl(false));

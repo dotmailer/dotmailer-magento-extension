@@ -3,22 +3,52 @@
 class Dotdigitalgroup_Email_Model_Apiconnector_Customer
 {
 
+    /**
+     * @var
+     */
     public $customer;
+    /**
+     * @var
+     */
     public $customerData;
+    /**
+     * @var
+     */
     public $reviewCollection;
 
-    //enterprise reward
+    /**
+     * Enterprise reward.
+     *
+     * @var
+     */
     public $reward;
 
+    /**
+     * @var
+     */
     public $rewardCustomer;
+    /**
+     * @var string
+     */
     public $rewardLastSpent = "";
+    /**
+     * @var string
+     */
     public $rewardLastEarned = "";
+    /**
+     * @var string
+     */
     public $rewardExpiry = "";
 
-    protected $_mappingHash;
+    /**
+     * @var
+     */
+    public $mappingHash;
 
-    public $subscriberStatus
-        = array(
+    /**
+     * @var array
+     */
+    public $subscriberStatus = array(
             Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED   => 'Subscribed',
             Mage_Newsletter_Model_Subscriber::STATUS_NOT_ACTIVE   => 'Not Active',
             Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED => 'Unsubscribed',
@@ -27,7 +57,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
 
 
     /**
-     * constructor, mapping hash to map.
+     * Constructor, mapping hash to map.
      *
      * @param $mappingHash
      */
@@ -71,10 +101,11 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
             foreach ($exploded as $one) {
                 $function .= ucfirst($one);
             }
+
             try {
-                $value                    = call_user_func(
-                    array('self', $function)
-                );
+                //@codingStandardsIgnoreStart
+                $value = call_user_func(array('self', $function));
+                //@codingStandardsIgnoreEnd
                 $this->customerData[$key] = $value;
             } catch (Exception $e) {
                 Mage::logException($e);
@@ -82,6 +113,9 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         }
     }
 
+    /**
+     * Customer review.
+     */
     public function setReviewCollection()
     {
         $customerId = $this->customer->getId();
@@ -92,25 +126,31 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         $this->reviewCollection = $collection;
     }
 
+    /**
+     * @return mixed
+     */
     public function getReviewCount()
     {
         return $this->reviewCollection->getSize();
     }
 
+    /**
+     * @return string
+     */
     public function getLastReviewDate()
     {
-
-        if (count($this->reviewCollection)) {
+        if (! empty($this->reviewCollection)) {
+            //@codingStandardsIgnoreStart
             $this->reviewCollection->getSelect()->limit(1);
-
             return $this->reviewCollection->getFirstItem()->getCreatedAt();
+            //@codingStandardsIgnoreEnd
         }
 
         return '';
     }
 
     /**
-     * Set reward customer
+     * Set reward customer.
      *
      * @param Mage_Customer_Model_Customer $customer
      */
@@ -118,9 +158,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     {
         //get tbt reward customer
         $tbtReward           = Mage::getModel('rewards/customer')
-            ->getRewardsCustomer(
-                $customer
-            );
+            ->getRewardsCustomer($customer);
         $this->rewardCustomer = $tbtReward;
 
         //get transfers collection from tbt reward. only active and order by last updated.
@@ -135,15 +173,16 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         foreach ($lastTransfers as $transfer) {
             // if transfer quantity is greater then 0 then this is last points earned date.
             // keep checking until earn is not null
-            if (is_null($earn) && $transfer->getQuantity() > 0) {
+            if ($earn == null && $transfer->getQuantity() > 0) {
                 $earn = $transfer->getEffectiveStart();
-            } else if (is_null($spent) && $transfer->getQuantity() < 0) {
+            } else if ($spent == null && $transfer->getQuantity() < 0) {
                 // id transfer quantity is less then 0 then this is last points spent date.
                 // keep checking until spent is not null
                 $spent = $transfer->getEffectiveStart();
             }
+
             // break if both spent and earn are not null (a value has been assigned)
-            if ( ! is_null($spent) && ! is_null($earn)) {
+            if ($spent !== null && ! $earn !== null) {
                 break;
             }
         }
@@ -152,6 +191,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         if ($earn) {
             $this->rewardLastEarned = $earn;
         }
+
         // if spent is not null (has a value) then assign the value to property
         if ($spent) {
             $this->rewardLastSpent = $spent;
@@ -167,7 +207,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get customer id.
+     * Get customer id.
      *
      * @return mixed
      */
@@ -177,7 +217,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get first name.
+     * Get first name.
      *
      * @return mixed
      */
@@ -187,7 +227,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get last name.
+     * Get last name.
      *
      * @return mixed
      */
@@ -197,7 +237,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get date of birth.
+     * Get date of birth.
      *
      * @return mixed
      */
@@ -207,7 +247,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get customer gender.
+     * Get customer gender.
      *
      * @return bool|string
      */
@@ -217,7 +257,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get customer prefix.
+     * Get customer prefix.
      *
      * @return mixed
      */
@@ -227,7 +267,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get customer suffix.
+     * Get customer suffix.
      *
      * @return mixed
      */
@@ -237,7 +277,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get website name.
+     * Get website name.
      *
      * @return string
      */
@@ -247,7 +287,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get store name.
+     * Get store name.
      *
      * @return null|string
      */
@@ -257,7 +297,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get customer created at date.
+     * Get customer created at date.
      *
      * @return mixed
      */
@@ -267,7 +307,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get customer last logged in date.
+     * Get customer last logged in date.
      *
      * @return mixed
      */
@@ -277,7 +317,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get cutomer group.
+     * Get cutomer group.
      *
      * @return string
      */
@@ -287,7 +327,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get billing address line 1.
+     * Get billing address line 1.
      *
      * @return string
      */
@@ -297,7 +337,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get billing address line 2.
+     * Get billing address line 2.
      *
      * @return string
      */
@@ -307,7 +347,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get billing city.
+     * Get billing city.
      *
      * @return mixed
      */
@@ -317,7 +357,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get billing country.
+     * Get billing country.
      *
      * @return mixed
      */
@@ -327,7 +367,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get billing state.
+     * Get billing state.
      *
      * @return mixed
      */
@@ -337,7 +377,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get billing postcode.
+     * Get billing postcode.
      *
      * @return mixed
      */
@@ -347,7 +387,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get billing phone.
+     * Get billing phone.
      *
      * @return mixed
      */
@@ -357,7 +397,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get delivery address line 1.
+     * Get delivery address line 1.
      *
      * @return string
      */
@@ -367,7 +407,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get delivery addrss line 2.
+     * Get delivery addrss line 2.
      *
      * @return string
      */
@@ -377,7 +417,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get delivery city.
+     * Get delivery city.
      *
      * @return mixed
      */
@@ -387,7 +427,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get delivery country.
+     * Get delivery country.
      *
      * @return mixed
      */
@@ -397,7 +437,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get delivery state.
+     * Get delivery state.
      *
      * @return mixed
      */
@@ -407,7 +447,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get delivery postcode.
+     * Get delivery postcode.
      *
      * @return mixed
      */
@@ -417,7 +457,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get delivery phone.
+     * Get delivery phone.
      *
      * @return mixed
      */
@@ -427,7 +467,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get numbser of orders.
+     * Get numbser of orders.
      *
      * @return mixed
      */
@@ -437,7 +477,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get average order value.
+     * Get average order value.
      *
      * @return mixed
      */
@@ -447,7 +487,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get total spend.
+     * Get total spend.
      *
      * @return mixed
      */
@@ -457,7 +497,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get last order date.
+     * Get last order date.
      *
      * @return mixed
      */
@@ -467,7 +507,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get last order id.
+     * Get last order id.
      *
      * @return mixed
      */
@@ -477,7 +517,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get last quote id.
+     * Get last quote id.
      *
      * @return mixed
      */
@@ -487,7 +527,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get cutomer id.
+     * Get cutomer id.
      *
      * @return mixed
      */
@@ -497,7 +537,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get customer title.
+     * Get customer title.
      *
      * @return mixed
      */
@@ -507,7 +547,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get total refund value.
+     * Get total refund value.
      *
      * @return float|int
      */
@@ -525,7 +565,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * export to CSV.
+     * Export to CSV.
      *
      * @return mixed
      */
@@ -537,7 +577,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * customer gender.
+     * Customer gender.
      *
      * @return bool|string
      * @throws Mage_Core_Exception
@@ -557,6 +597,11 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         return '';
     }
 
+    /**
+     * @param $street
+     * @param $line
+     * @return string
+     */
     protected function _getStreet($street, $line)
     {
         $street = explode("\n", $street);
@@ -567,6 +612,9 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         return '';
     }
 
+    /**
+     * @return string
+     */
     protected function _getWebsiteName()
     {
         $websiteId = $this->customer->getWebsiteId();
@@ -578,6 +626,9 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         return '';
     }
 
+    /**
+     * @return null|string
+     */
     protected function _getStoreName()
     {
         $storeId = $this->customer->getStoreId();
@@ -594,7 +645,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function setMappingHash($mappingHash)
     {
-        $this->_mappingHash = $mappingHash;
+        $this->mappingHash = $mappingHash;
     }
 
     /**
@@ -602,9 +653,12 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getMappingHash()
     {
-        return $this->_mappingHash;
+        return $this->mappingHash;
     }
 
+    /**
+     * @return string
+     */
     protected function _getCustomerGroup()
     {
 
@@ -619,7 +673,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * mapping hash value.
+     * Mapping hash value.
      *
      * @param $value
      *
@@ -627,16 +681,17 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function setMappigHash($value)
     {
-        $this->_mappingHash = $value;
+        $this->mappingHash = $value;
 
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getRewardReferralUrl()
     {
-        if (Mage::helper('ddg')->isSweetToothToGo(
-            $this->customer->getStore()->getWebsite()
-        )
+        if (Mage::helper('ddg')->isSweetToothToGo($this->customer->getStore()->getWebsite())
         ) {
             return (string)Mage::helper('rewardsref/url')->getUrl(
                 $this->customer
@@ -646,11 +701,17 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         return '';
     }
 
+    /**
+     * @return int
+     */
     public function getRewardPointBalance()
     {
         return $this->cleanString($this->rewardCustomer->getPointsSummary());
     }
 
+    /**
+     * @return int
+     */
     public function getRewardPointPending()
     {
         return $this->cleanString(
@@ -658,6 +719,9 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         );
     }
 
+    /**
+     * @return int
+     */
     public function getRewardPointPendingTime()
     {
         return $this->cleanString(
@@ -665,6 +729,9 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         );
     }
 
+    /**
+     * @return int
+     */
     public function getRewardPointOnHold()
     {
         return $this->cleanString(
@@ -672,27 +739,42 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         );
     }
 
+    /**
+     * @return string
+     */
     public function getRewardPointExpiration()
     {
         if ($this->rewardExpiry != "") {
+            //@codingStandardsIgnoreStart
             return Mage::getModel('core/date')->date(
                 'Y/m/d', strtotime($this->rewardExpiry)
             );
+            //@codingStandardsIgnoreEnd
         }
 
         return $this->rewardExpiry;
     }
 
+    /**
+     * @return string
+     */
     public function getRewardPointLastSpent()
     {
         return $this->rewardLastSpent;
     }
 
+    /**
+     * @return string
+     */
     public function getRewardPointLastEarn()
     {
         return $this->rewardLastEarned;
     }
 
+    /**
+     * @param $string
+     * @return int
+     */
     public function cleanString($string)
     {
         $cleanedString = preg_replace("/[^0-9]/", "", $string);
@@ -703,6 +785,9 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         return 0;
     }
 
+    /**
+     * @return mixed
+     */
     public function getSubscriberStatus()
     {
         $subscriber = Mage::getModel('newsletter/subscriber')->loadByCustomer(
@@ -720,7 +805,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getRewardPoints()
     {
-        if ( ! $this->reward) {
+        if (! $this->reward) {
             $this->_setReward();
         }
 
@@ -738,7 +823,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getRewardAmount()
     {
-        if ( ! $this->reward) {
+        if (! $this->reward) {
             $this->_setReward();
         }
 
@@ -757,7 +842,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     public function getExpirationDate()
     {
         //set reward for later use
-        if ( ! $this->reward) {
+        if (! $this->reward) {
             $this->_setReward();
         }
 
@@ -778,7 +863,9 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         return '';
     }
 
-
+    /**
+     * Set customer reward.
+     */
     protected function _setReward()
     {
         if (Mage::getModel('enterprise_reward/reward_history')) {
@@ -786,21 +873,20 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
                 ->getCollection()
                 ->addCustomerFilter($this->customer->getId())
                 ->addWebsiteFilter($this->customer->getWebsiteId())
-                ->setExpiryConfig(
-                    Mage::helper('enterprise_reward')->getExpiryConfig()
-                )
+                ->setExpiryConfig(Mage::helper('enterprise_reward')->getExpiryConfig())
                 ->addExpirationDate($this->customer->getWebsiteId())
                 ->skipExpiredDuplicates()
                 ->setDefaultOrder();
 
+            //@codingStandardsIgnoreStart
             $item = $collection->setPageSize(1)->setCurPage(1)->getFirstItem();
+            //@codingStandardsIgnoreEnd
 
             $this->reward = $item;
         } else {
             $this->reward = true;
         }
     }
-
 
     /**
      * Customer segments id.
@@ -813,7 +899,9 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
             ->addFieldToFilter('customer_id', $this->getCustomerId())
             ->addFieldToFilter('website_id', $this->customer->getWebsiteId());
 
+        //@codingStandardsIgnoreStart
         $item = $collection->setPageSize(1)->setCurPage(1)->getFirstItem();
+        //@codingStandardsIgnoreEnd
 
         if ($item) {
             return $item->getSegmentIds();
@@ -839,8 +927,10 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
                 ->addFieldToFilter('points_delta', array('lt' => 0))
                 ->setDefaultOrder();
 
+            //@codingStandardsIgnoreStart
             $item     = $collection->setPageSize(1)->setCurPage(1)
                 ->getFirstItem();
+            //@codingStandardsIgnoreEnd
             $lastUsed = $item->getCreatedAt();
 
             //for any valid date
@@ -854,18 +944,17 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         return '';
     }
 
-
     /**
-     * get most purchased category
+     * Get most purchased category
      *
      * @return string
      */
     public function getMostPurCategory()
     {
-        $id = $this->customer->getMostCategoryId();
-        if ($id) {
+        $categoryId = $this->customer->getMostCategoryId();
+        if ($categoryId) {
             return Mage::getModel('catalog/category')
-                ->load($id)
+                ->load($categoryId)
                 ->setStoreId($this->customer->getStoreId())
                 ->getName();
         }
@@ -874,7 +963,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get most purchased brand
+     * Get most purchased brand.
      *
      * @return string
      */
@@ -889,46 +978,46 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get most frequent day of purchase
+     * Get most frequent day of purchase.
      *
      * @return string
      */
     public function getMostFreqPurDay()
     {
-        $day = $this->customer->getWeekDay();
-        if ($day) {
-            return $day;
+        $weekDay = $this->customer->getWeekDay();
+        if ($weekDay) {
+            return $weekDay;
         }
 
         return "";
     }
 
     /**
-     * get most frequent month of purchase
+     * Get most frequent month of purchase.
      *
      * @return string
      */
     public function getMostFreqPurMon()
     {
-        $month = $this->customer->getMonthDay();
-        if ($month) {
-            return $month;
+        $monthDay = $this->customer->getMonthDay();
+        if ($monthDay) {
+            return $monthDay;
         }
 
         return "";
     }
 
     /**
-     * get first purchased category
+     * Get first purchased category.
      *
      * @return string
      */
     public function getFirstCategoryPur()
     {
-        $id = $this->customer->getFirstCategoryId();
-        if ($id) {
+        $categoryId = $this->customer->getFirstCategoryId();
+        if ($categoryId) {
             return Mage::getModel('catalog/category')
-                ->load($id)
+                ->load($categoryId)
                 ->setStoreId($this->customer->getStoreId())
                 ->getName();
         }
@@ -937,17 +1026,17 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get last purchased category
+     * Get last purchased category.
      *
      * @return string
      */
     public function getLastCategoryPur()
     {
-        $id = $this->customer->getLastCategoryId();
-        if ($id) {
+        $categoryId = $this->customer->getLastCategoryId();
+        if ($categoryId) {
             return Mage::getModel('catalog/category')
                 ->setStoreId($this->customer->getStoreId())
-                ->load($id)
+                ->load($categoryId)
                 ->getName();
         }
 
@@ -955,7 +1044,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get first purchased brand
+     * Get first purchased brand.
      *
      * @return string
      */
@@ -967,7 +1056,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get last purchased brand
+     * Get last purchased brand.
      *
      * @return string
      */
@@ -978,6 +1067,10 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         return $this->_getBrandValue($id);
     }
 
+    /**
+     * @param $id
+     * @return string
+     */
     protected function _getBrandValue($id)
     {
         $attribute = Mage::helper('ddg')->getWebsiteConfig(
@@ -998,7 +1091,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get last increment id
+     * Get last increment id.
      *
      * @return mixed
      */
@@ -1008,7 +1101,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get billing company name
+     * Get billing company name.
      *
      * @return mixed
      */
@@ -1018,7 +1111,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * get shipping company name
+     * Get shipping company name.
      *
      * @return mixed
      */

@@ -68,6 +68,10 @@ class Dotdigitalgroup_Email_Model_Connector_Product
      */
     public $websites = array();
 
+    /**
+     * Dotdigitalgroup_Email_Model_Connector_Product constructor.
+     * @param Mage_Catalog_Model_Product $product
+     */
     public function __construct(Mage_Catalog_Model_Product $product)
     {
         $this->id           = $product->getId();
@@ -94,13 +98,13 @@ class Dotdigitalgroup_Email_Model_Connector_Product
             $stock->getQty(), 2, '.', ''
         );
 
-        $short_description = $product->getShortDescription();
+        $shortDescription = $product->getShortDescription();
         //limit short description
-        if (strlen($short_description) > 250) {
-            $short_description = substr($short_description, 0, 250);
+        if (strlen($shortDescription) > 250) {
+            $shortDescription = substr($shortDescription, 0, 250);
         }
 
-        $this->short_description = $short_description;
+        $this->short_description = $shortDescription;
 
         //category data
         $count              = 0;
@@ -134,9 +138,7 @@ class Dotdigitalgroup_Email_Model_Connector_Product
                 ->getSelectionsCollection(
                     $product->getTypeInstance()->getOptionsIds()
                 );
-            $options             = $optionCollection->appendSelections(
-                $selectionCollection
-            );
+            $options = $optionCollection->appendSelections($selectionCollection);
             foreach ($options as $option) {
                 $count      = 0;
                 $title      = str_replace(' ', '', $option->getDefaultTitle());
@@ -151,6 +153,7 @@ class Dotdigitalgroup_Email_Model_Connector_Product
                     );
                     $count++;
                 }
+
                 $this->$title = $sOptions;
             }
         }
@@ -174,13 +177,14 @@ class Dotdigitalgroup_Email_Model_Connector_Product
                     );
                     $count++;
                 }
+
                 $this->$label = $options;
             }
         }
     }
 
     /**
-     * exposes the class as an array of objects.
+     * Exposes the class as an array of objects.
      *
      * @return array
      */
@@ -188,5 +192,4 @@ class Dotdigitalgroup_Email_Model_Connector_Product
     {
         return get_object_vars($this);
     }
-
 }

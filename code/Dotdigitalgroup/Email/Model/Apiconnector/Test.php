@@ -16,6 +16,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Test extends Dotdigitalgroup_Emai
         if (! $apiUsername || ! $apiPassword) {
             return false;
         }
+
         $this->setApiUsername($apiUsername)
             ->setApiPassword($apiPassword);
         $accountInfo = $this->getAccountInfo();

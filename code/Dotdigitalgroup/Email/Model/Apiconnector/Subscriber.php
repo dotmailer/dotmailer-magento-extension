@@ -9,8 +9,14 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Subscriber
      * @var Mage_Newsletter_Model_Subscriber $subscriber
      */
     public $subscriber;
+    /**]
+     * @var
+     */
     public $subscriberData;
-    protected $_mappingHash;
+    /**
+     * @var
+     */
+    public $mappingHash;
 
     /**
      * constructor, mapping hash to map.
@@ -41,17 +47,17 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Subscriber
     {
         $this->subscriber = $subscriber;
         foreach ($this->getMappingHash() as $key => $field) {
-
             //Call user function based on the attribute mapped.
             $function = 'get';
             $exploded = explode('_', $key);
             foreach ($exploded as $one) {
                 $function .= ucfirst($one);
             }
+
             try {
-                $value = call_user_func(
-                    array('self', $function)
-                );
+                //@codingStandardsIgnoreStart
+                $value = call_user_func(array('self', $function));
+                //@codingStandardsIgnoreEnd
                 $this->subscriberData[$key] = $value;
             } catch (Exception $e) {
                 Mage::logException($e);
@@ -60,11 +66,12 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Subscriber
     }
 
     /**
-     * @param mixed $mappingHash
+     * @param $mappingHash
+     * @return $this
      */
     public function setMappingHash($mappingHash)
     {
-        $this->_mappingHash = $mappingHash;
+        $this->mappingHash = $mappingHash;
 
         return $this;
     }
@@ -74,11 +81,11 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Subscriber
      */
     public function getMappingHash()
     {
-        return $this->_mappingHash;
+        return $this->mappingHash;
     }
 
     /**
-     * export to CSV.
+     * Export to CSV.
      *
      * @return mixed
      */
@@ -90,7 +97,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Subscriber
     }
 
     /**
-     * get website name.
+     * Get website name.
      *
      * @return string
      */
@@ -100,7 +107,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Subscriber
     }
 
     /**
-     * get store name.
+     * Get store name.
      *
      * @return null|string
      */
@@ -110,7 +117,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Subscriber
     }
 
     /**
-     * get numbser of orders.
+     * Get numbser of orders.
      *
      * @return mixed
      */
@@ -119,11 +126,12 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Subscriber
         if ($this->subscriber->getNumberOfOrders()) {
             return $this->subscriber->getNumberOfOrders();
         }
+
         return '';
     }
 
     /**
-     * get average order value.
+     * Get average order value.
      *
      * @return mixed
      */
@@ -132,11 +140,12 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Subscriber
         if ($this->subscriber->getAverageOrderValue()) {
             return $this->subscriber->getAverageOrderValue();
         }
+
         return '';
     }
 
     /**
-     * get total spend.
+     * Get total spend.
      *
      * @return mixed
      */
@@ -145,11 +154,12 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Subscriber
         if ($this->subscriber->getTotalSpend()) {
             return $this->subscriber->getTotalSpend();
         }
+
         return '';
     }
 
     /**
-     * get last order date.
+     * Get last order date.
      *
      * @return mixed
      */
@@ -158,11 +168,12 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Subscriber
         if ($this->subscriber->getLastOrderDate()) {
             return $this->subscriber->getLastOrderDate();
         }
+
         return '';
     }
 
     /**
-     * get last order id.
+     * Get last order id.
      *
      * @return mixed
      */
@@ -171,11 +182,12 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Subscriber
         if ($this->subscriber->getLastOrderId()) {
             return $this->subscriber->getLastOrderId();
         }
+
         return '';
     }
 
     /**
-     * get last increment id
+     * Get last increment id.
      *
      * @return mixed
      */
@@ -184,9 +196,13 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Subscriber
         if ($this->subscriber->getLastIncrementId()) {
             return $this->subscriber->getLastIncrementId();
         }
+
         return '';
     }
 
+    /**
+     * @return string
+     */
     protected function _getWebsiteName()
     {
         $storeId = $this->subscriber->getStoreId();
@@ -198,6 +214,9 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Subscriber
         return '';
     }
 
+    /**
+     * @return null|string
+     */
     protected function _getStoreName()
     {
         $storeId = $this->subscriber->getStoreId();
@@ -210,16 +229,16 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Subscriber
     }
 
     /**
-     * get most purchased category
+     * Get most purchased category.
      *
      * @return string
      */
     public function getMostPurCategory()
     {
-        $id = $this->subscriber->getMostCategoryId();
-        if ($id) {
+        $categoryId = $this->subscriber->getMostCategoryId();
+        if ($categoryId) {
             return Mage::getModel('catalog/category')
-                ->load($id)
+                ->load($categoryId)
                 ->setStoreId($this->subscriber->getStoreId())
                 ->getName();
         }
@@ -228,7 +247,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Subscriber
     }
 
     /**
-     * get most purchased brand
+     * Get most purchased brand.
      *
      * @return string
      */
@@ -243,22 +262,22 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Subscriber
     }
 
     /**
-     * get most frequent day of purchase
+     * Get most frequent day of purchase.
      *
      * @return string
      */
     public function getMostFreqPurDay()
     {
-        $day = $this->subscriber->getWeekDay();
-        if ($day) {
-            return $day;
+        $weekDay = $this->subscriber->getWeekDay();
+        if ($weekDay) {
+            return $weekDay;
         }
 
         return "";
     }
 
     /**
-     * get most frequent month of purchase
+     * Get most frequent month of purchase.
      *
      * @return string
      */
@@ -273,16 +292,16 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Subscriber
     }
 
     /**
-     * get first purchased category
+     * Get first purchased category.
      *
      * @return string
      */
     public function getFirstCategoryPur()
     {
-        $id = $this->subscriber->getFirstCategoryId();
-        if ($id) {
+        $categoryId = $this->subscriber->getFirstCategoryId();
+        if ($categoryId) {
             return Mage::getModel('catalog/category')
-                ->load($id)
+                ->load($categoryId)
                 ->setStoreId($this->subscriber->getStoreId())
                 ->getName();
         }
@@ -291,17 +310,17 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Subscriber
     }
 
     /**
-     * get last purchased category
+     * Get last purchased category.
      *
      * @return string
      */
     public function getLastCategoryPur()
     {
-        $id = $this->subscriber->getLastCategoryId();
-        if ($id) {
+        $categoryId = $this->subscriber->getLastCategoryId();
+        if ($categoryId) {
             return Mage::getModel('catalog/category')
                 ->setStoreId($this->subscriber->getStoreId())
-                ->load($id)
+                ->load($categoryId)
                 ->getName();
         }
 
@@ -309,7 +328,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Subscriber
     }
 
     /**
-     * get first purchased brand
+     * Get first purchased brand.
      *
      * @return string
      */
@@ -321,7 +340,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Subscriber
     }
 
     /**
-     * get last purchased brand
+     * Get last purchased brand.
      *
      * @return string
      */
@@ -332,6 +351,10 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Subscriber
         return $this->_getBrandValue($id);
     }
 
+    /**
+     * @param $id
+     * @return string
+     */
     protected function _getBrandValue($id)
     {
         $attribute = Mage::helper('ddg')->getWebsiteConfig(

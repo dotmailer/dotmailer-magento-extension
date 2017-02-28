@@ -3,11 +3,12 @@
 class Dotdigitalgroup_Email_Model_Adminhtml_Source_Attributes
 {
 
+    /**
+     * @return array
+     */
     public function toOptionArray()
     {
-        $attributes = Mage::getResourceModel(
-            'catalog/product_attribute_collection'
-        )
+        $attributes = Mage::getResourceModel('catalog/product_attribute_collection')
             ->addVisibleFilter();
 
         $attributeArray = array(

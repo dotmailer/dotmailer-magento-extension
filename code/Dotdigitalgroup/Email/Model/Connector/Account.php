@@ -3,30 +3,75 @@
 class Dotdigitalgroup_Email_Model_Connector_Account
 {
 
-    protected $_apiUsername;
-    protected $_apiPassword;
-    protected $_limit;
-    protected $_contactBookId;
-    protected $_subscriberBookId;
-    protected $_websites = array();
-    protected $_csvHeaders;
-    protected $_customersFilename;
-    protected $_subscribersFilename;
-    protected $_mappingHash;
-    protected $_contacts = array();
-    protected $_orders = array();
-    protected $_orderIds = array();
-    protected $_ordersForSingleSync = array();
-    protected $_orderIdsForSingleSync = array();
+    /**
+     * @var string
+     */
+    public $apiUsername;
+    /**
+     * @var string
+     */
+    public $apiPassword;
+    /**
+     * @var int
+     */
+    public $limit;
+    /**
+     * @var array
+     */
+    public $contactBookIds;
+    /**
+     * @var array
+     */
+    public $subscriberBookIds;
+    /**
+     * @var array
+     */
+    public $websites = array();
+    /**
+     * @var array
+     */
+    public $csvHeaders;
+    /**
+     * @var string
+     */
+    public $customersFilename;
+    /**
+     * @var string
+     */
+    public $subscribersFilename;
+    /**
+     * @var array
+     */
+    public $mappingHash;
+    /**
+     * @var array
+     */
+    public $contacts = array();
+    /**
+     * @var array
+     */
+    public $orders = array();
+    /**
+     * @var array
+     */
+    public $orderIds = array();
+    /**
+     * @var array
+     */
+    public $ordersForSingleSync = array();
+    /**
+     * @var array
+     */
+    public $orderIdsForSingleSync = array();
 
     /**
-     * @param $api_password
+     * @param $apiPassword
      *
      * @return $this
      */
-    public function setApiPassword($api_password)
+    public function setApiPassword($apiPassword)
     {
-        $this->_apiPassword = $api_password;
+        $this->apiPassword = $apiPassword;
 
         return $this;
     }
@@ -36,17 +81,17 @@ class Dotdigitalgroup_Email_Model_Connector_Account
      */
     public function getApiPassword()
     {
-        return $this->_apiPassword;
+        return $this->apiPassword;
     }
 
     /**
-     * @param $api_username
+     * @param $apiUsername
      *
      * @return $this
      */
-    public function setApiUsername($api_username)
+    public function setApiUsername($apiUsername)
     {
-        $this->_apiUsername = $api_username;
+        $this->apiUsername = $apiUsername;
 
         return $this;
     }
@@ -56,15 +101,15 @@ class Dotdigitalgroup_Email_Model_Connector_Account
      */
     public function getApiUsername()
     {
-        return $this->_apiUsername;
+        return $this->apiUsername;
     }
 
     /**
-     * @param string $contactBookId
+     * @param string $contactBookIds
      */
-    public function setContactBookId($contactBookId)
+    public function setContactBookId($contactBookIds)
     {
-        $this->_contactBookId[$contactBookId] = $contactBookId;
+        $this->contactBookIds[$contactBookIds] = $contactBookIds;
     }
 
     /**
@@ -72,7 +117,7 @@ class Dotdigitalgroup_Email_Model_Connector_Account
      */
     public function getContactBookIds()
     {
-        return $this->_contactBookId;
+        return $this->contactBookIds;
     }
 
     /**
@@ -80,10 +125,10 @@ class Dotdigitalgroup_Email_Model_Connector_Account
      */
     public function setContacts($contacts)
     {
-        if ( ! empty($this->_contacts)) {
-            $this->_contacts += $contacts;
+        if (! empty($this->contacts)) {
+            $this->contacts += $contacts;
         } else {
-            $this->_contacts[] = $contacts;
+            $this->contacts[] = $contacts;
         }
     }
 
@@ -92,15 +137,15 @@ class Dotdigitalgroup_Email_Model_Connector_Account
      */
     public function getContacts()
     {
-        return $this->_contacts;
+        return $this->contacts;
     }
 
     /**
-     * @param mixed $customers_filename
+     * @param mixed $customersFilename
      */
-    public function setCustomersFilename($customers_filename)
+    public function setCustomersFilename($customersFilename)
     {
-        $this->_customersFilename = $customers_filename;
+        $this->customersFilename = $customersFilename;
     }
 
     /**
@@ -108,7 +153,7 @@ class Dotdigitalgroup_Email_Model_Connector_Account
      */
     public function getCustomersFilename()
     {
-        return $this->_customersFilename;
+        return $this->customersFilename;
     }
 
     /**
@@ -116,7 +161,7 @@ class Dotdigitalgroup_Email_Model_Connector_Account
      */
     public function setLimit($limit)
     {
-        $this->_limit = $limit;
+        $this->limit = $limit;
     }
 
     /**
@@ -124,7 +169,7 @@ class Dotdigitalgroup_Email_Model_Connector_Account
      */
     public function getLimit()
     {
-        return $this->_limit;
+        return $this->limit;
     }
 
     /**
@@ -132,7 +177,7 @@ class Dotdigitalgroup_Email_Model_Connector_Account
      */
     public function setMappingHash($mappingHash)
     {
-        $this->_mappingHash = $mappingHash;
+        $this->mappingHash = $mappingHash;
     }
 
     /**
@@ -140,7 +185,7 @@ class Dotdigitalgroup_Email_Model_Connector_Account
      */
     public function getMappingHash()
     {
-        return $this->_mappingHash;
+        return $this->mappingHash;
     }
 
     /**
@@ -149,8 +194,7 @@ class Dotdigitalgroup_Email_Model_Connector_Account
     public function setOrders($orders)
     {
         foreach ($orders as $order) {
-
-            $this->_orders[$order->id] = $order;
+            $this->orders[$order->id] = $order;
         }
     }
 
@@ -159,15 +203,15 @@ class Dotdigitalgroup_Email_Model_Connector_Account
      */
     public function getOrders()
     {
-        return $this->_orders;
+        return $this->orders;
     }
 
     /**
-     * @param string $subscriberBookId
+     * @param string $subscriberBookIds
      */
-    public function setSubscriberBookId($subscriberBookId)
+    public function setSubscriberBookId($subscriberBookIds)
     {
-        $this->_subscriberBookId[$subscriberBookId] = $subscriberBookId;
+        $this->subscriberBookIds[$subscriberBookIds] = $subscriberBookIds;
     }
 
     /**
@@ -175,15 +219,15 @@ class Dotdigitalgroup_Email_Model_Connector_Account
      */
     public function getSubscriberBookIds()
     {
-        return $this->_subscriberBookId;
+        return $this->subscriberBookIds;
     }
 
     /**
-     * @param mixed $subscribers_filename
+     * @param mixed $subscribersFilename
      */
-    public function setSubscribersFilename($subscribers_filename)
+    public function setSubscribersFilename($subscribersFilename)
     {
-        $this->_subscribersFilename = $subscribers_filename;
+        $this->subscribersFilename = $subscribersFilename;
     }
 
     /**
@@ -191,15 +235,15 @@ class Dotdigitalgroup_Email_Model_Connector_Account
      */
     public function getSubscribersFilename()
     {
-        return $this->_subscribersFilename;
+        return $this->subscribersFilename;
     }
 
     /**
-     * @param mixed $csv_headers
+     * @param mixed $csvHeaders
      */
-    public function setCsvHeaders($csv_headers)
+    public function setCsvHeaders($csvHeaders)
     {
-        $this->_csvHeaders = $csv_headers;
+        $this->csvHeaders = $csvHeaders;
     }
 
     /**
@@ -207,7 +251,7 @@ class Dotdigitalgroup_Email_Model_Connector_Account
      */
     public function getCsvHeaders()
     {
-        return $this->_csvHeaders;
+        return $this->csvHeaders;
     }
 
     /**
@@ -215,7 +259,7 @@ class Dotdigitalgroup_Email_Model_Connector_Account
      */
     public function setWebsites($websites)
     {
-        $this->_websites[] = $websites;
+        $this->websites[] = $websites;
     }
 
     /**
@@ -223,7 +267,7 @@ class Dotdigitalgroup_Email_Model_Connector_Account
      */
     public function getWebsites()
     {
-        return $this->_websites;
+        return $this->websites;
     }
 
     /**
@@ -231,7 +275,7 @@ class Dotdigitalgroup_Email_Model_Connector_Account
      */
     public function setOrderIds($orderIds)
     {
-        $this->_orderIds = $orderIds;
+        $this->orderIds = $orderIds;
     }
 
     /**
@@ -239,7 +283,7 @@ class Dotdigitalgroup_Email_Model_Connector_Account
      */
     public function getOrderIds()
     {
-        return $this->_orderIds;
+        return $this->orderIds;
     }
 
     /**
@@ -248,7 +292,7 @@ class Dotdigitalgroup_Email_Model_Connector_Account
     public function setOrdersForSingleSync($orders)
     {
         foreach ($orders as $order) {
-            $this->_ordersForSingleSync[$order->id] = $order;
+            $this->ordersForSingleSync[$order->id] = $order;
         }
     }
 
@@ -257,7 +301,7 @@ class Dotdigitalgroup_Email_Model_Connector_Account
      */
     public function getOrdersForSingleSync()
     {
-        return $this->_ordersForSingleSync;
+        return $this->ordersForSingleSync;
     }
 
     /**
@@ -265,7 +309,7 @@ class Dotdigitalgroup_Email_Model_Connector_Account
      */
     public function setOrderIdsForSingleSync($orderIds)
     {
-        $this->_orderIdsForSingleSync = $orderIds;
+        $this->orderIdsForSingleSync = $orderIds;
     }
 
     /**
@@ -273,6 +317,6 @@ class Dotdigitalgroup_Email_Model_Connector_Account
      */
     public function getOrderIdsForSingleSync()
     {
-        return $this->_orderIdsForSingleSync;
+        return $this->orderIdsForSingleSync;
     }
 }

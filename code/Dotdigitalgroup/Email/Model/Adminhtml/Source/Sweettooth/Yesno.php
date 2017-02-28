@@ -4,7 +4,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Sweettooth_Yesno
 {
 
     /**
-     * Options getter
+     * Options getter.
      *
      * @return array
      */

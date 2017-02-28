@@ -5,7 +5,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Orders
 {
 
     /**
-     * calculate sales and prepare columns
+     * Calculate sales and prepare columns.
      *
      * @param int $isFilter
      *
@@ -21,6 +21,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Orders
         if (empty($statuses)) {
             $statuses = array(0);
         }
+
         $adapter = $collection->getConnection();
 
         if (Mage::getStoreConfig('sales/dashboard/use_aggregated_data')) {
@@ -31,16 +32,18 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Orders
                 'SUM(main_table.total_revenue_amount)/SUM(main_table.orders_count)',
                 0
             );
+            //@codingStandardsIgnoreStart
             $collection->getSelect()->columns(
                 array(
                     'lifetime'    => 'SUM(main_table.total_revenue_amount)',
                     'average'     => $averageExpr,
                     'total_count' => "SUM(main_table.orders_count)",
-                    'day_count'   => "ROUND(SUM(main_table.orders_count) / DATEDIFF(date(MAX(period)) , date(MIN(period))), 2)"
+                    'day_count'   => "ROUND(SUM(main_table.orders_count) / DATEDIFF(date(MAX(period)),
+                     date(MIN(period))), 2)"
                 )
             );
 
-            if ( ! $isFilter) {
+            if (! $isFilter) {
                 $collection->addFieldToFilter(
                     'store_id',
                     array('eq' => Mage::app()->getStore(
@@ -48,13 +51,14 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Orders
                     )->getId())
                 );
             }
+
             $collection->getSelect()->where(
                 'main_table.order_status NOT IN(?)', $statuses
             );
+
         } else {
             $collection->setMainTable('sales/order');
             $collection->removeAllFieldsFromSelect();
-
             $expr = Mage::getResourceModel('ddg_automation/contact')
                 ->getSalesAmountExpression($collection);
 
@@ -68,7 +72,8 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Orders
                         'lifetime'    => "SUM({$expr})",
                         'average'     => "AVG({$expr})",
                         'total_count' => "COUNT({$expr})",
-                        'day_count'   => "ROUND(COUNT({$expr}) / DATEDIFF(date(MAX(created_at)) , date(MIN(created_at))), 2)"
+                        'day_count'   => "ROUND(COUNT({$expr}) / DATEDIFF(date(MAX(created_at)),
+                         date(MIN(created_at))), 2)"
                     )
                 )
                 ->where('main_table.status NOT IN(?)', $statuses)
@@ -77,6 +82,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Orders
                         Mage_Sales_Model_Order::STATE_NEW,
                         Mage_Sales_Model_Order::STATE_PENDING_PAYMENT)
                 );
+            //@codingStandardsIgnoreEnd
         }
 
         return $collection;
@@ -97,15 +103,18 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Orders
 
         if ($store) {
             $collection->addFieldToFilter('store_id', $store);
-        } else if ($website) {
+        } elseif ($website) {
             $storeIds = Mage::app()->getWebsite($website)->getStoreIds();
             $collection->addFieldToFilter('store_id', array('in' => $storeIds));
-        } else if ($group) {
+        } elseif ($group) {
             $storeIds = Mage::app()->getGroup($group)->getStoreIds();
             $collection->addFieldToFilter('store_id', array('in' => $storeIds));
         }
+
+        //@codingStandardsIgnoreStart
         $collection->getSelect()->limit('1');
 
         return $collection->getFirstItem();
+        //@codingStandardsIgnoreEnd
     }
 }
