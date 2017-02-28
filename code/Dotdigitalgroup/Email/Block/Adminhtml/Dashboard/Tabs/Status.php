@@ -1546,9 +1546,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
 
             if ($customOrderAttibute !== true) {
                 $resultContent->setStyle(self::CONNECTOR_DASHBOARD_FAILED)
-                    ->setTitle(
-                        'Custom order attribute not selected (ignore if you do not want to import custom order attributes) :'
-                    )
+                    ->setTitle('Custom order attribute not selected 
+                    (ignore if you do not want to import custom order attributes) :')
                     ->setMessage('')
                     ->setTable(
                         array(

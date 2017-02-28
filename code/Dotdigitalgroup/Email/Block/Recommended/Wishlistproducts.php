@@ -11,11 +11,13 @@ class Dotdigitalgroup_Email_Block_Recommended_Wishlistproducts extends Dotdigita
     protected function getWishlistItems()
     {
         $wishlist = $this->getWishlist();
+        //@codingStandardsIgnoreStart
         if ($wishlist && count($wishlist->getItemCollection())) {
             return $wishlist->getItemCollection();
         } else {
             return array();
         }
+        //@codingStandardsIgnoreEnd
     }
 
     /**

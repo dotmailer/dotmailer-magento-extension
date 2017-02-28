@@ -18,8 +18,11 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Advanced_Notification
         $format = Mage::app()->getLocale()->getDateTimeFormat(
             Mage_Core_Model_Locale::FORMAT_TYPE_MEDIUM
         );
-
-        return Mage::app()->getLocale()->date((int)$element->getValue())
+        //@codingStandardsIgnoreStart
+        $date =  Mage::app()->getLocale()->date((int)$element->getValue())
             ->toString($format);
+        //@codingStandardsIgnoreEnd
+
+        return $date;
     }
 }

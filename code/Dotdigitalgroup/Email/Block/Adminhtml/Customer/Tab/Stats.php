@@ -7,7 +7,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Customer_Tab_Stats
     /**
      * @var array
      */
-    protected $stats = array();
+    public $stats = array();
 
     /**
      * Constructor.
@@ -29,11 +29,12 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Customer_Tab_Stats
             $contact = $client->postContacts($email);
             if (!isset($contact->message)) {
                 $locale = Mage::app()->getLocale()->getLocale();
+                //@codingStandardsIgnoreStart
                 $date = Zend_Date::now($locale)->subDay(30);
-
                 $response = $client->getCampaignsWithActivitySinceDate(
                     $date->toString(Zend_Date::ISO_8601)
                 );
+                //@codingStandardsIgnoreEnd
                 if (!isset($response->message) && is_array($response)) {
                     foreach ($response as $one) {
                         $result = $client->getCampaignActivityByContactId(

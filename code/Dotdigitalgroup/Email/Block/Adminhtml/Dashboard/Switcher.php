@@ -18,12 +18,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Switcher
     public function getStoreSelectOptions()
     {
         $section = $this->getRequest()->getParam('section');
-
         $curWebsite = $this->getRequest()->getParam('website');
         $curStore   = $this->getRequest()->getParam('store');
-
         $storeModel = Mage::getSingleton('adminhtml/system_store');
-        /* @var $storeModel Mage_Adminhtml_Model_System_Store */
         $url = Mage::getModel('adminhtml/url');
 
         $options            = array();
@@ -101,7 +98,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Switcher
      */
     public function getHintHtml()
     {
-        return Mage::getBlockSingleton('adminhtml/store_switcher')->getHintHtml(
-        );
+        return Mage::getBlockSingleton('adminhtml/store_switcher')->getHintHtml();
     }
 }
