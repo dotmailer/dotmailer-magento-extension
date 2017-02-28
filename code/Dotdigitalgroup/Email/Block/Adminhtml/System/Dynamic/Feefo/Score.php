@@ -10,7 +10,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Feefo_Score
         //passcode to append for url
         $passcode = Mage::helper('ddg')->getPasscode();
 
-        if ( ! strlen($passcode)) {
+        if (! strlen($passcode)) {
             $passcode = '[PLEASE SET UP A PASSCODE]';
         }
 

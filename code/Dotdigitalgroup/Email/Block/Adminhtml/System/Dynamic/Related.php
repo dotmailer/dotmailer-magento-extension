@@ -12,10 +12,11 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Related
         //last order id witch information will be generated
         $lastOrderId = Mage::helper('ddg')->getLastOrderId();
 
-        if ( ! strlen($passcode)) {
+        if (! strlen($passcode)) {
             $passcode = '[PLEASE SET UP A PASSCODE]';
         }
-        if ( ! $lastOrderId) {
+
+        if (! $lastOrderId) {
             $lastOrderId = '[PLEASE MAP THE LAST ORDER ID]';
         }
 

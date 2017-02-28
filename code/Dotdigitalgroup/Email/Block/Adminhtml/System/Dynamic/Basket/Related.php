@@ -12,11 +12,12 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Basket_Related
         //last quote id for dynamic page
         $lastQuoteId = Mage::helper('ddg')->getLastQuoteId();
 
-        if ( ! strlen($passcode)) {
+        if (! strlen($passcode)) {
             $passcode = '[PLEASE SET UP A PASSCODE]';
         }
+
         //alert message for last order id is not mapped
-        if ( ! $lastQuoteId) {
+        if (! $lastQuoteId) {
             $lastQuoteId = '[PLEASE MAP THE LAST QUOTE ID]';
         }
 

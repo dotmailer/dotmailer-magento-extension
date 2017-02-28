@@ -14,11 +14,12 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Crosssell
         //last order id for dynamic page
         $lastOrderId = Mage::helper('ddg')->getLastOrderId();
 
-        if ( ! strlen($passcode)) {
+        if (! strlen($passcode)) {
             $passcode = '[PLEASE SET UP A PASSCODE]';
         }
+
         //alert message for last order id is not mapped
-        if ( ! $lastOrderId) {
+        if (! $lastOrderId) {
             $lastOrderId = '[PLEASE MAP THE LAST ORDER ID]';
         }
 

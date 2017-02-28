@@ -30,6 +30,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_General
         } elseif ($this->getRequest()->getParam('website')) {
             $website = $this->getRequest()->getParam('website');
         }
+
         $apiUsername = Mage::helper('ddg')->getApiUsername($website);
         $apiPassword = Mage::helper('ddg')->getApiPassword($website);
         $data        = Mage::getModel('ddg_automation/apiconnector_client')

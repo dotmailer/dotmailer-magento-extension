@@ -12,7 +12,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Productpush
         $baseUrl = Mage::helper('ddg')->generateDynamicUrl();
         $passcode = Mage::helper('ddg')->getPasscode();
 
-        if ( ! strlen($passcode)) {
+        if (! strlen($passcode)) {
             $passcode = '[PLEASE SET UP A PASSCODE]';
         }
 

@@ -47,6 +47,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Widget_Chooser_Product
             if (empty($selected)) {
                 $selected = '';
             }
+
             if ($column->getFilter()->getValue()) {
                 $this->getCollection()->addFieldToFilter(
                     'entity_id', array('in' => $selected)

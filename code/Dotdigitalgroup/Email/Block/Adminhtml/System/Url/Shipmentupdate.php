@@ -22,6 +22,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Url_Shipmentupdate
             $website = Mage::app()->getWebsite($website);
             $baseUrl = $website->getConfig('web/secure/base_url');
         }
+
         $helper = Mage::helper('ddg');
         $passcode = $helper->getWebsiteConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_CONTENT_PASSCODE,
@@ -32,7 +33,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Url_Shipmentupdate
             $website
         );
 
-        if ( ! strlen($passcode)) {
+        if (! strlen($passcode)) {
             $passcode = '[PLEASE SET UP A PASSCODE]';
         }
 

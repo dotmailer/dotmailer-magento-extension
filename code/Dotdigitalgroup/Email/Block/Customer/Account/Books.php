@@ -91,6 +91,7 @@ class Dotdigitalgroup_Email_Block_Customer_Account_Books
                             = $addressBook->name;
                     }
                 }
+
                 foreach ($additionalFromConfig as $bookId) {
                     $connectorBook = $this->_getApiClient()->getAddressBookById(
                         $bookId
@@ -100,6 +101,7 @@ class Dotdigitalgroup_Email_Block_Customer_Account_Books
                         if (isset($processedAddressBooks[$bookId])) {
                             $subscribed = 1;
                         }
+
                         $additionalBooksToShow[] = array(
                             "name"       => $connectorBook->name,
                             "value"      => $connectorBook->id,
@@ -156,6 +158,7 @@ class Dotdigitalgroup_Email_Block_Customer_Account_Books
                     $processedConnectorDataFields[$connectorDataField->name]
                         = $connectorDataField;
                 }
+
                 foreach ($dataFieldsFromConfig as $dataFieldFromConfig) {
                     if (isset($processedConnectorDataFields[$dataFieldFromConfig])) {
                         $value = "";
@@ -182,7 +185,6 @@ class Dotdigitalgroup_Email_Block_Customer_Account_Books
                         );
                     }
                 }
-
             }
         }
 
@@ -200,7 +202,7 @@ class Dotdigitalgroup_Email_Block_Customer_Account_Books
         ) {
             $books  = $this->getAdditionalBooksToShow();
             $fields = $this->getDataFieldsToShow();
-            if ( ! empty($books) or ! empty($fields)) {
+            if (! empty($books) or ! empty($fields)) {
                 return true;
             }
         }

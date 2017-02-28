@@ -56,7 +56,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Installation
         $section = $this->getRequest()->getParam('section');
 
         // not not track other sections
-        if ( ! in_array($section, $this->sections)) {
+        if (! in_array($section, $this->sections)) {
             return;
         }
 

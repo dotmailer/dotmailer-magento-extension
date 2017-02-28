@@ -19,10 +19,11 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Wishlist_Upsell
         //last order id witch information will be generated
         $customerId = Mage::helper('ddg')->getMappedCustomerId();
 
-        if ( ! strlen($passcode)) {
+        if (! strlen($passcode)) {
             $passcode = '[PLEASE SET UP A PASSCODE]';
         }
-        if ( ! $customerId) {
+
+        if (! $customerId) {
             $customerId = '[PLEASE MAP THE CUSTOMER ID]';
         }
 

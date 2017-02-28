@@ -45,6 +45,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Config_Trial extends Mage_Adm
             </script>
         ";
         }
+
         return $html . $script;
     }
 }

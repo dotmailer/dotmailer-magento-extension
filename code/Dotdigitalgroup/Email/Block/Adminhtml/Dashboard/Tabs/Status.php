@@ -103,7 +103,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
 
         $displayData = array();
         foreach ($this->getCheckpoints() as $key => $checkpoint) {
-
             $method = $this->getFormatedMethodName($key);
 
             if (is_callable(array($this, $method))) {
@@ -115,9 +114,11 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                     $showHowTo   = 'no_display';
                     $collapsable = '0';
                 }
+
                 if ($this->_getCollapseState($key) !== false) {
                     $collapsable = $this->_getCollapseState($key);
                 }
+
                 $displayData[$key] = array(
                     'showHowTo'   => $showHowTo,
                     'collapsable' => $collapsable,
@@ -200,7 +201,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
             ->setMessage('Looks Great.');
 
         foreach (Mage::app()->getWebsites() as $website) {
-
             $websiteName = $website->getName();
             $link        = Mage::helper('adminhtml')->getUrl(
                 '*/system_config/edit/section/connector_sync_settings/website/'
@@ -277,7 +277,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
             )) ? true : 'Not Mapped! ';
             //not mapped show options
             if ($roiConfig !== true || $pageTracking !== true) {
-
                 //links to enable and get redirected back
                 $roiUrl  = Mage::helper('adminhtml')->getUrl(
                     '*/connector/enablewebsiteconfiguration',
@@ -306,8 +305,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                 $valid = false;
             }
         }
+
         //validation failed
-        if ( ! $valid) {
+        if (! $valid) {
             $resultContent->setHowto(self::FAST_FIX_MESSAGE);
         }
 
@@ -355,6 +355,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                     $emailDir . ' is set to : ' . $checkEmail
                 );
             }
+
             if ($checkArchive != 755 || $checkArchive != 777) {
                 $resultContent->setHowto(
                     $archiveDir . ' is set to : ' . $checkArchive
@@ -381,8 +382,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
             ->setMessage('Looks Great.');
 
         $filePath = Mage::getModuleDir(
-                'etc', Dotdigitalgroup_Email_Helper_Config::MODULE_NAME
-            ) . DS . 'files.yaml';
+            'etc', Dotdigitalgroup_Email_Helper_Config::MODULE_NAME
+        ) . DS . 'files.yaml';
         $config   = Zend_Config_Yaml::decode(file_get_contents($filePath));
 
         /**
@@ -454,6 +455,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                         ->setHowto('File not found : ' . $file);
                 }
             }
+
             array_shift($pathToCheck);
         }
 
@@ -500,8 +502,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                 $valid = false;
             }
         }
+
         //validation failed
-        if ( ! $valid) {
+        if (! $valid) {
             $resultContent->setHowto(self::FAST_FIX_MESSAGE);
         }
 
@@ -527,7 +530,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
         //global email duplicates
         if (Mage::getResourceModel('customer/customer')->findEmailDuplicates()
         ) {
-
             //duplicate email customers
             $customers      = Mage::helper('ddg')
                 ->getCustomersWithDuplicateEmails();
@@ -540,7 +542,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
         }
 
         foreach (Mage::app()->getWebsites() as $website) {
-
             $websiteId = $website->getId();
             //total customers for website
             $countCustomers = Mage::getModel('customer/customer')
@@ -549,7 +550,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                 ->getSize();
 
             //skip if no customers
-            if ( ! $countCustomers) {
+            if (! $countCustomers) {
                 continue;
             }
 
@@ -593,13 +594,12 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
             }
 
             //not valid response remove status
-            if ( ! $countAddressbookContacts) {
+            if (! $countAddressbookContacts) {
                 unset($tableData['Status']);
             }
 
             //no contacts
-            if ( ! $countCustomers) {
-
+            if (! $countCustomers) {
                 $resultContent->setStyle(self::CONNECTOR_DASHBOARD_FAILED)
                     ->setTitle(
                         'Contacts Sync (ignore if you have reset contacts for reimport) : '
@@ -658,8 +658,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                 $passed = false;
             }
         }
+
         //if validation not passed
-        if ( ! $passed) {
+        if (! $passed) {
             $resultContent->setHowto(self::FAST_FIX_MESSAGE);
         }
 
@@ -692,7 +693,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                 ->addStoreFilter($storeIds)
                 ->getSize();
             //skip if no subscriber
-            if ( ! $countSubscribers) {
+            if (! $countSubscribers) {
                 continue;
             }
 
@@ -724,8 +725,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
             $tableData['Status'] = '';
 
             //no imported contacts
-            if ( ! $countSubscribersImported) {
-
+            if (! $countSubscribersImported) {
                 $tableData['Status'] = 'No Imported Subscribers Found.';
                 $resultContent->setStyle(self::CONNECTOR_DASHBOARD_FAILED)
                     ->setTitle(
@@ -733,6 +733,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                     )
                     ->setMessage('');
             }
+
             $resultContent->setTable($tableData);
         }
 
@@ -794,9 +795,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
 
             //check for wishlist program
             if ($wishlistProgram) {
-
                 if ($wishlistProgram->status != 'Active') {
-
                     //set the status as failed
                     $resultContent->setStyle(self::CONNECTOR_DASHBOARD_FAILED)
                         ->setMessage(
@@ -812,18 +811,14 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                     );
                     $disableWishlist = 'Deactivated! <a href="'
                         . $disableWishlist . '">click</a> to disable';
-
                 } else {
-
                     $disableWishlist = $wishlistProgram->status;
                 }
             }
 
             //check for order program
             if ($orderProgram) {
-
                 if ($orderProgram->status != 'Active') {
-
                     //set the status as failed
                     $resultContent->setStyle(self::CONNECTOR_DASHBOARD_FAILED)
                         ->setMessage(
@@ -839,18 +834,14 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                     );
                     $disableOrder = 'Deactivated! <a href="' . $disableOrder
                         . '">click</a> to disable';
-
                 } else {
-
                     $disableOrder = $orderProgram->status;
                 }
             }
 
             //check for review program
             if ($reviewsProgram) {
-
                 if ($reviewsProgram->status != 'Active') {
-
                     //set the status as failed
                     $resultContent->setStyle(self::CONNECTOR_DASHBOARD_FAILED)
                         ->setMessage(
@@ -866,18 +857,14 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                     );
                     $disableReviews = 'Deactivated! <a href="' . $disableReviews
                         . '">click</a> to disable';
-
                 } else {
-
                     $disableReviews = $reviewsProgram->status;
                 }
             }
 
             //check for guest order program
             if ($guestOrderProgram) {
-
                 if ($guestOrderProgram->status != 'Active') {
-
                     //set the status as failed
                     $resultContent->setStyle(self::CONNECTOR_DASHBOARD_FAILED)
                         ->setMessage(
@@ -893,18 +880,14 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                     );
                     $disableGuestOrder = 'Deactivated! <a href="'
                         . $disableGuestOrder . '">click</a> to disable';
-
                 } else {
-
                     $disableGuestOrder = $guestOrderProgram->status;
                 }
             }
 
             //check for customer program
             if ($cusProgram) {
-
                 if ($cusProgram->status != 'Active') {
-
                     //set the status as failed
                     $resultContent->setStyle(self::CONNECTOR_DASHBOARD_FAILED)
                         ->setMessage(
@@ -920,16 +903,13 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                     );
                     $disableCustomer = 'Deactivated! <a href="'
                         . $disableCustomer . '">click</a> to disable';
-
                 } else {
-
                     $disableCustomer = $cusProgram->status;
                 }
             }
 
             //check for subscriber program
             if ($subProgram) {
-
                 if ($subProgram->status != 'Active') {
                     // set the status failed
                     $resultContent->setStyle(self::CONNECTOR_DASHBOARD_FAILED)
@@ -947,7 +927,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                     );
                     $disableSubscriber = 'Deactivated <a href="'
                         . $disableSubscriber . '">click</a> to disable';
-
                 } else {
                     $disableSubscriber = $subProgram->status;
                 }
@@ -983,7 +962,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
 
             //set the content with table data
             $resultContent->setTable($tableData);
-
         }
 
         return $resultContent;
@@ -1136,237 +1114,270 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
             //website name for table data
             $websiteName          = $website->getName();
             $tableData['Website'] = $websiteName;
-            if ( ! $website->getConfig(
+            if (! $website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_ID
             )
             ) {
                 $passed = false;
                 $mapped++;
             }
-            if ( ! $website->getConfig(
+
+            if (! $website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_FIRSTNAME
             )
             ) {
                 $passed = false;
                 $mapped++;
             }
-            if ( ! $website->getConfig(
+
+            if (! $website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_LASTNAME
             )
             ) {
                 $passed = false;
                 $mapped++;
             }
-            if ( ! $website->getConfig(
+
+            if (! $website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_DOB
             )
             ) {
                 $passed = false;
                 $mapped++;
             }
-            if ( ! $website->getConfig(
+
+            if (! $website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_GENDER
             )
             ) {
                 $passed = false;
                 $mapped++;
             }
-            if ( ! $website->getConfig(
+
+            if (! $website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_WEBSITE_NAME
             )
             ) {
                 $passed = false;
                 $mapped++;
             }
-            if ( ! $website->getConfig(
+
+            if (! $website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_STORE_NAME
             )
             ) {
                 $passed = false;
                 $mapped++;
             }
-            if ( ! $website->getConfig(
+
+            if (! $website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_CREATED_AT
             )
             ) {
                 $passed = false;
                 $mapped++;
             }
-            if ( ! $website->getConfig(
+
+            if (! $website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_LAST_LOGGED_DATE
             )
             ) {
                 $passed = false;
                 $mapped++;
             }
-            if ( ! $website->getConfig(
+
+            if (! $website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_CUSTOMER_GROUP
             )
             ) {
                 $passed = false;
                 $mapped++;
             }
-            if ( ! $website->getConfig(
+
+            if (! $website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_REVIEW_COUNT
             )
             ) {
                 $passed = false;
                 $mapped++;
             }
-            if ( ! $website->getConfig(
+
+            if (! $website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_LAST_REVIEW_DATE
             )
             ) {
                 $passed = false;
                 $mapped++;
             }
-            if ( ! $website->getConfig(
+
+            if (! $website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_BILLING_ADDRESS_1
             )
             ) {
                 $passed = false;
                 $mapped++;
             }
-            if ( ! $website->getConfig(
+
+            if (! $website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_BILLING_ADDRESS_2
             )
             ) {
                 $passed = false;
                 $mapped++;
             }
-            if ( ! $website->getConfig(
+
+            if (! $website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_BILLING_CITY
             )
             ) {
                 $passed = false;
                 $mapped++;
             }
-            if ( ! $website->getConfig(
+
+            if (! $website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_BILLING_STATE
             )
             ) {
                 $passed = false;
                 $mapped++;
             }
-            if ( ! $website->getConfig(
+
+            if (! $website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_BILLING_COUNTRY
             )
             ) {
                 $passed = false;
                 $mapped++;
             }
-            if ( ! $website->getConfig(
+
+            if (! $website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_BILLING_POSTCODE
             )
             ) {
                 $passed = false;
                 $mapped++;
             }
-            if ( ! $website->getConfig(
+
+            if (! $website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_BILLING_TELEPHONE
             )
             ) {
                 $passed = false;
                 $mapped++;
             }
-            if ( ! $website->getConfig(
+
+            if (! $website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_DELIVERY_ADDRESS_1
             )
             ) {
                 $passed = false;
                 $mapped++;
             }
-            if ( ! $website->getConfig(
+
+            if (! $website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_DELIVERY_ADDRESS_2
             )
             ) {
                 $passed = false;
                 $mapped++;
             }
-            if ( ! $website->getConfig(
+
+            if (! $website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_DELIVERY_CITY
             )
             ) {
                 $passed = false;
                 $mapped++;
             }
-            if ( ! $website->getConfig(
+
+            if (! $website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_DELIVERY_STATE
             )
             ) {
                 $passed = false;
                 $mapped++;
             }
-            if ( ! $website->getConfig(
+
+            if (! $website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_DELIVERY_COUNTRY
             )
             ) {
                 $passed = false;
                 $mapped++;
             }
-            if ( ! $website->getConfig(
+
+            if (! $website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_DELIVERY_POSTCODE
             )
             ) {
                 $passed = false;
                 $mapped++;
             }
-            if ( ! $website->getConfig(
+
+            if (! $website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_DELIVERY_TELEPHONE
             )
             ) {
                 $passed = false;
                 $mapped++;
             }
-            if ( ! $website->getConfig(
+
+            if (! $website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_TOTAL_NUMBER_ORDER
             )
             ) {
                 $passed = false;
                 $mapped++;
             }
-            if ( ! $website->getConfig(
+
+            if (! $website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_AOV
             )
             ) {
                 $passed = false;
                 $mapped++;
             }
-            if ( ! $website->getConfig(
+
+            if (! $website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_TOTAL_SPEND
             )
             ) {
                 $passed = false;
                 $mapped++;
             }
-            if ( ! $website->getConfig(
+
+            if (! $website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_LAST_ORDER_DATE
             )
             ) {
                 $passed = false;
                 $mapped++;
             }
-            if ( ! $website->getConfig(
+
+            if (! $website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_LAST_ORDER_ID
             )
             ) {
                 $passed = false;
                 $mapped++;
             }
-            if ( ! $website->getConfig(
+
+            if (! $website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_MAPPING_CUSTOMER_TOTALREFUND
             )
             ) {
                 $passed = false;
                 $mapped++;
             }
-            if ( ! $website->getConfig(
+
+            if (! $website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_SUBSCRIBER_STATUS
             )
             ) {
                 $passed = false;
                 $mapped++;
             }
+
             if (!$website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_BILLING_COMPANY_NAME
             )
@@ -1374,6 +1385,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                 $passed = false;
                 $mapped++;
             }
+
             if (!$website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_DELIVERY_COMPANY_NAME
             )
@@ -1381,11 +1393,12 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                 $passed = false;
                 $mapped++;
             }
+
             $tableData['Mapped Percentage'] = number_format(
-                    (1 - $mapped / 32) * 100, 2
-                ) . ' %';
+                (1 - $mapped / 32) * 100, 2
+            ) . ' %';
             //mapping not complete.
-            if ( ! $passed) {
+            if (! $passed) {
                 $url = Mage::helper('adminhtml')->getUrl(
                     '*/system_config/edit/section/connector_data_mapping/website/'
                     . $website->getCode()
@@ -1396,6 +1409,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                         . '">here</a> to change mapping configuration.'
                     );
             }
+
             $resultContent->setTable($tableData);
         }
 
@@ -1474,7 +1488,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                 'Disabled!';
 
             if ($order !== true) {
-
                 $url = Mage::helper('adminhtml')->getUrl(
                     '*/connector/enablewebsiteconfiguration',
                     array('path'    => 'XML_PATH_CONNECTOR_SYNC_ORDER_ENABLED',
@@ -1492,8 +1505,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                 $passed = false;
             }
         }
+
         //validation failed
-        if ( ! $passed) {
+        if (! $passed) {
             $resultContent->setHowto(self::FAST_FIX_MESSAGE);
         }
 
@@ -1566,7 +1580,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                 ->addFieldToFilter('store_id', array('in', $storeIds))->getSize(
                 );
 
-            if ( ! $numOrders) {
+            if (! $numOrders) {
                 $resultContent->setStyle(self::CONNECTOR_DASHBOARD_FAILED)
                     ->setTitle(
                         'Order Syncing (ignore if you have reset orders for reimport) :'
@@ -1610,7 +1624,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                 'Disabled!';
 
             if ($quote !== true) {
-
                 $url = Mage::helper('adminhtml')->getUrl(
                     '*/connector/enablewebsiteconfiguration',
                     array('path'    => 'XML_PATH_CONNECTOR_SYNC_QUOTE_ENABLED',
@@ -1628,8 +1641,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                 $passed = false;
             }
         }
+
         //validation failed
-        if ( ! $passed) {
+        if (! $passed) {
             $resultContent->setHowto(self::FAST_FIX_MESSAGE);
         }
 
@@ -1727,7 +1741,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
 
             $tableData['Status'] = 'Importing';
 
-            if ( ! $numReview) {
+            if (! $numReview) {
                 $tableData['Status'] = 'No Imported Review Found.';
                 $resultContent->setStyle(self::CONNECTOR_DASHBOARD_FAILED)
                     ->setTitle(
@@ -1735,6 +1749,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                     )
                     ->setMessage('');
             }
+
             $resultContent->setTable($tableData);
         }
 
@@ -1755,7 +1770,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
             ->setTitle('Last Abandoned Summary : ');
 
         foreach (Mage::app()->getWebsites() as $website) {
-
             $websiteName = $website->getName();
             $client      = Mage::helper('ddg')->getWebsiteApiClient($website);
 
@@ -1866,17 +1880,13 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
             $resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
                 ->setMessage('No Conflict Rewrites Found.');
         } else {
-
             $types = array('blocks', 'models', 'helpers');
             foreach ($types as $t) {
-
-                if ( ! empty($rewrites[$t])) {
-
+                if (! empty($rewrites[$t])) {
                     $resultContent->setStyle(self::CONNECTOR_DASHBOARD_FAILED)
                         ->setMessage('Conflicting Rewrite Found : ');
 
                     foreach ($rewrites[$t] as $node => $rewriteInfo) {
-
                         $resultContent->setTable(
                             array(
                                 'Type'         => $t,
@@ -1895,12 +1905,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
             $tableData       = array();
             foreach ($rewrites as $type => $data) {
                 if (count($data) > 0 && is_array($data)) {
-
                     foreach ($data as $class => $rewriteClass) {
-
                         if (count($rewriteClass) > 1) {
                             if ($this->_isInheritanceConflict($rewriteClass)) {
-
                                 $resultContent->setTable(
                                     array(
                                         'Type'         => $type,
@@ -1920,10 +1927,10 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                     }
                 }
             }
-            if ( ! empty($tableData)) {
+
+            if (! empty($tableData)) {
                 $resultContent->setTable($tableData);
             }
-
         }
 
         return $resultContent;
@@ -1970,7 +1977,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                 if (class_exists($classes[$i])
                     && class_exists($classes[$i + 1])
                 ) {
-                    if ( ! is_a($classes[$i], $classes[$i + 1], true)) {
+                    if (! is_a($classes[$i], $classes[$i + 1], true)) {
                         return true;
                     }
                 }
@@ -1997,7 +2004,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
         //compatibility with the old versions
         if (version_compare(Mage::getVersion(), '1.6.2.0', '>')) {
             $version = 'Magento ' . Mage::getEdition() . ' ' . Mage::getVersion(
-                ) . 'V';
+            ) . 'V';
         } else {
             $version = 'Magento version : ' . Mage::getVersion() . 'V';
         }
@@ -2012,8 +2019,10 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                     break;
                 }
             }
+
             fclose($fh);
         }
+
         if ($mem > 0) {
             $mem = $mem / 1024 . 'M';
         } else {
@@ -2045,7 +2054,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
 
         $client = Mage::helper('ddg')->getWebsiteApiClient($website);
 
-        if ( ! $client || ! $program) {
+        if (! $client || ! $program) {
             return false;
         }
 
@@ -2095,11 +2104,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
     {
         //version that not support the lcfirst method
         if (function_exists('lcfirst') === false) {
-
             $method = strtolower(substr(uc_words($name, ''), 0, 1)) . substr(
-                    uc_words($name, ''), 1
-                );
-
+                uc_words($name, ''), 1
+            );
         } else {
             $method = lcfirst(uc_words($name, ''));
         }
@@ -2244,7 +2251,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
 
             $tableData['Status'] = 'Importing';
 
-            if ( ! $numWishlist) {
+            if (! $numWishlist) {
                 $tableData['Status'] = 'No Imported Wishlist Found.';
                 $resultContent->setStyle(self::CONNECTOR_DASHBOARD_FAILED)
                     ->setTitle(
@@ -2252,6 +2259,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                     )
                     ->setMessage('');
             }
+
             $resultContent->setTable($tableData);
         }
 

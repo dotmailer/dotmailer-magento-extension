@@ -13,12 +13,14 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Recentlyviewed
         $passcode = Mage::helper('ddg')->getPasscode();
         $customerId = Mage::helper('ddg')->getMappedCustomerId();
 
-        if ( ! strlen($passcode)) {
+        if (! strlen($passcode)) {
             $passcode = '[PLEASE SET UP A PASSCODE]';
         }
-        if ( ! $customerId) {
+
+        if (! $customerId) {
             $customerId = '[PLEASE MAP THE CUSTOMER ID]';
         }
+
         //dynamic content url
         $text = sprintf(
             '%sconnector/report/recentlyviewed/code/%s/customer_id/@%s@',

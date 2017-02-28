@@ -15,7 +15,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Couponinfo
         //config code
         $code = Mage::helper('ddg')->getPasscode();
 
-        if ( ! strlen($code)) {
+        if (! strlen($code)) {
             $code = '[PLEASE SET UP A PASSCODE]';
         }
 

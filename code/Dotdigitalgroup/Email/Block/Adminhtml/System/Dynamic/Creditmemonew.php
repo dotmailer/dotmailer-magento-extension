@@ -16,9 +16,10 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Creditmemonew
         $orderId = Mage::helper('ddg')->getMappedOrderId();
 
         //message to set up the passcode
-        if ( ! strlen($code)) {
+        if (! strlen($code)) {
             $code = '[PLEASE SET UP A PASSCODE]';
         }
+
         //full url for dynamic content
         $text = sprintf(
             '%s/connector/creditmemo/new/code/%s/id/@%s@', $baseUrl, $code,
