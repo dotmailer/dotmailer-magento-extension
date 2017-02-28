@@ -3,20 +3,29 @@
 class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
 {
 
-    protected $_edcType;
+    /**
+     * @var
+     */
+    public $edcType;
+
+    /**
+     * @var array
+     */
     protected $_visibility = array(
         Mage_Catalog_Model_Product_Visibility::VISIBILITY_BOTH,
         Mage_Catalog_Model_Product_Visibility::VISIBILITY_IN_CATALOG,
         Mage_Catalog_Model_Product_Visibility::VISIBILITY_IN_SEARCH
     );
 
+    /**
+     * Constructor.
+     */
     protected function _construct()
     {
-
         parent::_construct();
 
         if ($this->getRequest()->getControllerName() == 'quoteproducts') {
-            $this->_edcType = 'quote_products';
+            $this->edcType = 'quote_products';
         }
     }
 
@@ -40,12 +49,11 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
      *
      * @return array
      */
-    protected function _getRecommendedProduct(Mage_Catalog_Model_Product $productModel,
-        $mode
-    ) 
+    protected function _getRecommendedProduct(Mage_Catalog_Model_Product $productModel, $mode)
     {
         //array of products to display
         $products = array();
+        $productIds = array();
         switch ($mode) {
             case 'related':
                 $products = $productModel->getRelatedProducts();
@@ -56,9 +64,8 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
             case 'crosssell':
                 $products = $productModel->getCrossSellProducts();
                 break;
-
         }
-        $productIds = array();
+
         foreach ($products as $product) {
             $productIds[] = $product->getId();
         }
@@ -66,6 +73,10 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
         return $productIds;
     }
 
+    /**
+     * @param $store
+     * @return null|string
+     */
     public function getTextForUrl($store)
     {
         $store = Mage::app()->getStore($store);
@@ -113,13 +124,14 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
         } else {
             $this->setTemplate('connector/product/price.phtml');
         }
+
         $this->setProduct($product);
 
         return $this->toHtml();
     }
 
     /**
-     * get collection to EDC type
+     * Get collection to EDC type.
      *
      * @return array
      * @throws Exception
@@ -129,12 +141,12 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
         $mode  = $this->getRequest()->getActionName();
         $result = array();
         $limit = Mage::helper('ddg/recommended')->getDisplayLimitByMode($mode);
-        if ( ! $this->_edcType) {
-            $this->_edcType = $mode;
+
+        if (! $this->edcType) {
+            $this->edcType = $mode;
         }
 
-
-        switch ($this->_edcType) {
+        switch ($this->edcType) {
             case 'recentlyviewed':
                 $result = $this->_getRecentlyViewedCollection($limit);
                 break;
@@ -156,7 +168,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
     }
 
     /**
-     * get collection for recently viewed products
+     * Get collection for recently viewed products.
      *
      * @param $limit
      *
@@ -197,15 +209,15 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
             if ($product->isSalable()) {
                 $productsToDisplay[$product->getId()] = $product;
             }
-
         }
+
         $session->logout();
 
         return $productsToDisplay;
     }
 
     /**
-     * get collection for push items
+     * Get collection for push items.
      *
      * @param $limit
      *
@@ -214,12 +226,9 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
     protected function _getProductPushCollection($limit)
     {
         $productsToDisplay = array();
-        $productIds        = Mage::helper('ddg/recommended')->getProductPushIds(
-        );
+        $productIds        = Mage::helper('ddg/recommended')->getProductPushIds();
 
-        $productCollection = Mage::getResourceModel(
-            'catalog/product_collection'
-        )
+        $productCollection = Mage::getResourceModel('catalog/product_collection')
             ->addPriceData()
             ->addAttributeToFilter('entity_id', array('in' => $productIds))
             ->addAttributeToFilter('visibility', $this->_visibility)
@@ -239,7 +248,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
     }
 
     /**
-     * get collection for best sellers
+     * Get collection for best sellers.
      *
      * @param $mode
      * @param $limit
@@ -250,11 +259,11 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
     {
         $from   = Mage::helper('ddg/recommended')->getTimeFromConfig($mode);
         $locale = Mage::app()->getLocale()->getLocale();
-        $to     = Zend_Date::now($locale)->toString(Zend_Date::ISO_8601);
+        //@codingStandardsIgnoreStart
+        $to = Zend_Date::now($locale)->toString(Zend_Date::ISO_8601);
+        //@codingStandardsIgnoreEnd
 
-        $productCollection = Mage::getResourceModel(
-            'reports/product_collection'
-        )
+        $productCollection = Mage::getResourceModel('reports/product_collection')
             ->addAttributeToSelect(
                 array('product_url', 'name', 'store_id', 'small_image', 'price')
             )
@@ -265,7 +274,8 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
 
         Mage::getSingleton('cataloginventory/stock')
             ->addInStockFilterToCollection($productCollection);
-        $productCollection->addAttributeToFilter('is_saleable', true)->addAttributeToFilter('visibility', $this->_visibility);
+        $productCollection->addAttributeToFilter('is_saleable', true)
+            ->addAttributeToFilter('visibility', $this->_visibility);
 
         $catId   = Mage::app()->getRequest()->getParam('category_id', false);
         $catName = Mage::app()->getRequest()->getParam('category_name', false);
@@ -277,6 +287,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
             if ($catId) {
                 $category->load($catId);
             }
+
             //load by the category name
             if ($catName) {
                 $category->loadByAttribute('name', $catName);
@@ -291,7 +302,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
     }
 
     /**
-     * get collection for most viewed items
+     * Get collection for most viewed items.
      *
      * @param $mode
      * @param $limit
@@ -306,12 +317,10 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
         );
         $locale            = Mage::app()->getLocale()->getLocale();
 
-        $to                = Zend_Date::now($locale)->toString(
-            Zend_Date::ISO_8601
-        );
-        $productCollection = Mage::getResourceModel(
-            'reports/product_collection'
-        )
+        //@codingStandardsIgnoreStart
+        $to                = Zend_Date::now($locale)->toString(Zend_Date::ISO_8601);
+        //@codingStandardsIgnoreEnd
+        $productCollection = Mage::getResourceModel('reports/product_collection')
             ->addViewsCount($from, $to)
             ->setPageSize($limit);
 
@@ -335,9 +344,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
 
         $productIds = $productCollection->getColumnValues('entity_id');
         $productCollection->clear();
-        $productCollection = Mage::getResourceModel(
-            'catalog/product_collection'
-        )
+        $productCollection = Mage::getResourceModel('catalog/product_collection')
             ->addPriceData()
             ->addIdFilter($productIds)
             ->addAttributeToSelect(
@@ -356,7 +363,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
     }
 
     /**
-     * join categories on product collection
+     * Join categories on product collection.
      *
      * @param $productCollection
      * @param $category
@@ -365,6 +372,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
      */
     protected function _joinCategoryOnCollection($productCollection, $category)
     {
+        //@codingStandardsIgnoreStart
         if ($category->getId()) {
             $productCollection->getSelect()
                 ->joinLeft(
@@ -379,12 +387,13 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
                 'Most viewed. Category id/name is invalid. It does not exist.'
             );
         }
+        //@codingStandardsIgnoreEnd
 
         return $productCollection;
     }
 
     /**
-     * get collection for quote products
+     * Get collection for quote products.
      *
      * @param $mode
      * @param $limit
@@ -396,11 +405,12 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
     {
         $quoteModel = Mage::registry('current_quote');
 
-        if ( ! $quoteModel) {
+        if (! $quoteModel) {
             Mage::throwException(
                 Mage::helper('ddg')->__('no current_quote found for EDC')
             );
         }
+
         $quoteItems = $quoteModel->getAllVisibleItems();
 
         $productsToDisplay = $this->getProductsToDisplay(
@@ -446,14 +456,13 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
             $i = 0;
             //parent product
             $product = $item->getProduct();
-            //check for product exists
 
             //get single product for current mode
             $recommendedProducts = $this->_getRecommendedProduct(
                 $product, $mode
             );
-            if ( ! empty($recommendedProducts)) {
 
+            if (! empty($recommendedProducts)) {
                 $recommendedProducts = Mage::getModel('catalog/product')
                     ->getCollection()
                     ->addPriceData()
@@ -496,22 +505,27 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
                     array('product_url', 'name', 'store_id', 'small_image',
                           'price')
                 );
-
             foreach ($productCollection as $product) {
                 if ($product->isSaleable()) {
                     $productsToDisplay[$product->getId()] = $product;
                 }
 
+                //@codingStandardsIgnoreStart
                 //stop the limit was reached
                 if (count($productsToDisplay) == $limit) {
                     break;
                 }
+                //@codingStandardsIgnoreEnd
             }
         }
 
         return $productsToDisplay;
     }
 
+    /**
+     * @param $product Mage_Catalog_Model_Product
+     * @return Mage_Catalog_Helper_Image
+     */
     public function getProductImage($product)
     {
         $helper = Mage::helper('ddg');
@@ -520,10 +534,12 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
         ) {
             $parentIds = Mage::getModel('catalog/product_type_configurable')->getParentIdsByChild($product->getId());
             if (!empty($parentIds)) {
+                /** @var Mage_Catalog_Model_Product $parentProduct */
                 $parentProduct = Mage::getModel('catalog/product')->load($parentIds[0]);
                 return $this->helper('catalog/image')->init($parentProduct, 'small_image')->resize(135);
             }
         }
+
         return $this->helper('catalog/image')->init($product, 'small_image')->resize(135);
     }
 }

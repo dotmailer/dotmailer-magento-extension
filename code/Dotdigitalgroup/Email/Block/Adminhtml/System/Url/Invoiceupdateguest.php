@@ -33,7 +33,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Url_Invoiceupdateguest
             $website
         );
 
-        if (! strlen($passcode)) {
+        if ($passcode == '') {
             $passcode = '[PLEASE SET UP A PASSCODE]';
         }
 

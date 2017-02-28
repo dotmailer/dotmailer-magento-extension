@@ -24,7 +24,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Switcher
 
         $storeModel = Mage::getSingleton('adminhtml/system_store');
         /* @var $storeModel Mage_Adminhtml_Model_System_Store */
-
         $url = Mage::getModel('adminhtml/url');
 
         $options            = array();

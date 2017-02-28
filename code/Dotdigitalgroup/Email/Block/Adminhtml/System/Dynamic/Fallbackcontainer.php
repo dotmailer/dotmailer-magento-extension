@@ -4,14 +4,18 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Fallbackcontainer
     extends Mage_Adminhtml_Block_System_Config_Form_Field
 {
 
-    protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element
-    ) 
+    /**
+     * @param Varien_Data_Form_Element_Abstract $element
+     * @return string
+     */
+    protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element)
     {
         $this->setElement($element);
 
         return
             "<script type='text/javascript'>
-                var fallback_product_selector = new ConnectorProductSelectorForm('connector_dynamic_content_fallback_products_product_list');
+                var fallback_product_selector 
+                = new ConnectorProductSelectorForm('connector_dynamic_content_fallback_products_product_list');
                 //ajax call and handler
                 getFallbackProductChooser = function (url) {
                     new Ajax.Request(

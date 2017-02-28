@@ -4,6 +4,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Rules
     extends Mage_Adminhtml_Block_Widget_Grid_Container
 {
 
+    /**
+     * Dotdigitalgroup_Email_Block_Adminhtml_Rules constructor.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -13,6 +16,5 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Rules
             'Email Exclusion Rule(s)'
         );
         $this->_addButtonLabel = Mage::helper('ddg')->__('Add New Rule');
-
     }
 }

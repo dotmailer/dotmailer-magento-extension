@@ -32,7 +32,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Url_Creditmemoupdateguest
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_MAPPING_LAST_ORDER_ID,
             $website
         );
-        if (! strlen($passcode)) {
+        if ($passcode == '') {
             $passcode = '[PLEASE SET UP A PASSCODE]';
         }
 

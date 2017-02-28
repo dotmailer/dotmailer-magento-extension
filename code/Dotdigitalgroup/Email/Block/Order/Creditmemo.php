@@ -19,7 +19,7 @@ class Dotdigitalgroup_Email_Block_Order_Creditmemo
     /**
      * Get current Order.
      *
-     * @return Mage_Sales_Model_Order
+     * @return Mage_Sales_Model_Order|false
      * @throws Exception
      */
     public function getOrder()

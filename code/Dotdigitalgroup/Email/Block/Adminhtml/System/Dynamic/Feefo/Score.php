@@ -4,13 +4,16 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Feefo_Score
     extends Mage_Adminhtml_Block_System_Config_Form_Field
 {
 
-    protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element
-    ) 
+    /**
+     * @param Varien_Data_Form_Element_Abstract $element
+     * @return string
+     */
+    protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element)
     {
         //passcode to append for url
         $passcode = Mage::helper('ddg')->getPasscode();
 
-        if (! strlen($passcode)) {
+        if ($passcode == '') {
             $passcode = '[PLEASE SET UP A PASSCODE]';
         }
 

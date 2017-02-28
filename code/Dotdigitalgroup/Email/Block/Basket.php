@@ -3,7 +3,10 @@
 class Dotdigitalgroup_Email_Block_Basket extends Mage_Core_Block_Template
 {
 
-    protected $_quote;
+    /**
+     * @var Mage_Sales_Model_Quote
+     */
+    public $quoteModel;
 
     /**
      * Basket itmes.
@@ -38,7 +41,7 @@ class Dotdigitalgroup_Email_Block_Basket extends Mage_Core_Block_Template
             return false;
         }
 
-        $this->_quote = $quoteModel;
+        $this->quoteModel = $quoteModel;
 
         //Start environment emulation of the specified store
         $storeId      = $quoteModel->getStoreId();
@@ -82,7 +85,7 @@ class Dotdigitalgroup_Email_Block_Basket extends Mage_Core_Block_Template
      */
     public function getGrandTotal()
     {
-        return $this->_quote->getGrandTotal();
+        return $this->quoteModel->getGrandTotal();
 
     }
 
@@ -93,27 +96,30 @@ class Dotdigitalgroup_Email_Block_Basket extends Mage_Core_Block_Template
      */
     public function getUrlForLink()
     {
-        return $this->_quote->getStore()->getUrl(
+        return $this->quoteModel->getStore()->getUrl(
             'connector/email/getbasket',
-            array('quote_id' => $this->_quote->getId())
+            array('quote_id' => $this->quoteModel->getId())
         );
     }
 
     /**
-     * can show go to basket url
+     * Can show go to basket url.
      *
      * @return bool
      */
     public function canShowUrl()
     {
-        return (boolean)$this->_quote->getStore()->getWebsite()->getConfig(
+        return (boolean)$this->quoteModel->getStore()->getWebsite()->getConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CONTENT_LINK_ENABLED
         );
     }
 
+    /**
+     * @return mixed
+     */
     public function takeMeToCartTextForUrl()
     {
-        return $this->_quote->getStore()->getWebsite()->getConfig(
+        return $this->quoteModel->getStore()->getWebsite()->getConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CONTENT_LINK_TEXT
         );
     }
@@ -132,6 +138,10 @@ class Dotdigitalgroup_Email_Block_Basket extends Mage_Core_Block_Template
         return $dynamicStyle;
     }
 
+    /**
+     * @param $product
+     * @return Mage_Catalog_Helper_Image
+     */
     public function getProductImage($product)
     {
         $helper = Mage::helper('ddg');
@@ -140,6 +150,7 @@ class Dotdigitalgroup_Email_Block_Basket extends Mage_Core_Block_Template
         ) {
             $parentIds = Mage::getModel('catalog/product_type_configurable')->getParentIdsByChild($product->getId());
             if (!empty($parentIds)) {
+                /** @var Mage_Catalog_Model_Product $parentProduct */
                 $parentProduct = Mage::getModel('catalog/product')->load($parentIds[0]);
                 return $this->helper('catalog/image')->init($parentProduct, 'small_image')->resize(85);
             }

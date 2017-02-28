@@ -4,13 +4,14 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
     extends Mage_Adminhtml_Block_Widget
     implements Mage_Adminhtml_Block_Widget_Tab_Interface
 {
-
-    const CONNECTOR_DASHBOARD_PASSED = 'available';
-    const CONNECTOR_DASHBOARD_WARRNING = 'connector_warning';
-    const CONNECTOR_DASHBOARD_FAILED = 'error';
-
+    const CONNECTOR_DASHBOARD_PASSED    = 'available';
+    const CONNECTOR_DASHBOARD_WARRNING  = 'connector_warning';
+    const CONNECTOR_DASHBOARD_FAILED    = 'error';
     const FAST_FIX_MESSAGE = 'Fast Fix Available, Click To Enable The Mapping And Redirect Back.';
 
+    /**
+     * @var array
+     */
     protected $_checkpoints
         = array(
             'valid_api_credentials'              => 'API Credentials',
@@ -47,30 +48,32 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
     }
 
     /**
-     * Prepare the layout.
-     *
-     * @return Mage_Core_Block_Abstract|void
-     * @throws Exception
+     * @return bool
      */
-    protected function _prepareLayout()
-    {
-    }
-
     public function canShowTab()
     {
         return true;
     }
 
+    /**
+     * @return bool
+     */
     public function isHidden()
     {
         return true;
     }
 
+    /**
+     * @return string
+     */
     public function getTabLabel()
     {
         return Mage::helper('ddg')->__('Marketing Automation System Status');
     }
 
+    /**
+     * @return string
+     */
     public function getTabTitle()
     {
         return Mage::helper('ddg')->__('Marketing Automation System Status');
@@ -93,11 +96,17 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
         return false;
     }
 
+    /**
+     * @return array
+     */
     public function getCheckpoints()
     {
         return $this->_checkpoints;
     }
 
+    /**
+     * @return array
+     */
     protected function getDisplayData()
     {
 
@@ -130,7 +139,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
         return $displayData;
     }
 
-
+    /**
+     * @param $checkpoint
+     */
     public function addCheckpoint($checkpoint)
     {
         $this->_checkpoints[$checkpoint->getName()] = $checkpoint;
@@ -140,20 +151,20 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
     /**
      * Check cron for the customer sync.
      *
-     * @return array
+     * @return Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Content|false|Mage_Core_Model_Abstract
      */
     public function cronRunning()
     {
-        $resultContent = Mage::getModel(
-            'ddg_automation/adminhtml_dashboard_content'
-        );
+        $resultContent = Mage::getModel('ddg_automation/adminhtml_dashboard_content');
         $resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
             ->setTitle('Cron Status : ')
             ->setMessage('Cron is running.');
         $message
                           = 'No cronjob task found. Check if cron is configured correctly.';
         $howToSetupCron
-                          = 'For more information <a href="http://www.magentocommerce.com/wiki/1_-_installation_and_configuration/how_to_setup_a_cron_job">how to setup the Magento cronjob.</a>';
+            = 'For more information 
+            <a href="http://www.magentocommerce.com/wiki/1_-_installation_and_configuration/how_to_setup_a_cron_job">
+            how to setup the Magento cronjob.</a>';
         $lastCustomerSync = Mage::getModel('ddg_automation/cron')
             ->getLastCustomerSync();
 
@@ -384,8 +395,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
         $filePath = Mage::getModuleDir(
             'etc', Dotdigitalgroup_Email_Helper_Config::MODULE_NAME
         ) . DS . 'files.yaml';
+        //@codingStandardsIgnoreStart
         $config   = Zend_Config_Yaml::decode(file_get_contents($filePath));
-
+        //@codingStandardsIgnoreEnd
         /**
          * Code dirs.
          */
@@ -448,12 +460,13 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
         foreach ($filesToCheck as $subdir) {
             foreach ($subdir as $path) {
                 $file = $pathToCheck[0] . DS . str_replace('#', DS, $path);
-
+                //@codingStandardsIgnoreStart
                 if (! file_exists($file)) {
                     $resultContent->setStyle(self::CONNECTOR_DASHBOARD_FAILED)
                         ->setMessage('')
                         ->setHowto('File not found : ' . $file);
                 }
+                //@codingStandardsIgnoreEnd
             }
 
             array_shift($pathToCheck);
@@ -528,8 +541,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
         $contactModel = Mage::getModel('ddg_automation/contact');
 
         //global email duplicates
-        if (Mage::getResourceModel('customer/customer')->findEmailDuplicates()
-        ) {
+        if (Mage::getResourceModel('customer/customer')->findEmailDuplicates()) {
             //duplicate email customers
             $customers      = Mage::helper('ddg')
                 ->getCustomersWithDuplicateEmails();
@@ -743,8 +755,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
     //check the mapped programs are active
     public function automationActive()
     {
-        $disableCustomer
-                       = $disableSubscriber = $disableOrder
+        $disableCustomer = $disableSubscriber = $disableOrder
             = $disableGuestOrder = $disableReviews = $disableWishlist = '';
         $resultContent = Mage::getModel(
             'ddg_automation/adminhtml_dashboard_content'
@@ -984,106 +995,105 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
 
         foreach (Mage::app()->getWebsites() as $website) {
             $websiteName       = $website->getName();
-            $abandonedCusomer1 = ($website->getConfig(
+            $abandonedCusomerOne = ($website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CARTS_ENABLED_1
             ))
                 ? true
                 :
                 'Disabled!';
-            $abandonedCusomer2 = ($website->getConfig(
+            $abandonedCusomerTwo = ($website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CARTS_ENABLED_2
             ))
                 ? true
                 :
                 'Disabled!';
-            $abandonedCusomer3 = ($website->getConfig(
+            $abandonedCusomerThree = ($website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CARTS_ENABLED_3
             ))
                 ? true
                 :
                 'Disabled!';
-            $abandonedGuest1   = ($website->getConfig(
+            $abandonedGuestOne   = ($website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_GUEST_ABANDONED_CARTS_ENABLED_1
             ))
                 ? true
                 :
                 'Disabled!';
-            $abandonedGuest2   = ($website->getConfig(
+            $abandonedGuestTwo   = ($website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_GUEST_ABANDONED_CARTS_ENABLED_2
             ))
                 ? true
                 :
                 'Disabled!';
-            $abandonedGuest3   = ($website->getConfig(
+            $abandonedGuestThree   = ($website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_GUEST_ABANDONED_CARTS_ENABLED_3
             ))
                 ? true
                 :
                 'Disabled!';
 
-            if ($abandonedCusomer1 !== true || $abandonedCusomer2 !== true
-                || $abandonedCusomer3 !== true
-                || $abandonedGuest1 !== true
-                || $abandonedGuest2 !== true
-                || $abandonedGuest3 !== true
+            if ($abandonedCusomerOne !== true || $abandonedCusomerTwo !== true
+                || $abandonedCusomerThree !== true
+                || $abandonedGuestOne !== true
+                || $abandonedGuestTwo !== true
+                || $abandonedGuestThree !== true
             ) {
                 //customer abandoned links to enable
-                $customer1 = Mage::helper('adminhtml')->getUrl(
+                $customerOne = Mage::helper('adminhtml')->getUrl(
                     '*/connector/enablewebsiteconfiguration',
                     array('path'    => 'XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CARTS_ENABLED_1',
                           'website' => $website->getId())
                 );
-                $customer2 = Mage::helper('adminhtml')->getUrl(
+                $customerTwo = Mage::helper('adminhtml')->getUrl(
                     '*/connector/enablewebsiteconfiguration',
                     array('path'    => 'XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CARTS_ENABLED_2',
                           'website' => $website->getId())
                 );
-                $customer3 = Mage::helper('adminhtml')->getUrl(
+                $customerThree = Mage::helper('adminhtml')->getUrl(
                     '*/connector/enablewebsiteconfiguration',
                     array('path'    => 'XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CARTS_ENABLED_3',
                           'website' => $website->getId())
                 );
                 //guests abandoned links to enable
-                $guest1 = Mage::helper('adminhtml')->getUrl(
+                $guestOne = Mage::helper('adminhtml')->getUrl(
                     '*/connector/enablewebsiteconfiguration',
                     array('path'    => 'XML_PATH_CONNECTOR_GUEST_ABANDONED_CARTS_ENABLED_1',
                           'website' => $website->getId())
                 );
-                $guest2 = Mage::helper('adminhtml')->getUrl(
+                $guestTwo = Mage::helper('adminhtml')->getUrl(
                     '*/connector/enablewebsiteconfiguration',
                     array('path'    => 'XML_PATH_CONNECTOR_GUEST_ABANDONED_CARTS_ENABLED_2',
                           'website' => $website->getId())
                 );
-                $guest3 = Mage::helper('adminhtml')->getUrl(
+                $guestThree = Mage::helper('adminhtml')->getUrl(
                     '*/connector/enablewebsiteconfiguration',
                     array('path'    => 'XML_PATH_CONNECTOR_GUEST_ABANDONED_CARTS_ENABLED_3',
                           'website' => $website->getId())
                 );
-
 
                 $resultContent->setStyle(self::CONNECTOR_DASHBOARD_FAILED)
                     ->setMessage('Don\'t forget to map')
                     ->setTable(
                         array(
                             'Website'              => $websiteName,
-                            'Customer Abandoned 1' => ($abandonedCusomer1
-                                !== true) ? $abandonedCusomer1 . ' <a href="'
-                                . $customer1 . '">enable</a>' : 'Enabled',
-                            'Customer Abandoned 2' => ($abandonedCusomer2
-                                !== true) ? $abandonedCusomer2 . ' <a href="'
-                                . $customer2 . '">enable</a>' : 'Enabled',
-                            'Customer Abandoned 3' => ($abandonedCusomer3
-                                !== true) ? $abandonedCusomer3 . ' <a href="'
-                                . $customer3 . '">enable</a>' : 'Enabled',
-                            'Guest Abandoned 1'    => ($abandonedGuest1
-                                !== true) ? $abandonedGuest1 . ' <a href="'
-                                . $guest1 . '">enable</a>' : 'Enabled',
-                            'Guest Abandoned 2'    => ($abandonedGuest2
-                                !== true) ? $abandonedGuest2 . ' <a href="'
-                                . $guest2 . '">enable</a>' : 'Enabled',
-                            'Guest Abandoned 3'    => ($abandonedGuest3
-                                !== true) ? $abandonedGuest3 . ' <a href="'
-                                . $guest3 . '">enable</a>' : 'Enabled',
+                            'Customer Abandoned 1' => ($abandonedCusomerOne
+                                !== true) ? $abandonedCusomerOne . ' <a href="'
+                                . $customerOne . '">enable</a>' : 'Enabled',
+                            'Customer Abandoned 2' => ($abandonedCusomerTwo
+                                !== true) ? $abandonedCusomerTwo . ' <a href="'
+                                . $customerTwo . '">enable</a>' : 'Enabled',
+                            'Customer Abandoned 3' => ($abandonedCusomerThree
+                                !== true) ? $abandonedCusomerThree . ' <a href="'
+                                . $customerThree . '">enable</a>' : 'Enabled',
+                            'Guest Abandoned 1'    => ($abandonedGuestOne
+                                !== true) ? $abandonedGuestOne . ' <a href="'
+                                . $guestOne . '">enable</a>' : 'Enabled',
+                            'Guest Abandoned 2'    => ($abandonedGuestTwo
+                                !== true) ? $abandonedGuestTwo . ' <a href="'
+                                . $guestTwo . '">enable</a>' : 'Enabled',
+                            'Guest Abandoned 3'    => ($abandonedGuestThree
+                                !== true) ? $abandonedGuestThree . ' <a href="'
+                                . $guestThree . '">enable</a>' : 'Enabled',
                         )
                     );
             }
@@ -1596,7 +1606,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
         }
 
         return $resultContent;
-
     }
 
     /**
@@ -1651,7 +1660,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
     }
 
     /**
-     * review sync enabled.
+     * Review sync enabled.
      *
      * @return Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Content
      * Display the transactional data for orders to be removed.
@@ -1775,81 +1784,79 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
 
             if ($client instanceof Dotdigitalgroup_Email_Model_Apiconnector_Client) {
                 //customer carts
-                $customerCampaign1 = $website->getConfig(
+                $customerCampaignOne = $website->getConfig(
                     Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CAMPAIGN_1
                 );
-                $customerCampaign2 = $website->getConfig(
+                $customerCampaignTwo = $website->getConfig(
                     Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CAMPAIGN_2
                 );
-                $customerCampaign3 = $website->getConfig(
+                $customerCampaignThree = $website->getConfig(
                     Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CAMPAIGN_3
                 );
 
                 //guests carts
-                $guestCampaign1 = $website->getConfig(
+                $guestCampaignOne = $website->getConfig(
                     Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_GUEST_ABANDONED_CAMPAIGN_1
                 );
-                $guestCampaign2 = $website->getConfig(
+                $guestCampaignTwo = $website->getConfig(
                     Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_GUEST_ABANDONED_CAMPAIGN_2
                 );
-                $guestCampaign3 = $website->getConfig(
+                $guestCampaignThree = $website->getConfig(
                     Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_GUEST_ABANDONED_CAMPAIGN_3
                 );
 
-
                 //date customer carts
-
-                $cusDateSent1 = ($customerCampaign1) ? $client->getCampaignSummary(
-                    $customerCampaign1
+                $cusDateSentOne = ($customerCampaignOne) ? $client->getCampaignSummary(
+                    $customerCampaignOne
                 ) : '';
-                $cusDateSent2 = ($customerCampaign2) ? $client->getCampaignSummary(
-                    $customerCampaign2
+                $cusDateSentTwo = ($customerCampaignTwo) ? $client->getCampaignSummary(
+                    $customerCampaignTwo
                 ) : '';
-                $cusDateSent3 = ($customerCampaign3) ? $client->getCampaignSummary(
-                    $customerCampaign3
+                $cusDateSentThree = ($customerCampaignThree) ? $client->getCampaignSummary(
+                    $customerCampaignThree
                 ) : '';
 
                 //date guest carts
-                $resGuest1 = ($guestCampaign1) ? $client->getCampaignSummary(
-                    $guestCampaign1
+                $resGuestOne = ($guestCampaignOne) ? $client->getCampaignSummary(
+                    $guestCampaignOne
                 ) : '';
-                $resGuest2 = ($guestCampaign2) ? $client->getCampaignSummary(
-                    $guestCampaign2
+                $resGuestTwo = ($guestCampaignTwo) ? $client->getCampaignSummary(
+                    $guestCampaignTwo
                 ) : '';
-                $resGuest3 = ($guestCampaign3) ? $client->getCampaignSummary(
-                    $guestCampaign3
+                $resGuestThree = ($guestCampaignThree) ? $client->getCampaignSummary(
+                    $guestCampaignThree
                 ) : '';
 
                 /**
                  * Customers.
                  */
-                $customerCampaign1 = (isset($cusDateSent1->dateSent)
-                    ? $cusDateSent1->dateSent : 'Not Sent/Selected');
-                $customerCampaign2 = (isset($cusDateSent2->dateSent)
-                    ? $cusDateSent2->dateSent : 'Not Sent/Selected');
-                $customerCampaign3 = (isset($cusDateSent3->dateSent)
-                    ? $cusDateSent3->dateSent : 'Not Sent/Selected');
+                $customerCampaignOne = (isset($cusDateSentOne->dateSent)
+                    ? $cusDateSentOne->dateSent : 'Not Sent/Selected');
+                $customerCampaignTwo = (isset($cusDateSentTwo->dateSent)
+                    ? $cusDateSentTwo->dateSent : 'Not Sent/Selected');
+                $customerCampaignThree = (isset($cusDateSentThree->dateSent)
+                    ? $cusDateSentThree->dateSent : 'Not Sent/Selected');
 
                 /**
                  * Guests.
                  */
-                $guestCampaign1 = (isset($resGuest1->dateSent)
-                    ? $resGuest1->dateSent : 'Not Sent/Selected');
-                $guestCampaign2 = (isset($resGuest2->dateSent)
-                    ? $resGuest2->dateSent : 'Not Sent/Selected');
-                $guestCampaign3 = (isset($resGuest3->dateSent)
-                    ? $resGuest3->dateSent : 'Not Sent/Selected');
+                $guestCampaignOne = (isset($resGuestOne->dateSent)
+                    ? $resGuestOne->dateSent : 'Not Sent/Selected');
+                $guestCampaignTwo = (isset($resGuestTwo->dateSent)
+                    ? $resGuestTwo->dateSent : 'Not Sent/Selected');
+                $guestCampaignThree = (isset($resGuestThree->dateSent)
+                    ? $resGuestThree->dateSent : 'Not Sent/Selected');
 
 
                 $resultContent->setTable(
                     array(
                         'Website' => $websiteName,
-                        'Customer Campaign 1' => $customerCampaign1,
-                        'Customer Campaign 2' => $customerCampaign2,
-                        'Customer Campaign 3' => $customerCampaign3,
-                        'Guest Campaign 1' => $guestCampaign1,
-                        'Guest Campaign 2' => $guestCampaign2,
-                        'Guest Campaign 3' => $guestCampaign3
+                        'Customer Campaign 1' => $customerCampaignOne,
+                        'Customer Campaign 2' => $customerCampaignTwo,
+                        'Customer Campaign 3' => $customerCampaignThree,
+                        'Guest Campaign 1' => $guestCampaignOne,
+                        'Guest Campaign 2' => $guestCampaignTwo,
+                        'Guest Campaign 3' => $guestCampaignThree
                     )
                 );
             }
@@ -1874,7 +1881,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
 
         //check the module override and conflict
         $rewrites = Mage::helper('ddg/dashboard')->getRewrites();
-
 
         if ($rewrites === false) {
             $resultContent->setStyle(self::CONNECTOR_DASHBOARD_PASSED)
@@ -1904,6 +1910,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
             $conflictCounter = 0;
             $tableData       = array();
             foreach ($rewrites as $type => $data) {
+                //@codingStandardsIgnoreStart
                 if (count($data) > 0 && is_array($data)) {
                     foreach ($data as $class => $rewriteClass) {
                         if (count($rewriteClass) > 1) {
@@ -1926,6 +1933,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                         }
                     }
                 }
+                //@codingStandardsIgnoreEnd
             }
 
             if (! empty($tableData)) {
@@ -2009,6 +2017,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
             $version = 'Magento version : ' . Mage::getVersion() . 'V';
         }
 
+        //@codingStandardsIgnoreStart
         $fh  = @fopen('/proc/meminfo', 'r');
         $mem = 0;
         if ($fh) {
@@ -2022,6 +2031,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
 
             fclose($fh);
         }
+        //@codingStandardsIgnoreEnd
 
         if ($mem > 0) {
             $mem = $mem / 1024 . 'M';
@@ -2038,8 +2048,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
             )
             ->setHowto($version)
             ->setHowto(
-                'Connector version : V' . Mage::helper('ddg')
-                    ->getConnectorVersion()
+                'Connector version : V' . Mage::helper('ddg')->getConnectorVersion()
             );
 
         return $resultContent;
@@ -2048,10 +2057,13 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
 
     /**
      * Check if the mapped program is active.
+     *
+     * @param $program
+     * @param $website
+     * @return bool|null
      */
     protected function _getWebisteProgram($program, $website)
     {
-
         $client = Mage::helper('ddg')->getWebsiteApiClient($website);
 
         if (! $client || ! $program) {
@@ -2094,7 +2106,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
     }
 
     /**
-     * Get the method name
+     * Get the method name.
      *
      * @param $name
      *
@@ -2115,7 +2127,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
     }
 
     /**
-     * disabled newsletter success enabled
+     * Disabled newsletter success enabled.
      *
      * @return Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Content
      */
@@ -2162,7 +2174,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
     }
 
     /**
-     * wishlist sync enabled.
+     * Wishlist sync enabled.
      *
      * @return Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Content
      */
@@ -2265,6 +2277,4 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
 
         return $resultContent;
     }
-
-
 }

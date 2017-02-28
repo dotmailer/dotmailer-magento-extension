@@ -4,6 +4,10 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Widget_Chooser_Product
     extends Mage_Adminhtml_Block_Widget_Grid
 {
 
+    /**
+     * Dotdigitalgroup_Email_Block_Adminhtml_Widget_Chooser_Product constructor.
+     * @param array $arguments
+     */
     public function __construct($arguments = array())
     {
         parent::__construct($arguments);
@@ -39,6 +43,10 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Widget_Chooser_Product
         return Mage::app()->getStore();
     }
 
+    /**
+     * @param $column
+     * @return $this
+     */
     protected function _addColumnFilterToCollection($column)
     {
         // Set custom filter for in product flag
@@ -67,7 +75,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Widget_Chooser_Product
     /**
      * Prepare Catalog Product Collection for attribute SKU in Promo Conditions SKU chooser
      *
-     * @return Mage_Adminhtml_Block_Promo_Widget_Chooser_Sku
+     * @return Mage_Adminhtml_Block_Widget_Grid
      */
     protected function _prepareCollection()
     {
@@ -83,7 +91,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Widget_Chooser_Product
     /**
      * Define Cooser Grid Columns and filters
      *
-     * @return Mage_Adminhtml_Block_Promo_Widget_Chooser_Sku
+     * @return Mage_Adminhtml_Block_Widget_Grid
      */
     protected function _prepareColumns()
     {
@@ -157,6 +165,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Widget_Chooser_Product
         return parent::_prepareColumns();
     }
 
+    /**
+     * @return string
+     */
     public function getGridUrl()
     {
         return $this->getUrl(
@@ -168,6 +179,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Widget_Chooser_Product
         );
     }
 
+    /**
+     * @return mixed
+     */
     protected function _getSelectedProducts()
     {
         $products = $this->getRequest()->getPost('selected', array());
@@ -176,7 +190,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Widget_Chooser_Product
     }
 
     /**
-     * set default limit
+     * Set default limit.
      *
      * @param $limit
      *

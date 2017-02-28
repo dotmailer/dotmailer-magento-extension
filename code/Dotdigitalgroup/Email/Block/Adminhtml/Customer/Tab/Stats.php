@@ -4,8 +4,14 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Customer_Tab_Stats
     extends Mage_Adminhtml_Block_Template
 {
 
-    protected $_stat = array();
+    /**
+     * @var array
+     */
+    protected $stats = array();
 
+    /**
+     * Constructor.
+     */
     public function _construct()
     {
         $this->setTemplate('connector/customer/stats.phtml');
@@ -24,6 +30,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Customer_Tab_Stats
             if (!isset($contact->message)) {
                 $locale = Mage::app()->getLocale()->getLocale();
                 $date = Zend_Date::now($locale)->subDay(30);
+
                 $response = $client->getCampaignsWithActivitySinceDate(
                     $date->toString(Zend_Date::ISO_8601)
                 );
@@ -32,10 +39,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Customer_Tab_Stats
                         $result = $client->getCampaignActivityByContactId(
                             $one->id, $contact->id
                         );
-                        if (!empty($result) && !isset($result->message)
-                            && !is_null($result)
-                        ) {
-                            $this->_stat[$one->name] = $result;
+                        if (!empty($result) && !isset($result->message) && $result !== null) {
+                            $this->stats[$one->name] = $result;
                         }
                     }
                 }
@@ -43,10 +48,15 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Customer_Tab_Stats
         }
     }
 
+    /**
+     * Get stats for customer.
+     *
+     * @return array
+     */
     public function getStats()
     {
         $this->_getCampaignStatsForCustomer();
 
-        return $this->_stat;
+        return $this->stats;
     }
 }

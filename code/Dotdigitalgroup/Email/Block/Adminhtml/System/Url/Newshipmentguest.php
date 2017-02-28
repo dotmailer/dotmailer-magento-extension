@@ -12,8 +12,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Url_Newshipmentguest
      * @return string
      * @throws Mage_Core_Exception
      */
-    protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element
-    ) 
+    protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element)
     {
         $baseUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);
         $website = Mage::app()->getRequest()->getParam('website', false);
@@ -33,7 +32,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Url_Newshipmentguest
             $website
         );
 
-        if (! strlen($passcode)) {
+        if ($passcode == '') {
             $passcode = '[PLEASE SET UP A PASSCODE]';
         }
 

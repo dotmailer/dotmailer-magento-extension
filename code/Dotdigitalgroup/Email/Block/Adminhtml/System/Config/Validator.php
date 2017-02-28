@@ -1,6 +1,5 @@
 <?php
 
-
 class Dotdigitalgroup_Email_Block_Adminhtml_System_Config_Validator
     extends Mage_Adminhtml_Block_System_Config_Form_Field
 {
@@ -70,7 +69,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Config_Validator
                                     // ignore DO NOT MAP fields
                                     break;
                                 case currentSelection:
-                                    // warning, that field is already mapped somewhere else - reset that value to 'Do not map''
+                                    // that field is already mapped somewhere else - reset that value to 'Do not map''
                                     alert('Warning! You have overwritten: '+currentLabel);
                                     jQuery(this).val(0);
                                     break;

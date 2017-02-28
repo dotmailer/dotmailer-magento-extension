@@ -25,7 +25,6 @@ class Dotdigitalgroup_Email_Block_Recommended_Wishlistproducts extends Dotdigita
      */
     protected function getWishlist()
     {
-
         //customer id param
         $customerId = Mage::app()->getRequest()->getParam('customer_id');
 

@@ -1,9 +1,13 @@
 <?php
 
-class Dotdigitalgroup_Email_Block_Adminhtml_Automation_Grid
-    extends Mage_Adminhtml_Block_Widget_Grid
+/**
+ * Class Dotdigitalgroup_Email_Block_Adminhtml_Automation_Grid
+ */
+class Dotdigitalgroup_Email_Block_Adminhtml_Automation_Grid extends Mage_Adminhtml_Block_Widget_Grid
 {
-
+    /**
+     * Dotdigitalgroup_Email_Block_Adminhtml_Automation_Grid constructor.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -15,6 +19,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Automation_Grid
 
     }
 
+    /**
+     * @return Mage_Adminhtml_Block_Widget_Grid
+     */
     protected function _prepareCollection()
     {
         $collection = Mage::getModel('ddg_automation/automation')
@@ -26,6 +33,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Automation_Grid
         return parent::_prepareCollection();
     }
 
+    /**
+     * @return $this
+     */
     protected function _prepareColumns()
     {
         $this->addColumn(

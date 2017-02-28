@@ -4,11 +4,18 @@ class Dotdigitalgroup_Email_Block_Customer_Account_Books
     extends Mage_Customer_Block_Account_Dashboard
 {
 
-    protected $_client;
+    /**
+     * @var Dotdigitalgroup_Email_Model_Apiconnector_Client
+     */
+    public $client;
+
+    /**
+     * @var int
+     */
     public $contactId;
 
     /**
-     * subscription pref save url
+     * Subscription pref save url.
      *
      * @return string
      */
@@ -18,7 +25,7 @@ class Dotdigitalgroup_Email_Block_Customer_Account_Books
     }
 
     /**
-     * get config values
+     * Get config values.
      *
      * @param $path
      * @param $website
@@ -31,23 +38,23 @@ class Dotdigitalgroup_Email_Block_Customer_Account_Books
     }
 
     /**
-     * get api client
+     * Get api client.
      *
      * @return Dotdigitalgroup_Email_Model_Apiconnector_Client
      */
     protected function _getApiClient()
     {
-        if (empty($this->_client)) {
+        if (empty($this->client)) {
             $website = $this->getCustomer()->getStore()->getWebsite();
             $client  = Mage::getModel('ddg_automation/apiconnector_client');
             $client->setApiUsername(
                 Mage::helper('ddg')->getApiUsername($website)
             )
                 ->setApiPassword(Mage::helper('ddg')->getApiPassword($website));
-            $this->_client = $client;
+            $this->client = $client;
         }
 
-        return $this->_client;
+        return $this->client;
     }
 
     /**
@@ -64,7 +71,7 @@ class Dotdigitalgroup_Email_Block_Customer_Account_Books
     }
 
     /**
-     * getter for additional books. Fully processed.
+     * Getter for additional books. Fully processed.
      *
      * @return array
      */
@@ -76,7 +83,7 @@ class Dotdigitalgroup_Email_Block_Customer_Account_Books
             $this->getCustomer()->getStore()->getWebsite()
         );
 
-        if (strlen($additionalFromConfig)) {
+        if ($additionalFromConfig !== '') {
             $additionalFromConfig = explode(',', $additionalFromConfig);
             $this->getConnectorContact();
             if ($this->contactId) {
@@ -140,7 +147,7 @@ class Dotdigitalgroup_Email_Block_Customer_Account_Books
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_ADDRESSBOOK_PREF_SHOW_FIELDS,
             $this->getCustomer()->getStore()->getWebsite()
         );
-        if (strlen($dataFieldsFromConfig)) {
+        if ($dataFieldsFromConfig !== '') {
             $dataFieldsFromConfig = explode(',', $dataFieldsFromConfig);
             $contact              = $this->getConnectorContact();
             if ($this->contactId) {
@@ -162,19 +169,19 @@ class Dotdigitalgroup_Email_Block_Customer_Account_Books
                 foreach ($dataFieldsFromConfig as $dataFieldFromConfig) {
                     if (isset($processedConnectorDataFields[$dataFieldFromConfig])) {
                         $value = "";
-                        $type  = "";
-                        if (isset($processedContactDataFields[$processedConnectorDataFields[$dataFieldFromConfig]->name])) {
-                            if ($processedConnectorDataFields[$dataFieldFromConfig]->type
-                                == "Date"
-                            ) {
-                                $type  = "Date";
-                                $value
-                                       = $processedContactDataFields[$processedConnectorDataFields[$dataFieldFromConfig]->name];
-                                $value = Mage::app()->getLocale()->date($value)
-                                    ->toString("Y/M/d");
+                        if (isset(
+                            $processedContactDataFields[$processedConnectorDataFields[$dataFieldFromConfig]
+                                ->name]
+                        )) {
+                            if ($processedConnectorDataFields[$dataFieldFromConfig]->type == "Date") {
+                                $value = $processedContactDataFields[
+                                    $processedConnectorDataFields[$dataFieldFromConfig]->name];
+                                //@codingStandardsIgnoreStart
+                                $value = Mage::app()->getLocale()->date($value)->toString("Y/M/d");
+                                //@codingStandardsIgnoreEnd
                             } else {
-                                $value
-                                    = $processedContactDataFields[$processedConnectorDataFields[$dataFieldFromConfig]->name];
+                                $value = $processedContactDataFields[
+                                        $processedConnectorDataFields[$dataFieldFromConfig]->name];
                             }
                         }
 
@@ -192,7 +199,7 @@ class Dotdigitalgroup_Email_Block_Customer_Account_Books
     }
 
     /**
-     * find out if anything is true
+     * Find out if anything is true.
      *
      * @return bool
      */
@@ -211,7 +218,7 @@ class Dotdigitalgroup_Email_Block_Customer_Account_Books
     }
 
     /**
-     * get connector contact
+     * Get connector contact.
      *
      * @return mixed
      */
@@ -238,6 +245,9 @@ class Dotdigitalgroup_Email_Block_Customer_Account_Books
         return $contact;
     }
 
+    /**
+     * @return Mage_Core_Model_Abstract|Mage_Customer_Model_Session
+     */
     protected function _getCustomerSession()
     {
         return Mage::getSingleton('customer/session');

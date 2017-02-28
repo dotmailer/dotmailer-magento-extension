@@ -2,7 +2,6 @@
 
 class Dotdigitalgroup_Email_Block_Coupon extends Mage_Core_Block_Template
 {
-
     /**
      * Generates the coupon code based on the code id.
      *
@@ -50,15 +49,16 @@ class Dotdigitalgroup_Email_Block_Coupon extends Mage_Core_Block_Template
             $couponCode = $coupon->getCode();
             //save the type of coupon
             $couponModel = Mage::getModel('salesrule/coupon')
-                ->loadByCode(
-                    $couponCode
-                );
+                ->loadByCode($couponCode);
+
             $couponModel->setType(Mage_SalesRule_Model_Rule::COUPON_TYPE_NO_COUPON)
                 ->setGeneratedByDotmailer(1);
 
             if (is_numeric($params['expire_days'])) {
                 $locale = Mage::app()->getLocale()->getLocale();
+                //@codingStandardsIgnoreStart
                 $expirationDate = Zend_Date::now($locale)->addDay($params['expire_days']);
+                //@codingStandardsIgnoreEnd
                 $couponModel->setExpirationDate($expirationDate->toString('yyyy-MM-dd HH:mm'));
             } elseif ($rule->getToDate()) {
                 $couponModel->setExpirationDate($rule->getToDate());
