@@ -87,12 +87,12 @@ class Dotdigitalgroup_Email_Model_Customer_Guest
             $storeId = $order->getStoreId();
 
             //add guest to the list
-            $this->guests[] = [
+            $this->guests[] = array(
                 'email' => $order->getCustomerEmail(),
                 'website_id' => $websiteId,
                 'store_id' => $storeId,
                 'is_guest' => 1
-            ];
+            );
         }
 
         /**
