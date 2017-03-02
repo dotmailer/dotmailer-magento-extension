@@ -5,7 +5,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_DashboardController
 {
 
     /**
-     * post dispatch
+     * Post dispatch.
      */
     public function postDispatch()
     {
@@ -13,12 +13,10 @@ class Dotdigitalgroup_Email_Adminhtml_Email_DashboardController
 
         //check the api valid for any of the website
         foreach (Mage::app()->getWebsites(true) as $website) {
-
-            if($currentWebsiteId == $website->getId()) {
-
+            if ($currentWebsiteId == $website->getId()) {
                 $passed = Mage::helper('ddg')->isEnabled($website);
 
-                if ( ! $passed) {
+                if (! $passed) {
                     $this->_redirect(
                         '*/system_config/edit',
                         array('section' => 'connector_api_credentials', 'website' => $website->getCode())
@@ -30,7 +28,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_DashboardController
     }
 
     /**
-     * main page.
+     * Main page.
      */
     public function indexAction()
     {
@@ -65,6 +63,9 @@ class Dotdigitalgroup_Email_Adminhtml_Email_DashboardController
         $this->getResponse()->setBody($block->toHtml());
     }
 
+    /**
+     * @return bool
+     */
     protected function _isAllowed()
     {
         return Mage::getSingleton('admin/session')->isAllowed(
@@ -85,20 +86,27 @@ class Dotdigitalgroup_Email_Adminhtml_Email_DashboardController
         $this->_saveState($configState);
     }
 
+    /**
+     * @param array $configState
+     * @return bool
+     */
     protected function _saveState($configState = array())
     {
         $adminUser = Mage::getSingleton('admin/session')->getUser();
         if (is_array($configState)) {
             $extra = $adminUser->getExtra();
-            if ( ! is_array($extra)) {
+            if (! is_array($extra)) {
                 $extra = array();
             }
-            if ( ! isset($extra['configState'])) {
+
+            if (! isset($extra['configState'])) {
                 $extra['configState'] = array();
             }
+
             foreach ($configState as $fieldset => $state) {
                 $extra['configState'][$fieldset] = $state;
             }
+
             $adminUser->saveExtra($extra);
         }
 
@@ -106,7 +114,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_DashboardController
     }
 
     /**
-     * ajax tab for view connector logs
+     * Ajax tab for view connector logs.
      */
     public function logsAction()
     {

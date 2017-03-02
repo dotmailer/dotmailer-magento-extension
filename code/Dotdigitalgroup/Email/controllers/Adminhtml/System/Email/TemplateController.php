@@ -7,11 +7,11 @@ class Dotdigitalgroup_Email_Adminhtml_System_Email_TemplateController
 {
 
     /**
-     * Set template data to retrieve it in template info form
+     * Set template data to retrieve it in template info form.
      */
     public function defaultTemplateAction()
     {
-        if ( ! $this->getRequest()->getParam('connector') or $this->getRequest()
+        if (! $this->getRequest()->getParam('connector') or $this->getRequest()
                 ->getParam('connector') == ''
         ) {
             parent::defaultTemplateAction();
@@ -47,6 +47,7 @@ class Dotdigitalgroup_Email_Adminhtml_System_Email_TemplateController
                 if (isset($connectorTemplate->id)) {
                     $template->setTemplateText($connectorTemplate->htmlContent);
                 }
+
                 $template->setTemplateStyles('');
             }
         }

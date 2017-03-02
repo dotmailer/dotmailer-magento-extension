@@ -15,6 +15,8 @@ class Dotdigitalgroup_Email_Model_Resource_Review
     /**
      * Reset the email reviews for reimport.
      *
+     * @param null $from
+     * @param null $to
      * @return int
      */
     public function reset($from = null, $to = null)

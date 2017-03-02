@@ -5,22 +5,23 @@ class Dotdigitalgroup_Email_Customer_NewsletterController
 {
 
     /**
-     * Check customer authentication
+     * Check customer authentication.
      */
     public function preDispatch()
     {
         parent::preDispatch();
 
-        if ( ! $this->getRequest()->isDispatched()) {
+        if (! $this->getRequest()->isDispatched()) {
             return;
         }
-        if ( ! $this->_getCustomerSession()->authenticate($this)) {
+
+        if (! $this->_getCustomerSession()->authenticate($this)) {
             $this->setFlag('', 'no-dispatch', true);
         }
     }
 
     /**
-     * get customer session
+     * Get customer session.
      *
      * @return Mage_Customer_Model_Session
      */
@@ -30,18 +31,20 @@ class Dotdigitalgroup_Email_Customer_NewsletterController
     }
 
     /**
-     * save action
+     * Save action.
+     * @codingStandardsIgnoreStart
      *
      * @return Mage_Core_Controller_Varien_Action
      * @throws Mage_Core_Exception
      */
     public function saveAction()
     {
-        if ( ! $this->_validateFormKey() or ! $this->_getCustomerSession()
-                ->getConnectorContactId()
+        if (! $this->_validateFormKey() or
+            ! $this->_getCustomerSession()->getConnectorContactId()
         ) {
             return $this->_redirect('customer/account/');
         }
+
         //params
         $additionalSubscriptions = Mage::app()->getRequest()->getParam(
             'additional_subscriptions'
@@ -79,20 +82,21 @@ class Dotdigitalgroup_Email_Customer_NewsletterController
                     }
                 }
             }
+
             if (isset($additionalSubscriptions)) {
-                foreach ($additionalSubscriptions as $additional_subscription) {
-                    if ( ! isset($processedAddressBooks[$additional_subscription])) {
+                foreach ($additionalSubscriptions as $additionalSubscription) {
+                    if (! isset($processedAddressBooks[$additionalSubscription])) {
                         $bookResponse = $client->postAddressBookContacts(
-                            $additional_subscription, $contact
+                            $additionalSubscription, $contact
                         );
                         if (isset($bookResponse->message)) {
                             $bookError = true;
                         }
-
                     }
                 }
+
                 foreach ($processedAddressBooks as $bookId => $name) {
-                    if ( ! in_array($bookId, $additionalSubscriptions)) {
+                    if (! in_array($bookId, $additionalSubscriptions)) {
                         $bookResponse = $client->deleteAddressBookContact(
                             $bookId, $contact->id
                         );
@@ -119,26 +123,31 @@ class Dotdigitalgroup_Email_Customer_NewsletterController
             foreach ($dFields as $dataField) {
                 $processedFields[$dataField->name] = $dataField->type;
             }
+
             foreach ($dataFields as $key => $value) {
                 if (isset($processedFields[$key]) && $value) {
                     if ($processedFields[$key] == 'Numeric') {
                         $dataFields[$key] = (int)$value;
                     }
+
                     if ($processedFields[$key] == 'String') {
                         $dataFields[$key] = (string)$value;
                     }
+
                     if ($processedFields[$key] == 'Date') {
                         $date             = new Zend_Date($value, "Y/M/d");
                         $dataFields[$key] = $date->toString(
                             Zend_Date::ISO_8601
                         );
                     }
+
                     $data[] = array(
                         'Key'   => $key,
                         'Value' => $dataFields[$key]
                     );
                 }
             }
+
             $contactResponse = $client->updateContactDatafieldsByEmail(
                 $customerEmail, $data
             );
@@ -161,6 +170,7 @@ class Dotdigitalgroup_Email_Customer_NewsletterController
                 )
             );
         }
+        //@codingStandardsIgnoreEnd
         $this->_redirect('customer/account/');
     }
 }

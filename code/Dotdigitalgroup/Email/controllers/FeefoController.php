@@ -18,14 +18,14 @@ class Dotdigitalgroup_Email_FeefoController
         $actionName = $this->getRequest()->getActionName();
         switch ($actionName) {
             case 'score':
-                if ( ! $helper->getFeefoLogon()) {
+                if (! $helper->getFeefoLogon()) {
                     $this->sendResponse();
 
                     return;
                 }
                 break;
             case 'reviews':
-                if ( ! $helper->getFeefoLogon() or ! Mage::app()->getRequest()
+                if (! $helper->getFeefoLogon() or ! Mage::app()->getRequest()
                         ->getParam('quote_id')
                 ) {
                     $this->sendResponse();
@@ -39,7 +39,7 @@ class Dotdigitalgroup_Email_FeefoController
     }
 
     /**
-     * show customer's score logo
+     * Show customer's score logo.
      */
     public function scoreAction()
     {
@@ -50,7 +50,7 @@ class Dotdigitalgroup_Email_FeefoController
     }
 
     /**
-     * show product reviews
+     * Show product reviews.
      */
     public function reviewsAction()
     {
