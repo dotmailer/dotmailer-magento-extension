@@ -49,11 +49,12 @@ class Dotdigitalgroup_Email_Model_Customer_Guest
         }
 
         if ($this->countGuests) {
+            //@codingStandardsIgnoreStart
             $helper->log(
-                '---- End Guest total time for guest sync : ' . gmdate(
-                    "H:i:s", microtime(true) - $this->start
-                )
+                '---- End Guest total time for guest sync : ' .
+                gmdate("H:i:s", microtime(true) - $this->start)
             );
+            //@codingStandardsIgnoreEnd
         }
     }
 

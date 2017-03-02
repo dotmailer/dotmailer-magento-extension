@@ -5,14 +5,13 @@ class Dotdigitalgroup_Email_Model_Resource_Contact_Collection
 {
 
     /**
-     * constructor.
+     * Constructor.
      */
     protected function _construct()
     {
         parent::_construct();
         $this->_init('ddg_automation/contact');
     }
-
 
     /**
      * @param $website

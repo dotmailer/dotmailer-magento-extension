@@ -45,6 +45,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Campaigns
                 Mage::unregister('savedcampigns');
                 Mage::register('savedcampigns', $campaigns);
             }
+
             //@codingStandardsIgnoreStart
             foreach ($campaigns as $one) {
                 if (isset($one->id)) {

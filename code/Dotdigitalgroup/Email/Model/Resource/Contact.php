@@ -1,16 +1,13 @@
 <?php
 
-class Dotdigitalgroup_Email_Model_Resource_Contact
-    extends Mage_Core_Model_Resource_Db_Abstract
+class Dotdigitalgroup_Email_Model_Resource_Contact extends Mage_Core_Model_Resource_Db_Abstract
 {
-
     /**
-     * constructor.
+     * Constructor.
      */
     protected function _construct()
     {
         $this->_init('ddg_automation/contact', 'email_contact_id');
-
     }
 
     /**
@@ -37,7 +34,7 @@ class Dotdigitalgroup_Email_Model_Resource_Contact
     }
 
     /**
-     * Reset the imported contacts
+     * Reset the imported contacts.
      *
      * @return int
      */
@@ -56,6 +53,7 @@ class Dotdigitalgroup_Email_Model_Resource_Contact
             return $num;
         } catch (Exception $e) {
             Mage::logException($e);
+            return 0;
         }
     }
 
@@ -79,11 +77,12 @@ class Dotdigitalgroup_Email_Model_Resource_Contact
             return $num;
         } catch (Exception $e) {
             Mage::logException($e);
+            return 0;
         }
     }
 
     /**
-     * Reset the imported contacts as guest
+     * Reset the imported contacts as guest.
      *
      * @return int
      */
@@ -108,11 +107,12 @@ class Dotdigitalgroup_Email_Model_Resource_Contact
             return $num;
         } catch (Exception $e) {
             Mage::logException($e);
+            return 0;
         }
     }
 
     /**
-     * Re-set all tables
+     * Re-set all tables.
      */
     public function resetAllTables()
     {
@@ -126,12 +126,14 @@ class Dotdigitalgroup_Email_Model_Resource_Contact
 
             //clean cache
             Mage::app()->getCacheInstance()->flush();
-
         } catch (Exception $e) {
             Mage::logException($e);
         }
     }
 
+    /**
+     * @param $customer
+     */
     public function update($customer)
     {
         $write = $this->_getWriteAdapter();
@@ -195,7 +197,7 @@ class Dotdigitalgroup_Email_Model_Resource_Contact
     }
 
     /**
-     * prepare recency part of RFM
+     * Prepare recency part of RFM.
      *
      * @param $collection
      *
@@ -216,7 +218,7 @@ class Dotdigitalgroup_Email_Model_Resource_Contact
     }
 
     /**
-     * prepare frequency part of RFM
+     * Prepare frequency part of RFM.
      *
      * @param $collection
      *
@@ -236,7 +238,7 @@ class Dotdigitalgroup_Email_Model_Resource_Contact
     }
 
     /**
-     * prepare monetary part of RFM
+     * Prepare monetary part of RFM.
      *
      * @param $collection
      *
@@ -258,7 +260,7 @@ class Dotdigitalgroup_Email_Model_Resource_Contact
     }
 
     /**
-     * get sales amount expression
+     * Get sales amount expression.
      *
      * @param $collection
      *
@@ -291,10 +293,13 @@ class Dotdigitalgroup_Email_Model_Resource_Contact
         );
 
     }
-    
+
+    /**
+     * @param $data
+     */
     public function unsubscribe($data)
     {
-        //if empty return null
+        //for no data return null
         if (empty($data)) {
             return;
         }
@@ -320,20 +325,18 @@ class Dotdigitalgroup_Email_Model_Resource_Contact
 
             foreach ($newsletterCollection as $subscriber) {
                 Mage::register('unsubscribeEmail', $subscriber->getSubscriberEmail());
-                $subscriber->setSubscriberStatus(
-                    Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED
-                )
+                //@codingStandardsIgnoreStart
+                $subscriber->setSubscriberStatus(Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED)
                     ->save();
+                //@codingStandardsIgnoreEnd
             }
-
         } catch (Exception $e) {
             Mage::throwException($e->getMessage());
-            Mage::logException($e);
         }
     }
 
     /**
-     * insert multiple contacts to table
+     * Insert multiple contacts to table.
      *
      * @param $data
      */
@@ -344,22 +347,25 @@ class Dotdigitalgroup_Email_Model_Resource_Contact
             $write->insertMultiple($this->getMainTable(), $data);
         } catch (Exception $e) {
             Mage::throwException($e->getMessage());
-            Mage::logException($e);
         }
     }
 
     /**
-     * Update subscriber imported
+     * Update subscriber imported.
      *
      * @param $subscribers
      */
     public function updateSubscribers($subscribers)
     {
-        $write = $this->_getWriteAdapter();
-        $ids = implode(', ', $subscribers);
-        $write->update(
-            $this->getMainTable(), array('subscriber_imported' => 1),
-            "email_contact_id IN ($ids)"
-        );
+        try{
+            $write = $this->_getWriteAdapter();
+            $ids = implode(', ', $subscribers);
+            $write->update(
+                $this->getMainTable(), array('subscriber_imported' => 1),
+                "email_contact_id IN ($ids)"
+            );
+        } catch (Exception $e) {
+            Mage::throwException($e->getMessage());
+        }
     }
 }

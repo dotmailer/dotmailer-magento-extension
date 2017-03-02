@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @codingStandardsIgnoreStart
+ * Class Dotdigitalgroup_Email_Model_Connector_Product
+ */
 class Dotdigitalgroup_Email_Model_Connector_Product
 {
 

@@ -1,8 +1,11 @@
 <?php
 
+/**
+ * Class Dotdigitalgroup_Email_Model_Sales_Quote
+ * @codingStandardsIgnoreStart
+ */
 class Dotdigitalgroup_Email_Model_Sales_Quote
 {
-
     //customer
     const XML_PATH_LOSTBASKET_CUSTOMER_ENABLED_1 = 'connector_lost_baskets/customers/enabled_1';
     const XML_PATH_LOSTBASKET_CUSTOMER_ENABLED_2 = 'connector_lost_baskets/customers/enabled_2';
@@ -27,18 +30,17 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
 
 
     /**
-     * number of lost baskets available.
+     * Number of lost baskets available.
      *
      * @var array
      */
     public $lostBasketCustomers = array(1, 2, 3);
     /**
-     * number of guest lost baskets available.
+     * Number of guest lost baskets available.
      *
      * @var array
      */
     public $lostBasketGuests = array(1, 2, 3);
-
 
     /**
      * Proccess abandoned carts.
@@ -62,7 +64,6 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
                 foreach ($this->lostBasketCustomers as $num) {
                     //customer enabled
                     if ($this->_getLostBasketCustomerEnabled($num, $storeId)) {
-
                         //number of the campaign use minutes
                         if ($num == 1) {
                             $from = Zend_Date::now($locale)->subMinute(
@@ -101,7 +102,6 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
                             $num, $storeId
                         );
                         foreach ($quoteCollection as $quote) {
-
                             $email     = $quote->getCustomerEmail();
                             $websiteId = $store->getWebsiteId();
                             $quoteId   = $quote->getId();
@@ -123,6 +123,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
                                     $mostExpensiveItem = $item;
                                 }
                             }
+
                             if ($mostExpensiveItem) {
                                 Mage::helper('ddg')->updateAbandonedProductName(
                                     $mostExpensiveItem->getName(), $email,
@@ -136,12 +137,9 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
                             );
 
                             //no campign found for interval pass
-                            if ( ! $campignFound) {
-
+                            if (! $campignFound) {
                                 //save lost basket for sending
-                                $sendModel = Mage::getModel(
-                                    'ddg_automation/campaign'
-                                )
+                                Mage::getModel('ddg_automation/campaign')
                                     ->setEmail($email)
                                     ->setCustomerId($quote->getCustomerId())
                                     ->setEventName('Lost Basket')
@@ -152,12 +150,14 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
                                     ->setWebsiteId($websiteId)
                                     ->setSendStatus(
                                         Dotdigitalgroup_Email_Model_Campaign::PENDING
-                                    )->save();
+                                    )
+                                    ->save();
                             }
                         }
                     }
                 }
             }
+
             if ($mode == 'all' || $mode == 'guests') {
                 /**
                  * Guests campaigns
@@ -177,6 +177,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
                                 )
                             );
                         }
+
                         $to = clone($from);
                         $from->sub('5', Zend_Date::MINUTE);
                         $quoteCollection = $this->_getStoreQuotes(
@@ -192,11 +193,11 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
                                 . $to->toString('yyyy-MM-dd HH:mm')
                             );
                         }
+
                         $guestCampaignId = $this->_getLostBasketGuestCampaignId(
                             $num, $storeId
                         );
                         foreach ($quoteCollection as $quote) {
-
                             $email     = $quote->getCustomerEmail();
                             $websiteId = $store->getWebsiteId();
                             $quoteId   = $quote->getId();
@@ -218,6 +219,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
                                     $mostExpensiveItem = $item;
                                 }
                             }
+
                             if ($mostExpensiveItem) {
                                 Mage::helper('ddg')->updateAbandonedProductName(
                                     $mostExpensiveItem->getName(), $email,
@@ -231,11 +233,9 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
                             );
 
                             //no campign found for interval pass
-                            if ( ! $campignFound) {
+                            if (! $campignFound) {
                                 //save lost basket for sending
-                                $sendModel = Mage::getModel(
-                                    'ddg_automation/campaign'
-                                )
+                                Mage::getModel('ddg_automation/campaign')
                                     ->setEmail($email)
                                     ->setEventName('Lost Basket')
                                     ->setQuoteId($quoteId)
@@ -248,7 +248,8 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
                                     ->setWebsiteId($websiteId)
                                     ->setSendStatus(
                                         Dotdigitalgroup_Email_Model_Campaign::PENDING
-                                    )->save();
+                                    )
+                                    ->save();
                             }
                         }
                     }
@@ -257,6 +258,11 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
         }
     }
 
+    /**
+     * @param $num
+     * @param $storeId
+     * @return null|string
+     */
     protected function _getLostBasketCustomerCampaignId($num, $storeId)
     {
         $store = Mage::app()->getStore($storeId);
@@ -266,6 +272,11 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
         );
     }
 
+    /**
+     * @param $num
+     * @param $storeId
+     * @return null|string
+     */
     protected function _getLostBasketGuestCampaignId($num, $storeId)
     {
         $store = Mage::app()->getStore($storeId);
@@ -275,6 +286,11 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
         );
     }
 
+    /**
+     * @param $num
+     * @param $storeId
+     * @return null|string
+     */
     protected function _getLostBasketCustomerInterval($num, $storeId)
     {
         $store = Mage::app()->getstore($storeId);
@@ -284,6 +300,11 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
         );
     }
 
+    /**
+     * @param $num
+     * @param $storeId
+     * @return null|string
+     */
     protected function _getLostBasketGuestIterval($num, $storeId)
     {
         $store = Mage::app()->getStore($storeId);
@@ -293,6 +314,11 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
         );
     }
 
+    /**
+     * @param $num
+     * @param $storeId
+     * @return null|string
+     */
     protected function _getLostBasketCustomerEnabled($num, $storeId)
     {
         $store   = Mage::app()->getStore($storeId);
@@ -304,6 +330,11 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
 
     }
 
+    /**
+     * @param $num
+     * @param $storeId
+     * @return null|string
+     */
     protected function _getLostBasketGuestEnabled($num, $storeId)
     {
         $store = Mage::app()->getStore($storeId);
@@ -321,11 +352,8 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
      *
      * @return Mage_Eav_Model_Entity_Collection_Abstract
      */
-    protected function _getStoreQuotes($from = null, $to = null, $guest = false,
-        $storeId = 0
-    ) 
+    protected function _getStoreQuotes($from = null, $to = null, $guest = false, $storeId = 0)
     {
-
         $updated = array(
             'from' => $from,
             'to'   => $to,
@@ -348,6 +376,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
                 'main_table.customer_id', array('notnull' => true)
             );
         }
+
         $salesCollection->addFieldToFilter('main_table.updated_at', $updated);
 
         //process rules on collection
@@ -379,7 +408,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
         $locale    = Mage::app()->getLocale()->getLocale();
 
         //no limit is set skip
-        if ( ! $cartLimit) {
+        if (! $cartLimit) {
             return false;
         }
 

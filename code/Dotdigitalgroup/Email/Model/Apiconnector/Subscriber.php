@@ -9,7 +9,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Subscriber
      * @var Mage_Newsletter_Model_Subscriber $subscriber
      */
     public $subscriber;
-    /**]
+    /**
      * @var
      */
     public $subscriberData;

@@ -32,6 +32,9 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
     //sync limits
     const SYNC_SINGLE_LIMIT_NUMBER = 100;
 
+    /**
+     * @var array
+     */
     protected $_reasons = array(
         'Globally Suppressed',
         'Blocked',
@@ -45,18 +48,21 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
         'Suppressed by you'
     );
 
-    protected $import_statuses = array(
+    /**
+     * @var array
+     */
+    public $importStatuses = array(
         'RejectedByWatchdog', 'InvalidFileFormat', 'Unknown',
         'Failed', 'ExceedsAllowedContactLimit', 'NotAvailableInThisVersion'
     );
 
-    protected $_bulkPriority;
-    protected $_singlePriority;
-    protected $_totalItems;
-    protected $_bulkSyncLimit;
+    public $bulkPriority;
+    public $singlePriority;
+    public $totalItems;
+    public $bulkSyncLimit;
 
     /**
-     * constructor
+     * Constructor.
      */
     public function _construct()
     {
@@ -76,11 +82,12 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
         } else {
             $this->setUpdatedAt($now);
         }
+
         return $this;
     }
 
     /**
-     * register import in queue
+     * Register import in queue.
      *
      * @param $importType
      * @param $importData
@@ -108,20 +115,24 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
         } catch (Exception $e) {
             Mage::logException($e);
         }
+
         return false;
     }
 
+    /**
+     * @codingStandardsIgnoreStart
+     * Check import status.
+     */
     protected function _checkImportStatus()
     {
         $helper = Mage::helper('ddg');
         $helper->allowResourceFullExecution();
-        if ($items = $this->_getImportingItems($this->_bulkSyncLimit)) {
-            foreach($items as $item) {
+        if ($items = $this->_getImportingItems($this->bulkSyncLimit)) {
+            foreach ($items as $item) {
                 $websiteId = $item->getWebsiteId();
                 $client = Mage::helper('ddg')->getWebsiteApiClient($websiteId);
                 if ($client) {
-                    if (
-                        $item->getImportType() == self::IMPORT_TYPE_CONTACT or
+                    if ($item->getImportType() == self::IMPORT_TYPE_CONTACT or
                         $item->getImportType() == self::IMPORT_TYPE_SUBSCRIBERS or
                         $item->getImportType() == self::IMPORT_TYPE_GUEST
 
@@ -130,22 +141,27 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
                     } else {
                         $response = $client->getContactsTransactionalDataImportByImportId($item->getImportId());
                     }
+
                     //if curl error 28
                     $curlError = $client->getCurlError();
                     if ($curlError) {
+                        //@codingStandardsIgnoreStart
                         $item->setMessage($curlError)
                             ->setImportStatus(self::FAILED)
                             ->save();
+                        //@codingStandardsIgnoreEnd
                     } else {
                         if ($response && !isset($response->message)) {
                             if ($response->status == 'Finished') {
+                                //@codingStandardsIgnoreStart
                                 $now = Mage::getSingleton('core/date')->gmtDate();
+
                                 $item->setImportStatus(self::IMPORTED)
                                     ->setImportFinished($now)
                                     ->setMessage('')
                                     ->save();
-                                if (
-                                    $item->getImportType() == self::IMPORT_TYPE_CONTACT or
+                                //@codingStandardsIgnoreEnd
+                                if ($item->getImportType() == self::IMPORT_TYPE_CONTACT or
                                     $item->getImportType() == self::IMPORT_TYPE_SUBSCRIBERS or
                                     $item->getImportType() == self::IMPORT_TYPE_GUEST
 
@@ -159,26 +175,37 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
                                         $this->_processContactImportReportFaults($item->getImportId(), $websiteId);
                                     }
                                 }
-                            } elseif (in_array($response->status, $this->import_statuses)) {
+                            } elseif (in_array($response->status, $this->importStatuses)) {
+                                //@codingStandardsIgnoreStart
                                 $item->setImportStatus(self::FAILED)
                                     ->setMessage('Import failed with status ' . $response->status)
                                     ->save();
-                            }else{
+                                //@codingStandardsIgnoreEnd
+                            } else {
                                 //Not finished
-                                $this->_totalItems += 1;
+                                $this->totalItems += 1;
                             }
                         }
+
                         if ($response && isset($response->message)) {
+                            //@codingStandardsIgnoreStart
                             $item->setImportStatus(self::FAILED)
                                 ->setMessage($response->message)
                                 ->save();
+                            //@codingStandardsIgnoreEnd
                         }
                     }
                 }
             }
         }
+
+        //@codingStandardsIgnoreEnd
     }
 
+    /**
+     * @param $id
+     * @param $websiteId
+     */
     protected function _processContactImportReportFaults($id, $websiteId)
     {
         $helper = Mage::helper('ddg');
@@ -206,12 +233,16 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
         }
     }
 
-    public function processQueue() {
+    /**
+     * Proccess the queue data.
+     */
+    public function processQueue()
+    {
         //Set items to 0
-        $this->_totalItems = 0;
+        $this->totalItems = 0;
 
         //Set bulk sync limit
-        $this->_bulkSyncLimit = 5;
+        $this->bulkSyncLimit = 5;
 
         //Set priority
         $this->_setPriority();
@@ -220,17 +251,15 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
         $this->_checkImportStatus();
 
         //Bulk priority. Process group 1 first
-        foreach($this->_bulkPriority as $bulk)
-        {
-            if($this->_totalItems < $bulk['limit'])
-            {
+        foreach ($this->bulkPriority as $bulk) {
+            if ($this->totalItems < $bulk['limit']) {
                 $collection = $this->_getQueue(
                     $bulk['type'],
                     $bulk['mode'],
-                    $bulk['limit'] - $this->_totalItems
+                    $bulk['limit'] - $this->totalItems
                 );
-                if($collection->getSize()){
-                    $this->_totalItems += $collection->getSize();
+                if ($collection->getSize()) {
+                    $this->totalItems += $collection->getSize();
                     $bulkModel = Mage::getModel($bulk['model']);
                     $bulkModel->processCollection($collection);
                 }
@@ -238,20 +267,18 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
         }
 
         //reset total items to 0
-        $this->_totalItems = 0;
+        $this->totalItems = 0;
 
         //Single/Update priority
-        foreach($this->_singlePriority as $single)
-        {
-            if($this->_totalItems < $single['limit'])
-            {
+        foreach ($this->singlePriority as $single) {
+            if ($this->totalItems < $single['limit']) {
                 $collection = $this->_getQueue(
                     $single['type'],
                     $single['mode'],
-                    $single['limit'] - $this->_totalItems
+                    $single['limit'] - $this->totalItems
                 );
-                if($collection->getSize()){
-                    $this->_totalItems += $collection->getSize();
+                if ($collection->getSize()) {
+                    $this->totalItems += $collection->getSize();
                     $singleModel = Mage::getModel($single['model']);
                     $singleModel->processCollection($collection);
                 }
@@ -259,17 +286,19 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
         }
     }
 
+    /**
+     * Set priority.
+     */
     protected function _setPriority()
     {
         /**
          * Bulk
          */
-
         $defaultBulk = array(
             'model' => '',
             'mode'  => self::MODE_BULK,
             'type'  => '',
-            'limit' => $this->_bulkSyncLimit
+            'limit' => $this->bulkSyncLimit
         );
 
         //Contact Bulk
@@ -303,7 +332,6 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
         /**
          * Update
          */
-
         $defaultSingleUpdate = array(
             'model' => 'ddg_automation/sync_contact_update',
             'mode'  => '',
@@ -350,7 +378,6 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
         /**
          * Delete
          */
-
         $defaultSingleDelete = array(
             'model' => '',
             'mode'  => '',
@@ -376,16 +403,15 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
             self::IMPORT_TYPE_QUOTE
         );
 
-
         //Bulk Priority
-        $this->_bulkPriority = array(
+        $this->bulkPriority = array(
             $contact,
             $order,
             $quote,
             $other
         );
 
-        $this->_singlePriority = array(
+        $this->singlePriority = array(
             $subscriberResubscribe,
             $subscriberUpdate,
             $emailChange,
@@ -395,21 +421,27 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
             $contactDelete,
             $tdDelete
         );
-
     }
 
+    /**
+     * @param $importType
+     * @param $importMode
+     * @param $limit
+     * @return Dotdigitalgroup_Email_Model_Resource_Importer_Collection|object
+     */
     protected function _getQueue($importType, $importMode, $limit)
     {
         $collection = $this->getCollection();
 
-        if(is_array($importType)){
+        if (is_array($importType)) {
             $condition = array();
-            foreach($importType as $type){
+            foreach ($importType as $type) {
                 if($type == 'Catalog')
                     $condition[] = array('like' => $type . '%');
                 else
                     $condition[] = array('eq' => $type);
             }
+
             $collection->addFieldToFilter('import_type', $condition);
         }
         else
@@ -423,6 +455,10 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
         return $collection;
     }
 
+    /**
+     * @param $limit
+     * @return bool|Varien_Data_Collection
+     */
     protected function _getImportingItems($limit)
     {
         $collection = $this->getCollection()
@@ -431,15 +467,20 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
             ->setPageSize($limit)
             ->setCurPage(1);
 
-        if($collection->getSize())
+        if ($collection->getSize())
             return $collection;
 
         return false;
     }
 
+    /**
+     * @param $filename
+     * @return array|bool
+     */
     protected function _csvToArray($filename)
     {
-        if(!file_exists($filename) || !is_readable($filename))
+        //@codingStandardsIgnoreStart
+        if (! file_exists($filename) || ! is_readable($filename))
             return FALSE;
 
         $header = NULL;
@@ -455,6 +496,7 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
             }
             fclose($handle);
         }
+        //@codingStandardsIgnoreEnd
 
         $contacts = array();
         foreach ($data as $item) {
@@ -467,7 +509,7 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
 
     protected function _removeUtf8Bom($text)
     {
-        $bom = pack('H*','EFBBBF');
+        $bom = pack('H*', 'EFBBBF');
         $text = preg_replace("/^$bom/", '', $text);
         return $text;
     }

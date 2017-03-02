@@ -5,12 +5,11 @@ class Dotdigitalgroup_Email_Model_Resource_Review
 {
 
     /**
-     * constructor.
+     * Constructor.
      */
     protected function _construct()
     {
         $this->_init('ddg_automation/review', 'id');
-
     }
 
     /**
@@ -33,6 +32,7 @@ class Dotdigitalgroup_Email_Model_Resource_Review
                     'review_imported is ?', new Zend_Db_Expr('not null')
                 );
             }
+
             $num = $conn->update(
                 $this->getMainTable(),
                 array('review_imported' => new Zend_Db_Expr('null')),
@@ -42,11 +42,12 @@ class Dotdigitalgroup_Email_Model_Resource_Review
             return $num;
         } catch (Exception $e) {
             Mage::logException($e);
+            return 0;
         }
     }
 
     /**
-     * set imported in bulk query
+     * Set imported in bulk query.
      *
      * @param $ids
      */

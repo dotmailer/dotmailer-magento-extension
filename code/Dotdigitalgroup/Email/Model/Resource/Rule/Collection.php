@@ -18,12 +18,12 @@ class Dotdigitalgroup_Email_Model_Resource_Rule_Collection extends Mage_SalesRul
      */
     public function setValidationFilter($websiteId, $customerGroupId, $couponCode = '', $now = null)
     {
-        if (!$this->getFlag('validation_filter')) {
-
-            if (is_null($now)) {
+        if (! $this->getFlag('validation_filter')) {
+            if ($now === null) {
+                //@codingStandardsIgnoreStart
                 $now = Mage::getModel('core/date')->date('Y-m-d');
+                //@codingStandardsIgnoreEnd
             }
-
 
             /* We need to overwrite joinLeft if coupon is applied */
             $this->getSelect()->reset();
@@ -33,7 +33,7 @@ class Dotdigitalgroup_Email_Model_Resource_Rule_Collection extends Mage_SalesRul
             $select = $this->getSelect();
 
             $connection = $this->getConnection();
-            if (strlen($couponCode)) {
+            if ($couponCode !== '') {
                 $select->joinLeft(
                     array('rule_coupons' => $this->getTable('salesrule/coupon')),
                     $connection->quoteInto(
@@ -67,19 +67,20 @@ class Dotdigitalgroup_Email_Model_Resource_Rule_Collection extends Mage_SalesRul
                     $noCouponCondition . ' OR ((' . $orWhereCondition . ') AND rule_coupons.code = ?)', $couponCode
                 );
 
-                $select->where('(rule_coupons.expiration_date IS NULL) AND
-                         (to_date is null or to_date >= ?)
-                        OR
-                         (rule_coupons.expiration_date IS NOT NULL) AND
-                         (rule_coupons.expiration_date >= ?) ', $now);
+                $select->where(
+                    '(rule_coupons.expiration_date IS NULL) AND (to_date is null or to_date >= ?) OR
+                         (rule_coupons.expiration_date IS NOT NULL) AND (rule_coupons.expiration_date >= ?) ',
+                    $now
+                );
             } else {
                 $this->addFieldToFilter('main_table.coupon_type', Mage_SalesRule_Model_Rule::COUPON_TYPE_NO_COUPON);
             }
 
-            $select->where('
-                         (main_table.to_date IS NULL) OR
-                         (main_table.to_date >= ?)
-                       ', $now);
+            $select->where(
+                '(main_table.to_date IS NULL) OR
+                 (main_table.to_date >= ?)',
+                $now
+            );
 
             $this->setOrder('sort_order', self::SORT_ORDER_ASC);
             $this->setFlag('validation_filter', true);
@@ -95,21 +96,19 @@ class Dotdigitalgroup_Email_Model_Resource_Rule_Collection extends Mage_SalesRul
      *
      * @param int $websiteId
      * @param int $customerGroupId
-     * @param string|null $now
-     * @use $this->addWebsiteFilter()
-     *
-     * @return Mage_SalesRule_Model_Mysql4_Rule_Collection
+     * @param null $now
+     * @return $this
      */
     public function addWebsiteGroupDateFilter($websiteId, $customerGroupId, $now = null)
     {
-
-        if (!$this->getFlag('website_group_date_filter')) {
-            if (is_null($now)) {
+        if (! $this->getFlag('website_group_date_filter')) {
+            if ($now === null) {
+                //@codingStandardsIgnoreStart
                 $now = Mage::getModel('core/date')->date('Y-m-d');
+                //@codingStandardsIgnoreEnd
             }
 
             $this->addWebsiteFilter($websiteId);
-
             $entityInfo = $this->_getAssociatedEntityInfo('customer_group');
             $connection = $this->getConnection();
             $this->getSelect()

@@ -5,7 +5,7 @@ class Dotdigitalgroup_Email_Model_Resource_Order
 {
 
     /**
-     * cosntructor.
+     * Constructor.
      */
     protected function _construct()
     {
@@ -13,7 +13,7 @@ class Dotdigitalgroup_Email_Model_Resource_Order
     }
 
     /**
-     * get sales_flat_order table description
+     * Get sales_flat_order table description.
      *
      * @return array
      */
@@ -46,6 +46,7 @@ class Dotdigitalgroup_Email_Model_Resource_Order
                     'email_imported is ?', new Zend_Db_Expr('not null')
                 );
             }
+
             $num  = $conn->update(
                 $this->getMainTable(),
                 array(
@@ -58,6 +59,7 @@ class Dotdigitalgroup_Email_Model_Resource_Order
             return $num;
         } catch (Exception $e) {
             Mage::logException($e);
+            return 0;
         }
     }
 }
