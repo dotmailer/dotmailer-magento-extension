@@ -1836,7 +1836,9 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
                 $visibility = $addressBook['visibility'];
                 if (strlen($addressBookName)) {
                     $response = $client->postAddressBooks($addressBookName, $visibility);
-                    if (isset($response->message)) {
+                    if (isset($response->message) &&
+                        $response->message != Dotdigitalgroup_Email_Model_Apiconnector_Client::API_ERROR_ADDRESSBOOK_DUPLICATE
+                    ) {
                         $error = true;
                     } else {
                         try {

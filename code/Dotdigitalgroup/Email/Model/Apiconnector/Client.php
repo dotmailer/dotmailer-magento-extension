@@ -39,6 +39,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
     const API_ERROR_CONTACT_SUPPRESSED = 'Contact is suppressed. ERROR_CONTACT_SUPPRESSED';
     const API_ERROR_AUTHORIZATION_DENIED = 'Authorization has been denied for this request.';
     const API_ERROR_ADDRESSBOOK_NOT_FOUND = 'Error: ERROR_ADDRESSBOOK_NOT_FOUND';
+    const API_ERROR_ADDRESSBOOK_DUPLICATE = 'That name is in use already, please choose another. ERROR_ADDRESSBOOK_DUPLICATE';
 
 
     protected $_limit = 10;
