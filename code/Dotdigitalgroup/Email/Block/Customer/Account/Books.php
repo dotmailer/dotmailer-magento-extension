@@ -39,11 +39,7 @@ class Dotdigitalgroup_Email_Block_Customer_Account_Books
     {
         if (empty($this->_client)) {
             $website = $this->getCustomer()->getStore()->getWebsite();
-            $client  = Mage::getModel('ddg_automation/apiconnector_client');
-            $client->setApiUsername(
-                Mage::helper('ddg')->getApiUsername($website)
-            )
-                ->setApiPassword(Mage::helper('ddg')->getApiPassword($website));
+            $client = Mage::helper('ddg')->getWebsiteApiClient($website);
             $this->_client = $client;
         }
 

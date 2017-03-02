@@ -33,20 +33,18 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard
             $website = $this->getRequest()->getParam('website');
         }
 
-        $apiUsername = Mage::helper('ddg')->getApiUsername($website);
-        $apiPassword = Mage::helper('ddg')->getApiPassword($website);
-
         //api get account info
-        $data = Mage::getModel('ddg_automation/apiconnector_client')
-            ->setApiUsername($apiUsername)
-            ->setApiPassword($apiPassword)
-            ->getAccountInfo();
+        $client = Mage::helper('ddg')->getWebsiteApiClient($website);
 
-        //check if properties for the data exists
-        if (isset($data->properties)) {
-            foreach ($data->properties as $one) {
-                //add total for the api calls
-                $this->addTotal($this->__($one->name), $one->value, true);
+        if ($client) {
+            $data = $client->getAccountInfo();
+
+            //check if properties for the data exists
+            if (isset($data->properties)) {
+                foreach ($data->properties as $one) {
+                    //add total for the api calls
+                    $this->addTotal($this->__($one->name), $one->value, true);
+                }
             }
         }
     }
