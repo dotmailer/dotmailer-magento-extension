@@ -423,6 +423,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
     /**
      * Get products to display for order, wishlist and quote EDC.
      *
+     * @codingStandardsIgnoreStart
      * @param $items
      * @param $limit
      * @param $mode
@@ -510,14 +511,14 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
                     $productsToDisplay[$product->getId()] = $product;
                 }
 
-                //@codingStandardsIgnoreStart
                 //stop the limit was reached
                 if (count($productsToDisplay) == $limit) {
                     break;
                 }
-                //@codingStandardsIgnoreEnd
             }
         }
+
+        //@codingStandardsIgnoreEnd
 
         return $productsToDisplay;
     }

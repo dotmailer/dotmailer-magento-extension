@@ -14,7 +14,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Manualcontainer
 
         return
             "<script type='text/javascript'>
-                var manual_product_selector = new ConnectorProductSelectorForm('connector_dynamic_content_manual_product_search_products_push_items');
+                var manual_product_selector = 
+                new ConnectorProductSelectorForm('connector_dynamic_content_manual_product_search_products_push_items');
                 //ajax call and handler
                 getManualProductChooser = function (url) {
                     new Ajax.Request(

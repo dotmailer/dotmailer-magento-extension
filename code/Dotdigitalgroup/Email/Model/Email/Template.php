@@ -15,7 +15,7 @@ class Dotdigitalgroup_Email_Model_Email_Template
     {
         $helper = Mage::helper('ddg/transactional');
         // If it's not enabled, just return the parent result.
-        if ( ! $helper->isEnabled()) {
+        if (! $helper->isEnabled()) {
             return parent::send($email, $name, $variables);
         }
 
@@ -41,10 +41,8 @@ class Dotdigitalgroup_Email_Model_Email_Template
         $variables['email'] = reset($emails);
         $variables['name']  = reset($names);
 
-        //@codingStandardsIgnoreStart
         ini_set('SMTP', Mage::getStoreConfig('system/smtp/host'));
         ini_set('smtp_port', Mage::getStoreConfig('system/smtp/port'));
-        //@codingStandardsIgnoreEnd
 
         $mail = $this->getMail();
 

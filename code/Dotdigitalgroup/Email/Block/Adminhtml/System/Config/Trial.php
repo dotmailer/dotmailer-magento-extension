@@ -3,6 +3,7 @@
 class Dotdigitalgroup_Email_Block_Adminhtml_System_Config_Trial extends Mage_Adminhtml_Block_System_Config_Form_Fieldset
 {
     /**
+     * @codingStandardsIgnoreStart
      * @param Varien_Data_Form_Element_Abstract $element
      * @return string
      */

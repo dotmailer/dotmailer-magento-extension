@@ -752,7 +752,13 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
         return $resultContent;
     }
 
-    //check the mapped programs are active
+    /**
+     * Check the mapped programs are active.
+     *
+     * @codingStandardsIgnoreStart
+     *
+     * @return Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Content|false|Mage_Core_Model_Abstract
+     */
     public function automationActive()
     {
         $disableCustomer = $disableSubscriber = $disableOrder
@@ -974,6 +980,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
             //set the content with table data
             $resultContent->setTable($tableData);
         }
+        //@codingStandardsIgnoreEnd
 
         return $resultContent;
     }
@@ -1104,6 +1111,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
 
     /**
      * Crazy mapping checking.
+     *
+     * @codingStandardsIgnoreStart
      *
      * @return Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Content
      */
@@ -1422,6 +1431,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
 
             $resultContent->setTable($tableData);
         }
+
+        //@codingStandardsIgnoreEnd
 
         return $resultContent;
     }
@@ -1869,6 +1880,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
     /**
      * Conflict checker.
      *
+     * @codingStandardsIgnoreStart
      * @return Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Content
      */
     public function conflictCheck()
@@ -1911,7 +1923,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
             $conflictCounter = 0;
             $tableData       = array();
             foreach ($rewrites as $type => $data) {
-                //@codingStandardsIgnoreStart
                 if (count($data) > 0 && is_array($data)) {
                     foreach ($data as $class => $rewriteClass) {
                         if (count($rewriteClass) > 1) {
@@ -1934,13 +1945,13 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                         }
                     }
                 }
-                //@codingStandardsIgnoreEnd
             }
 
             if (! empty($tableData)) {
                 $resultContent->setTable($tableData);
             }
         }
+        //@codingStandardsIgnoreEnd
 
         return $resultContent;
     }

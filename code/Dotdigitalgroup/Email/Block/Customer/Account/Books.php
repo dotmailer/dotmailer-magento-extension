@@ -138,6 +138,8 @@ class Dotdigitalgroup_Email_Block_Customer_Account_Books
     /**
      * Get datafields to show. Fully processed.
      *
+     * @codingStandardsIgnoreStart
+     *
      * @return array
      */
     public function getDataFieldsToShow()
@@ -194,6 +196,8 @@ class Dotdigitalgroup_Email_Block_Customer_Account_Books
                 }
             }
         }
+
+        //@codingStandardsIgnoreEnd
 
         return $datafieldsToShow;
     }

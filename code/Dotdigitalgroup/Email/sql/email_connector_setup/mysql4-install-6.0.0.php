@@ -21,75 +21,75 @@ $table->addColumn(
     'identity' => true,
     'unsigned' => true,
     'nullable' => false
-), 'Primary Key'
+    ), 'Primary Key'
 )
     ->addColumn(
         'is_guest', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => true,
-    ), 'Is Guest'
+        ), 'Is Guest'
     )
     ->addColumn(
         'contact_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => true,
-    ), 'Connector Contact ID'
+        ), 'Connector Contact ID'
     )
     ->addColumn(
         'customer_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-    ), 'Customer ID'
+        ), 'Customer ID'
     )
     ->addColumn(
         'website_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
         'default' => '0'
-    ), 'Website ID'
+        ), 'Website ID'
     )
     ->addColumn(
         'store_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
         'default' => '0'
-    ), 'Store ID'
+        ), 'Store ID'
     )
     ->addColumn(
         'email', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'nullable' => false,
         'default' => ''
-    ), 'Customer Email'
+        ), 'Customer Email'
     )
     ->addColumn(
         'is_subscriber', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => true,
-    ), 'Is Subscriber'
+        ), 'Is Subscriber'
     )
     ->addColumn(
         'subscriber_status', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => true,
-    ), 'Subscriber status'
+        ), 'Subscriber status'
     )
     ->addColumn(
         'email_imported', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => true,
-    ), 'Is Imported'
+        ), 'Is Imported'
     )
     ->addColumn(
         'subscriber_imported', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => true,
-    ), 'Subscriber Imported'
+        ), 'Subscriber Imported'
     )
     ->addColumn(
         'suppressed', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => true,
-    ), 'Is Suppressed'
+        ), 'Is Suppressed'
     )
     ->addIndex(
         $installer->getIdxName($contactTable, array('email_contact_id')),
@@ -157,44 +157,44 @@ $table->addColumn(
     'identity' => true,
     'unsigned' => true,
     'nullable' => false
-), 'Primary Key'
+    ), 'Primary Key'
 )
     ->addColumn(
         'order_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-    ), 'Order ID'
+        ), 'Order ID'
     )
     ->addColumn(
         'order_status', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'unsigned' => true,
         'nullable' => false,
-    ), 'Order Status'
+        ), 'Order Status'
     )
     ->addColumn(
         'quote_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-    ), 'Sales Quote ID'
+        ), 'Sales Quote ID'
     )
     ->addColumn(
         'store_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
         'default' => '0'
-    ), 'Store ID'
+        ), 'Store ID'
     )
     ->addColumn(
         'email_imported', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => true,
-    ), 'Is Order Imported'
+        ), 'Is Order Imported'
     )
     ->addColumn(
         'modified', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => true,
-    ), 'Is Order Modified'
+        ), 'Is Order Modified'
     )
     ->addColumn(
         'created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(),
@@ -258,31 +258,31 @@ $table->addColumn(
     'identity' => true,
     'unsigned' => true,
     'nullable' => false
-), 'Primary Key'
+    ), 'Primary Key'
 )
     ->addColumn(
         'campaign_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-    ), 'Campaign ID'
+        ), 'Campaign ID'
     )
     ->addColumn(
         'email', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'nullable' => false,
         'default' => ''
-    ), 'Contact Email'
+        ), 'Contact Email'
     )
     ->addColumn(
         'customer_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-    ), 'Customer ID'
+        ), 'Customer ID'
     )
     ->addColumn(
         'is_sent', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => true,
-    ), 'Is Sent'
+        ), 'Is Sent'
     )
     ->addColumn(
         'sent_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(),
@@ -292,38 +292,38 @@ $table->addColumn(
         'order_increment_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-    ), 'Order Increment ID'
+        ), 'Order Increment ID'
     )
     ->addColumn(
         'quote_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-    ), 'Sales Quote ID'
+        ), 'Sales Quote ID'
     )
     ->addColumn(
         'message', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'nullable' => false,
         'default' => ''
-    ), 'Errror Message'
+        ), 'Errror Message'
     )
     ->addColumn(
         'checkout_method', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'nullable' => false,
         'default' => ''
-    ), 'Checkout Method Used'
+        ), 'Checkout Method Used'
     )
     ->addColumn(
         'store_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
         'default' => '0'
-    ), 'Store ID'
+        ), 'Store ID'
     )
     ->addColumn(
         'event_name', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'nullable' => false,
         'default' => ''
-    ), 'Event Name'
+        ), 'Event Name'
     )
     ->addColumn(
         'created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(),
@@ -490,6 +490,7 @@ $options = array();
 foreach ($statuses as $status) {
     $options[] = $status['value'];
 }
+
 $statusString = implode(',', $options);
 
 $configModel = Mage::getModel('core/config');
@@ -555,6 +556,7 @@ $options = array();
 foreach ($statuses as $status) {
     $options[] = $status['value'];
 }
+
 $statusString = implode(',', $options);
 
 $configModel = Mage::getModel('core/config');
@@ -671,29 +673,29 @@ $table->addColumn(
     'identity' => true,
     'unsigned' => true,
     'nullable' => false
-), 'Primary Key'
+    ), 'Primary Key'
 )
     ->addColumn(
         'path', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
         'nullable' => true,
-    ), 'Config Path'
+        ), 'Config Path'
     )
     ->addColumn(
         'scope', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
         'nullable' => true,
-    ), 'Config Scope'
+        ), 'Config Scope'
     )
     ->addColumn(
         'value', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'nullable' => false,
         'default' => ''
-    ), 'Config Value'
+        ), 'Config Value'
     )
     ->addColumn(
         'is_api', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => true,
-    ), 'Only For Api Calls'
+        ), 'Only For Api Calls'
     )
     ->addColumn(
         'created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(),
@@ -723,31 +725,31 @@ $table->addColumn(
     'identity' => true,
     'unsigned' => true,
     'nullable' => false
-), 'Primary Key'
+    ), 'Primary Key'
 )
     ->addColumn(
         'review_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-    ), 'Review Id'
+        ), 'Review Id'
     )
     ->addColumn(
         'customer_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-    ), 'Customer ID'
+        ), 'Customer ID'
     )
     ->addColumn(
         'store_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-    ), 'Store Id'
+        ), 'Store Id'
     )
     ->addColumn(
         'review_imported', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => true,
-    ), 'Review Imported'
+        ), 'Review Imported'
     )
     ->addColumn(
         'created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(),
@@ -847,43 +849,43 @@ $table->addColumn(
     'identity' => true,
     'unsigned' => true,
     'nullable' => false
-), 'Primary Key'
+    ), 'Primary Key'
 )
     ->addColumn(
         'wishlist_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-    ), 'Wishlist Id'
+        ), 'Wishlist Id'
     )
     ->addColumn(
         'item_count', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-    ), 'Item Count'
+        ), 'Item Count'
     )
     ->addColumn(
         'customer_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-    ), 'Customer ID'
+        ), 'Customer ID'
     )
     ->addColumn(
         'store_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-    ), 'Store Id'
+        ), 'Store Id'
     )
     ->addColumn(
         'wishlist_imported', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => true,
-    ), 'Wishlist Imported'
+        ), 'Wishlist Imported'
     )
     ->addColumn(
         'wishlist_modified', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => true,
-    ), 'Wishlist Modified'
+        ), 'Wishlist Modified'
     )
     ->addColumn(
         'created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(),
@@ -966,43 +968,43 @@ $table->addColumn(
     'identity' => true,
     'unsigned' => true,
     'nullable' => false
-), 'Primary Key'
+    ), 'Primary Key'
 )
     ->addColumn(
         'quote_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-    ), 'Quote Id'
+        ), 'Quote Id'
     )
     ->addColumn(
         'customer_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-    ), 'Customer ID'
+        ), 'Customer ID'
     )
     ->addColumn(
         'store_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-    ), 'Store Id'
+        ), 'Store Id'
     )
     ->addColumn(
         'imported', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => true,
-    ), 'Quote Imported'
+        ), 'Quote Imported'
     )
     ->addColumn(
         'modified', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => true,
-    ), 'Quote Modified'
+        ), 'Quote Modified'
     )
     ->addColumn(
         'converted_to_order', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => true,
-    ), 'Quote Converted To Order'
+        ), 'Quote Converted To Order'
     )
     ->addColumn(
         'created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(),
@@ -1066,7 +1068,6 @@ $installer->getConnection()->query($sqlQuery);
  * Enterprise customer segmentation.
  */
 if (Mage::helper('ddg')->isEnterprise()) {
-
     //contact table
     $contactTable = $installer->getTable('ddg_automation/contact');
     //customer segment table
@@ -1083,7 +1084,6 @@ if (Mage::helper('ddg')->isEnterprise()) {
         "update`{$contactTable}` c,(select customer_id, website_id, group_concat(`segment_id` separator ',') as segmentids
 from `{$segmentTable}` group by customer_id) as s set c.segment_ids = segmentids, c.email_imported = null WHERE s.customer_id= c.customer_id and s.website_id = c.website_id"
     );
-
 }
 
 $campaignTable = $installer->getTable('ddg_automation/campaign');
@@ -1109,6 +1109,7 @@ $catalogTable = $installer->getTable('ddg_automation/catalog');
 if ($installer->getConnection()->isTableExists($catalogTable)) {
     $installer->getConnection()->dropTable($catalogTable);
 }
+
 $table = $installer->getConnection()->newTable($catalogTable);
 $table->addColumn(
     'id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
@@ -1116,25 +1117,25 @@ $table->addColumn(
     'identity' => true,
     'unsigned' => true,
     'nullable' => false
-), 'Primary Key'
+    ), 'Primary Key'
 )
     ->addColumn(
         'product_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-    ), 'Product Id'
+        ), 'Product Id'
     )
     ->addColumn(
         'imported', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => true,
-    ), 'Product Imported'
+        ), 'Product Imported'
     )
     ->addColumn(
         'modified', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => true,
-    ), 'Product Modified'
+        ), 'Product Modified'
     )
     ->addColumn(
         'created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(),
@@ -1190,6 +1191,7 @@ $rulesTable = $installer->getTable('ddg_automation/rules');
 if ($installer->getConnection()->isTableExists($rulesTable)) {
     $installer->getConnection()->dropTable($rulesTable);
 }
+
 $table = $installer->getConnection()->newTable($rulesTable);
 $table->addColumn(
     'id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
@@ -1197,43 +1199,43 @@ $table->addColumn(
     'identity' => true,
     'unsigned' => true,
     'nullable' => false
-), 'Primary Key'
+    ), 'Primary Key'
 )
     ->addColumn(
         'name', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'nullable' => false,
         'default' => ''
-    ), 'Rule Name'
+        ), 'Rule Name'
     )
     ->addColumn(
         'website_ids', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'nullable' => false,
         'default' => '0'
-    ), 'Website Id'
+        ), 'Website Id'
     )
     ->addColumn(
         'type', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'nullable' => false,
         'default' => 0
-    ), 'Rule Type'
+        ), 'Rule Type'
     )
     ->addColumn(
         'status', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'nullable' => false,
         'default' => 0
-    ), 'Status'
+        ), 'Status'
     )
     ->addColumn(
         'combination', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'nullable' => false,
         'default' => '1'
-    ), 'Rule Condition'
+        ), 'Rule Condition'
     )
     ->addColumn(
         'condition', Varien_Db_Ddl_Table::TYPE_BLOB, null, array(
         'nullable' => false,
         'default' => ''
-    ), 'Rule Condition'
+        ), 'Rule Condition'
     )
     ->addColumn(
         'created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(),
@@ -1254,6 +1256,7 @@ $options = array();
 foreach ($types as $type) {
     $options[] = $type['value'];
 }
+
 $typeString = implode(',', $options);
 
 //Save all product visibilities as string to extension's config value
@@ -1264,6 +1267,7 @@ $options = array();
 foreach ($visibilities as $visibility) {
     $options[] = $visibility['value'];
 }
+
 $visibilityString = implode(',', $options);
 
 //save config value
@@ -1285,6 +1289,7 @@ $importerTable = $installer->getTable('ddg_automation/importer');
 if ($installer->getConnection()->isTableExists($importerTable)) {
     $installer->getConnection()->dropTable($importerTable);
 }
+
 $table = $installer->getConnection()->newTable($importerTable);
 $table->addColumn(
     'id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
@@ -1292,55 +1297,55 @@ $table->addColumn(
     'identity' => true,
     'unsigned' => true,
     'nullable' => false
-), 'Primary Key'
+    ), 'Primary Key'
 )
     ->addColumn(
         'import_type', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'nullable' => false,
         'default' => ''
-    ), 'Import Type'
+        ), 'Import Type'
     )
     ->addColumn(
         'website_id', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'nullable' => false,
         'default' => '0'
-    ), 'Website Id'
+        ), 'Website Id'
     )
     ->addColumn(
         'import_status', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'nullable' => false,
         'default' => 0
-    ), 'Import Status'
+        ), 'Import Status'
     )
     ->addColumn(
         'import_id', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'nullable' => false,
         'default' => ''
-    ), 'Import Id'
+        ), 'Import Id'
     )
     ->addColumn(
         'import_data', Varien_Db_Ddl_Table::TYPE_BLOB, '2M', array(
         'nullable' => false,
         'default' => ''
-    ), 'Import Data'
+        ), 'Import Data'
     )
     ->addColumn(
         'import_mode', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'nullable' => false,
         'default' => ''
-    ), 'Import Mode'
+        ), 'Import Mode'
     )
     ->addColumn(
         'import_file', Varien_Db_Ddl_Table::TYPE_TEXT, null, array(
         'nullable' => false,
         'default' => ''
-    ), 'Import File'
+        ), 'Import File'
     )
     ->addColumn(
         'message', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'nullable' => false,
         'default' => ''
-    ), 'Error Message'
+        ), 'Error Message'
     )
     ->addColumn(
         'created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(),
@@ -1421,6 +1426,7 @@ $automationTable = $installer->getTable('ddg_automation/automation');
 if ($installer->getConnection()->isTableExists($automationTable)) {
     $installer->getConnection()->dropTable($automationTable);
 }
+
 $table = $installer->getConnection()->newTable($automationTable);
 $table->addColumn(
     'id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
@@ -1428,48 +1434,48 @@ $table->addColumn(
     'identity' => true,
     'unsigned' => true,
     'nullable' => false
-), 'Primary Key'
+    ), 'Primary Key'
 )
     ->addColumn(
         'automation_type', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
         'nullable' => true,
-    ), 'Automation Type'
+        ), 'Automation Type'
     )
     ->addColumn(
         'store_name', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
         'nullable' => true,
-    ), 'Automation Type'
+        ), 'Automation Type'
     )
     ->addColumn(
         'enrolment_status', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
         'nullable' => false,
-    ), 'Entrolment Status'
+        ), 'Entrolment Status'
     )
     ->addColumn(
         'email', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
         'nullable' => true,
-    ), 'Email'
+        ), 'Email'
     )
     ->addColumn(
         'type_id', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
         'nullable' => true,
-    ), 'Type ID'
+        ), 'Type ID'
     )
     ->addColumn(
         'program_id', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
         'nullable' => true,
-    ), 'Program ID'
+        ), 'Program ID'
     )
     ->addColumn(
         'website_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-    ), 'Website Id'
+        ), 'Website Id'
     )
     ->addColumn(
         'message', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
         'nullable' => false,
-    ), 'Message'
+        ), 'Message'
     )
     ->addColumn(
         'created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(),

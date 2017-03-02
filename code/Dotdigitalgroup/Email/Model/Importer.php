@@ -145,22 +145,18 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
                     //if curl error 28
                     $curlError = $client->getCurlError();
                     if ($curlError) {
-                        //@codingStandardsIgnoreStart
                         $item->setMessage($curlError)
                             ->setImportStatus(self::FAILED)
                             ->save();
-                        //@codingStandardsIgnoreEnd
                     } else {
                         if ($response && !isset($response->message)) {
                             if ($response->status == 'Finished') {
-                                //@codingStandardsIgnoreStart
                                 $now = Mage::getSingleton('core/date')->gmtDate();
 
                                 $item->setImportStatus(self::IMPORTED)
                                     ->setImportFinished($now)
                                     ->setMessage('')
                                     ->save();
-                                //@codingStandardsIgnoreEnd
                                 if ($item->getImportType() == self::IMPORT_TYPE_CONTACT or
                                     $item->getImportType() == self::IMPORT_TYPE_SUBSCRIBERS or
                                     $item->getImportType() == self::IMPORT_TYPE_GUEST
@@ -176,11 +172,9 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
                                     }
                                 }
                             } elseif (in_array($response->status, $this->importStatuses)) {
-                                //@codingStandardsIgnoreStart
                                 $item->setImportStatus(self::FAILED)
                                     ->setMessage('Import failed with status ' . $response->status)
                                     ->save();
-                                //@codingStandardsIgnoreEnd
                             } else {
                                 //Not finished
                                 $this->totalItems += 1;
@@ -188,11 +182,9 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
                         }
 
                         if ($response && isset($response->message)) {
-                            //@codingStandardsIgnoreStart
                             $item->setImportStatus(self::FAILED)
                                 ->setMessage($response->message)
                                 ->save();
-                            //@codingStandardsIgnoreEnd
                         }
                     }
                 }
