@@ -436,12 +436,12 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      * @param $apiEndpoint
      * @param $websiteId
      */
-    public function saveApiEndpoint($apiEndpoint, $websiteId)
+    public function saveApiEndpoint($apiEndpoint, $websiteId = 0)
     {
-        if ($websiteId > 0) {
-            $scope = 'website';
-        } else {
+        if ($websiteId == 0) {
             $scope = 'default';
+        } else {
+            $scope = 'website';
         }
 
         $config = Mage::getModel('core/config');
