@@ -30,15 +30,13 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_General
         } elseif ($this->getRequest()->getParam('website')) {
             $website = $this->getRequest()->getParam('website');
         }
-        $apiUsername = Mage::helper('ddg')->getApiUsername($website);
-        $apiPassword = Mage::helper('ddg')->getApiPassword($website);
-        $data        = Mage::getModel('ddg_automation/apiconnector_client')
-            ->setApiUsername($apiUsername)
-            ->setApiPassword($apiPassword)
-            ->getAccountInfo();
+        $client = Mage::helper('ddg')->getWebsiteApiClient($website);
+        if ($client) {
+            $data = $client->getAccountInfo();
 
-        if (isset($data->id)) {
-            $this->prepareGroupArray($data);
+            if (isset($data->id)) {
+                $this->prepareGroupArray($data);
+            }
         }
 
         $this->_setChild();

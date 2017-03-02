@@ -5,19 +5,18 @@ class Dotdigitalgroup_Email_Model_Customer_Guest
 
     protected $_countGuests = 0;
     protected $_start;
-    public $guest = array();
+    public $guests = array();
 
     /**
      * GUEST SYNC.
      */
     public function sync()
     {
-        //Find and create guest
-        $this->findAndCreateGuest();
-
         /** @var Dotdigitalgroup_Email_Helper_Data $helper */
         $helper       = Mage::helper('ddg');
         $this->_start = microtime(true);
+
+        /** @var Mage_Core_Model_Website $website */
         foreach (Mage::app()->getWebsites() as $website) {
 
             //check if the guest is mapped and enabled
@@ -30,6 +29,8 @@ class Dotdigitalgroup_Email_Model_Customer_Guest
                 $website
             );
             if ($enabled && $syncEnabled && $apiEnabled) {
+                //Find and create guest
+                $this->findAndCreateGuest($website->getId());
 
                 //ready to start sync
                 if ( ! $this->_countGuests) {
@@ -51,34 +52,47 @@ class Dotdigitalgroup_Email_Model_Customer_Guest
 
     /**
      * Find and create guests
+     *
+     * @param $websiteId
      */
-    public function findAndCreateGuest()
+    public function findAndCreateGuest($websiteId)
     {
+        //Reset guests
+        $this->guests = array();
+
         $contacts = Mage::getModel('ddg_automation/contact')
             ->getCollection()
             ->getColumnValues('email');
+
+        $storeIds = Mage::app()->getWebsite($websiteId)->getStoreIds();
 
         //get the order collection
         $salesOrderCollection = Mage::getModel('sales/order')
             ->getCollection()
             ->addFieldToFilter('customer_is_guest', array('eq' => 1))
             ->addFieldToFilter('customer_email', array('notnull' => true))
-            ->addFieldToFilter('customer_email', array('nin' => $contacts));
+            ->addFieldToFilter('store_id', array('in' => $storeIds));
+
+        //Exclude existed contacts from collection
+        if (!empty($contacts)) {
+            $salesOrderCollection->addFieldToFilter('customer_email', ['nin' => $contacts]);
+        }
 
         //group by email and store
+        //@codingStandardsIgnoreStart
         $salesOrderCollection->getSelect()->group(array('customer_email', 'store_id'));
+        //@codingStandardsIgnoreEnd
 
         foreach ($salesOrderCollection as $order) {
             $storeId = $order->getStoreId();
-            $websiteId = Mage::app()->getStore($storeId)->getWebsiteId();
 
             //add guest to the list
-            $this->guests[] = [
+            $this->guests[] = array(
                 'email' => $order->getCustomerEmail(),
                 'website_id' => $websiteId,
                 'store_id' => $storeId,
                 'is_guest' => 1
-            ];
+            );
         }
 
         /**

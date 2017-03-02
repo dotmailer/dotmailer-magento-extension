@@ -17,20 +17,23 @@ class Dotdigitalgroup_Email_Model_Sync_Contact_Bulk
             $addressBook = '';
             $websiteId = $item->getWebsiteId();
             $this->_client = $this->_helper->getWebsiteApiClient($websiteId);
-            // Registered customer
-            if ($item->getImportType() == Dotdigitalgroup_Email_Model_Importer::IMPORT_TYPE_CONTACT)
-                $addressBook = $this->_helper->getCustomerAddressBook($websiteId);
-            // Subscriber
-            if ($item->getImportType() == Dotdigitalgroup_Email_Model_Importer::IMPORT_TYPE_SUBSCRIBERS)
-                $addressBook = $this->_helper->getSubscriberAddressBook($websiteId);
-            // Guest customer
-            if ($item->getImportType() == Dotdigitalgroup_Email_Model_Importer::IMPORT_TYPE_GUEST)
-                $addressBook = $this->_helper->getGuestAddressBook($websiteId);
 
-            $file = $item->getImportFile();
-            if (!empty($file) && !empty($addressBook) && $this->_client) {
-                $result = $this->_client->postAddressBookContactsImport($file, $addressBook);
-                $this->_handleItemAfterSync($item, $result);
+            if ($this->_client) {
+                // Registered customer
+                if ($item->getImportType() == Dotdigitalgroup_Email_Model_Importer::IMPORT_TYPE_CONTACT)
+                    $addressBook = $this->_helper->getCustomerAddressBook($websiteId);
+                // Subscriber
+                if ($item->getImportType() == Dotdigitalgroup_Email_Model_Importer::IMPORT_TYPE_SUBSCRIBERS)
+                    $addressBook = $this->_helper->getSubscriberAddressBook($websiteId);
+                // Guest customer
+                if ($item->getImportType() == Dotdigitalgroup_Email_Model_Importer::IMPORT_TYPE_GUEST)
+                    $addressBook = $this->_helper->getGuestAddressBook($websiteId);
+
+                $file = $item->getImportFile();
+                if (!empty($file) && !empty($addressBook) && $this->_client) {
+                    $result = $this->_client->postAddressBookContactsImport($file, $addressBook);
+                    $this->_handleItemAfterSync($item, $result);
+                }
             }
         }
     }

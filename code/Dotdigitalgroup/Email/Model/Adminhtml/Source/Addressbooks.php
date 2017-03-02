@@ -21,20 +21,19 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Addressbooks
 
         //get address books options
         if ($enabled) {
-            $client = Mage::getModel('ddg_automation/apiconnector_client');
-            $client->setApiUsername(
-                Mage::helper('ddg')->getApiUsername($website)
-            )
-                ->setApiPassword(Mage::helper('ddg')->getApiPassword($website));
+            $client = Mage::helper('ddg')->getWebsiteApiClient($website);
 
             $savedAddressBooks = Mage::registry('addressbooks');
+            $addressBooks = array();
             //get saved address books from registry
             if ($savedAddressBooks) {
                 $addressBooks = $savedAddressBooks;
             } else {
                 // api all address books
-                $addressBooks = $client->getAddressBooks();
-                Mage::register('addressbooks', $addressBooks);
+                if ($client) {
+                    $addressBooks = $client->getAddressBooks();
+                    Mage::register('addressbooks', $addressBooks);
+                }
             }
 
             //set up fields with book id and label

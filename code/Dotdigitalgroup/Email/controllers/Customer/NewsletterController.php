@@ -57,42 +57,51 @@ class Dotdigitalgroup_Email_Customer_NewsletterController
         //client
         $website = Mage::getModel('customer/session')->getCustomer()->getStore()
             ->getWebsite();
-        $client  = Mage::getModel('ddg_automation/apiconnector_client');
-        $client->setApiUsername(Mage::helper('ddg')->getApiUsername($website))
-            ->setApiPassword(Mage::helper('ddg')->getApiPassword($website));
+        $client = Mage::helper('ddg')->getWebsiteApiClient($website);
 
-        $contact = $client->getContactById($customerId);
-        if (isset($contact->id)) {
-            //contact address books
-            $bookError             = false;
-            $addressBooks          = $client->getContactAddressBooks(
-                $contact->id
-            );
-            $subscriberAddressBook = Mage::helper('ddg')
-                ->getSubscriberAddressBook(Mage::app()->getWebsite());
-            $processedAddressBooks = array();
-            if (is_array($addressBooks)) {
-                foreach ($addressBooks as $addressBook) {
-                    if ($subscriberAddressBook != $addressBook->id) {
-                        $processedAddressBooks[$addressBook->id]
-                            = $addressBook->name;
-                    }
-                }
-            }
-            if (isset($additionalSubscriptions)) {
-                foreach ($additionalSubscriptions as $additional_subscription) {
-                    if ( ! isset($processedAddressBooks[$additional_subscription])) {
-                        $bookResponse = $client->postAddressBookContacts(
-                            $additional_subscription, $contact
-                        );
-                        if (isset($bookResponse->message)) {
-                            $bookError = true;
+        if ($client) {
+            $contact = $client->getContactById($customerId);
+            if (isset($contact->id)) {
+                //contact address books
+                $bookError = false;
+                $addressBooks = $client->getContactAddressBooks(
+                    $contact->id
+                );
+                $subscriberAddressBook = Mage::helper('ddg')
+                    ->getSubscriberAddressBook(Mage::app()->getWebsite());
+                $processedAddressBooks = array();
+                if (is_array($addressBooks)) {
+                    foreach ($addressBooks as $addressBook) {
+                        if ($subscriberAddressBook != $addressBook->id) {
+                            $processedAddressBooks[$addressBook->id]
+                                = $addressBook->name;
                         }
-
                     }
                 }
-                foreach ($processedAddressBooks as $bookId => $name) {
-                    if ( ! in_array($bookId, $additionalSubscriptions)) {
+                if (isset($additionalSubscriptions)) {
+                    foreach ($additionalSubscriptions as $additional_subscription) {
+                        if (!isset($processedAddressBooks[$additional_subscription])) {
+                            $bookResponse = $client->postAddressBookContacts(
+                                $additional_subscription, $contact
+                            );
+                            if (isset($bookResponse->message)) {
+                                $bookError = true;
+                            }
+
+                        }
+                    }
+                    foreach ($processedAddressBooks as $bookId => $name) {
+                        if (!in_array($bookId, $additionalSubscriptions)) {
+                            $bookResponse = $client->deleteAddressBookContact(
+                                $bookId, $contact->id
+                            );
+                            if (isset($bookResponse->message)) {
+                                $bookError = true;
+                            }
+                        }
+                    }
+                } else {
+                    foreach ($processedAddressBooks as $bookId => $name) {
                         $bookResponse = $client->deleteAddressBookContact(
                             $bookId, $contact->id
                         );
@@ -101,65 +110,56 @@ class Dotdigitalgroup_Email_Customer_NewsletterController
                         }
                     }
                 }
-            } else {
-                foreach ($processedAddressBooks as $bookId => $name) {
-                    $bookResponse = $client->deleteAddressBookContact(
-                        $bookId, $contact->id
-                    );
-                    if (isset($bookResponse->message)) {
-                        $bookError = true;
-                    }
-                }
-            }
 
-            //contact data fields
-            $data            = array();
-            $dFields         = $client->getDataFields();
-            $processedFields = array();
-            foreach ($dFields as $dataField) {
-                $processedFields[$dataField->name] = $dataField->type;
-            }
-            foreach ($dataFields as $key => $value) {
-                if (isset($processedFields[$key]) && $value) {
-                    if ($processedFields[$key] == 'Numeric') {
-                        $dataFields[$key] = (int)$value;
-                    }
-                    if ($processedFields[$key] == 'String') {
-                        $dataFields[$key] = (string)$value;
-                    }
-                    if ($processedFields[$key] == 'Date') {
-                        $date             = new Zend_Date($value, "Y/M/d");
-                        $dataFields[$key] = $date->toString(
-                            Zend_Date::ISO_8601
+                //contact data fields
+                $data = array();
+                $dFields = $client->getDataFields();
+                $processedFields = array();
+                foreach ($dFields as $dataField) {
+                    $processedFields[$dataField->name] = $dataField->type;
+                }
+                foreach ($dataFields as $key => $value) {
+                    if (isset($processedFields[$key]) && $value) {
+                        if ($processedFields[$key] == 'Numeric') {
+                            $dataFields[$key] = (int)$value;
+                        }
+                        if ($processedFields[$key] == 'String') {
+                            $dataFields[$key] = (string)$value;
+                        }
+                        if ($processedFields[$key] == 'Date') {
+                            $date = new Zend_Date($value, "Y/M/d");
+                            $dataFields[$key] = $date->toString(
+                                Zend_Date::ISO_8601
+                            );
+                        }
+                        $data[] = array(
+                            'Key' => $key,
+                            'Value' => $dataFields[$key]
                         );
                     }
-                    $data[] = array(
-                        'Key'   => $key,
-                        'Value' => $dataFields[$key]
+                }
+                $contactResponse = $client->updateContactDatafieldsByEmail(
+                    $customerEmail, $data
+                );
+
+                if (isset($contactResponse->message) && $bookError) {
+                    Mage::getSingleton('customer/session')->addError(
+                        $this->__(
+                            'An error occurred while saving your subscription preferences.'
+                        )
+                    );
+                } else {
+                    Mage::getSingleton('customer/session')->addSuccess(
+                        $this->__('The subscription preferences has been saved.')
                     );
                 }
-            }
-            $contactResponse = $client->updateContactDatafieldsByEmail(
-                $customerEmail, $data
-            );
-
-            if (isset($contactResponse->message) && $bookError) {
+            } else {
                 Mage::getSingleton('customer/session')->addError(
                     $this->__(
                         'An error occurred while saving your subscription preferences.'
                     )
                 );
-            } else {
-                Mage::getSingleton('customer/session')->addSuccess(
-                    $this->__('The subscription preferences has been saved.')
-                );
             }
-        } else {
-            Mage::getSingleton('customer/session')->addError(
-                $this->__(
-                    'An error occurred while saving your subscription preferences.'
-                )
-            );
         }
         $this->_redirect('customer/account/');
     }

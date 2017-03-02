@@ -22,18 +22,19 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Addressbookspref
     protected function getAddressBooks()
     {
         $website = $this->getWebsite();
-        $client  = Mage::getModel('ddg_automation/apiconnector_client');
-        $client->setApiUsername(Mage::helper('ddg')->getApiUsername($website))
-            ->setApiPassword(Mage::helper('ddg')->getApiPassword($website));
+        $client = Mage::helper('ddg')->getWebsiteApiClient($website);
 
         $savedAddressBooks = Mage::registry('addressbooks');
+        $addressBooks = false;
         //get saved address books from registry
         if ($savedAddressBooks) {
             $addressBooks = $savedAddressBooks;
         } else {
             // api all address books
-            $addressBooks = $client->getAddressBooks();
-            Mage::register('addressbooks', $addressBooks);
+            if ($client) {
+                $addressBooks = $client->getAddressBooks();
+                Mage::register('addressbooks', $addressBooks);
+            }
         }
 
         return $addressBooks;

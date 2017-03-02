@@ -358,7 +358,100 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         $client->setApiUsername($this->getApiUsername($website))
             ->setApiPassword($this->getApiPassword($website));
 
+        $websiteId = Mage::app()->getWebsite($website)->getId();
+
+        //Get api endpoint
+        $apiEndpoint = $this->getApiEndpoint($websiteId, $client);
+
+        //Set api endpoint on client
+        if ($apiEndpoint) {
+            $client->setApiEndpoint($apiEndpoint);
+        }
+
         return $client;
+    }
+
+    /**
+     * Get Api endPoint
+     *
+     * @param $websiteId
+     * @param $client
+     * @return mixed
+     */
+    public function getApiEndpoint($websiteId, $client)
+    {
+        //Get from DB
+        $apiEndpoint = $this->getApiEndPointFromConfig($websiteId);
+
+        //Nothing from DB then fetch from api
+        if (!$apiEndpoint) {
+            $apiEndpoint = $this->getApiEndPointFromApi($client);
+            //Save it in DB
+            if ($apiEndpoint) {
+                $this->saveApiEndpoint($apiEndpoint, $websiteId);
+            }
+        }
+        return $apiEndpoint;
+    }
+
+    /**
+     * Get api end point from api
+     *
+     * @param Dotdigitalgroup_Email_Model_Apiconnector_Client $client
+     * @return mixed
+     */
+    public function getApiEndPointFromApi($client)
+    {
+        $accountInfo = $client->getAccountInfo();
+        $apiEndpoint = false;
+        if (is_object($accountInfo) && !isset($accountInfo->message)) {
+            foreach ($accountInfo->properties as $property) {
+                if ($property->name == 'ApiEndpoint' && !empty($property->value)) {
+                    $apiEndpoint = $property->value;
+                    break;
+                }
+            }
+        }
+        return $apiEndpoint;
+    }
+
+    /**
+     * Get api end point for given website
+     *
+     * @param $websiteId
+     * @return mixed
+     */
+    public function getApiEndPointFromConfig($websiteId)
+    {
+        $apiEndpoint = $this->getWebsiteConfig(
+            Dotdigitalgroup_Email_Helper_Config::PATH_FOR_API_ENDPOINT,
+            $websiteId
+        );
+        return $apiEndpoint;
+    }
+
+    /**
+     * Save api endpoint into config.
+     *
+     * @param $apiEndpoint
+     * @param $websiteId
+     */
+    public function saveApiEndpoint($apiEndpoint, $websiteId = 0)
+    {
+        if ($websiteId == 0) {
+            $scope = 'default';
+        } else {
+            $scope = 'website';
+        }
+
+        $config = Mage::getModel('core/config');
+        $config->saveConfig(
+            Dotdigitalgroup_Email_Helper_Config::PATH_FOR_API_ENDPOINT,
+            $apiEndpoint,
+            $scope,
+            $websiteId
+        );
+        $config->cleanCache();
     }
 
     /**
@@ -1786,21 +1879,6 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
             Mage::logException($e);
             return false;
         }
-    }
-
-    /**
-     * save api endpoint
-     *
-     * @param $value
-     */
-    public function saveApiEndPoint($value)
-    {
-        $config = Mage::getConfig();
-        $config->saveConfig(
-            Dotdigitalgroup_Email_Helper_Config::PATH_FOR_API_ENDPOINT,
-            $value
-        );
-        $config->cleanCache();
     }
 
     /**

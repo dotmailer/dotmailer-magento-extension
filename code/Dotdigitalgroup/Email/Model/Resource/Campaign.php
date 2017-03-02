@@ -140,10 +140,10 @@ class Dotdigitalgroup_Email_Model_Resource_Campaign
     /**
      * Set processing
      *
-     * @param $campaignId
+     * @param $ids
      * @param bool $sendId
      */
-    public function setProcessing($campaignId, $sendId)
+    public function setProcessing($ids, $sendId)
     {
         try {
             $bind = array(
@@ -154,7 +154,7 @@ class Dotdigitalgroup_Email_Model_Resource_Campaign
             $conn->update(
                 $this->getMainTable(),
                 $bind,
-                array('campaign_id = ?' => $campaignId)
+                array("id in ('$ids')")
             );
         } catch (Exception $e) {
             Mage::logException($e);

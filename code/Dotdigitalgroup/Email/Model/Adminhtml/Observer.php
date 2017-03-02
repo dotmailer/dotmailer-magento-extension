@@ -121,29 +121,37 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Observer
                     Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED,
                     0, $scope, $scopeId
                 );
+            } elseif (is_object($isValid)) {
+                //save endpoint for account
+                $this->saveApiEndpoint($apiUsername, $apiPassword, $scopeId);
             }
 
-            //check if returned value is an object
-            if (is_object($isValid)) {
-                //save endpoint for account
-                foreach ($isValid->properties as $property) {
-                    if ($property->name == 'ApiEndpoint'
-                        && strlen(
-                            $property->value
-                        )
-                    ) {
-                        $config->saveConfig(
-                            Dotdigitalgroup_Email_Helper_Config::PATH_FOR_API_ENDPOINT,
-                            $property->value
-                        );
-                        break;
-                    }
-                }
-            }
             $config->cleanCache();
         }
 
         return $this;
+    }
+
+    /**
+     * Save api endpoint
+     *
+     * @param $apiUsername
+     * @param $apiPassword
+     * @param $website
+     */
+    public function saveApiEndpoint($apiUsername, $apiPassword, $website = 0)
+    {
+        $helper = Mage::helper('ddg');
+        $website = Mage::app()->getWebsite($website);
+        $client = $helper->getWebsiteApiClient($website);
+        if ($client) {
+            $client->setApiUsername($apiUsername)
+                ->setApiPassword($apiPassword);
+            $apiEndpoint = $helper->getApiEndPointFromApi($client);
+            if ($apiEndpoint) {
+                $helper->saveApiEndpoint($apiEndpoint, $website->getId());
+            }
+        }
     }
 
     /**
