@@ -140,8 +140,7 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
         } else {
             // customer to automation mapped
             $programType = 'XML_PATH_CONNECTOR_AUTOMATION_STUDIO_ORDER';
-            $automationType
-                         = Dotdigitalgroup_Email_Model_Automation::AUTOMATION_TYPE_NEW_ORDER;
+            $automationType = Dotdigitalgroup_Email_Model_Automation::AUTOMATION_TYPE_NEW_ORDER;
 
             if ($order->getCustomerId()) {
                 //If customer's first order
@@ -155,18 +154,20 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
                     $programIdNewOrder = Mage::helper('ddg')->getAutomationIdByType(
                         'XML_PATH_CONNECTOR_AUTOMATION_STUDIO_NEW_ORDER', $order->getWebsiteId()
                     );
-
-                    //send to automation queue
-                    $this->_doAutomationEnrolment(
-                        array(
-                            'programId' => $programIdNewOrder,
-                            'automationType' => $automationTypeNewOrder,
-                            'email' => $email,
-                            'order_id' => $order->getId(),
-                            'website_id' => $website->getId(),
-                            'store_name' => $storeName
-                        )
-                    );
+                    //program for customer new order mapped
+                    if ($programIdNewOrder) {
+                        //send to automation queue
+                        $this->_doAutomationEnrolment(
+                            array(
+                                'programId' => $programIdNewOrder,
+                                'automationType' => $automationTypeNewOrder,
+                                'email' => $email,
+                                'order_id' => $order->getId(),
+                                'website_id' => $website->getId(),
+                                'store_name' => $storeName
+                            )
+                        );
+                    }
                 }
             }
         }
