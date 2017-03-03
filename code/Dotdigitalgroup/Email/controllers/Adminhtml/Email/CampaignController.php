@@ -5,7 +5,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_CampaignController
 {
 
     /**
-     * constructor - set the used module name
+     * Constructor - set the used module name.
      */
     protected function _construct()
     {
@@ -40,6 +40,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_CampaignController
                 $this->_getSession()->addError($e->getMessage());
             }
         }
+
         $this->getResponse()->setRedirect(
             $this->getUrl(
                 '*/*/', array('store' => $this->getRequest()->getParam('store'))
@@ -53,7 +54,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_CampaignController
     public function massDeleteAction()
     {
         $campaignIds = $this->getRequest()->getParam('campaign');
-        if ( ! is_array($campaignIds)) {
+        if (! is_array($campaignIds)) {
             $this->_getSession()->addError(
                 $this->__('Please select campaigns.')
             );
@@ -70,6 +71,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_CampaignController
                 $this->_getSession()->addError($num->getMessage());
             }
         }
+
         $this->_redirect('*/*/index');
     }
 
@@ -79,7 +81,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_CampaignController
     public function massResendAction()
     {
         $campaignIds = $this->getRequest()->getParam('campaign');
-        if ( ! is_array($campaignIds)) {
+        if (! is_array($campaignIds)) {
             $this->_getSession()->addError(
                 $this->__('Please select campaigns.')
             );
@@ -97,11 +99,12 @@ class Dotdigitalgroup_Email_Adminhtml_Email_CampaignController
                 $this->_getSession()->addError($num->getMessage());
             }
         }
+
         $this->_redirect('*/*/index');
     }
 
     /**
-     * main page.
+     * Main page.
      */
     public function gridAction()
     {
@@ -110,6 +113,9 @@ class Dotdigitalgroup_Email_Adminhtml_Email_CampaignController
     }
 
 
+    /**
+     * @return bool
+     */
     protected function _isAllowed()
     {
         return Mage::getSingleton('admin/session')->isAllowed(
@@ -117,6 +123,9 @@ class Dotdigitalgroup_Email_Adminhtml_Email_CampaignController
         );
     }
 
+    /**
+     * Export action.
+     */
     public function exportCsvAction()
     {
         $fileName = 'campaign.csv';

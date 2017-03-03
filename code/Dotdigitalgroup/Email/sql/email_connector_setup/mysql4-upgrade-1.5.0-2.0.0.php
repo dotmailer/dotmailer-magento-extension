@@ -6,7 +6,6 @@ $installer = $this;
 $installer->startSetup();
 
 try {
-
     $installer->run(
         "DROP TABLE IF EXISTS {$this->getTable('email_order')};
         CREATE TABLE `{$this->getTable('email_order')}` (
@@ -64,12 +63,8 @@ try {
     //Remove Order Attribute For Imported Data
     $installer->removeAttribute('order', 'dotmailer_order_imported');
     $installer->removeAttribute('customer', 'dotmailer_contact_id');
-
-
 } catch (Exception $e) {
-
     Mage::log($e->getMessage());
-
 }
 
 $installer->endSetup();

@@ -3,13 +3,20 @@
 class Dotdigitalgroup_Email_Helper_Dashboard extends Mage_Core_Helper_Abstract
 {
 
-    protected $_rewriteTypes
+    /**
+     * @var array
+     */
+    public $rewriteTypes
         = array(
             'blocks',
             'helpers',
             'models',
         );
 
+    /**
+     * @codingStandardsIgnoreStart
+     * @return array|bool
+     */
     public function getRewrites()
     {
         $rewrites = array(
@@ -18,41 +25,41 @@ class Dotdigitalgroup_Email_Helper_Dashboard extends Mage_Core_Helper_Abstract
             'helpers',
         );
 
-        /* @var $_magentoConfig Mage_Core_Model_Config */
-        $_magentoConfig = Mage::getConfig();
+        $magentoConfig = Mage::getConfig();
 
         // Load config of each module because modules can overwrite config each other. Global config is already merged
-        $modules = $_magentoConfig->getNode('modules')->children();
+        $modules = $magentoConfig->getNode('modules')->children();
         foreach ($modules as $moduleName => $moduleData) {
             // Check only active modules
-            if ( ! $moduleData->is('active')) {
+            if (! $moduleData->is('active')) {
                 continue;
             }
 
             // Load config of module
-            $configXmlFile = $_magentoConfig->getModuleDir('etc', $moduleName)
+            $configXmlFile = $magentoConfig->getModuleDir('etc', $moduleName)
                 . DIRECTORY_SEPARATOR . 'config.xml';
-            if ( ! file_exists($configXmlFile)) {
+            //@codingStandardsIgnoreStart
+            if (! file_exists($configXmlFile)) {
                 continue;
             }
+            //@codingStandardsIgnoreEnd
 
             $xml = simplexml_load_file($configXmlFile);
             if ($xml) {
                 $rewriteElements = $xml->xpath('//rewrite');
                 foreach ($rewriteElements as $element) {
                     foreach ($element->children() as $child) {
-                        $type = simplexml_import_dom(
-                            dom_import_simplexml(
-                                $element
-                            )->parentNode->parentNode
-                        )->getName();
-                        if ( ! in_array($type, $this->_rewriteTypes)) {
+                        $type = simplexml_import_dom(dom_import_simplexml($element)->parentNode->parentNode)
+                            ->getName();
+                        if (! in_array($type, $this->rewriteTypes)) {
                             continue;
                         }
+
                         $groupClassName = simplexml_import_dom(
                             dom_import_simplexml($element)->parentNode
                         )->getName();
-                        if ( ! isset(
+
+                        if (! isset(
                             $rewrites[$type][$groupClassName . '/'
                             . $child->getName()]
                         )
@@ -61,6 +68,7 @@ class Dotdigitalgroup_Email_Helper_Dashboard extends Mage_Core_Helper_Abstract
                             . $child->getName()]
                                 = array();
                         }
+
                         $rewrites[$type][$groupClassName . '/'
                         . $child->getName()]['classes'][]
                             = (string)$child;
@@ -70,7 +78,9 @@ class Dotdigitalgroup_Email_Helper_Dashboard extends Mage_Core_Helper_Abstract
         }
 
         foreach ($rewrites as $type => $data) {
+            //@codingStandardsIgnoreStart
             if (count($data) > 0 && is_array($data)) {
+
                 foreach ($data as $node => $rewriteInfo) {
                     if (count($rewriteInfo['classes']) > 1) {
                         if ($this->_isInheritanceConflict(
@@ -87,6 +97,7 @@ class Dotdigitalgroup_Email_Helper_Dashboard extends Mage_Core_Helper_Abstract
                     }
                 }
             }
+            //@codingStandardsIgnoreEnd
         }
 
         $rewrites = array_merge(
@@ -123,7 +134,7 @@ class Dotdigitalgroup_Email_Helper_Dashboard extends Mage_Core_Helper_Abstract
                         $classes[$i + 1]
                     )
                 ) {
-                    if ( ! is_a($classes[$i], $classes[$i + 1], true)) {
+                    if (! is_a($classes[$i], $classes[$i + 1], true)) {
                         return true;
                     }
                 }
@@ -178,7 +189,9 @@ class Dotdigitalgroup_Email_Helper_Dashboard extends Mage_Core_Helper_Abstract
         );
 
         foreach ($folders as $vendorPrefix => $folder) {
+            //@codingStandardsIgnoreStart
             if (is_dir($folder)) {
+                //@codingStandardsIgnoreEnd
                 $directory = new RecursiveDirectoryIterator($folder);
                 $iterator  = new RecursiveIteratorIterator($directory);
                 $files     = new RegexIterator(
@@ -186,9 +199,9 @@ class Dotdigitalgroup_Email_Helper_Dashboard extends Mage_Core_Helper_Abstract
                 );
 
                 foreach ($files as $file) {
-                    $classFile                                   = trim(
-                        str_replace($folder, '', realpath($file[0])), '/'
-                    );
+                    //@codingStandardsIgnoreStart
+                    $classFile = trim(str_replace($folder, '', realpath($file[0])), '/');
+                    //@codingStandardsIgnoreEnd
                     $className                                   = $vendorPrefix
                         . '_'
                         . str_replace(DIRECTORY_SEPARATOR, '_', $classFile);
@@ -202,6 +215,4 @@ class Dotdigitalgroup_Email_Helper_Dashboard extends Mage_Core_Helper_Abstract
 
         return $return;
     }
-
-
 }

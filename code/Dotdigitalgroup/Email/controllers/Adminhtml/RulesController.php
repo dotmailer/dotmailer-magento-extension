@@ -5,7 +5,7 @@ class Dotdigitalgroup_Email_Adminhtml_RulesController
 {
 
     /**
-     * ajax action for actions and value update without selection
+     * Ajax action for actions and value update without selection.
      */
     public function ajaxAction()
     {
@@ -34,10 +34,10 @@ class Dotdigitalgroup_Email_Adminhtml_RulesController
                     'cvalue', $valueName, $valueOptions
                 );
             } elseif ($elmType == 'text') {
-                $html
-                                    = "<input style='width:160px' title='cvalue' class='' id='' name=$valueName />";
+                $html = "<input style='width:160px' title='cvalue' class='' id='' name=$valueName />";
                 $response['cvalue'] = $html;
             }
+
             $this->getResponse()->clearHeaders()->setHeader(
                 'Content-Type', 'application/json'
             )->setBody(Mage::helper('core')->jsonEncode($response));
@@ -45,7 +45,7 @@ class Dotdigitalgroup_Email_Adminhtml_RulesController
     }
 
     /**
-     * create options array from block
+     * Create options array from block.
      *
      * @param $title
      * @param $name
@@ -67,7 +67,7 @@ class Dotdigitalgroup_Email_Adminhtml_RulesController
     }
 
     /**
-     * ajax action for actions and value update with selection
+     * Ajax action for actions and value update with selection.
      */
     public function selectedAction()
     {
@@ -78,14 +78,14 @@ class Dotdigitalgroup_Email_Adminhtml_RulesController
         $valueName     = $this->getRequest()->getParam('value');
 
         if ($arrayKey && $id && $attribute && $conditionName && $valueName) {
-
             $rule = Mage::getModel('ddg_automation/rules')->load($id);
             //rule not found
-            if ( ! $rule->getId()) {
+            if (! $rule->getId()) {
                 return $this->getResponse()->clearHeaders()->setHeader(
                     'Content-Type', 'application/json'
                 )->setBody('Rule not found!');
             }
+
             $conditions         = $rule->getCondition();
             $condition          = $conditions[$arrayKey];
             $selectedConditions = $condition['conditions'];
@@ -114,6 +114,7 @@ class Dotdigitalgroup_Email_Adminhtml_RulesController
                 if ($selectedConditions == 'null') {
                     $isEmpty = true;
                 }
+
                 $valueOptions       = Mage::getModel(
                     'ddg_automation/adminhtml_source_rules_value'
                 )->getValueSelectOptions($attribute, $isEmpty);
@@ -123,10 +124,11 @@ class Dotdigitalgroup_Email_Adminhtml_RulesController
                     $this->_getOptionHtml('cvalue', $valueName, $valueOptions)
                 );
             } elseif ($elmType == 'text') {
-                $html
-                                    = "<input style='width:160px' title='cvalue' class='' id='' name='$valueName' value='$selectedValues' />";
+                $html = "<input style='width:160px' title='cvalue' class='' id='' name='$valueName' 
+                    value='$selectedValues' />";
                 $response['cvalue'] = $html;
             }
+
             $this->getResponse()->clearHeaders()->setHeader(
                 'Content-Type', 'application/json'
             )->setBody(Mage::helper('core')->jsonEncode($response));
@@ -134,7 +136,7 @@ class Dotdigitalgroup_Email_Adminhtml_RulesController
     }
 
     /**
-     * ajax action for value update without selection
+     * Ajax action for value update without selection.
      */
     public function valueAction()
     {
@@ -167,12 +169,16 @@ class Dotdigitalgroup_Email_Adminhtml_RulesController
                     $response['cvalue'] = $html;
                 }
             }
+
             $this->getResponse()->clearHeaders()->setHeader(
                 'Content-Type', 'application/json'
             )->setBody(Mage::helper('core')->jsonEncode($response));
         }
     }
 
+    /**
+     * @return bool
+     */
     protected function _isAllowed()
     {
         return Mage::getSingleton('admin/session')->isAllowed(

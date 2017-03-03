@@ -22,6 +22,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Url_Creditmemoupdateguest
             $website = Mage::app()->getWebsite($website);
             $baseUrl = $website->getConfig('web/secure/base_url');
         }
+
         $helper = Mage::helper('ddg');
         $passcode = $helper->getWebsiteConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_CONTENT_PASSCODE,
@@ -31,7 +32,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Url_Creditmemoupdateguest
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_MAPPING_LAST_ORDER_ID,
             $website
         );
-        if ( ! strlen($passcode)) {
+        if ($passcode == '') {
             $passcode = '[PLEASE SET UP A PASSCODE]';
         }
 

@@ -4,9 +4,11 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Lostbasket
     extends Mage_Adminhtml_Block_System_Config_Form_Field
 {
 
-    /** label */
-    protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element
-    ) 
+    /**
+     * @param Varien_Data_Form_Element_Abstract $element
+     * @return string
+     */
+    protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element)
     {
         //base url for dynamic content
         $baseUrl = Mage::helper('ddg')->generateDynamicUrl();
@@ -16,16 +18,16 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Lostbasket
         $lastQuoteId = Mage::helper('ddg')->getLastQuoteId();
 
         //config passcode
-        if ( ! strlen($passcode)) {
+        if ($passcode == '') {
             $passcode = '[PLEASE SET UP A PASSCODE]';
         }
+
         //alert message for last order id is not mapped
-        if ( ! $lastQuoteId) {
+        if (! $lastQuoteId) {
             $lastQuoteId = '[PLEASE MAP THE LAST QUOTE ID]';
         }
 
         // full url
-
         $text = sprintf(
             "%sconnector/email/basket/code/%s/quote_id/@%s@", $baseUrl,
             $passcode, $lastQuoteId

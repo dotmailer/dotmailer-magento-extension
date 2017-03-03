@@ -28,9 +28,8 @@ class Dotdigitalgroup_Email_Model_Cron
     public function contactSync()
     {
         // send customers
-        $result           = Mage::getModel(
-            'ddg_automation/apiconnector_contact'
-        )->sync();
+        $result = Mage::getModel('ddg_automation/apiconnector_contact')
+            ->sync();
         $subscriberResult = $this->subscribersAndGuestSync();
         if (isset($subscriberResult['message']) && isset($result['message'])) {
             $result['message'] = $result['message'] . ' - '
@@ -45,9 +44,7 @@ class Dotdigitalgroup_Email_Model_Cron
      */
     public function abandonedCarts()
     {
-
         Mage::getModel('ddg_automation/sales_quote')->proccessAbandonedCarts();
-
     }
 
     /**
@@ -62,7 +59,7 @@ class Dotdigitalgroup_Email_Model_Cron
     }
 
     /**
-     * review sync and product reminder.
+     * Review sync and product reminder.
      */
     public function reviewAndProductReminderSync()
     {
@@ -77,7 +74,7 @@ class Dotdigitalgroup_Email_Model_Cron
     }
 
     /**
-     * order sync
+     * Order sync.
      *
      * @return mixed
      */
@@ -90,7 +87,7 @@ class Dotdigitalgroup_Email_Model_Cron
     }
 
     /**
-     * quote sync
+     * Quote sync.
      *
      * @return mixed
      */
@@ -165,11 +162,9 @@ class Dotdigitalgroup_Email_Model_Cron
         $result         = $helper->deleteDir($archivedFolder);
         $message .= ' Deleting archived folder result : ' . $result;
         $helper->log($message);
-        Mage::helper('ddg');
 
         return $message;
     }
-
 
     /**
      * Last customer sync date.
@@ -180,7 +175,9 @@ class Dotdigitalgroup_Email_Model_Cron
     {
 
         $schedules = Mage::getModel('cron/schedule')->getCollection();
+        //@codingStandardsIgnoreStart
         $schedules->getSelect()->limit(1)->order('executed_at DESC');
+
         $schedules->addFieldToFilter(
             'status', Mage_Cron_Model_Schedule::STATUS_SUCCESS
         )
@@ -188,15 +185,19 @@ class Dotdigitalgroup_Email_Model_Cron
                 'job_code', 'ddg_automation_customer_subscriber_guest_sync'
             );
 
-
         if ($schedules->getSize() == 0) {
             return false;
         }
+
         $executedAt = $schedules->getFirstItem()->getExecutedAt();
 
         return Mage::getModel('core/date')->date(null, $executedAt);
+        //@codingStandardsIgnoreEnd
     }
 
+    /**
+     * Automation enrollment.
+     */
     public function automationStatus()
     {
         Mage::getModel('ddg_automation/automation')->enrollment();

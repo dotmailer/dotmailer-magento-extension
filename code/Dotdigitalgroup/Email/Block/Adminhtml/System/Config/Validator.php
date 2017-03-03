@@ -1,6 +1,5 @@
 <?php
 
-
 class Dotdigitalgroup_Email_Block_Adminhtml_System_Config_Validator
     extends Mage_Adminhtml_Block_System_Config_Form_Field
 {
@@ -13,7 +12,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Config_Validator
      * @return string
      */
     protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element
-    ) {
+    ) 
+    {
         // Get the default HTML for this option
         $html = parent::_getElementHtml($element);
 
@@ -25,7 +25,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Config_Validator
         $html .= $jquery;
         $javaScript = "<script type=\"text/javascript\"> var show_warning = 0;";
 
-        if ( ! Mage::helper('ddg')->isSweetToothEnabled()) {
+        if (! Mage::helper('ddg')->isSweetToothEnabled()) {
             $javaScript .= "show_warning = 1;";
         }
 
@@ -69,7 +69,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Config_Validator
                                     // ignore DO NOT MAP fields
                                     break;
                                 case currentSelection:
-                                    // warning, that field is already mapped somewhere else - reset that value to 'Do not map''
+                                    // that field is already mapped somewhere else - reset that value to 'Do not map''
                                     alert('Warning! You have overwritten: '+currentLabel);
                                     jQuery(this).val(0);
                                     break;

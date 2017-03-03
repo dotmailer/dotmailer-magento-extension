@@ -13,6 +13,7 @@ class Dotdigitalgroup_Email_Block_Order extends Dotdigitalgroup_Email_Block_Edc
         if ($root = $this->getLayout()->getBlock('root')) {
             $root->setTemplate('page/blank.phtml');
         }
+
         if ($headBlock = $this->getLayout()->getBlock('head')) {
             $headBlock->setTitle(
                 $this->__('Order # %s', $this->getOrder()->getRealOrderId())
@@ -28,7 +29,7 @@ class Dotdigitalgroup_Email_Block_Order extends Dotdigitalgroup_Email_Block_Edc
     public function getOrder()
     {
         $order = Mage::registry('current_order');
-        if ( ! $order) {
+        if (! $order) {
             Mage::throwException(
                 Mage::helper('ddg')->__('no current_order found for EDC')
             );
@@ -76,6 +77,7 @@ class Dotdigitalgroup_Email_Block_Order extends Dotdigitalgroup_Email_Block_Edc
         foreach ($items as $item) {
             $productIds[] = $item->getProductId();
         }
+
         $items = Mage::getModel('catalog/product')->getCollection()
             ->addAttributeToSelect('*')
             ->addFieldToFilter('entity_id', array('in' => $productIds));

@@ -19,20 +19,19 @@ class Dotdigitalgroup_Email_Block_Order_Invoice
     /**
      * Get current order.
      *
-     * @return Mage_Sales_Model_Order
+     * @return Mage_Sales_Model_Order|false
      * @throws Exception
      */
     public function getOrder()
     {
         $order = Mage::registry('current_order');
-        if ( ! $order) {
+        if (! $order) {
             Mage::throwException(
                 Mage::helper('ddg')->__('no current_order found for EDC')
             );
         }
 
-        if ( ! $order->hasInvoices()) {
-            //throw new Exception('TE - no invoice for order : '. $orderId);
+        if (! $order->hasInvoices()) {
             Mage::helper('ddg')->log(
                 'TE - no invoice for order : ' . $order->getId()
             );

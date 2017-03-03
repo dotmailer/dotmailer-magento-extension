@@ -405,6 +405,7 @@ $options = array();
 foreach ($statuses as $status) {
     $options[] = $status['value'];
 }
+
 $statusString = implode(',', $options);
 
 $configModel = Mage::getModel('core/config');

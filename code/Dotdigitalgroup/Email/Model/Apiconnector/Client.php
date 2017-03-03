@@ -5,7 +5,6 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
 {
 
     const APICONNECTOR_VERSION = 'V2';
-
     const REST_WAIT_UPLOAD_TIME = 5;
     //rest api data
     const REST_ACCOUNT_INFO = 'https://r1-api.dotmailer.com/v2/account-info';
@@ -24,12 +23,13 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
     const REST_PROGRAM = '/v2/programs/';
     const REST_PROGRAM_ENROLMENTS = '/v2/programs/enrolments';
     const REST_TEMPLATES = '/v2/templates';
-
     //rest error responces
-    const API_ERROR_API_EXCEEDED = 'Your account has generated excess API activity and is being temporarily capped. Please contact support. ERROR_APIUSAGE_EXCEEDED';
+    const API_ERROR_API_EXCEEDED = 'Your account has generated excess API activity and is being temporarily capped.
+     Please contact support. ERROR_APIUSAGE_EXCEEDED';
     const API_ERROR_EMAIL_NOT_VALID = 'Email is not a valid email address. ERROR_PARAMETER_INVALID';
     const API_ERROR_FEATURENOTACTIVE = 'Error: ERROR_FEATURENOTACTIVE';
-    const API_ERROR_REPORT_NOT_FOUND = 'Import is not processed yet or completed with error. ERROR_IMPORT_REPORT_NOT_FOUND';
+    const API_ERROR_REPORT_NOT_FOUND =
+        'Import is not processed yet or completed with error. ERROR_IMPORT_REPORT_NOT_FOUND';
     const API_ERROR_TRANS_NOT_EXISTS = 'Error: ERROR_TRANSACTIONAL_DATA_DOES_NOT_EXIST';
     const API_ERROR_DATAFIELD_EXISTS = 'Field already exists. ERROR_NON_UNIQUE_DATAFIELD';
     const API_ERROR_CONTACT_NOT_FOUND = 'Error: ERROR_CONTACT_NOT_FOUND';
@@ -41,12 +41,29 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
     const API_ERROR_ADDRESSBOOK_NOT_FOUND = 'Error: ERROR_ADDRESSBOOK_NOT_FOUND';
     const API_ERROR_ADDRESSBOOK_DUPLICATE = 'That name is in use already, please choose another. ERROR_ADDRESSBOOK_DUPLICATE';
 
-
-    protected $_limit = 10;
+    /**
+     * @var int
+     */
+    public $limit = 10;
+    /**
+     * @var
+     */
     public $fileHelper;
-    protected $_filename;
+
+    /**
+     * @var
+     */
+    public $filename;
+    /**
+     * @var array
+     */
     public $result = array('error' => false, 'message' => '');
+
+    /**
+     * @var
+     */
     public $apiEndpoint;
+
 
     /**
      * constructor.
@@ -69,7 +86,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
 
     public function getApiEndpoint()
     {
-        if (!isset($this->apiEndpoint)) {
+        if (! isset($this->apiEndpoint)) {
             Mage::throwException(Mage::helper('ddg')->__('Dotmailer connector API endpoint cannot be empty.'));
         }
         return $this->apiEndpoint;
@@ -161,7 +178,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         $url = $this->getApiEndpoint()
             . "/v2/address-books/{$addressBookId}/contacts/import";
         $helper = Mage::helper('ddg');
-
+        //@codingStandardsIgnoreStart
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt(
@@ -203,7 +220,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
             //save the error
             $this->curlError = curl_error($ch);
         }
-
+        //@codingStandardsIgnoreEnd
         $result = json_decode($result);
         if (isset($result->message)) {
             $message = 'POST ADDRESS BOOK ' . $addressBookId
@@ -226,8 +243,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
      */
     public function postAddressBookContacts($addressBookId, $apiContact)
     {
-        $url = $this->getApiEndpoint() . self::REST_ADDRESS_BOOKS . $addressBookId
-            . '/contacts';
+        $url = $this->getApiEndpoint() . self::REST_ADDRESS_BOOKS . $addressBookId . '/contacts';
         $this->setUrl($url)
             ->setVerb("POST")
             ->buildPostBody($apiContact);
@@ -236,12 +252,9 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
 
         //log the error
         if (isset($response->message)
-            && ! in_array(
-                $response->message, $this->exludeMessages
-            )
+            && ! in_array($response->message, $this->exludeMessages)
         ) {
-            $message = 'POST ADDRESS BOOK CONTACTS ' . $url . ', '
-                . $response->message;
+            $message = 'POST ADDRESS BOOK CONTACTS ' . $url . ', ' . $response->message;
             Mage::helper('ddg')->log($message);
         }
 
@@ -258,9 +271,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
      */
     public function deleteAddressBookContact($addressBookId, $contactId)
     {
-
-        $url = $this->getApiEndpoint() . self::REST_ADDRESS_BOOKS . $addressBookId
-            . '/contacts/' . $contactId;
+        $url = $this->getApiEndpoint() . self::REST_ADDRESS_BOOKS . $addressBookId . '/contacts/' . $contactId;
         $this->setUrl($url)
             ->setVerb('DELETE');
 
@@ -276,16 +287,13 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
      */
     public function getContactsImportReport($importId)
     {
-        $url = $this->getApiEndpoint() . self::REST_CONTACTS_IMPORT . $importId
-            . "/report";
+        $url = $this->getApiEndpoint() . self::REST_CONTACTS_IMPORT . $importId . "/report";
         $this->setUrl($url)
             ->setVerb('GET');
         $response = $this->execute();
         //log error
         if (isset($response->message)
-            && ! in_array(
-                $response->message, $this->exludeMessages
-            )
+            && ! in_array($response->message, $this->exludeMessages)
         ) {
             $message = 'GET CONTACTS IMPORT REPORT  . ' . $url . ' message : '
                 . $response->message;
@@ -445,14 +453,14 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
      *
      * @return mixed
      */
-    public function postDataFields($data, $type = 'String',
-        $visibility = 'public', $defaultValue = false
-    ) {
+    public function postDataFields($data, $type = 'String', $visibility = 'public', $defaultValue = false)
+    {
         $url = $this->getApiEndpoint() . self::REST_DATA_FILEDS;
         //set default value for the numeric datatype
         if ($type == 'numeric' && ! $defaultValue) {
             $defaultValue = 0;
         }
+
         //set data for the string datatype
         if (is_string($data)) {
             $data = array(
@@ -465,6 +473,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
                 $data['DefaultValue'] = $defaultValue;
             }
         }
+
         $this->setUrl($url)
             ->buildPostBody($data)
             ->setVerb('POST');
@@ -504,7 +513,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
                 $response->message, $this->exludeMessages
             )
         ) {
-            $message = 'DELETE DATA FIELD :' . $name . ' ' . $response->message;
+            $message = 'DELETES DATA FIELD :' . $name . ' ' . $response->message;
             Mage::helper('ddg')->log($message);
         }
 
@@ -587,7 +596,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
                 $response->message, $this->exludeMessages
             )
         ) {
-            $message = 'DELETE CONTACT : ' . $url . ', ' . $response->message;
+            $message = 'DELETES CONTACT : ' . $url . ', ' . $response->message;
             Mage::helper('ddg')->log($message);
         }
 
@@ -607,18 +616,18 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
     {
         $apiContact = $this->postContacts($email);
         //do not create for non contact id set
-        if ( ! isset($apiContact->id)) {
+        if (! isset($apiContact->id)) {
             return $apiContact;
         } else {
             //get the contact id for this email
             $contactId = $apiContact->id;
         }
+
         $data               = array(
             'Email'     => $email,
             'EmailType' => 'Html');
         $data['DataFields'] = $dataFields;
-        $url = $this->getApiEndpoint() . self::REST_CONTACTS
-            . $contactId;
+        $url = $this->getApiEndpoint() . self::REST_CONTACTS . $contactId;
         $this->setUrl($url)
             ->setVerb('PUT')
             ->buildPostBody($data);
@@ -689,7 +698,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
             "/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix",
             $email
         );
-        if ( ! $valid) {
+        if (! $valid) {
             $object = new stdClass();
 
             return $object->message = 'Not valid email :' . $email;
@@ -711,7 +720,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
                 $response->message, $this->exludeMessages
             )
         ) {
-            $message = 'CREATE A NEW CONTACT : ' . $response->message;
+            $message = 'CREATES A NEW CONTACT : ' . $response->message;
             Mage::helper('ddg')->log($message);
         }
 
@@ -728,9 +737,8 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
      *
      * @return object
      */
-    public function getContactsSuppressedSinceDate($dateString, $select = 1000,
-        $skip = 0
-    ) {
+    public function getContactsSuppressedSinceDate($dateString, $select = 1000, $skip = 0)
+    {
         $url = $this->getApiEndpoint() . self::REST_CONTACTS_SUPPRESSED_SINCE
             . $dateString . '?select=' . $select . '&skip=' . $skip;
         $this->setUrl($url)
@@ -753,16 +761,16 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
     }
 
     /**
-     * Adds multiple pieces of transactional data to contacts asynchronously, returning an identifier that can be used to check for import progress.
+     * Adds multiple pieces of transactional data to contacts asynchronously,
+     * returning an identifier that can be used to check for import progress.
      *
      * @param $collectionName
      * @param $transactionalData
      *
      * @return object
      */
-    public function postContactsTransactionalDataImport($transactionalData,
-        $collectionName = 'Orders'
-    ) {
+    public function postContactsTransactionalDataImport($transactionalData, $collectionName = 'Orders')
+    {
         $orders = array();
         foreach ($transactionalData as $one) {
             if (isset($one->email)) {
@@ -803,10 +811,8 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
      * @return null
      * @throws Exception
      */
-    public function postContactsTransactionalData($data,
-        $collectionName = 'Orders',
-        $catalogCheck = false
-    ) {
+    public function postContactsTransactionalData($data, $collectionName = 'Orders', $catalogCheck = false)
+    {
         $order = $this->getContactsTransactionalDataByKey(
             $collectionName, $data->id
         );
@@ -819,6 +825,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
             $url = $this->getApiEndpoint() . self::REST_TRANSACTIONAL_DATA
                 . $collectionName . '/' . $order->key;
         }
+
         if ($catalogCheck) {
             $apiData = array(
                 'Key' => $data->id,
@@ -878,9 +885,8 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
      *
      * @return object
      */
-    public function deleteContactTransactionalData($email,
-        $collectionName = 'Orders'
-    ) {
+    public function deleteContactTransactionalData($email, $collectionName = 'Orders')
+    {
         $url = $this->getApiEndpoint() . '/v2/contacts/' . $email
             . '/transactional-data/' . $collectionName;
         $this->setUrl($url)
@@ -939,7 +945,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
                 $response->message, $this->exludeMessages
             )
         ) {
-            $message = 'DELETE BULK ADDRESS BOOK CONTACTS ' . $response->message
+            $message = 'DELETES BULK ADDRESS BOOK CONTACTS ' . $response->message
                 . ' address book ' . $addressBookId;
             Mage::helper('ddg')->log($message);
         }
@@ -1031,7 +1037,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
                 $response->message, $this->exludeMessages
             )
         ) {
-            $message = ' CREATE CAMPAIGN ' . $response->message;
+            $message = ' CREATES CAMPAIGN ' . $response->message;
             Mage::helper('ddg')->log($message);
         }
 
@@ -1159,9 +1165,8 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
      *
      * @return object
      */
-    public function deleteContactsTransactionalData($key,
-        $collectionName = 'Orders'
-    ) {
+    public function deleteContactsTransactionalData($key, $collectionName = 'Orders')
+    {
         $url = $this->getApiEndpoint() . '/v2/contacts/transactional-data/'
             . $collectionName . '/' . $key;
         $this->setUrl($url)
@@ -1206,7 +1211,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
     }
 
     /**
-     * get contact address books
+     * Get contact address books.
      *
      * @param $contactId
      *
@@ -1290,16 +1295,16 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
     }
 
     /**
-     * Adds multiple pieces of transactional data to account asynchronously, returning an identifier that can be used to check for import progress.
+     * Adds multiple pieces of transactional data to account asynchronously,
+     * returning an identifier that can be used to check for import progress.
      *
      * @param $collectionName
      * @param $transactionalData
      *
      * @return object
      */
-    public function postAccountTransactionalDataImport($transactionalData,
-        $collectionName = 'Catalog_Default'
-    ) {
+    public function postAccountTransactionalDataImport($transactionalData, $collectionName = 'Catalog_Default')
+    {
         $orders = array();
         foreach ($transactionalData as $one) {
             if (isset($one->id)) {
@@ -1331,6 +1336,10 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         return $response;
     }
 
+    /**
+     * @param $dateTime
+     * @return object
+     */
     public function getCampaignsWithActivitySinceDate($dateTime)
     {
         $url = $this->getApiEndpoint() . self::REST_DATA_FIELDS_CAMPAIGNS
@@ -1436,7 +1445,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
     }
 
     /**
-     * get contact import report faults
+     * Get contact import report faults.
      *
      * @param $id
      *

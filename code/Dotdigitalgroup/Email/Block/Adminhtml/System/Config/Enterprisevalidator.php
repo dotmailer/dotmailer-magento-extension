@@ -16,7 +16,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Config_Enterprisevalidator
         $jquery
             = '<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>';
 
-        if ( ! Mage::helper('ddg')->isEnterprise()) {
+        if (! Mage::helper('ddg')->isEnterprise()) {
             $html .= $jquery;
             $javaScript
                 = "<script type=\"text/javascript\">

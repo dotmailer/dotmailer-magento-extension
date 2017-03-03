@@ -140,7 +140,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Campaign_Grid
                 'escape' => true
             )
         );
-        if ( ! Mage::app()->isSingleStoreMode()) {
+        if (! Mage::app()->isSingleStoreMode()) {
             $this->addColumn(
                 'store_id', array(
                     'header'  => Mage::helper('customer')->__('Store'),

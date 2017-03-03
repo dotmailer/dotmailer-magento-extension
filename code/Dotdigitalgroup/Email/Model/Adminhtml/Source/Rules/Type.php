@@ -4,8 +4,8 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Rules_Type
 {
 
     /**
-     * get input type
-     *
+     * Get input type.
+     * @codingStandardsIgnoreStart
      * @param $attribute
      *
      * @return string
@@ -32,40 +32,29 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Rules_Type
                 if ($attribute->getFrontend()->getInputType() == 'price') {
                     return 'numeric';
                 }
+
                 if ($attribute->usesSource()) {
                     return 'select';
                 }
         }
-
+        //@codingStandardsIgnoreEnd
         return 'string';
     }
 
     /**
-     * default options
+     * Default options.
      *
      * @return array
      */
     public function defaultOptions()
     {
         return array(
-            'method'            => Mage::helper('adminhtml')->__(
-                'Payment Method'
-            ),
-            'shipping_method'   => Mage::helper('adminhtml')->__(
-                'Shipping Method'
-            ),
-            'country_id'        => Mage::helper('adminhtml')->__(
-                'Shipping Country'
-            ),
-            'city'              => Mage::helper('adminhtml')->__(
-                'Shipping Town'
-            ),
-            'region_id'         => Mage::helper('adminhtml')->__(
-                'Shipping State/Province'
-            ),
-            'customer_group_id' => Mage::helper('adminhtml')->__(
-                'Customer Group'
-            ),
+            'method' => Mage::helper('adminhtml')->__('Payment Method'),
+            'shipping_method'   => Mage::helper('adminhtml')->__('Shipping Method'),
+            'country_id'        => Mage::helper('adminhtml')->__('Shipping Country'),
+            'city'              => Mage::helper('adminhtml')->__('Shipping Town'),
+            'region_id'         => Mage::helper('adminhtml')->__('Shipping State/Province'),
+            'customer_group_id' => Mage::helper('adminhtml')->__('Customer Group'),
             'coupon_code'       => Mage::helper('adminhtml')->__('Coupon'),
             'subtotal'          => Mage::helper('adminhtml')->__('Subtotal'),
             'grand_total'       => Mage::helper('adminhtml')->__('Grand Total'),
@@ -75,7 +64,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Rules_Type
     }
 
     /**
-     * attribute options array
+     * Attribute options array.
      *
      * @return array
      */
@@ -91,6 +80,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Rules_Type
                 $pAttributes[$code] = Mage::helper('adminhtml')->__($label);
             }
         }
+
         $options = array_merge($defaultOptions, $pAttributes);
 
         return $options;

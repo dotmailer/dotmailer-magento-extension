@@ -3,30 +3,63 @@
 abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
 {
 
+    /**
+     * @var null
+     */
     public $url;
+    /**
+     * @var string
+     */
     public $verb;
+    /**
+     * @var null
+     */
     public $requestBody;
+    /**
+     * @var int
+     */
     public $requestLength;
-    protected $_apiUsername;
-    protected $_apiPassword;
+    /**
+     * @var string
+     */
+    public $apiUsername;
+    /**
+     * @var string
+     */
+    public $apiPassword;
+    /**
+     * @var string
+     */
     public $acceptType;
+    /**
+     * @var null
+     */
     public $responseBody;
+    /**
+     * @var null
+     */
     public $responseInfo;
+    /**
+     * @var
+     */
     public $curlError;
+    /**
+     * @var bool
+     */
     public $isNotJson = false;
 
-    public function __construct($website = 0
-    ) {
-        $this->url           = null; //$url;
-        $this->verb          = 'GET'; //$verb;
-        $this->requestBody   = null; //$requestBody;
+    /**
+     * Dotdigitalgroup_Email_Model_Abstract_Rest constructor.
+     * @param int $website
+     */
+    public function __construct($website = 0)
+    {
+        $this->url           = null;
+        $this->verb          = 'GET';
+        $this->requestBody   = null;
         $this->requestLength = 0;
-        $this->_apiUsername  = (string)Mage::helper('ddg')->getApiUsername(
-            $website
-        );
-        $this->_apiPassword  = (string)Mage::helper('ddg')->getApiPassword(
-            $website
-        );
+        $this->apiUsername  = (string)Mage::helper('ddg')->getApiUsername($website);
+        $this->apiPassword  = (string)Mage::helper('ddg')->getApiPassword($website);
         $this->acceptType    = 'application/json';
         $this->responseBody  = null;
         $this->responseInfo  = null;
@@ -36,6 +69,11 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
         }
     }
 
+    /**
+     * @codingStandardsIgnoreStart
+     * @param $json
+     * @return string
+     */
     protected function prettyPrint($json)
     {
         $result        = '';
@@ -53,9 +91,10 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
                 $newLineLevel  = $endsLineLevel;
                 $endsLineLevel = null;
             }
+
             if ($char === '"' && $prevChar != '\\') {
                 $inQuotes = ! $inQuotes;
-            } elseif ( ! $inQuotes) {
+            } elseif (! $inQuotes) {
                 switch ($char) {
                     case '}':
                     case ']':
@@ -85,18 +124,20 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
                         break;
                 }
             }
+
             if ($newLineLevel !== null) {
                 $result .= "\n" . str_repeat("\t", $newLineLevel);
             }
+
             $result .= $char . $post;
             $prevChar = $char;
         }
-
+        //@codingStandardsIgnoreEnd
         return $result;
     }
 
     /**
-     * returns the object as JSON.
+     * Returns the object as JSON.
      *
      * @param bool $pretty
      *
@@ -105,7 +146,7 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
     public function toJSON($pretty = false)
     {
 
-        if ( ! $pretty) {
+        if (! $pretty) {
             return json_encode($this->expose());
         } else {
             return $this->prettyPrint(json_encode($this->expose()));
@@ -113,15 +154,13 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
     }
 
     /**
-     * exposes the class as an array of objects
+     * Exposes the class as an array of objects.
      *
      * @return array
      */
     public function expose()
     {
-
         return get_object_vars($this);
-
     }
 
 
@@ -132,8 +171,8 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
      */
     public function flush()
     {
-        $this->_apiUsername  = '';
-        $this->_apiPassword  = '';
+        $this->apiUsername  = '';
+        $this->apiPassword  = '';
         $this->requestBody   = null;
         $this->requestLength = 0;
         $this->verb          = 'GET';
@@ -146,6 +185,7 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
     /**
      * Execute the curl request.
      *
+     * @codingStandardsIgnoreStart
      * @return null
      * @throws Exception
      */
@@ -201,7 +241,7 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
                 }
             }
         }
-
+        //@codingStandardsIgnoreEnd
         return $this->responseBody;
     }
 
@@ -236,13 +276,14 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
      */
     protected function executePost($ch)
     {
-        if ( ! is_string($this->requestBody)) {
+        if (! is_string($this->requestBody)) {
             $this->buildPostBody();
         }
 
+        //@codingStandardsIgnoreStart
         curl_setopt($ch, CURLOPT_POSTFIELDS, $this->requestBody);
         curl_setopt($ch, CURLOPT_POST, true);
-
+        //@codingStandardsIgnoreEnd
         $this->doExecute($ch);
     }
 
@@ -253,9 +294,7 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
      */
     protected function buildPostBodyFromFile($filename)
     {
-        $this->requestBody = array(
-            'file' => '@' . $filename
-        );
+        $this->requestBody = array('file' => '@' . $filename);
     }
 
     /**
@@ -265,23 +304,22 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
      */
     protected function executePut($ch)
     {
-        if ( ! is_string($this->requestBody)) {
+        if (! is_string($this->requestBody)) {
             $this->buildPostBody();
         }
 
         $this->requestLength = strlen($this->requestBody);
-
+        //@codingStandardsIgnoreStart
         $fh = fopen('php://memory', 'rw');
         fwrite($fh, $this->requestBody);
         rewind($fh);
-
         curl_setopt($ch, CURLOPT_INFILE, $fh);
         curl_setopt($ch, CURLOPT_INFILESIZE, $this->requestLength);
         curl_setopt($ch, CURLOPT_PUT, true);
 
         $this->doExecute($ch);
-
         fclose($fh);
+        //@codingStandardsIgnoreEnd
     }
 
     /**
@@ -291,8 +329,9 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
      */
     protected function executeDelete($ch)
     {
+        //@codingStandardsIgnoreStart
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
-
+        //@codingStandardsIgnoreEnd
         $this->doExecute($ch);
     }
 
@@ -304,7 +343,7 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
     protected function doExecute(&$ch)
     {
         $this->setCurlOpts($ch);
-
+        //@codingStandardsIgnoreStart
         if ($this->isNotJson) {
             $this->responseBody = curl_exec($ch);
         } else {
@@ -320,15 +359,17 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
         }
 
         curl_close($ch);
+        //@codingStandardsIgnoreEnd
     }
 
     /**
-     * curl options.
+     * Curl options.
      *
      * @param $ch
      */
     protected function setCurlOpts(&$ch)
     {
+        //@codingStandardsIgnoreStart
         curl_setopt($ch, CURLOPT_TIMEOUT, 10);
         curl_setopt($ch, CURLOPT_URL, $this->url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -338,21 +379,24 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
             $ch, CURLOPT_HTTPHEADER, array('Accept: ' . $this->acceptType,
                                            'Content-Type: application/json')
         );
+        //@codingStandardsIgnoreEnd
     }
 
     /**
-     * basic auth.
+     * Basic auth.
      *
      * @param $ch
      */
     protected function setAuth(&$ch)
     {
-        if ($this->_apiUsername !== null && $this->_apiPassword !== null) {
+        if ($this->apiUsername !== null && $this->apiPassword !== null) {
+            //@codingStandardsIgnoreStart
             curl_setopt($ch, CURLAUTH_BASIC, CURLAUTH_DIGEST);
             curl_setopt(
                 $ch, CURLOPT_USERPWD,
-                $this->_apiUsername . ':' . $this->_apiPassword
+                $this->apiUsername . ':' . $this->apiPassword
             );
+            //@codingStandardsIgnoreEnd
         }
     }
 
@@ -367,7 +411,7 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
     }
 
     /**
-     * set accept type.
+     * Set accept type.
      *
      * @param $acceptType
      */
@@ -376,19 +420,18 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
         $this->acceptType = $acceptType;
     }
 
-
     /**
-     * get api username.
+     * Get api username.
      *
      * @return string
      */
     public function getApiUsername()
     {
-        return $this->_apiUsername;
+        return $this->apiUsername;
     }
 
     /**
-     * set api username.
+     * Set api username.
      *
      * @param $apiUsername
      *
@@ -396,7 +439,7 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
      */
     public function setApiUsername($apiUsername)
     {
-        $this->_apiUsername = $apiUsername;
+        $this->apiUsername = $apiUsername;
 
         return $this;
     }
@@ -408,11 +451,11 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
      */
     public function getApiPassword()
     {
-        return $this->_apiPassword;
+        return $this->apiPassword;
     }
 
     /**
-     * set api password.
+     * Set api password.
      *
      * @param $apiPassword
      *
@@ -420,13 +463,13 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
      */
     public function setApiPassword($apiPassword)
     {
-        $this->_apiPassword = $apiPassword;
+        $this->apiPassword = $apiPassword;
 
         return $this;
     }
 
     /**
-     * get response body.
+     * Get response body.
      *
      * @return string/object
      */
@@ -436,7 +479,7 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
     }
 
     /**
-     * get response info.
+     * Get response info.
      *
      * @return null
      */
@@ -446,7 +489,7 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
     }
 
     /**
-     * get url.
+     * Get url.
      *
      * @return string
      */
@@ -456,7 +499,7 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
     }
 
     /**
-     * set url.
+     * Set url.
      *
      * @param $url
      *
@@ -470,7 +513,7 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
     }
 
     /**
-     * get the verb.
+     * Get the verb.
      *
      * @return string
      */
@@ -480,7 +523,7 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
     }
 
     /**
-     * set the verb.
+     * Set the verb.
      *
      * @param $verb
      *
@@ -493,10 +536,13 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
         return $this;
     }
 
+    /**
+     * @return bool
+     */
     public function getCurlError()
     {
         //if curl error
-        if ( ! empty($this->curlError)) {
+        if (! empty($this->curlError)) {
             //log curl error
             $message = 'CURL ERROR ' . $this->curlError;
             Mage::helper('ddg')->log($message);
@@ -507,6 +553,9 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
         return false;
     }
 
+    /**
+     * @return $this
+     */
     public function setIsNotJsonTrue()
     {
         $this->isNotJson = true;

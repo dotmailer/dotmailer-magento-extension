@@ -2,7 +2,6 @@
 
 class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
 {
-
     const AUTOMATION_TYPE_NEW_CUSTOMER = 'customer_automation';
     const AUTOMATION_TYPE_NEW_SUBSCRIBER = 'subscriber_automation';
     const AUTOMATION_TYPE_NEW_ORDER = 'order_automation';
@@ -13,17 +12,47 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
     const ORDER_STATUS_AUTOMATION = 'order_automation_';
     const AUTOMATION_TYPE_CUSTOMER_FIRST_ORDER = 'first_order_automation';
 
-    //automation enrolment limit
+    /**
+     * Automation enrolment limit.
+     * @var int
+     */
     public $limit = 100;
+    /**
+     * @var string
+     */
     public $email;
+    /**
+     * @var int
+     */
     public $typeId;
+    /**
+     * @var int
+     */
     public $websiteId;
+    /**
+     * @var string
+     */
     public $storeName;
+    /**
+     * @var string
+     */
     public $programId;
+    /**
+     * @var string
+     */
     public $programStatus = 'Active';
+    /**
+     * @var
+     */
     public $programMessage;
+    /**
+     * @var string
+     */
     public $automationType;
 
+    /**
+     * @var array
+     */
     public $automationTypes = array(
         self::AUTOMATION_TYPE_NEW_CUSTOMER =>
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_CUSTOMER,
@@ -42,7 +71,7 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
     );
 
     /**
-     * constructor
+     * Constructor.
      */
     public function _construct()
     {
@@ -67,7 +96,9 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
     }
 
     /**
-     * Automation enrollment
+     * Automation enrollment.
+     *
+     * @codingStandardsIgnoreStart
      */
     public function enrollment()
     {
@@ -81,20 +112,20 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
                 array('like' => '%' . 'order_automation_' . '%')
             )->getSelect()->group('automation_type');
 
-        $statusTypes
-            = $automationOrderStatusCollection->getColumnValues('automation_type');
+        $statusTypes = $automationOrderStatusCollection->getColumnValues('automation_type');
         foreach ($statusTypes as $type) {
             $this->automationTypes[$type]
                 = Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_ORDER_STATUS;
         }
+
         $helper = Mage::helper('ddg');
         //send the campaign by each types
         foreach ($this->automationTypes as $type => $config) {
             $contacts = array();
             foreach (Mage::app()->getWebsites(true) as $website) {
                 if (strpos($type, self::ORDER_STATUS_AUTOMATION) !== false) {
-                    $configValue
-                        = unserialize($helper->getWebsiteConfig($config, $website));
+                    $configValue = unserialize($helper->getWebsiteConfig($config, $website));
+
                     if (is_array($configValue) && !empty($configValue)) {
                         foreach ($configValue as $one) {
                             if (strpos($type, $one['status']) !== false) {
@@ -108,6 +139,7 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
                         = $helper->getWebsiteConfig($config, $website);
                 }
             }
+
             //get collection from type
             $automationCollection = $this->getCollection()
                 ->addFieldToFilter(
@@ -127,6 +159,7 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
                 if (strpos($typeDouble, self::ORDER_STATUS_AUTOMATION) !== false) {
                     $typeDouble = self::ORDER_STATUS_AUTOMATION;
                 }
+
                 //Only if api is enabled and credentials are filled
                 if ($helper->getWebsiteApiClient($this->websiteId)) {
                     $contactId = Mage::helper('ddg')->getContactId(
@@ -147,6 +180,7 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
                     unset($contacts[$this->websiteId]);
                 }
             }
+
             foreach ($contacts as $websiteId => $websiteContacts) {
                 if (isset($websiteContacts['contacts'])) {
                     $this->programId = $websiteContacts['programId'];
@@ -164,12 +198,14 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
                             $this->programStatus = 'Failed';
                             $this->programMessage = $result->message;
                         }
+
                         //program is not active
                     } elseif ($this->programMessage
                         == 'Error: ERROR_PROGRAM_NOT_ACTIVE '
                     ) {
                         $this->programStatus = 'Deactivated';
                     }
+
                     //update contacts with the new status, and log the error message if fails
                     $num = $this->getResource()->updateContacts(
                         $contactsArray, $this->programStatus, $this->programMessage
@@ -182,12 +218,14 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
                 }
             }
         }
+        //@codingStandardsIgnoreEnd
     }
 
     /**
-     * update single contact datafields for this automation type.
+     * Update single contact datafields for this automation type.
      *
      * @param $type
+     * @param $email
      */
     public function updateDatafieldsByType($type, $email)
     {
@@ -210,6 +248,9 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
         }
     }
 
+    /**
+     * @param $email
+     */
     protected function _updateDefaultDatafields($email)
     {
         $website = Mage::app()->getWebsite($this->websiteId);
@@ -218,6 +259,9 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
         );
     }
 
+    /**
+     * Order datafields.
+     */
     protected function _updateNewOrderDatafields()
     {
         $website = Mage::app()->getWebsite($this->websiteId);
@@ -232,6 +276,7 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
                 'Value' => $order->getId()
             );
         }
+
         if ($orderIncrementId = $website->getConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_LAST_ORDER_INCREMENT_ID
         )
@@ -241,6 +286,7 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
                 'Value' => $order->getIncrementId()
             );
         }
+
         if ($storeName = $website->getConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_STORE_NAME
         )
@@ -250,6 +296,7 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
                 'Value' => $this->storeName
             );
         }
+
         if ($websiteName = $website->getConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_WEBSITE_NAME
         )
@@ -259,6 +306,7 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
                 'Value' => $website->getName()
             );
         }
+
         if ($lastOrderDate = $website->getConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_LAST_ORDER_DATE
         )
@@ -268,6 +316,7 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
                 'Value' => $order->getCreatedAt()
             );
         }
+
         if (($customerId = $website->getConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_ID
         ))
@@ -278,7 +327,8 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
                 'Value' => $order->getCustomerId()
             );
         }
-        if ( ! empty($data)) {
+
+        if (! empty($data)) {
             //update data fields
             $client = Mage::helper('ddg')->getWebsiteApiClient($website);
             if ($client instanceof Dotdigitalgroup_Email_Model_Apiconnector_Client) {
@@ -299,9 +349,10 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
     protected function _checkCampignEnrolmentActive($programId)
     {
         //program is not set
-        if ( ! $programId) {
+        if (! $programId) {
             return false;
         }
+
         $client  = Mage::helper('ddg')->getWebsiteApiClient($this->websiteId);
         if ($client === false) {
             return false;
@@ -312,6 +363,7 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
         if (isset($program->status)) {
             $this->programStatus = $program->status;
         }
+
         if (isset($program->status) && $program->status == 'Active') {
             return true;
         }

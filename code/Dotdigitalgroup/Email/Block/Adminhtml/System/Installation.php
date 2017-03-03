@@ -3,7 +3,9 @@
 class Dotdigitalgroup_Email_Block_Adminhtml_System_Installation
     extends Mage_Core_Block_Template
 {
-
+    /**
+     * @var array
+     */
     public $sections
         = array(
             'connector_api_credentials',
@@ -50,14 +52,16 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Installation
 
     /*
      * Features enabled to use.
+     *
+     * @return array/null
      */
     public function getFeatures()
     {
         $section = $this->getRequest()->getParam('section');
 
         // not not track other sections
-        if ( ! in_array($section, $this->sections)) {
-            return;
+        if (! in_array($section, $this->sections)) {
+            return null;
         }
 
         $features = array(
@@ -74,43 +78,64 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Installation
     }
 
 
+    /**
+     * @return bool
+     */
     public function getCatalogSync()
     {
         return Mage::helper('ddg')->getCatalogSyncEnabled();
     }
 
+    /**
+     * @return bool
+     */
     public function getOrderSync()
     {
         return Mage::helper('ddg')->getOrderSyncEnabled();
     }
 
+    /**
+     * @return bool
+     */
     public function getSubscriberSync()
     {
         return Mage::helper('ddg')->getSubscriberSyncEnabled();
     }
 
+    /**
+     * @return bool
+     */
     public function getGuestSync()
     {
         return Mage::helper('ddg')->getGuestSyncEnabled();
     }
 
+    /**
+     * @return bool
+     */
     public function getCustomerSync()
     {
         return Mage::helper('ddg')->getContactSyncEnabled();
     }
 
+    /**
+     * @return bool
+     */
     public function getRoi()
     {
         return Mage::helper('ddg')->getRoiTrackingEnabled();
     }
 
+    /**
+     * @return bool
+     */
     public function getDotmailerSmtp()
     {
         return Mage::helper('ddg')->isSmtpEnabled();
     }
 
     /**
-     * magento version.
+     * Magento version.
      *
      * @return string
      */
@@ -120,7 +145,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Installation
     }
 
     /**
-     * connector version.
+     * Connector version.
      *
      * @return string
      */

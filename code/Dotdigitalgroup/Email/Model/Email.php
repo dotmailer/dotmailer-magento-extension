@@ -3,11 +3,12 @@
 class Dotdigitalgroup_Email_Model_Email extends Mage_Core_Model_Email
 {
 
+    /**
+     * @return Mage_Core_Model_Email
+     */
     public function send()
     {
-
-
-        if ( ! Mage::helper('ddg/transactional')->isEnabled()) {
+        if (! Mage::helper('ddg/transactional')->isEnabled()) {
             return parent::send();
         }
 
@@ -30,7 +31,6 @@ class Dotdigitalgroup_Email_Model_Email extends Mage_Core_Model_Email
         $transport = Mage::helper('ddg/transactional')->getTransport();
 
         $mail->send($transport);
-
 
         return $this;
     }

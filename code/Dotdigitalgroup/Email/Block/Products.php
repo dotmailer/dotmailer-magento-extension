@@ -16,7 +16,7 @@ class Dotdigitalgroup_Email_Block_Products extends Mage_Core_Block_Template
     }
 
     /**
-     * get the products to display for table
+     * Get the products to display for table.
      */
     public function getRecommendedProducts()
     {

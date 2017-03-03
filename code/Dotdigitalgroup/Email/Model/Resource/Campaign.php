@@ -5,12 +5,11 @@ class Dotdigitalgroup_Email_Model_Resource_Campaign
 {
 
     /**
-     * constructor.
+     * Constructor.
      */
     protected function _construct()
     {
         $this->_init('ddg_automation/campaign', 'id');
-
     }
 
     /**
@@ -61,14 +60,17 @@ class Dotdigitalgroup_Email_Model_Resource_Campaign
     }
 
     /**
-     * delete completed records older then 30 days
+     * Delete completed records older then 30 days.
      *
      * @return Exception|int
      */
     public function cleanup()
     {
         try {
-            $date = Mage::app()->getLocale()->date()->subDay(30)->toString('YYYY-MM-dd HH:mm:ss');
+            //@codingStandardsIgnoreStart
+            $date = Mage::app()->getLocale()->date()->subDay(30)
+                ->toString('YYYY-MM-dd HH:mm:ss');
+            //@codingStandardsIgnoreEnd
             $conn = $this->_getWriteAdapter();
             $num = $conn->delete(
                 $this->getMainTable(),
@@ -82,7 +84,7 @@ class Dotdigitalgroup_Email_Model_Resource_Campaign
     }
 
     /**
-     * Set error message
+     * Set error message.
      *
      * @param $ids
      * @param $message
@@ -97,6 +99,7 @@ class Dotdigitalgroup_Email_Model_Resource_Campaign
             } else {
                 $map = 'id';
             }
+
             $now = Mage::getSingleton('core/date')->gmtDate();
             $conn = $this->_getWriteAdapter();
             $conn->update(
@@ -114,7 +117,7 @@ class Dotdigitalgroup_Email_Model_Resource_Campaign
     }
 
     /**
-     * Set sent
+     * Set sent.
      *
      * @param bool $sendId
      */
@@ -138,7 +141,7 @@ class Dotdigitalgroup_Email_Model_Resource_Campaign
     }
 
     /**
-     * Set processing
+     * Set processing.
      *
      * @param $ids
      * @param bool $sendId

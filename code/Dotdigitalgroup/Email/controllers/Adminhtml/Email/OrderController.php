@@ -5,7 +5,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_OrderController
 {
 
     /**
-     * main page.
+     * Main page.
      */
     public function indexAction()
     {
@@ -16,7 +16,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_OrderController
     }
 
     /**
-     * Check currently called action by permissions for current user
+     * Check currently called action by permissions for current user.
      *
      * @return bool
      */

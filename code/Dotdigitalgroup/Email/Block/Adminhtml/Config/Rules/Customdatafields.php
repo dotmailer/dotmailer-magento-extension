@@ -122,7 +122,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Config_Rules_Customdatafields
      */
     protected function _getAttributeRenderer()
     {
-        if ( ! $this->_getAttributeRenderer) {
+        if (! $this->_getAttributeRenderer) {
             $this->_getAttributeRenderer = $this->getLayout()
                 ->createBlock('ddg_automation/adminhtml_config_select')
                 ->setIsRenderToJsTemplate(true);
@@ -138,7 +138,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Config_Rules_Customdatafields
      */
     protected function _getConditionsRenderer()
     {
-        if ( ! $this->_getConditionsRenderer) {
+        if (! $this->_getConditionsRenderer) {
             $this->_getConditionsRenderer = $this->getLayout()
                 ->createBlock('ddg_automation/adminhtml_config_select')
                 ->setIsRenderToJsTemplate(true);
@@ -154,7 +154,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Config_Rules_Customdatafields
      */
     protected function _getValueRenderer()
     {
-        if ( ! $this->_getValueRenderer) {
+        if (! $this->_getValueRenderer) {
             $this->_getValueRenderer = $this->getLayout()
                 ->createBlock('ddg_automation/adminhtml_config_select')
                 ->setIsRenderToJsTemplate(true);
@@ -197,8 +197,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Config_Rules_Customdatafields
 
                     function doUpdate(item){
                         var url = '" . Mage::helper('adminhtml')->getUrl(
-                'adminhtml/rules/ajax'
-            ) . "';
+            'adminhtml/rules/ajax'
+        ) . "';
                         var cond = item.up(1).down().next();
                         var condName = cond.down().readAttribute('name');
                         var value = item.up(1).down().next(1);
@@ -229,8 +229,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Config_Rules_Customdatafields
 
                     function doUpdateWithValues(item){
                         var url = '" . Mage::helper('adminhtml')->getUrl(
-                'adminhtml/rules/selected'
-            ) . "';
+            'adminhtml/rules/selected'
+        ) . "';
                         var arrayKey = item.up(1).readAttribute('id');
                         var cond = item.up(1).down().next();
                         var condName = cond.down().readAttribute('name');
@@ -265,8 +265,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Config_Rules_Customdatafields
 
                     function doUpdateForCondition(item){
                         var url = '" . Mage::helper('adminhtml')->getUrl(
-                'adminhtml/rules/value'
-            ) . "';
+            'adminhtml/rules/value'
+        ) . "';
                         var attribute = item.up(1).down();
                         var attributeValue = attribute.down().value;
                         var value = item.up().next();

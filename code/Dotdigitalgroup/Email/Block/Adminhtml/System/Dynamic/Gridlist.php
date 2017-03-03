@@ -11,12 +11,10 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Gridlist
      *
      * @return string
      */
-    protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element
-    ) 
+    protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element)
     {
         // Get the default HTML for this option
         $html = parent::_getElementHtml($element);
-
 
         $jQuery
             = '<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>';
@@ -42,7 +40,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Gridlist
                         "6" : "6",
                         "8" : "8"
                       }
-
                 jQuery("#connector_dynamic_content_products_related_display_type").change(function(){
                     var display_type = jQuery(this).closest("tr").next().find("select");
                     var display_mode = jQuery(this).val();

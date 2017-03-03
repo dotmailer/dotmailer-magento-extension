@@ -11,11 +11,13 @@ class Dotdigitalgroup_Email_Block_Recommended_Wishlistproducts extends Dotdigita
     protected function getWishlistItems()
     {
         $wishlist = $this->getWishlist();
+        //@codingStandardsIgnoreStart
         if ($wishlist && count($wishlist->getItemCollection())) {
             return $wishlist->getItemCollection();
         } else {
             return array();
         }
+        //@codingStandardsIgnoreEnd
     }
 
     /**
@@ -25,11 +27,10 @@ class Dotdigitalgroup_Email_Block_Recommended_Wishlistproducts extends Dotdigita
      */
     protected function getWishlist()
     {
-
         //customer id param
         $customerId = Mage::app()->getRequest()->getParam('customer_id');
 
-        if ( ! $customerId) {
+        if (! $customerId) {
             return array();
         }
 

@@ -5,13 +5,13 @@ class Dotdigitalgroup_Email_Customer_AccountController
 {
 
     /**
-     * Checking if user is logged in. If not logged in then redirect to customer login
+     * Checking if user is logged in. If not logged in then redirect to customer login.
      */
     public function preDispatch()
     {
         parent::preDispatch();
 
-        if ( ! Mage::getSingleton('customer/session')->authenticate($this)) {
+        if (! Mage::getSingleton('customer/session')->authenticate($this)) {
             $this->setFlag('', 'no-dispatch', true);
 
             // adding message in customer login page
@@ -24,6 +24,9 @@ class Dotdigitalgroup_Email_Customer_AccountController
         }
     }
 
+    /**
+     * Customer email stats.
+     */
     public function statsAction()
     {
         $this->loadLayout();
