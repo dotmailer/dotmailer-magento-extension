@@ -385,6 +385,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
             ) . DS . 'files.yaml';
         $config   = Zend_Config_Yaml::decode(file_get_contents($filePath));
 
+
         /**
          * Code dirs.
          */
@@ -420,7 +421,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
          */
         $jsDir = Mage::getBaseDir('base') . DS . 'js';
 
-        $filesToCheck = array(
+        $dirsIncluded = array(
             $config['etc'],
             $config['controllers'],
             $config['sql'],
@@ -444,9 +445,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
             $skinDir,
             $jsDir
         );
-        foreach ($filesToCheck as $subdir) {
+        foreach ($dirsIncluded as $subdir) {
             foreach ($subdir as $path) {
-                $file = $pathToCheck[0] . DS . str_replace('#', DS, $path);
+                $file = $pathToCheck[0] . DS . str_replace('|', DS, $path);
 
                 if (! file_exists($file)) {
                     $resultContent->setStyle(self::CONNECTOR_DASHBOARD_FAILED)
