@@ -151,18 +151,20 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
                     $programIdNewOrder = Mage::helper('ddg')->getAutomationIdByType(
                         'XML_PATH_CONNECTOR_AUTOMATION_STUDIO_NEW_ORDER', $order->getWebsiteId()
                     );
-
-                    //send to automation queue
-                    $this->_doAutomationEnrolment(
-                        array(
-                            'programId' => $programIdNewOrder,
-                            'automationType' => $automationTypeNewOrder,
-                            'email' => $email,
-                            'order_id' => $order->getId(),
-                            'website_id' => $website->getId(),
-                            'store_name' => $storeName
-                        )
-                    );
+                    //program for customer new order mapped
+                    if ($programIdNewOrder) {
+                        //send to automation queue
+                        $this->_doAutomationEnrolment(
+                            array(
+                                'programId' => $programIdNewOrder,
+                                'automationType' => $automationTypeNewOrder,
+                                'email' => $email,
+                                'order_id' => $order->getId(),
+                                'website_id' => $website->getId(),
+                                'store_name' => $storeName
+                            )
+                        );
+                    }
                 }
             }
         }
