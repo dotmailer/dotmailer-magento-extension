@@ -5,7 +5,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_RulesController
 {
 
     /**
-     * constructor - set the used module name
+     * Constructor - set the used module name.
      */
     protected function _construct()
     {
@@ -13,7 +13,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_RulesController
     }
 
     /**
-     * init action
+     * Init action.
      *
      * @return $this
      */
@@ -30,7 +30,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_RulesController
     }
 
     /**
-     * index action
+     * Index action.
      */
     public function indexAction()
     {
@@ -47,7 +47,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_RulesController
     }
 
     /**
-     * action for new rule page
+     * Action for new rule page.
      */
     public function newAction()
     {
@@ -55,7 +55,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_RulesController
     }
 
     /**
-     * action for edit rule page
+     * Action for edit rule page.
      */
     public function editAction()
     {
@@ -65,7 +65,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_RulesController
         if ($id) {
             $emailRules->load($id);
 
-            if ( ! $emailRules->getId()) {
+            if (!$emailRules->getId()) {
                 Mage::getSingleton('adminhtml/session')->addError(
                     Mage::helper('adminhtml')->__('This rule no longer exists.')
                 );
@@ -74,6 +74,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_RulesController
                 return;
             }
         }
+
         $this->_title(
             $emailRules->getId()
                 ? $emailRules->getName()
@@ -84,7 +85,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_RulesController
 
         // set entered data if was error when we do save
         $data = Mage::getSingleton('adminhtml/session')->getPageData(true);
-        if ( ! empty($data)) {
+        if (!empty($data)) {
             $emailRules->addData($data);
         }
 
@@ -105,7 +106,8 @@ class Dotdigitalgroup_Email_Adminhtml_Email_RulesController
     }
 
     /**
-     * action for save rule data
+     * Action for save rule data.
+     * @codingStandardsIgnoreStart
      */
     public function saveAction()
     {
@@ -120,7 +122,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_RulesController
                         $result = $model->checkWebsiteBeforeSave(
                             $websiteId, $data['type'], $id
                         );
-                        if ( ! $result) {
+                        if (!$result) {
                             $websiteName = Mage::app()->getWebsite($websiteId)
                                 ->getName();
                             $this->_getSession()->addError(
@@ -157,6 +159,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_RulesController
                                 unset($value['__empty']);
                             }
                         }
+
                         $model->setData($key, $value);
                     }
                 }
@@ -175,20 +178,20 @@ class Dotdigitalgroup_Email_Adminhtml_Email_RulesController
 
                     return;
                 }
+
                 $this->_redirect('*/*/');
 
                 return;
             } catch (Mage_Core_Exception $e) {
                 $this->_getSession()->addError($e->getMessage());
                 $id = (int)$this->getRequest()->getParam('id');
-                if ( ! empty($id)) {
+                if (!empty($id)) {
                     $this->_redirect('*/*/edit', array('id' => $id));
                 } else {
                     $this->_redirect('*/*/new');
                 }
 
                 return;
-
             } catch (Exception $e) {
                 $this->_getSession()->addError(
                     Mage::helper('adminhtml')->__(
@@ -205,11 +208,12 @@ class Dotdigitalgroup_Email_Adminhtml_Email_RulesController
                 return;
             }
         }
+        //@codingStandardsIgnoreEnd
         $this->_redirect('*/*/');
     }
 
     /**
-     * action for delete button
+     * Action for delete button.
      */
     public function deleteAction()
     {
@@ -241,6 +245,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_RulesController
                 return;
             }
         }
+
         Mage::getSingleton('adminhtml/session')->addError(
             Mage::helper('adminhtml')->__('Unable to find a rule to delete.')
         );
@@ -248,7 +253,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_RulesController
     }
 
     /**
-     * main page/grid.
+     * Main page/grid.
      */
     public function gridAction()
     {

@@ -5,7 +5,7 @@ class Dotdigitalgroup_Email_Model_Resource_Quote
 {
 
     /**
-     * constructor.
+     * Constructor.
      */
     protected function _construct()
     {
@@ -13,7 +13,7 @@ class Dotdigitalgroup_Email_Model_Resource_Quote
     }
 
     /**
-     * get sales_flat_quote table description
+     * Get sales_flat_quote table description.
      *
      * @return array
      */
@@ -46,6 +46,7 @@ class Dotdigitalgroup_Email_Model_Resource_Quote
                     'imported is ?', new Zend_Db_Expr('not null')
                 );
             }
+
             $num = $conn->update(
                 $this->getMainTable(),
                 array(
@@ -58,11 +59,12 @@ class Dotdigitalgroup_Email_Model_Resource_Quote
             return $num;
         } catch (Exception $e) {
             Mage::logException($e);
+            return 0;
         }
     }
 
     /**
-     * set imported in bulk query
+     * Set imported in bulk query.
      *
      * @param $ids
      */

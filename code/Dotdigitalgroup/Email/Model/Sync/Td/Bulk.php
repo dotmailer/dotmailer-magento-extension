@@ -2,20 +2,23 @@
 
 class Dotdigitalgroup_Email_Model_Sync_Td_Bulk extends Dotdigitalgroup_Email_Model_Sync_Contact_Bulk
 {
+    /**
+     * @param $collection
+     */
     public function processCollection($collection)
     {
-        foreach($collection as $item)
-        {
+        foreach ($collection as $item) {
             $websiteId = $item->getWebsiteId();
-            $this->_client = $this->_helper->getWebsiteApiClient($websiteId);
+            $this->client = $this->helper->getWebsiteApiClient($websiteId);
+            //@codingStandardsIgnoreStart
             $importData = unserialize($item->getImportData());
-
-            if ($this->_client) {
+            //@codingStandardsIgnoreEnd
+            if ($this->client) {
                 if (strpos($item->getImportType(), 'Catalog_') !== false) {
-                    $result = $this->_client->postAccountTransactionalDataImport($importData, $item->getImportType());
+                    $result = $this->client->postAccountTransactionalDataImport($importData, $item->getImportType());
                     $this->_handleItemAfterSync($item, $result);
-                }else {
-                    $result = $this->_client->postContactsTransactionalDataImport($importData, $item->getImportType());
+                } else {
+                    $result = $this->client->postContactsTransactionalDataImport($importData, $item->getImportType());
                     $this->_handleItemAfterSync($item, $result);
                 }
             }

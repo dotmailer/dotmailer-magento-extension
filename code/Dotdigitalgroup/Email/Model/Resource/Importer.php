@@ -5,7 +5,7 @@ class Dotdigitalgroup_Email_Model_Resource_Importer
 {
 
     /**
-     * cosntructor.
+     * Constructor.
      */
     protected function _construct()
     {
@@ -17,7 +17,7 @@ class Dotdigitalgroup_Email_Model_Resource_Importer
      *
      * @param $ids
      *
-     * @return Exception|int
+     * @return int
      */
     public function massResend($ids)
     {
@@ -31,7 +31,7 @@ class Dotdigitalgroup_Email_Model_Resource_Importer
 
             return $num;
         } catch (Exception $e) {
-            return $e;
+            return 0;
         }
     }
 
@@ -40,7 +40,7 @@ class Dotdigitalgroup_Email_Model_Resource_Importer
      *
      * @param $ids
      *
-     * @return Exception|int
+     * @return int
      */
     public function massDelete($ids)
     {
@@ -53,19 +53,22 @@ class Dotdigitalgroup_Email_Model_Resource_Importer
 
             return $num;
         } catch (Exception $e) {
-            return $e;
+            return 0;
         }
     }
 
     /**
-     * delete completed records older then 30 days
+     * Delete completed records older then 30 days.
      *
      * @return Exception|int
      */
     public function cleanup()
     {
         try {
-            $date = Mage::app()->getLocale()->date()->subDay(30)->toString('YYYY-MM-dd HH:mm:ss');
+            //@codingStandardsIgnoreStart
+            $date = Mage::app()->getLocale()->date()->subDay(30)
+                ->toString('YYYY-MM-dd HH:mm:ss');
+            //@codingStandardsIgnoreEnd
             $conn = $this->_getWriteAdapter();
             $num = $conn->delete(
                 $this->getMainTable(),

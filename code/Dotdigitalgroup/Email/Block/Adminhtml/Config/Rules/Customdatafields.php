@@ -122,7 +122,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Config_Rules_Customdatafields
      */
     protected function _getAttributeRenderer()
     {
-        if ( ! $this->_getAttributeRenderer) {
+        if (!$this->_getAttributeRenderer) {
             $this->_getAttributeRenderer = $this->getLayout()
                 ->createBlock('ddg_automation/adminhtml_config_select')
                 ->setIsRenderToJsTemplate(true);
@@ -138,7 +138,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Config_Rules_Customdatafields
      */
     protected function _getConditionsRenderer()
     {
-        if ( ! $this->_getConditionsRenderer) {
+        if (!$this->_getConditionsRenderer) {
             $this->_getConditionsRenderer = $this->getLayout()
                 ->createBlock('ddg_automation/adminhtml_config_select')
                 ->setIsRenderToJsTemplate(true);
@@ -154,7 +154,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Config_Rules_Customdatafields
      */
     protected function _getValueRenderer()
     {
-        if ( ! $this->_getValueRenderer) {
+        if (!$this->_getValueRenderer) {
             $this->_getValueRenderer = $this->getLayout()
                 ->createBlock('ddg_automation/adminhtml_config_select')
                 ->setIsRenderToJsTemplate(true);

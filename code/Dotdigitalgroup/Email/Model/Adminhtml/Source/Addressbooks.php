@@ -12,11 +12,11 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Addressbooks
     {
         $fields = array();
         // Add a "Do Not Map" Option
-        $fields[] = array('value' => 0, 'label' => Mage::helper('ddg')->__(
-            '-- Please Select --'
-        ));
+        $fields[] = array(
+            'value' => 0,
+            'label' => Mage::helper('ddg')->__('-- Please Select --')
+        );
         $website  = Mage::app()->getRequest()->getParam('website');
-
         $enabled = Mage::helper('ddg')->isEnabled($website);
 
         //get address books options
@@ -40,8 +40,10 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Addressbooks
             foreach ($addressBooks as $book) {
                 //check for address book id before displaying, IMPORTANT :Test address book cannot be used through api
                 if (isset($book->id) && $book->name != 'Test') {
-                    $fields[] = array('value' => $book->id,
-                                      'label' => $book->name);
+                    $fields[] = array(
+                        'value' => $book->id,
+                        'label' => $book->name
+                    );
                 }
             }
         }

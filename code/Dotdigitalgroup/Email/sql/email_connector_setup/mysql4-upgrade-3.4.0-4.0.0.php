@@ -9,7 +9,6 @@ $installer->startSetup();
  * Enterprise customer segmentation.
  */
 if (Mage::helper('ddg')->isEnterprise()) {
-
     //contact table
     $contactTable = $installer->getTable('ddg_automation/contact');
     //customer segment table
@@ -27,7 +26,6 @@ if (Mage::helper('ddg')->isEnterprise()) {
 from `{$segmentTable}` group by customer_id) as s set c.segment_ids = segmentids, c.email_imported = null
 WHERE s.customer_id= c.customer_id and s.website_id = c.website_id"
     );
-
 }
 
 $campaignTable = $this->getTable('ddg_automation/campaign');

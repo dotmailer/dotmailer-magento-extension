@@ -95,7 +95,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Config_Automation_Customdatafields
 
     protected function _getStatusRenderer()
     {
-        if ( ! $this->_getStatusRenderer) {
+        if (!$this->_getStatusRenderer) {
             $this->_getStatusRenderer = $this->getLayout()
                 ->createBlock('ddg_automation/adminhtml_config_select')
                 ->setIsRenderToJsTemplate(true);
@@ -106,7 +106,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Config_Automation_Customdatafields
 
     protected function _getAutomationRenderer()
     {
-        if ( ! $this->_getAutomationRenderer) {
+        if (!$this->_getAutomationRenderer) {
             $this->_getAutomationRenderer = $this->getLayout()
                 ->createBlock('ddg_automation/adminhtml_config_select')
                 ->setIsRenderToJsTemplate(true);

@@ -5,7 +5,7 @@ class  Dotdigitalgroup_Email_Adminhtml_Widget_ChooserController
 {
 
     /**
-     * ajax handler for product chooser
+     * Ajax handler for product chooser.
      */
     public function productAction()
     {
@@ -21,6 +21,9 @@ class  Dotdigitalgroup_Email_Adminhtml_Widget_ChooserController
         }
     }
 
+    /**
+     * @return bool
+     */
     protected function _isAllowed()
     {
         return Mage::getSingleton('admin/session')->isAllowed(

@@ -4,7 +4,7 @@ class Dotdigitalgroup_Email_Model_Resource_Coupon extends Mage_SalesRule_Model_R
 {
 
     /**
-     * Update auto generated Specific Coupon if it's rule changed
+     * Update auto generated Specific Coupon if it's rule changed.
      *
      * @param Mage_SalesRule_Model_Rule $rule
      * @return Mage_SalesRule_Model_Resource_Coupon
@@ -25,8 +25,10 @@ class Dotdigitalgroup_Email_Model_Resource_Coupon extends Mage_SalesRule_Model_R
             $updateArray['usage_per_customer'] = $rule->getUsesPerCustomer();
         }
 
+        //@codingStandardsIgnoreStart
         $ruleNewDate = new Zend_Date($rule->getToDate());
         $ruleOldDate = new Zend_Date($rule->getOrigData('to_date'));
+        //@codingStandardsIgnoreEnd
 
         if ($ruleNewDate->compare($ruleOldDate)) {
             $updateArray['expiration_date'] = $rule->getToDate();

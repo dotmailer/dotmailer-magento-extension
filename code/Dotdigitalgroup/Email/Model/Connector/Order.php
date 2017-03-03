@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @codingStandardsIgnoreStart
+ * Class Dotdigitalgroup_Email_Model_Connector_Order
+ */
 class Dotdigitalgroup_Email_Model_Connector_Order
 {
 
@@ -113,6 +117,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
         if ($payment = $orderData->getPayment()) {
             $this->payment = $payment->getMethodInstance()->getTitle();
         }
+
         $this->couponCode = $orderData->getCouponCode();
 
         //set order custom attributes
@@ -166,7 +171,6 @@ class Dotdigitalgroup_Email_Model_Connector_Order
      */
     protected function _setBillingData($orderData)
     {
-
         if ($orderData->getBillingAddress()) {
             $billingData           = $orderData->getBillingAddress()->getData();
             $this->billing_address = array(
@@ -229,11 +233,10 @@ class Dotdigitalgroup_Email_Model_Connector_Order
         if ($line == 1) {
             return $street[0];
         }
-        if (isset($street[$line - 1])) {
 
+        if (isset($street[$line - 1])) {
             return $street[$line - 1];
         } else {
-
             return '';
         }
     }
@@ -293,7 +296,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
     }
 
     /**
-     * create property on runtime
+     * Create property on runtime.
      *
      * @param $field
      * @param $value
@@ -304,7 +307,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
     }
 
     /**
-     * get attributes from attribute set
+     * Get attributes from attribute set.
      *
      * @param $attributeSetId
      *
@@ -313,9 +316,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
     protected function _getAttributesArray($attributeSetId)
     {
         $result     = array();
-        $attributes = Mage::getResourceModel(
-            'catalog/product_attribute_collection'
-        )
+        $attributes = Mage::getResourceModel('catalog/product_attribute_collection')
             ->setAttributeSetFilter($attributeSetId)
             ->getItems();
 
@@ -327,7 +328,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
     }
 
     /**
-     *  check string length and limit to 250
+     *  Check string length and limit to 250.
      *
      * @param $value
      *
@@ -352,14 +353,14 @@ class Dotdigitalgroup_Email_Model_Connector_Order
         $orderItemOptions = $orderItem->getProductOptions();
 
         //if product doesn't have options
-        if ( ! array_key_exists('options', $orderItemOptions)) {
+        if (!array_key_exists('options', $orderItemOptions)) {
             return array();
         }
 
         $orderItemOptions = $orderItemOptions['options'];
 
         //if product options isn't array
-        if ( ! is_array($orderItemOptions)) {
+        if (!is_array($orderItemOptions)) {
             return array();
         }
 
@@ -379,11 +380,10 @@ class Dotdigitalgroup_Email_Model_Connector_Order
         }
 
         return $options;
-
     }
 
     /**
-     * get attribute set name
+     * Get attribute set name.
      *
      * @param Mage_Catalog_Model_Product $product
      *
@@ -416,7 +416,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
     }
 
     /**
-     * load attribute model
+     * Load attribute model.
      *
      * @param Mage_Catalog_Model_Product $product
      */
@@ -429,9 +429,11 @@ class Dotdigitalgroup_Email_Model_Connector_Order
         }
     }
 
+    /**
+     * @param $orderData
+     */
     protected function _setOrderItems($orderData)
     {
-
         $website = Mage::app()->getStore($orderData->getStore())->getWebsite();
 
         $syncCustomOption = Mage::helper('ddg')->getWebsiteConfig(
@@ -479,14 +481,14 @@ class Dotdigitalgroup_Email_Model_Connector_Order
                         $product->getAttributeSetId()
                     );
 
-                    foreach ($configAttributes as $attribute_code) {
+                    foreach ($configAttributes as $attributeCode) {
                         //if config attribute is in attribute set
                         if (in_array(
-                            $attribute_code, $attributesFromAttributeSet
+                            $attributeCode, $attributesFromAttributeSet
                         )) {
                             //attribute input type
                             $inputType = $product->getResource()
-                                ->getAttribute($attribute_code)
+                                ->getAttribute($attributeCode)
                                 ->getFrontend()
                                 ->getInputType();
 
@@ -496,27 +498,27 @@ class Dotdigitalgroup_Email_Model_Connector_Order
                                 case 'select':
                                 case 'dropdown':
                                     $value = $product->getAttributeText(
-                                        $attribute_code
+                                        $attributeCode
                                     );
                                     break;
                                 case 'date':
                                     $date = new Zend_Date(
-                                        $product->getData($attribute_code), Zend_Date::ISO_8601
+                                        $product->getData($attributeCode), Zend_Date::ISO_8601
                                     );
                                     $value = $date->toString(Zend_Date::ISO_8601);
                                     break;
                                 default:
-                                    $value = $product->getData($attribute_code);
+                                    $value = $product->getData($attributeCode);
                                     break;
                             }
 
                             // check limit on text and assign value to array
                             if (is_string($value)) {
-                                $attributes[][$attribute_code]
+                                $attributes[][$attributeCode]
                                     = $this->_limitLength($value);
-                            } elseif(is_array($value)) { // check for multi select values
-                            	$value = implode($value, ', ');
-                                $attributes[][$attribute_code]
+                            } elseif (is_array($value)) {
+                                $value = implode($value, ', ');
+                                $attributes[][$attributeCode]
                                     = $this->_limitLength($value);
                             }
                         }

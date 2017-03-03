@@ -479,6 +479,7 @@ $options = array();
 foreach ($statuses as $status) {
     $options[] = $status['value'];
 }
+
 $statusString = implode(',', $options);
 
 $configModel = Mage::getModel('core/config');
@@ -544,6 +545,7 @@ $options = array();
 foreach ($statuses as $status) {
     $options[] = $status['value'];
 }
+
 $statusString = implode(',', $options);
 
 $configModel = Mage::getModel('core/config');
@@ -1042,7 +1044,6 @@ $installer->getConnection()->query($sqlQuery);
  * Enterprise customer segmentation.
  */
 if (Mage::helper('ddg')->isEnterprise()) {
-
     //contact table
     $contactTable = $installer->getTable('ddg_automation/contact');
     //customer segment table
@@ -1059,7 +1060,6 @@ if (Mage::helper('ddg')->isEnterprise()) {
         "update`{$contactTable}` c,(select customer_id, website_id, group_concat(`segment_id` separator ',') as segmentids
 from `{$segmentTable}` group by customer_id) as s set c.segment_ids = segmentids, c.email_imported = null WHERE s.customer_id= c.customer_id and s.website_id = c.website_id"
     );
-
 }
 
 $campaignTable = $installer->getTable('ddg_automation/campaign');
@@ -1085,6 +1085,7 @@ $catalogTable = $installer->getTable('ddg_automation/catalog');
 if ($installer->getConnection()->isTableExists($catalogTable)) {
     $installer->getConnection()->dropTable($catalogTable);
 }
+
 $table = $installer->getConnection()->newTable($catalogTable);
 $table->addColumn(
     'id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
@@ -1164,6 +1165,7 @@ $rulesTable = $installer->getTable('ddg_automation/rules');
 if ($installer->getConnection()->isTableExists($rulesTable)) {
     $installer->getConnection()->dropTable($rulesTable);
 }
+
 $table = $installer->getConnection()->newTable($rulesTable);
 $table->addColumn(
     'id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
@@ -1228,6 +1230,7 @@ $options = array();
 foreach ($types as $type) {
     $options[] = $type['value'];
 }
+
 $typeString = implode(',', $options);
 
 //Save all product visibilities as string to extension's config value
@@ -1238,6 +1241,7 @@ $options      = array();
 foreach ($visibilities as $visibility) {
     $options[] = $visibility['value'];
 }
+
 $visibilityString = implode(',', $options);
 
 //save config value
@@ -1259,6 +1263,7 @@ $importerTable = $installer->getTable('ddg_automation/importer');
 if ($installer->getConnection()->isTableExists($importerTable)) {
     $installer->getConnection()->dropTable($importerTable);
 }
+
 $table = $installer->getConnection()->newTable($importerTable);
 $table->addColumn(
     'id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
@@ -1395,6 +1400,7 @@ $automationTable = $installer->getTable('ddg_automation/automation');
 if ($installer->getConnection()->isTableExists($automationTable)) {
     $installer->getConnection()->dropTable($automationTable);
 }
+
 $table = $installer->getConnection()->newTable($automationTable);
 $table->addColumn(
     'id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(

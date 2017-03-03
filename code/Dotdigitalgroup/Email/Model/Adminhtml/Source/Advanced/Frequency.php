@@ -3,6 +3,9 @@
 class Dotdigitalgroup_Email_Model_Adminhtml_Source_Advanced_Frequency
 {
 
+    /**
+     * @return array
+     */
     public function toOptionArray()
     {
         return array(

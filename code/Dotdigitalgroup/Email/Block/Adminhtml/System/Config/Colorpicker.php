@@ -12,7 +12,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Config_Colorpicker
      * @return string
      */
     protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element
-    ) {
+    )
+    {
         // Include Procolor library JS file
         $html = '<script type="text/javascript" src="' . Mage::getBaseUrl('js')
             . 'connector/procolor-1.0/procolor.compressed.js' . '"></script>';

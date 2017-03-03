@@ -7,7 +7,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Content
 {
 
     /**
-     * css style that can be used to alert based on result
+     * Css style that can be used to alert based on result.
      *
      * @var
      */
@@ -34,37 +34,36 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Content
     }
 
     /**
-     * title to be displayed as a key for the status
+     * Title to be displayed as a key for the status.
      *
      * @var
      */
     public $title;
 
     /**
-     * message to be displayd in the body
+     * Message to be displayd in the body.
      *
      * @var
      */
     public $message;
 
     /**
-     * how to fix message
+     * How to fix message.
      *
      * @var
      */
     public $howto = array();
 
     /**
-     * @return mixed
-     */
-
-    /**
-     * table data
+     * Table data.
      *
-     * @var
+     * @var array
      */
     public $table = array();
 
+    /**
+     * @return array
+     */
     public function getHowto()
     {
         return $this->howto;
@@ -122,6 +121,10 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Content
         return $this;
     }
 
+    /**
+     * @param $table
+     * @return $this
+     */
     public function setTable($table)
     {
         $this->table[] = $table;
@@ -129,10 +132,11 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Content
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getTable()
     {
         return $this->table;
     }
-
-
 }

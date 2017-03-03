@@ -4,7 +4,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Lostbaskets_Intervalminute
 {
 
     /**
-     * lost basket hour options
+     * Lost basket hour options.
      *
      * @return array
      */

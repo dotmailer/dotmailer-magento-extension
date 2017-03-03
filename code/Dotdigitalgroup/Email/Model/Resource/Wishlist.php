@@ -5,12 +5,11 @@ class Dotdigitalgroup_Email_Model_Resource_Wishlist
 {
 
     /**
-     * constructor.
+     * Constructor.
      */
     protected function _construct()
     {
         $this->_init('ddg_automation/wishlist', 'id');
-
     }
 
     /**
@@ -35,6 +34,7 @@ class Dotdigitalgroup_Email_Model_Resource_Wishlist
                     'wishlist_imported is ?', new Zend_Db_Expr('not null')
                 );
             }
+
             $num = $conn->update(
                 $this->getMainTable(),
                 array(
@@ -47,11 +47,12 @@ class Dotdigitalgroup_Email_Model_Resource_Wishlist
             return $num;
         } catch (Exception $e) {
             Mage::logException($e);
+            return 0;
         }
     }
 
     /**
-     * set imported in bulk query
+     * Set imported in bulk query.
      *
      * @param $ids
      * @param $modified

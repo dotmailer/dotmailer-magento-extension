@@ -27,7 +27,6 @@ class Dotdigitalgroup_Email_DynamicContentController
                 $appEmulation = Mage::getSingleton('core/app_emulation');
                 $appEmulation->startEnvironmentEmulation($storeId);
             } else {
-
                 Mage::helper('ddg')->log('order not found: ' . $orderId);
                 $this->sendResponse();
                 Mage::throwException(
@@ -35,13 +34,13 @@ class Dotdigitalgroup_Email_DynamicContentController
                 );
             }
         } else {
-            //throw new Exception('TE invoice : order_id missing :' . $orderId);
             Mage::helper('ddg')->log('order_id missing :' . $orderId);
             $this->sendResponse();
             Mage::throwException(
                 Mage::helper('ddg')->__('Order id is missing')
             );
         }
+
         parent::preDispatch();
     }
 }
