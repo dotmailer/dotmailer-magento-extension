@@ -43,13 +43,6 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
 
             //enabled and mapped
             if ($enabled && $addressBook && $apiEnabled) {
-                //ready to start sync
-                if (!$this->countSubscriber) {
-                    $helper->log(
-                        '---------------------- Start subscriber sync -------------------'
-                    );
-                }
-
                 $numUpdated = $this->exportSubscribersPerWebsite($website);
                 // show message for any number of customers
                 if ($numUpdated) {
@@ -62,8 +55,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
         //global number of subscribers to set the message
         if ($this->countSubscriber) {
             //@codingStandardsIgnoreStart
-            //reponse message
-            $message = 'Total time for sync : ' . gmdate("H:i:s", microtime(true) - $this->start);
+            $message = 'Total time for Subscribers sync : ' . gmdate("H:i:s", microtime(true) - $this->start);
             //@codingStandardsIgnoreEnd
 
             //put the message in front
@@ -104,11 +96,10 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
         $customerSubscribers = $subscribersAreCustomers->getColumnValues('email');
         $emailsWithNoSaleData = array_merge($emailsNotInSales, $customerSubscribers);
 
-        //Subscriber that are customer or/and the one that
-        //do not exist in sales order table
+        //Subscriber that are customer or/and the one that, do not exist in sales order table.
         $subscribersWithNoSaleData = $emailContactModel
             ->getSubscribersToImportFromEmails($emailsWithNoSaleData);
-        if (!empty($subscribersWithNoSaleData)) {
+        if (! empty($subscribersWithNoSaleData)) {
             $updated += $this->exportSubscribers(
                 $website, $subscribersWithNoSaleData
             );
@@ -116,12 +107,11 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
             $this->countSubscriber += $updated;
         }
 
-        //Subscriber that are guest and also
-        //exist in sales order table
+        //subscriber that are guest and also exist in sales order table
         $subscribersWithSaleData = $emailContactModel
             ->getSubscribersToImportFromEmails($existInSales);
 
-        if (!empty($subscribersWithSaleData)) {
+        if (! empty($subscribersWithSaleData)) {
             $updated += $this->exportSubscribersWithSales(
                 $website, $subscribersWithSaleData
             );

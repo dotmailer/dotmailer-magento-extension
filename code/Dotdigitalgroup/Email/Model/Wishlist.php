@@ -88,12 +88,8 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
                 $website
             );
             $storeIds   = $website->getStoreIds();
+
             if ($enabled && $apiEnabled && ! empty($storeIds)) {
-                //using bulk api
-                $helper->log(
-                    '---------- Start wishlist bulk sync ----------'
-                    . $website->getName()
-                );
                 $this->start = microtime(true);
                 $this->_exportWishlistForWebsite($website);
                 //send wishlist as transactional data
@@ -115,10 +111,13 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
                     }
                 }
 
-                //@codingStandardsIgnoreStart
-                $message = 'Total time for wishlist bulk sync : ' . gmdate("H:i:s", microtime(true) - $this->start);
-                //@codingStandardsIgnoreEnd
-                $helper->log($message);
+                if ($this->countWishlists) {
+                    //@codingStandardsIgnoreStart
+                    $message = 'Total time for Wishlist bulk sync : ' . gmdate("H:i:s", microtime(true) - $this->start);
+                    //@codingStandardsIgnoreEnd
+                    $helper->log($message);
+                }
+
 
                 //using single api
                 $this->_exportWishlistForWebsiteInSingle($website);
@@ -131,7 +130,7 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
     }
 
     /**
-     * Sync single wishlist.
+     * Sync Single wishlist.
      *
      * @param Mage_Core_Model_Website $website
      */
@@ -147,7 +146,7 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
         $emailWishlist      = $this->_getWishlistToImport($website, $limit);
         $this->wishlistIds = $emailWishlist->getColumnValues('wishlist_id');
 
-        if (!empty($this->wishlistIds)) {
+        if (! empty($this->wishlistIds)) {
             $collection = Mage::getModel('wishlist/wishlist')
                 ->getCollection()
                 ->addFieldToFilter(

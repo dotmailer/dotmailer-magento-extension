@@ -69,12 +69,8 @@ class Dotdigitalgroup_Email_Model_Quote extends Mage_Core_Model_Abstract
             $storeIds   = $website->getStoreIds();
             //api and sync enabled, also the should have stores created for this website
             if ($enabled && $apiEnabled && ! empty($storeIds)) {
-                //using bulk api
-                $helper->log('---------- Start quote bulk sync ----------');
                 $this->start = microtime(true);
-                /**
-                 * get quotes for website to import.
-                 */
+                //get quotes for website to import
                 $this->_exportQuoteForWebsite($website);
 
                 //send quote as transactional data
@@ -95,10 +91,12 @@ class Dotdigitalgroup_Email_Model_Quote extends Mage_Core_Model_Abstract
                     }
                 }
 
-                //@codingStandardsIgnoreStart
-                $message = 'Total time for quote bulk sync : ' . gmdate("H:i:s", microtime(true) - $this->start);
-                //@codingStandardsIgnoreEnd
-                $helper->log($message);
+                if ($this->countQuotes) {
+                    //@codingStandardsIgnoreStart
+                    $message = 'Total time for Quotes bulk sync : ' . gmdate("H:i:s", microtime(true) - $this->start);
+                    //@codingStandardsIgnoreEnd
+                    $helper->log($message);
+                }
 
                 //update quotes
                 $this->_exportQuoteForWebsiteInSingle($website);
