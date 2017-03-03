@@ -30,7 +30,7 @@ class Dotdigitalgroup_Email_Block_Recommended_Wishlistproducts extends Dotdigita
         //customer id param
         $customerId = Mage::app()->getRequest()->getParam('customer_id');
 
-        if (! $customerId) {
+        if (!$customerId) {
             return array();
         }
 

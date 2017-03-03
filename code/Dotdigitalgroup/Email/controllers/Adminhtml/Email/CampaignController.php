@@ -54,7 +54,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_CampaignController
     public function massDeleteAction()
     {
         $campaignIds = $this->getRequest()->getParam('campaign');
-        if (! is_array($campaignIds)) {
+        if (!is_array($campaignIds)) {
             $this->_getSession()->addError(
                 $this->__('Please select campaigns.')
             );
@@ -81,7 +81,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_CampaignController
     public function massResendAction()
     {
         $campaignIds = $this->getRequest()->getParam('campaign');
-        if (! is_array($campaignIds)) {
+        if (!is_array($campaignIds)) {
             $this->_getSession()->addError(
                 $this->__('Please select campaigns.')
             );

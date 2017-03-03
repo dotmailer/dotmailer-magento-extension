@@ -40,13 +40,15 @@ class Dotdigitalgroup_Email_Model_Sync_Contact_Update extends Dotdigitalgroup_Em
                         }
                     }
                 } elseif ($item->getImportMode() ==
-                    Dotdigitalgroup_Email_Model_Importer::MODE_SUBSCRIBER_RESUBSCRIBED) {
+                    Dotdigitalgroup_Email_Model_Importer::MODE_SUBSCRIBER_RESUBSCRIBED
+                ) {
                     $email = $importData['email'];
                     $apiContact = $this->client->postContacts($email);
 
                     //resubscribe suppressed contacts
                     if (isset($apiContact->message) && $apiContact->message ==
-                        Dotdigitalgroup_Email_Model_Apiconnector_Client::API_ERROR_CONTACT_SUPPRESSED) {
+                        Dotdigitalgroup_Email_Model_Apiconnector_Client::API_ERROR_CONTACT_SUPPRESSED
+                    ) {
                         $apiContact = $this->client->getContactByEmail($email);
                         $result = $this->client->postContactsResubscribe($apiContact);
                     }

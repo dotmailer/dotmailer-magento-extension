@@ -16,7 +16,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Config_Trial extends Mage_Adm
                 Mage::getDesign()->getSkinUrl('connector/banner.png') .
                 ' alt="Open Trial Account"></a>';
             $script =
-            "<script>
+                "<script>
                 var j = jQuery.noConflict();
                 j(document).ready(function() {
                     j('.various').fancybox();   
@@ -28,7 +28,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Config_Trial extends Mage_Adm
                 Mage::getDesign()->getSkinUrl('connector/banner.png') .
                 ' alt="Open Trial Account"></a>';
             $script =
-            "<script>
+                "<script>
                 var j = jQuery.noConflict();
                 j(document).ready(function() {
                     j('.various').fancybox({

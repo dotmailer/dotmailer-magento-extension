@@ -233,7 +233,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
                 }
             }
 
-            if (! empty($this->productIds)) {
+            if (!empty($this->productIds)) {
                 $this->getResource()->setImported($this->productIds, true);
                 $this->countProducts += count($this->productIds);
             }
@@ -438,7 +438,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
      */
     public function handleConfigSaveBefore(Varien_Event_Observer $observer)
     {
-        if (! Mage::registry('core_config_data_save_before')) {
+        if (!Mage::registry('core_config_data_save_before')) {
             if ($groups = $observer->getEvent()->getConfigData()->getGroups()) {
                 if (isset($groups['catalog_sync']['fields']['catalog_values']['value'])) {
                     $value
@@ -448,7 +448,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
             }
         }
 
-        if (! Mage::registry('core_config_data_save_before_status')) {
+        if (!Mage::registry('core_config_data_save_before_status')) {
             if ($groups = $observer->getEvent()->getConfigData()->getGroups()) {
                 if (isset($groups['data_fields']['fields']['order_statuses']['value'])) {
                     $value
@@ -473,7 +473,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
     public function handleConfigSaveAfter(Varien_Event_Observer $observer)
     {
         try {
-            if (! Mage::registry('core_config_data_save_after_done')) {
+            if (!Mage::registry('core_config_data_save_after_done')) {
                 if ($groups = $observer->getEvent()->getConfigData()->getGroups(
                 )
                 ) {
@@ -497,7 +497,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
                 }
             }
 
-            if (! Mage::registry('core_config_data_save_after_done_status')) {
+            if (!Mage::registry('core_config_data_save_after_done_status')) {
                 if ($groups = $observer->getEvent()->getConfigData()->getGroups(
                 )
                 ) {

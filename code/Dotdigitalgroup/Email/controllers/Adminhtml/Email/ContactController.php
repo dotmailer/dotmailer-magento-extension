@@ -85,7 +85,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ContactController
     public function massDeleteAction()
     {
         $contactIds = $this->getRequest()->getParam('contact');
-        if (! is_array($contactIds)) {
+        if (!is_array($contactIds)) {
             $this->_getSession()->addError(
                 $this->__('Please select contacts.')
             );
@@ -114,7 +114,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ContactController
     {
         $contactIds = $this->getRequest()->getParam('contact');
 
-        if (! is_array($contactIds)) {
+        if (!is_array($contactIds)) {
             $this->_getSession()->addError(
                 $this->__('Please select contacts.')
             );

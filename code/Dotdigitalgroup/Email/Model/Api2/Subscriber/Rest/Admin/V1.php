@@ -58,7 +58,7 @@ class Dotdigitalgroup_Email_Model_Api2_Subscriber_Rest_Admin_V1
     public function _retrieve()
     {
         $email = $this->getRequest()->getParam('email', false);
-        if (! $email) {
+        if (!$email) {
             Mage::helper('ddg')->log('Subscriber id is not set');
 
             return array();

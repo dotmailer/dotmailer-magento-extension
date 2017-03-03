@@ -54,8 +54,8 @@ class Dotdigitalgroup_Email_Adminhtml_Email_StudioController
         if ($refreshToken) {
             $code   = Mage::helper('ddg')->getCode();
             $params = 'client_id=' . Mage::getStoreConfig(
-                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CLIENT_ID
-            ) .
+                    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CLIENT_ID
+                ) .
                 '&client_secret=' . Mage::getStoreConfig(
                     Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CLIENT_SECRET_ID
                 ) .

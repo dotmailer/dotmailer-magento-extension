@@ -125,7 +125,7 @@ class Dotdigitalgroup_Email_Model_Connector_Account
      */
     public function setContacts($contacts)
     {
-        if (! empty($this->contacts)) {
+        if (!empty($this->contacts)) {
             $this->contacts += $contacts;
         } else {
             $this->contacts[] = $contacts;

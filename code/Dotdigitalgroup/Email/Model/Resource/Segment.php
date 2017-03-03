@@ -48,7 +48,7 @@ class Dotdigitalgroup_Email_Model_Resource_Segment
                 }
             }
 
-            if (! empty($data)) {
+            if (!empty($data)) {
                 $adapter->insertMultiple($customerTable, $data);
             }
         } catch (Exception $e) {
@@ -129,7 +129,7 @@ class Dotdigitalgroup_Email_Model_Resource_Segment
 
         $existing = explode(',', $existing);
         //no segments found set current segment
-        if (! in_array($segmentId, $existing)) {
+        if (!in_array($segmentId, $existing)) {
             //for the existing
             if (count($existing) == 1) {
                 $existing = $segmentId;

@@ -19,7 +19,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Advanced_Notification
             Mage_Core_Model_Locale::FORMAT_TYPE_MEDIUM
         );
         //@codingStandardsIgnoreStart
-        $date =  Mage::app()->getLocale()->date((int)$element->getValue())
+        $date = Mage::app()->getLocale()->date((int)$element->getValue())
             ->toString($format);
         //@codingStandardsIgnoreEnd
 

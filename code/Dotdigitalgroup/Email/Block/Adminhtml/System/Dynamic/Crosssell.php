@@ -22,7 +22,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Crosssell
         }
 
         //alert message for last order id is not mapped
-        if (! $lastOrderId) {
+        if (!$lastOrderId) {
             $lastOrderId = '[PLEASE MAP THE LAST ORDER ID]';
         }
 

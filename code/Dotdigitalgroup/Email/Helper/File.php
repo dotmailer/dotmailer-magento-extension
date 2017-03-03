@@ -28,7 +28,7 @@ class Dotdigitalgroup_Email_Helper_File
      */
     public function __construct()
     {
-        $this->outputFolder        = Mage::getBaseDir('var') . DS . 'export' . DS . 'email';
+        $this->outputFolder = Mage::getBaseDir('var') . DS . 'export' . DS . 'email';
         $this->outputArchiveFolder = $this->outputFolder . DS . 'archive';
         $this->delimiter = ',';
         $this->enclosure = '"';
@@ -180,8 +180,8 @@ class Dotdigitalgroup_Email_Helper_File
                 || preg_match("/(?:${delimiterEsc}|${enclosureEsc}|\s)/", $field)
             ) {
                 $output[] = $enclosure . str_replace(
-                    $enclosure, $enclosure . $enclosure, $field
-                ) . $enclosure;
+                        $enclosure, $enclosure . $enclosure, $field
+                    ) . $enclosure;
             } else {
                 $output[] = $field;
             }
@@ -274,7 +274,7 @@ class Dotdigitalgroup_Email_Helper_File
         }
 
         foreach ($mappedData as $key => $value) {
-            if (! $value) {
+            if (!$value) {
                 unset($mappedData[$key]);
             }
         }

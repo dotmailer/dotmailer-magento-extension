@@ -11,7 +11,7 @@ class Dotdigitalgroup_Email_Adminhtml_System_Email_TemplateController
      */
     public function defaultTemplateAction()
     {
-        if (! $this->getRequest()->getParam('connector') or $this->getRequest()
+        if (!$this->getRequest()->getParam('connector') or $this->getRequest()
                 ->getParam('connector') == ''
         ) {
             parent::defaultTemplateAction();

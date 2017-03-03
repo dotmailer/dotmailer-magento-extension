@@ -18,7 +18,7 @@ class Dotdigitalgroup_Email_Model_Resource_Rule_Collection extends Mage_SalesRul
      */
     public function setValidationFilter($websiteId, $customerGroupId, $couponCode = '', $now = null)
     {
-        if (! $this->getFlag('validation_filter')) {
+        if (!$this->getFlag('validation_filter')) {
             if ($now === null) {
                 //@codingStandardsIgnoreStart
                 $now = Mage::getModel('core/date')->date('Y-m-d');
@@ -101,7 +101,7 @@ class Dotdigitalgroup_Email_Model_Resource_Rule_Collection extends Mage_SalesRul
      */
     public function addWebsiteGroupDateFilter($websiteId, $customerGroupId, $now = null)
     {
-        if (! $this->getFlag('website_group_date_filter')) {
+        if (!$this->getFlag('website_group_date_filter')) {
             if ($now === null) {
                 //@codingStandardsIgnoreStart
                 $now = Mage::getModel('core/date')->date('Y-m-d');

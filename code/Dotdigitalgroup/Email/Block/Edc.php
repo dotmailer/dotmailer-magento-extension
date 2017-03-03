@@ -142,7 +142,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
         $result = array();
         $limit = Mage::helper('ddg/recommended')->getDisplayLimitByMode($mode);
 
-        if (! $this->edcType) {
+        if (!$this->edcType) {
             $this->edcType = $mode;
         }
 
@@ -226,7 +226,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
     protected function _getProductPushCollection($limit)
     {
         $productsToDisplay = array();
-        $productIds        = Mage::helper('ddg/recommended')->getProductPushIds();
+        $productIds = Mage::helper('ddg/recommended')->getProductPushIds();
 
         $productCollection = Mage::getResourceModel('catalog/product_collection')
             ->addPriceData()
@@ -318,7 +318,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
         $locale            = Mage::app()->getLocale()->getLocale();
 
         //@codingStandardsIgnoreStart
-        $to                = Zend_Date::now($locale)->toString(Zend_Date::ISO_8601);
+        $to = Zend_Date::now($locale)->toString(Zend_Date::ISO_8601);
         //@codingStandardsIgnoreEnd
         $productCollection = Mage::getResourceModel('reports/product_collection')
             ->addViewsCount($from, $to)
@@ -405,7 +405,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
     {
         $quoteModel = Mage::registry('current_quote');
 
-        if (! $quoteModel) {
+        if (!$quoteModel) {
             Mage::throwException(
                 Mage::helper('ddg')->__('no current_quote found for EDC')
             );
@@ -463,7 +463,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
                 $product, $mode
             );
 
-            if (! empty($recommendedProducts)) {
+            if (!empty($recommendedProducts)) {
                 $recommendedProducts = Mage::getModel('catalog/product')
                     ->getCollection()
                     ->addPriceData()

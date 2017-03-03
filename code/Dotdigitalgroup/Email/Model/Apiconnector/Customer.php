@@ -139,7 +139,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getLastReviewDate()
     {
-        if (! empty($this->reviewCollection)) {
+        if (!empty($this->reviewCollection)) {
             //@codingStandardsIgnoreStart
             $this->reviewCollection->getSelect()->limit(1);
             return $this->reviewCollection->getFirstItem()->getCreatedAt();
@@ -182,7 +182,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
             }
 
             // break if both spent and earn are not null (a value has been assigned)
-            if ($spent !== null && ! $earn !== null) {
+            if ($spent !== null && !$earn !== null) {
                 break;
             }
         }
@@ -805,7 +805,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getRewardPoints()
     {
-        if (! $this->reward) {
+        if (!$this->reward) {
             $this->_setReward();
         }
 
@@ -823,7 +823,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getRewardAmount()
     {
-        if (! $this->reward) {
+        if (!$this->reward) {
             $this->_setReward();
         }
 
@@ -842,7 +842,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     public function getExpirationDate()
     {
         //set reward for later use
-        if (! $this->reward) {
+        if (!$this->reward) {
             $this->_setReward();
         }
 

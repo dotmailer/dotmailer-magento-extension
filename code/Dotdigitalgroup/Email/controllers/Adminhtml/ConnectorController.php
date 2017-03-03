@@ -17,7 +17,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
             )
         );
 
-        if (! $apiModel) {
+        if (!$apiModel) {
             Mage::getSingleton('adminhtml/session')->addNotice(Mage::helper('ddg')->__('Please enable api first.'));
         } else {
             // get all possible datatifileds
@@ -27,7 +27,8 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
 
                 //ignore existing datafields message
                 if (isset($response->message) && $response->message !=
-                    Dotdigitalgroup_Email_Model_Apiconnector_Client::API_ERROR_DATAFIELD_EXISTS) {
+                    Dotdigitalgroup_Email_Model_Apiconnector_Client::API_ERROR_DATAFIELD_EXISTS
+                ) {
                     $result['errors'] = true;
                     $result['message'] .=  ' Datafield ' . $datafield['name'] . ' - '. $response->message . '</br>';
                 } else {
@@ -80,7 +81,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
 
         $message = '-- Reset Orders for Reimport : ' . $num;
         Mage::helper('ddg')->log($message);
-        if (! $num)
+        if (!$num)
             $message = 'Done.';
         Mage::getSingleton('adminhtml/session')->addSuccess($message);
 
@@ -138,9 +139,9 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
     public function resetcustomersimportAction()
     {
         $num = Mage::getResourceModel('ddg_automation/contact')->resetAllContacts();
-        $message  = '-- Reset Contacts for re-import : ' . $num;
+        $message = '-- Reset Contacts for re-import : ' . $num;
         Mage::helper('ddg')->log($message);
-        if (! $num)
+        if (!$num)
             $message = 'Done.';
         Mage::getSingleton('adminhtml/session')->addSuccess($message);
         $this->_redirectReferer();
@@ -152,8 +153,8 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
     public function deletecontactidsAction()
     {
         $num = Mage::getResourceModel('ddg_automation/contact')->deleteContactIds();
-        $message = 'Number of Contacts Id\'s Removed: '. $num;
-        if (! $num)
+        $message = 'Number of Contacts Id\'s Removed: ' . $num;
+        if (!$num)
             $message = 'Done.';
         Mage::getSingleton('adminhtml/session')->addSuccess($message);
         $this->_redirectReferer();
@@ -410,7 +411,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
                 return $this->_redirectReferer();
             }
 
-        //@codingStandardsIgnoreStart
+            //@codingStandardsIgnoreStart
             $num = Mage::getResourceModel('ddg_automation/review')
                 ->reset($params['from'], $params['to']);
         } else {

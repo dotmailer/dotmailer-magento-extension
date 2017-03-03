@@ -12,7 +12,7 @@ class Dotdigitalgroup_Email_ResponseController
         //authenticate ip address
         $authIp = Mage::helper('ddg')->authIpAddress();
 
-        if (! $authIp) {
+        if (!$authIp) {
             $message = 'You are not authorised to view content of this page.';
             Mage::throwException($message);
         }
@@ -22,7 +22,7 @@ class Dotdigitalgroup_Email_ResponseController
             $this->getRequest()->getParam('code')
         );
 
-        if (! $auth) {
+        if (!$auth) {
             $this->sendResponse();
             Mage::throwException(
                 Mage::helper('ddg')->__('Authentication failed!')

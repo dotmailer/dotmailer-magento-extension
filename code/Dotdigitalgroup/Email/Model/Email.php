@@ -8,7 +8,7 @@ class Dotdigitalgroup_Email_Model_Email extends Mage_Core_Model_Email
      */
     public function send()
     {
-        if (! Mage::helper('ddg/transactional')->isEnabled()) {
+        if (!Mage::helper('ddg/transactional')->isEnabled()) {
             return parent::send();
         }
 

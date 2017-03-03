@@ -472,7 +472,7 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
     protected function _csvToArray($filename)
     {
         //@codingStandardsIgnoreStart
-        if (! file_exists($filename) || ! is_readable($filename))
+        if (!file_exists($filename) || !is_readable($filename))
             return FALSE;
 
         $header = NULL;

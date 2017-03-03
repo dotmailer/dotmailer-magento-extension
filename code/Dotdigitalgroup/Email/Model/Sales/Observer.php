@@ -40,7 +40,7 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
             }
 
             //if api is not enabled
-            if (! $store->getWebsite()->getConfig(
+            if (!$store->getWebsite()->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED
             )
             ) {
@@ -76,7 +76,7 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
                     $order->getStore()
                 )
             );
-            if (! empty($configStatusAutomationMap)) {
+            if (!empty($configStatusAutomationMap)) {
                 foreach ($configStatusAutomationMap as $configMap) {
                     if ($configMap['status'] == $status) {
                         try {
@@ -125,7 +125,7 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
         $storeName = Mage::app()->getStore($order->getStoreId())->getName();
 
         //if api is not enabled
-        if (! $website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED)) {
+        if (!$website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED)) {
             return $this;
         }
 
@@ -230,7 +230,7 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
             $emailOrder = Mage::getModel('ddg_automation/order')->loadByOrderId(
                 $orderId, $quoteId, $storeId
             );
-            if (! $emailOrder->getId()) {
+            if (!$emailOrder->getId()) {
                 Mage::helper('ddg')->log(
                     'ERROR Creditmemmo Order not found :' . $orderId
                     . ', quote id : ' . $quoteId . ', store id ' . $storeId

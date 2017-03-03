@@ -12,7 +12,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Config_Validator
      * @return string
      */
     protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element
-    ) 
+    )
     {
         // Get the default HTML for this option
         $html = parent::_getElementHtml($element);
@@ -25,7 +25,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Config_Validator
         $html .= $jquery;
         $javaScript = "<script type=\"text/javascript\"> var show_warning = 0;";
 
-        if (! Mage::helper('ddg')->isSweetToothEnabled()) {
+        if (!Mage::helper('ddg')->isSweetToothEnabled()) {
             $javaScript .= "show_warning = 1;";
         }
 

@@ -15,12 +15,12 @@ class Dotdigitalgroup_Email_Model_Email_Template
     {
         $helper = Mage::helper('ddg/transactional');
         // If it's not enabled, just return the parent result.
-        if (! $helper->isEnabled()) {
+        if (!$helper->isEnabled()) {
             return parent::send($email, $name, $variables);
         }
 
         // As per parent class - except addition of before and after send events
-        if (! $this->isValidForSend()) {
+        if (!$this->isValidForSend()) {
             Mage::log(
                 'Email is not valid for sending, this is a core error that often means there\'s a problem with your 
                 email templates.'
@@ -33,7 +33,7 @@ class Dotdigitalgroup_Email_Model_Email_Template
         $names  = is_array($name) ? $name : (array)$name;
         $names  = array_values($names);
         foreach ($emails as $key => $email) {
-            if (! isset($names[$key])) {
+            if (!isset($names[$key])) {
                 $names[$key] = substr($email, 0, strpos($email, '@'));
             }
         }

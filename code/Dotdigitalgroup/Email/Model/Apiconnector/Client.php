@@ -86,7 +86,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
 
     public function getApiEndpoint()
     {
-        if (! isset($this->apiEndpoint)) {
+        if (!isset($this->apiEndpoint)) {
             Mage::throwException(Mage::helper('ddg')->__('Dotmailer connector API endpoint cannot be empty.'));
         }
         return $this->apiEndpoint;
@@ -252,7 +252,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
 
         //log the error
         if (isset($response->message)
-            && ! in_array($response->message, $this->exludeMessages)
+            && !in_array($response->message, $this->exludeMessages)
         ) {
             $message = 'POST ADDRESS BOOK CONTACTS ' . $url . ', ' . $response->message;
             Mage::helper('ddg')->log($message);
@@ -293,7 +293,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         $response = $this->execute();
         //log error
         if (isset($response->message)
-            && ! in_array($response->message, $this->exludeMessages)
+            && !in_array($response->message, $this->exludeMessages)
         ) {
             $message = 'GET CONTACTS IMPORT REPORT  . ' . $url . ' message : '
                 . $response->message;
@@ -616,7 +616,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
     {
         $apiContact = $this->postContacts($email);
         //do not create for non contact id set
-        if (! isset($apiContact->id)) {
+        if (!isset($apiContact->id)) {
             return $apiContact;
         } else {
             //get the contact id for this email
@@ -698,7 +698,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
             "/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix",
             $email
         );
-        if (! $valid) {
+        if (!$valid) {
             $object = new stdClass();
 
             return $object->message = 'Not valid email :' . $email;

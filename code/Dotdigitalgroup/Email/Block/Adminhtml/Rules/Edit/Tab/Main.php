@@ -100,7 +100,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Rules_Edit_Tab_Main
             )
         );
 
-        if (! $model->getId()) {
+        if (!$model->getId()) {
             $model->setData('status', '0');
         }
 

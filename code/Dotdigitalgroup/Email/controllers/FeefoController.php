@@ -18,14 +18,14 @@ class Dotdigitalgroup_Email_FeefoController
         $actionName = $this->getRequest()->getActionName();
         switch ($actionName) {
             case 'score':
-                if (! $helper->getFeefoLogon()) {
+                if (!$helper->getFeefoLogon()) {
                     $this->sendResponse();
 
                     return;
                 }
                 break;
             case 'reviews':
-                if (! $helper->getFeefoLogon() or ! Mage::app()->getRequest()
+                if (!$helper->getFeefoLogon() or !Mage::app()->getRequest()
                         ->getParam('quote_id')
                 ) {
                     $this->sendResponse();

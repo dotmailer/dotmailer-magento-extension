@@ -36,7 +36,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
                 $website
             );
             if ($enabled && $sync) {
-                if (! $this->countCustomers) {
+                if (!$this->countCustomers) {
                     $helper->log('---------- Start customer sync ----------');
                 }
 
@@ -84,7 +84,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
         );
 
         //skip if the mapping field is missing
-        if (! $helper->getCustomerAddressBook($website)) {
+        if (!$helper->getCustomerAddressBook($website)) {
             return 0;
         }
 
@@ -95,7 +95,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
         );
 
         // no contacts for this website
-        if (! $contacts->getSize()) {
+        if (!$contacts->getSize()) {
             return 0;
         }
 
@@ -224,7 +224,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
             $contact = Mage::registry('current_contact');
         }
 
-        if (! $contact->getId()) {
+        if (!$contact->getId()) {
             Mage::getSingleton('adminhtml/session')->addError(
                 'No contact found!'
             );
@@ -239,14 +239,14 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
         $helper    = Mage::helper('ddg');
         $helper->log('---------- Start single customer sync ----------');
         //skip if the mapping field is missing
-        if (! $helper->getCustomerAddressBook($website)) {
+        if (!$helper->getCustomerAddressBook($website)) {
             return false;
         }
 
         $fileHelper = Mage::helper('ddg/file');
 
         $customerId = $contact->getCustomerId();
-        if (! $customerId) {
+        if (!$customerId) {
             Mage::getSingleton('adminhtml/session')->addError(
                 'Cannot manually sync guests!'
             );

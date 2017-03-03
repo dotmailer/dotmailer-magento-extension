@@ -328,7 +328,7 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
             );
         }
 
-        if (! empty($data)) {
+        if (!empty($data)) {
             //update data fields
             $client = Mage::helper('ddg')->getWebsiteApiClient($website);
             if ($client instanceof Dotdigitalgroup_Email_Model_Apiconnector_Client) {
@@ -349,7 +349,7 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
     protected function _checkCampignEnrolmentActive($programId)
     {
         //program is not set
-        if (! $programId) {
+        if (!$programId) {
             return false;
         }
 

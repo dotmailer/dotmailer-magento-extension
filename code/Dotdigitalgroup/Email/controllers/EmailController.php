@@ -130,8 +130,8 @@ class Dotdigitalgroup_Email_EmailController
             //callback url
             $callback = $baseUrl . 'connector/email/callback';
             $data = 'client_id=' . Mage::getStoreConfig(
-                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CLIENT_ID
-            ) .
+                    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CLIENT_ID
+                ) .
                 '&client_secret=' . Mage::getStoreConfig(
                     Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CLIENT_SECRET_ID
                 ) .
@@ -180,14 +180,14 @@ class Dotdigitalgroup_Email_EmailController
     {
         $quoteId = $this->getRequest()->getParam('quote_id');
         //no quote id redirect to base url
-        if (! $quoteId) {
+        if (!$quoteId) {
             $this->_redirectUrl(Mage::getBaseUrl());
         }
 
         $quoteModel = Mage::getModel('sales/quote')->load($quoteId);
 
         //no quote id redirect to base url
-        if (! $quoteModel->getId()) {
+        if (!$quoteModel->getId()) {
             $this->_redirectUrl(Mage::getBaseUrl());
         }
 

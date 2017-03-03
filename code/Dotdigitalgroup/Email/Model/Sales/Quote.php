@@ -137,7 +137,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
                             );
 
                             //no campign found for interval pass
-                            if (! $campignFound) {
+                            if (!$campignFound) {
                                 //save lost basket for sending
                                 Mage::getModel('ddg_automation/campaign')
                                     ->setEmail($email)
@@ -233,7 +233,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
                             );
 
                             //no campign found for interval pass
-                            if (! $campignFound) {
+                            if (!$campignFound) {
                                 //save lost basket for sending
                                 Mage::getModel('ddg_automation/campaign')
                                     ->setEmail($email)
@@ -408,7 +408,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
         $locale    = Mage::app()->getLocale()->getLocale();
 
         //no limit is set skip
-        if (! $cartLimit) {
+        if (!$cartLimit) {
             return false;
         }
 

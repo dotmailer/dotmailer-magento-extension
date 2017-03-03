@@ -119,7 +119,7 @@ class Dotdigitalgroup_Email_Model_Quote extends Mage_Core_Model_Abstract
     {
         try {
             //reset quotes
-            $this->quotes   = array();
+            $this->quotes = array();
             $this->quoteIds = array();
             $websiteId       = $website->getId();
             $limit           = Mage::helper('ddg')->getWebsiteConfig(
@@ -138,7 +138,7 @@ class Dotdigitalgroup_Email_Model_Quote extends Mage_Core_Model_Abstract
                     'ddg_automation/connector_quote', $quote
                 );
                 $this->quotes[$websiteId][] = $connectorQuote;
-                $this->quoteIds[]           = $quote->getId();
+                $this->quoteIds[] = $quote->getId();
                 $this->countQuotes++;
             }
         } catch (Exception $e) {

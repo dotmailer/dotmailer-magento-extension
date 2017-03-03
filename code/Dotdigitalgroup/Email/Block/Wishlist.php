@@ -16,7 +16,7 @@ class Dotdigitalgroup_Email_Block_Wishlist
     {
         $wishlist = $this->_getWishlist();
 
-        if ($wishlist && ! empty($wishlist->getItemCollection())) {
+        if ($wishlist && !empty($wishlist->getItemCollection())) {
             return $wishlist->getItemCollection();
         } else {
             return false;
@@ -31,7 +31,7 @@ class Dotdigitalgroup_Email_Block_Wishlist
         //customer id param
         $customerId = Mage::app()->getRequest()->getParam('customer_id', false);
 
-        if (! $customerId) {
+        if (!$customerId) {
             return false;
         }
 

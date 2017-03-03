@@ -138,7 +138,7 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
     protected function _exportWishlistForWebsite(Mage_Core_Model_Website $website)
     {
         //reset wishlists
-        $this->wishlists   = array();
+        $this->wishlists = array();
         $this->wishlistIds = array();
         $limit              = Mage::helper('ddg')->getWebsiteConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT,
@@ -147,7 +147,7 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
         $emailWishlist      = $this->_getWishlistToImport($website, $limit);
         $this->wishlistIds = $emailWishlist->getColumnValues('wishlist_id');
 
-        if (! empty($this->wishlistIds)) {
+        if (!empty($this->wishlistIds)) {
             $collection = Mage::getModel('wishlist/wishlist')
                 ->getCollection()
                 ->addFieldToFilter(
@@ -300,7 +300,7 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
             }
         }
 
-        if (! empty($this->wishlistIds)) {
+        if (!empty($this->wishlistIds)) {
             $this->getResource()->setImported($this->wishlistIds, true);
         }
     }

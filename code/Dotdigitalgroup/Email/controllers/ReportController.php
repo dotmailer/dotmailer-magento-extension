@@ -45,7 +45,7 @@ class Dotdigitalgroup_Email_ReportController
         //customer id param
         $customerId = $this->getRequest()->getParam('customer_id', false);
         //no customer was found
-        if (! $customerId) {
+        if (!$customerId) {
             Mage::helper('ddg')->log(
                 'Recentlyviewed : no customer id : ' . $customerId
             );

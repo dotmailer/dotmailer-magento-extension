@@ -40,7 +40,7 @@ class Dotdigitalgroup_Email_Model_Sync_Contact_Bulk
                     $addressBook = $this->helper->getGuestAddressBook($websiteId);
 
                 $file = $item->getImportFile();
-                if (! empty($file) && ! empty($addressBook) && $this->client) {
+                if (!empty($file) && !empty($addressBook) && $this->client) {
                     $result = $this->client->postAddressBookContactsImport($file, $addressBook);
                     $this->_handleItemAfterSync($item, $result);
                 }
@@ -56,7 +56,7 @@ class Dotdigitalgroup_Email_Model_Sync_Contact_Bulk
     {
         $curlError = $this->_checkCurlError($item);
 
-        if (! $curlError) {
+        if (!$curlError) {
             if (isset($result->message) && !isset($result->id)) {
                 $item->setImportStatus(Dotdigitalgroup_Email_Model_Importer::FAILED)
                     ->setMessage($result->message);

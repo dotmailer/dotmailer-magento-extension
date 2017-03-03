@@ -12,7 +12,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Config_Colorpicker
      * @return string
      */
     protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element
-    ) 
+    )
     {
         // Include Procolor library JS file
         $html = '<script type="text/javascript" src="' . Mage::getBaseUrl('js')
@@ -71,8 +71,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Config_Colorpicker
         return
             '<script type="text/javascript">
                 Validation.add(\'validate-hex\', \'' . Mage::helper('ddg')->__(
-            'Please enter a valid hex color code'
-        ) . '\', function(v) {
+                'Please enter a valid hex color code'
+            ) . '\', function(v) {
                     return /^#(?:[0-9a-fA-F]{3}){1,2}$/.test(v);
                 });
             </script>';

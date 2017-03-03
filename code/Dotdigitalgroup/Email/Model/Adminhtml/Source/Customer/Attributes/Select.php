@@ -37,7 +37,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Customer_Attributes_Select
                 //escape the label in case of quotes
                 $label = addslashes($attribute->getFrontendLabel());
                 //@codingStandardsIgnoreEnd
-                if (! in_array($code, $excluded)) {
+                if (!in_array($code, $excluded)) {
                     $options[] = array(
                         'value' => $attribute->getAttributeCode(),
                         'label' => $label

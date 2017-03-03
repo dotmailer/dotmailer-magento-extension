@@ -11,7 +11,7 @@ class Dotdigitalgroup_Email_Model_Feed extends Mage_AdminNotification_Model_Feed
     public function checkForUpgrade()
     {
         //not enabled
-        if (! (bool)Mage::getStoreConfig(
+        if (!(bool)Mage::getStoreConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_FEED_ENABLED
         )
         ) {

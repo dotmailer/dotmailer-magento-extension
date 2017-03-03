@@ -19,7 +19,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
         $websiteId = Mage::app()->getStore($subscriber->getStoreId())->getWebsiteId();
 
         //check if enabled
-        if (! Mage::helper('ddg')->isEnabled($websiteId)) {
+        if (!Mage::helper('ddg')->isEnabled($websiteId)) {
             return $this;
         }
 
@@ -112,7 +112,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
         $programId = Mage::helper('ddg')
             ->getAutomationIdByType('XML_PATH_CONNECTOR_AUTOMATION_STUDIO_SUBSCRIBER', $websiteId);
         //not mapped ignore
-        if (! $programId) {
+        if (!$programId) {
             return;
         }
 
@@ -132,7 +132,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
             //@codingStandardsIgnoreEnd
 
             //add new subscriber to automation
-            if (! $enrolment->getId()) {
+            if (!$enrolment->getId()) {
                 //save subscriber to the queue
                 $automation = Mage::getModel('ddg_automation/automation');
                 $automation->setEmail($email)

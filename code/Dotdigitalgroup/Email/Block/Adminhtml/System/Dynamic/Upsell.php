@@ -19,7 +19,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Upsell
             $passcode = '[PLEASE SET UP A PASSCODE]';
         }
 
-        if (! $lastOrderid) {
+        if (!$lastOrderid) {
             $lastOrderid = '[PLEASE MAP THE LAST ORDER ID]';
         }
 

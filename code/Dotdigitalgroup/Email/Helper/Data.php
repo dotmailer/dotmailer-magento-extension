@@ -54,8 +54,9 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
     public function auth($authRequest)
     {
         if ($authRequest != Mage::getStoreConfig(
-            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_CONTENT_PASSCODE
-        )) {
+                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_CONTENT_PASSCODE
+            )
+        ) {
             return false;
         }
 
@@ -312,7 +313,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         $unit = array('b', 'kb', 'mb', 'gb', 'tb', 'pb');
 
         return round($size / pow(1024, ($i = floor(log($size, 1024)))), 2) . ' '
-        . $unit[(int)$i];
+            . $unit[(int)$i];
     }
 
     /**
@@ -344,7 +345,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_MAPPING_CUSTOM_DATAFIELDS
         );
 
-        if (! $attr) {
+        if (!$attr) {
             return array();
         }
 
@@ -412,7 +413,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
             return false;
         }
 
-        if (! $apiUsername = $this->getApiUsername($website)
+        if (!$apiUsername = $this->getApiUsername($website)
             || !$apiPassword = $this->getApiPassword($website)
         ) {
             return false;
@@ -877,7 +878,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
             );
         }
 
-        if (! empty($data)) {
+        if (!empty($data)) {
             //update data fields
             $client = $this->getWebsiteApiClient($website);
             if ($client instanceof Dotdigitalgroup_Email_Model_Apiconnector_Client) {
@@ -1180,7 +1181,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         //@codingStandardsIgnoreStart
         $handle = fopen($pathLogfile, 'r');
         fseek($handle, -$lengthBefore, SEEK_END);
-        if (! $handle) {
+        if (!$handle) {
             return "Log file is not readable or does not exist at this moment. File path is "
             . $pathLogfile;
         }
@@ -1864,7 +1865,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         $error = false;
         $apiModel = Mage::helper('ddg')->getWebsiteApiClient();
 
-        if (! $apiModel) {
+        if (!$apiModel) {
             return false;
         } else {
             $dataFields = Mage::getModel('ddg_automation/connector_datafield')->getContactDatafields();
@@ -1914,13 +1915,13 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         );
         $addressBookMap = array(
             'Magento_Customers' => Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMERS_ADDRESS_BOOK_ID,
-            'Magento_Subscribers'=> Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SUBSCRIBERS_ADDRESS_BOOK_ID,
+            'Magento_Subscribers' => Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SUBSCRIBERS_ADDRESS_BOOK_ID,
             'Magento_Guests' => Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_GUEST_ADDRESS_BOOK_ID
         );
         $error = false;
         $client = Mage::helper('ddg')->getWebsiteApiClient();
 
-        if (! $client) {
+        if (!$client) {
             return false;
         } else {
             foreach ($addressBooks as $addressBook) {

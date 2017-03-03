@@ -28,8 +28,8 @@ class Dotdigitalgroup_Email_TrialController
         $this->params = $this->getRequest()->getParams();
 
         //if ip is not in range send error response
-        if (! in_array(Mage::helper('core/http')->getRemoteAddr(), $this->ipRanges) or
-            ! isset($params['accountId']) or ! isset($params['apiUser']) or ! isset($params['pass'])
+        if (!in_array(Mage::helper('core/http')->getRemoteAddr(), $this->ipRanges) or
+            !isset($params['accountId']) or !isset($params['apiUser']) or !isset($params['pass'])
         ) {
             $this->sendAjaxResponse(true, $this->_getErrorHtml());
         }

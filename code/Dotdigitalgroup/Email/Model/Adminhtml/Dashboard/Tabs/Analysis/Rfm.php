@@ -107,19 +107,19 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Rfm
             );
         }
 
-        $first  = (int)round(.25 * ($count + 1));
+        $first = (int)round(.25 * ($count + 1));
         $second = (int)round(.50 * ($count + 1));
-        $third  = (int)round(.75 * ($count + 1));
+        $third = (int)round(.75 * ($count + 1));
 
-        if (! array_key_exists($first, $array)) {
+        if (!array_key_exists($first, $array)) {
             $first = $this->getClosest($first, $array);
         }
 
-        if (! array_key_exists($second, $array)) {
+        if (!array_key_exists($second, $array)) {
             $second = $this->getClosest($second, $array);
         }
 
-        if (! array_key_exists($third, $array)) {
+        if (!array_key_exists($third, $array)) {
             $third = $this->getClosest($third, $array);
         }
 
@@ -161,7 +161,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Rfm
         $collection      = $this->getPreparedCollection();
         $contactResource = Mage::getResourceModel('ddg_automation/contact');
         $values = $contactResource->prepareFrequency($collection);
-        $this->resultCount         = count($values);
+        $this->resultCount = count($values);
         $this->rfm[self::FREQUENCY] = $this->calculateQuartile($values);
         $values = $contactResource->prepareRecency($collection);
         $this->rfm[self::RECENCY] = $this->calculateQuartile($values);
@@ -178,8 +178,8 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Rfm
      */
     public function getPreparedRfm($store = 0, $website = 0, $group = 0)
     {
-        $this->store   = $store;
-        $this->groupId   = $group;
+        $this->store = $store;
+        $this->groupId = $group;
         $this->website = $website;
 
         $this->prepareRfm();

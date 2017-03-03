@@ -90,13 +90,13 @@ class Dotdigitalgroup_Email_Model_Sales_Order
                             Dotdigitalgroup_Email_Model_Importer::MODE_SINGLE,
                             $website[0]
                         );
-                    if (! $check) {
+                    if (!$check) {
                         $error = true;
                     }
                 }
 
                 //if no error then set imported
-                if (! $error) {
+                if (!$error) {
                     $this->_setImported($orderIdsForSingleSync, true);
                 }
             }
@@ -121,7 +121,7 @@ class Dotdigitalgroup_Email_Model_Sales_Order
         $helper = Mage::helper('ddg');
 
         foreach (Mage::app()->getWebsites(true) as $website) {
-            $this->orderIds              = array();
+            $this->orderIds = array();
             $this->orderIdsForSingleSync = array();
             $apiEnabled                   = $helper->getWebsiteConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED,
@@ -144,7 +144,7 @@ class Dotdigitalgroup_Email_Model_Sales_Order
                     Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT,
                     $website
                 );
-                if (! isset($this->accounts[$this->apiUsername])) {
+                if (!isset($this->accounts[$this->apiUsername])) {
                     $account                              = Mage::getModel(
                         'ddg_automation/connector_account'
                     )
@@ -366,7 +366,7 @@ class Dotdigitalgroup_Email_Model_Sales_Order
                         'main_table.store_id', array('in' => $storeIds)
                     );
 
-                if (! empty($campaignOrderIds)) {
+                if (!empty($campaignOrderIds)) {
                     $orderCollection->addFieldToFilter(
                         'main_table.increment_id',
                         array('nin' => $campaignOrderIds)
@@ -459,7 +459,7 @@ class Dotdigitalgroup_Email_Model_Sales_Order
                 $write->update(
                     $tableName,
                     array(
-                        'modified'   => new Zend_Db_Expr('null'),
+                        'modified' => new Zend_Db_Expr('null'),
                         'updated_at' => $now
                     ),
                     "order_id IN ($ids)"

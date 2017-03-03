@@ -54,12 +54,12 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
      */
     public function __construct($website = 0)
     {
-        $this->url           = null;
-        $this->verb          = 'GET';
-        $this->requestBody   = null;
+        $this->url = null;
+        $this->verb = 'GET';
+        $this->requestBody = null;
         $this->requestLength = 0;
-        $this->apiUsername  = (string)Mage::helper('ddg')->getApiUsername($website);
-        $this->apiPassword  = (string)Mage::helper('ddg')->getApiPassword($website);
+        $this->apiUsername = (string)Mage::helper('ddg')->getApiUsername($website);
+        $this->apiPassword = (string)Mage::helper('ddg')->getApiPassword($website);
         $this->acceptType    = 'application/json';
         $this->responseBody  = null;
         $this->responseInfo  = null;
@@ -94,7 +94,7 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
 
             if ($char === '"' && $prevChar != '\\') {
                 $inQuotes = ! $inQuotes;
-            } elseif (! $inQuotes) {
+            } elseif (!$inQuotes) {
                 switch ($char) {
                     case '}':
                     case ']':
@@ -146,7 +146,7 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
     public function toJSON($pretty = false)
     {
 
-        if (! $pretty) {
+        if (!$pretty) {
             return json_encode($this->expose());
         } else {
             return $this->prettyPrint(json_encode($this->expose()));
@@ -171,8 +171,8 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
      */
     public function flush()
     {
-        $this->apiUsername  = '';
-        $this->apiPassword  = '';
+        $this->apiUsername = '';
+        $this->apiPassword = '';
         $this->requestBody   = null;
         $this->requestLength = 0;
         $this->verb          = 'GET';
@@ -276,7 +276,7 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
      */
     protected function executePost($ch)
     {
-        if (! is_string($this->requestBody)) {
+        if (!is_string($this->requestBody)) {
             $this->buildPostBody();
         }
 
@@ -304,7 +304,7 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
      */
     protected function executePut($ch)
     {
-        if (! is_string($this->requestBody)) {
+        if (!is_string($this->requestBody)) {
             $this->buildPostBody();
         }
 
@@ -542,7 +542,7 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
     public function getCurlError()
     {
         //if curl error
-        if (! empty($this->curlError)) {
+        if (!empty($this->curlError)) {
             //log curl error
             $message = 'CURL ERROR ' . $this->curlError;
             Mage::helper('ddg')->log($message);

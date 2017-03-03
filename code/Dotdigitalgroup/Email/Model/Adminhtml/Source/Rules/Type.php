@@ -50,10 +50,10 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Rules_Type
     {
         return array(
             'method' => Mage::helper('adminhtml')->__('Payment Method'),
-            'shipping_method'   => Mage::helper('adminhtml')->__('Shipping Method'),
-            'country_id'        => Mage::helper('adminhtml')->__('Shipping Country'),
-            'city'              => Mage::helper('adminhtml')->__('Shipping Town'),
-            'region_id'         => Mage::helper('adminhtml')->__('Shipping State/Province'),
+            'shipping_method' => Mage::helper('adminhtml')->__('Shipping Method'),
+            'country_id' => Mage::helper('adminhtml')->__('Shipping Country'),
+            'city' => Mage::helper('adminhtml')->__('Shipping Town'),
+            'region_id' => Mage::helper('adminhtml')->__('Shipping State/Province'),
             'customer_group_id' => Mage::helper('adminhtml')->__('Customer Group'),
             'coupon_code'       => Mage::helper('adminhtml')->__('Coupon'),
             'subtotal'          => Mage::helper('adminhtml')->__('Subtotal'),

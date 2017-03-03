@@ -121,7 +121,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Automation_Grid extends Mage_Adminht
                 'type'   => 'datetime'
             )
         );
-        if (! Mage::app()->isSingleStoreMode()) {
+        if (!Mage::app()->isSingleStoreMode()) {
             $this->addColumn(
                 'website_id', array(
                     'header'  => Mage::helper('customer')->__('Website'),

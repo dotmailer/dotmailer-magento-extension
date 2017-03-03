@@ -2,116 +2,116 @@
 
 class Dotdigitalgroup_Email_Helper_Config
 {
-    const MODULE_NAME                                          = 'Dotdigitalgroup_Email';
+    const MODULE_NAME = 'Dotdigitalgroup_Email';
 
     /**
      * API SECTION.
      */
-    const XML_PATH_CONNECTOR_API_ENABLED                       = 'connector_api_credentials/api/enabled';
-    const XML_PATH_CONNECTOR_API_USERNAME                      = 'connector_api_credentials/api/username';
-    const XML_PATH_CONNECTOR_API_PASSWORD                      = 'connector_api_credentials/api/password';
+    const XML_PATH_CONNECTOR_API_ENABLED = 'connector_api_credentials/api/enabled';
+    const XML_PATH_CONNECTOR_API_USERNAME = 'connector_api_credentials/api/username';
+    const XML_PATH_CONNECTOR_API_PASSWORD = 'connector_api_credentials/api/password';
 
     /**
      * SYNC SECTION.
      */
-    const XML_PATH_CONNECTOR_SYNC_CONTACT_ENABLED              = 'connector_sync_settings/sync/contact_enabled';
-    const XML_PATH_CONNECTOR_SYNC_GUEST_ENABLED                = 'connector_sync_settings/sync/guest_enabled';
-    const XML_PATH_CONNECTOR_SYNC_SUBSCRIBER_ENABLED           = 'connector_sync_settings/sync/subscriber_enabled';
-    const XML_PATH_CONNECTOR_SYNC_ORDER_ENABLED                = 'connector_sync_settings/sync/order_enabled';
-    const XML_PATH_CONNECTOR_SYNC_WISHLIST_ENABLED             = 'connector_sync_settings/sync/wishlist_enabled';
-    const XML_PATH_CONNECTOR_SYNC_REVIEW_ENABLED               = 'connector_sync_settings/sync/review_enabled';
-    const XML_PATH_CONNECTOR_SYNC_QUOTE_ENABLED                = 'connector_sync_settings/sync/quote_enabled';
-    const XML_PATH_CONNECTOR_SYNC_CATALOG_ENABLED              = 'connector_sync_settings/sync/catalog_enabled';
-    const XML_PATH_CONNECTOR_CUSTOMERS_ADDRESS_BOOK_ID         = 'connector_sync_settings/address_book/customers';
-    const XML_PATH_CONNECTOR_SUBSCRIBERS_ADDRESS_BOOK_ID       = 'connector_sync_settings/address_book/subscribers';
-    const XML_PATH_CONNECTOR_GUEST_ADDRESS_BOOK_ID             = 'connector_sync_settings/address_book/guests';
+    const XML_PATH_CONNECTOR_SYNC_CONTACT_ENABLED = 'connector_sync_settings/sync/contact_enabled';
+    const XML_PATH_CONNECTOR_SYNC_GUEST_ENABLED = 'connector_sync_settings/sync/guest_enabled';
+    const XML_PATH_CONNECTOR_SYNC_SUBSCRIBER_ENABLED = 'connector_sync_settings/sync/subscriber_enabled';
+    const XML_PATH_CONNECTOR_SYNC_ORDER_ENABLED = 'connector_sync_settings/sync/order_enabled';
+    const XML_PATH_CONNECTOR_SYNC_WISHLIST_ENABLED = 'connector_sync_settings/sync/wishlist_enabled';
+    const XML_PATH_CONNECTOR_SYNC_REVIEW_ENABLED = 'connector_sync_settings/sync/review_enabled';
+    const XML_PATH_CONNECTOR_SYNC_QUOTE_ENABLED = 'connector_sync_settings/sync/quote_enabled';
+    const XML_PATH_CONNECTOR_SYNC_CATALOG_ENABLED = 'connector_sync_settings/sync/catalog_enabled';
+    const XML_PATH_CONNECTOR_CUSTOMERS_ADDRESS_BOOK_ID = 'connector_sync_settings/address_book/customers';
+    const XML_PATH_CONNECTOR_SUBSCRIBERS_ADDRESS_BOOK_ID = 'connector_sync_settings/address_book/subscribers';
+    const XML_PATH_CONNECTOR_GUEST_ADDRESS_BOOK_ID = 'connector_sync_settings/address_book/guests';
     // Mapping
-    const XML_PATH_CONNECTOR_MAPPING_LAST_ORDER_ID             = 'connector_data_mapping/customer_data/last_order_id';
-    const XML_PATH_CONNECTOR_MAPPING_LAST_QUOTE_ID             = 'connector_data_mapping/customer_data/last_quote_id';
-    const XML_PATH_CONNECTOR_MAPPING_CUSTOMER_ID               = 'connector_data_mapping/customer_data/customer_id';
-    const XML_PATH_CONNECTOR_MAPPING_CUSTOM_DATAFIELDS       = 'connector_data_mapping/customer_data/custom_attributes';
-    const XML_PATH_CONNECTOR_MAPPING_CUSTOMER_STORENAME        = 'connector_data_mapping/customer_data/store_name';
-    const XML_PATH_CONNECTOR_MAPPING_CUSTOMER_TOTALREFUND      = 'connector_data_mapping/customer_data/total_refund';
-    const XML_PATH_CONNECTOR_MAPPING_SWEETTOOTH_ACTIVE         = 'connector_data_mapping/sweet_tooth/active';
+    const XML_PATH_CONNECTOR_MAPPING_LAST_ORDER_ID = 'connector_data_mapping/customer_data/last_order_id';
+    const XML_PATH_CONNECTOR_MAPPING_LAST_QUOTE_ID = 'connector_data_mapping/customer_data/last_quote_id';
+    const XML_PATH_CONNECTOR_MAPPING_CUSTOMER_ID = 'connector_data_mapping/customer_data/customer_id';
+    const XML_PATH_CONNECTOR_MAPPING_CUSTOM_DATAFIELDS = 'connector_data_mapping/customer_data/custom_attributes';
+    const XML_PATH_CONNECTOR_MAPPING_CUSTOMER_STORENAME = 'connector_data_mapping/customer_data/store_name';
+    const XML_PATH_CONNECTOR_MAPPING_CUSTOMER_TOTALREFUND = 'connector_data_mapping/customer_data/total_refund';
+    const XML_PATH_CONNECTOR_MAPPING_SWEETTOOTH_ACTIVE = 'connector_data_mapping/sweet_tooth/active';
 
     /**
      * Abandoned Carts.
      */
-    const XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CARTS_ENABLED_1= 'connector_lost_baskets/customers/enabled_1';
-    const XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CAMPAIGN_1     = 'connector_lost_baskets/customers/campaign_1';
-    const XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CARTS_ENABLED_2= 'connector_lost_baskets/customers/enabled_2';
-    const XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CAMPAIGN_2     = 'connector_lost_baskets/customers/campaign_2';
-    const XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CARTS_ENABLED_3= 'connector_lost_baskets/customers/enabled_3';
-    const XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CAMPAIGN_3     = 'connector_lost_baskets/customers/campaign_3';
-    const XML_PATH_CONNECTOR_GUEST_ABANDONED_CARTS_ENABLED_1   = 'connector_lost_baskets/guests/enabled_1';
-    const XML_PATH_CONNECTOR_GUEST_ABANDONED_CAMPAIGN_1        = 'connector_lost_baskets/guests/campaign_1';
-    const XML_PATH_CONNECTOR_GUEST_ABANDONED_CARTS_ENABLED_2   = 'connector_lost_baskets/guests/enabled_2';
-    const XML_PATH_CONNECTOR_GUEST_ABANDONED_CAMPAIGN_2        = 'connector_lost_baskets/guests/campaign_2';
-    const XML_PATH_CONNECTOR_GUEST_ABANDONED_CARTS_ENABLED_3   = 'connector_lost_baskets/guests/enabled_3';
-    const XML_PATH_CONNECTOR_GUEST_ABANDONED_CAMPAIGN_3        = 'connector_lost_baskets/guests/campaign_3';
+    const XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CARTS_ENABLED_1 = 'connector_lost_baskets/customers/enabled_1';
+    const XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CAMPAIGN_1 = 'connector_lost_baskets/customers/campaign_1';
+    const XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CARTS_ENABLED_2 = 'connector_lost_baskets/customers/enabled_2';
+    const XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CAMPAIGN_2 = 'connector_lost_baskets/customers/campaign_2';
+    const XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CARTS_ENABLED_3 = 'connector_lost_baskets/customers/enabled_3';
+    const XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CAMPAIGN_3 = 'connector_lost_baskets/customers/campaign_3';
+    const XML_PATH_CONNECTOR_GUEST_ABANDONED_CARTS_ENABLED_1 = 'connector_lost_baskets/guests/enabled_1';
+    const XML_PATH_CONNECTOR_GUEST_ABANDONED_CAMPAIGN_1 = 'connector_lost_baskets/guests/campaign_1';
+    const XML_PATH_CONNECTOR_GUEST_ABANDONED_CARTS_ENABLED_2 = 'connector_lost_baskets/guests/enabled_2';
+    const XML_PATH_CONNECTOR_GUEST_ABANDONED_CAMPAIGN_2 = 'connector_lost_baskets/guests/campaign_2';
+    const XML_PATH_CONNECTOR_GUEST_ABANDONED_CARTS_ENABLED_3 = 'connector_lost_baskets/guests/enabled_3';
+    const XML_PATH_CONNECTOR_GUEST_ABANDONED_CAMPAIGN_3 = 'connector_lost_baskets/guests/campaign_3';
 
     /**
      * Datafields Mapping.
      */
-    const XML_PATH_CONNECTOR_CUSTOMER_ID                     = 'connector_data_mapping/customer_data/customer_id';
-    const XML_PATH_CONNECTOR_CUSTOMER_FIRSTNAME              = 'connector_data_mapping/customer_data/firstname';
-    const XML_PATH_CONNECTOR_CUSTOMER_LASTNAME               = 'connector_data_mapping/customer_data/lastname';
-    const XML_PATH_CONNECTOR_CUSTOMER_DOB                    = 'connector_data_mapping/customer_data/dob';
-    const XML_PATH_CONNECTOR_CUSTOMER_GENDER                 = 'connector_data_mapping/customer_data/gender';
-    const XML_PATH_CONNECTOR_CUSTOMER_WEBSITE_NAME           = 'connector_data_mapping/customer_data/website_name';
-    const XML_PATH_CONNECTOR_CUSTOMER_STORE_NAME             = 'connector_data_mapping/customer_data/store_name';
-    const XML_PATH_CONNECTOR_CUSTOMER_CREATED_AT             = 'connector_data_mapping/customer_data/created_at';
-    const XML_PATH_CONNECTOR_CUSTOMER_LAST_LOGGED_DATE       = 'connector_data_mapping/customer_data/last_logged_date';
-    const XML_PATH_CONNECTOR_CUSTOMER_CUSTOMER_GROUP         = 'connector_data_mapping/customer_data/customer_group';
-    const XML_PATH_CONNECTOR_CUSTOMER_REVIEW_COUNT           = 'connector_data_mapping/customer_data/review_count';
-    const XML_PATH_CONNECTOR_CUSTOMER_LAST_REVIEW_DATE       = 'connector_data_mapping/customer_data/last_review_date';
-    const XML_PATH_CONNECTOR_CUSTOMER_BILLING_ADDRESS_1      = 'connector_data_mapping/customer_data/billing_address_1';
-    const XML_PATH_CONNECTOR_CUSTOMER_BILLING_ADDRESS_2      = 'connector_data_mapping/customer_data/billing_address_2';
-    const XML_PATH_CONNECTOR_CUSTOMER_BILLING_CITY           = 'connector_data_mapping/customer_data/billing_city';
-    const XML_PATH_CONNECTOR_CUSTOMER_BILLING_STATE          = 'connector_data_mapping/customer_data/billing_state';
-    const XML_PATH_CONNECTOR_CUSTOMER_BILLING_COUNTRY        = 'connector_data_mapping/customer_data/billing_country';
-    const XML_PATH_CONNECTOR_CUSTOMER_BILLING_POSTCODE       = 'connector_data_mapping/customer_data/billing_postcode';
-    const XML_PATH_CONNECTOR_CUSTOMER_BILLING_TELEPHONE      = 'connector_data_mapping/customer_data/billing_telephone';
+    const XML_PATH_CONNECTOR_CUSTOMER_ID = 'connector_data_mapping/customer_data/customer_id';
+    const XML_PATH_CONNECTOR_CUSTOMER_FIRSTNAME = 'connector_data_mapping/customer_data/firstname';
+    const XML_PATH_CONNECTOR_CUSTOMER_LASTNAME = 'connector_data_mapping/customer_data/lastname';
+    const XML_PATH_CONNECTOR_CUSTOMER_DOB = 'connector_data_mapping/customer_data/dob';
+    const XML_PATH_CONNECTOR_CUSTOMER_GENDER = 'connector_data_mapping/customer_data/gender';
+    const XML_PATH_CONNECTOR_CUSTOMER_WEBSITE_NAME = 'connector_data_mapping/customer_data/website_name';
+    const XML_PATH_CONNECTOR_CUSTOMER_STORE_NAME = 'connector_data_mapping/customer_data/store_name';
+    const XML_PATH_CONNECTOR_CUSTOMER_CREATED_AT = 'connector_data_mapping/customer_data/created_at';
+    const XML_PATH_CONNECTOR_CUSTOMER_LAST_LOGGED_DATE = 'connector_data_mapping/customer_data/last_logged_date';
+    const XML_PATH_CONNECTOR_CUSTOMER_CUSTOMER_GROUP = 'connector_data_mapping/customer_data/customer_group';
+    const XML_PATH_CONNECTOR_CUSTOMER_REVIEW_COUNT = 'connector_data_mapping/customer_data/review_count';
+    const XML_PATH_CONNECTOR_CUSTOMER_LAST_REVIEW_DATE = 'connector_data_mapping/customer_data/last_review_date';
+    const XML_PATH_CONNECTOR_CUSTOMER_BILLING_ADDRESS_1 = 'connector_data_mapping/customer_data/billing_address_1';
+    const XML_PATH_CONNECTOR_CUSTOMER_BILLING_ADDRESS_2 = 'connector_data_mapping/customer_data/billing_address_2';
+    const XML_PATH_CONNECTOR_CUSTOMER_BILLING_CITY = 'connector_data_mapping/customer_data/billing_city';
+    const XML_PATH_CONNECTOR_CUSTOMER_BILLING_STATE = 'connector_data_mapping/customer_data/billing_state';
+    const XML_PATH_CONNECTOR_CUSTOMER_BILLING_COUNTRY = 'connector_data_mapping/customer_data/billing_country';
+    const XML_PATH_CONNECTOR_CUSTOMER_BILLING_POSTCODE = 'connector_data_mapping/customer_data/billing_postcode';
+    const XML_PATH_CONNECTOR_CUSTOMER_BILLING_TELEPHONE = 'connector_data_mapping/customer_data/billing_telephone';
     const XML_PATH_CONNECTOR_CUSTOMER_DELIVERY_ADDRESS_1
         = 'connector_data_mapping/customer_data/delivery_address_1';
     const XML_PATH_CONNECTOR_CUSTOMER_DELIVERY_ADDRESS_2
         = 'connector_data_mapping/customer_data/delivery_address_2';
-    const XML_PATH_CONNECTOR_CUSTOMER_DELIVERY_CITY          = 'connector_data_mapping/customer_data/delivery_city';
-    const XML_PATH_CONNECTOR_CUSTOMER_DELIVERY_STATE         = 'connector_data_mapping/customer_data/delivery_state';
-    const XML_PATH_CONNECTOR_CUSTOMER_DELIVERY_COUNTRY       = 'connector_data_mapping/customer_data/delivery_country';
-    const XML_PATH_CONNECTOR_CUSTOMER_DELIVERY_POSTCODE      = 'connector_data_mapping/customer_data/delivery_postcode';
+    const XML_PATH_CONNECTOR_CUSTOMER_DELIVERY_CITY = 'connector_data_mapping/customer_data/delivery_city';
+    const XML_PATH_CONNECTOR_CUSTOMER_DELIVERY_STATE = 'connector_data_mapping/customer_data/delivery_state';
+    const XML_PATH_CONNECTOR_CUSTOMER_DELIVERY_COUNTRY = 'connector_data_mapping/customer_data/delivery_country';
+    const XML_PATH_CONNECTOR_CUSTOMER_DELIVERY_POSTCODE = 'connector_data_mapping/customer_data/delivery_postcode';
     const XML_PATH_CONNECTOR_CUSTOMER_DELIVERY_TELEPHONE
         = 'connector_data_mapping/customer_data/delivery_telephone';
-    const XML_PATH_CONNECTOR_CUSTOMER_TOTAL_NUMBER_ORDER     = 'connector_data_mapping/customer_data/number_of_orders';
+    const XML_PATH_CONNECTOR_CUSTOMER_TOTAL_NUMBER_ORDER = 'connector_data_mapping/customer_data/number_of_orders';
     const XML_PATH_CONNECTOR_CUSTOMER_AOV
         = 'connector_data_mapping/customer_data/average_order_value';
-    const XML_PATH_CONNECTOR_CUSTOMER_TOTAL_SPEND            = 'connector_data_mapping/customer_data/total_spend';
-    const XML_PATH_CONNECTOR_CUSTOMER_LAST_ORDER_DATE        = 'connector_data_mapping/customer_data/last_order_date';
-    const XML_PATH_CONNECTOR_CUSTOMER_LAST_ORDER_ID          = 'connector_data_mapping/customer_data/last_order_id';
-    const XML_PATH_CONNECTOR_CUSTOMER_TOTAL_REFUND           = 'connector_data_mapping/customer_data/total_refund';
-    const XML_PATH_CONNECTOR_CUSTOMER_LAST_ORDER_INCREMENT_ID= 'connector_data_mapping/customer_data/last_increment_id';
-    const XML_PATH_CONNECTOR_CUSTOMER_MOST_PURCHASED_CATEGORY= 'connector_data_mapping/customer_data/most_pur_category';
-    const XML_PATH_CONNECTOR_CUSTOMER_MOST_PURCHASED_BRAND   = 'connector_data_mapping/customer_data/most_pur_brand';
+    const XML_PATH_CONNECTOR_CUSTOMER_TOTAL_SPEND = 'connector_data_mapping/customer_data/total_spend';
+    const XML_PATH_CONNECTOR_CUSTOMER_LAST_ORDER_DATE = 'connector_data_mapping/customer_data/last_order_date';
+    const XML_PATH_CONNECTOR_CUSTOMER_LAST_ORDER_ID = 'connector_data_mapping/customer_data/last_order_id';
+    const XML_PATH_CONNECTOR_CUSTOMER_TOTAL_REFUND = 'connector_data_mapping/customer_data/total_refund';
+    const XML_PATH_CONNECTOR_CUSTOMER_LAST_ORDER_INCREMENT_ID = 'connector_data_mapping/customer_data/last_increment_id';
+    const XML_PATH_CONNECTOR_CUSTOMER_MOST_PURCHASED_CATEGORY = 'connector_data_mapping/customer_data/most_pur_category';
+    const XML_PATH_CONNECTOR_CUSTOMER_MOST_PURCHASED_BRAND = 'connector_data_mapping/customer_data/most_pur_brand';
     const XML_PATH_CONNECTOR_CUSTOMER_MOST_FREQUENT_PURCHASE_DAY
         = 'connector_data_mapping/customer_data/most_freq_pur_day';
     const XML_PATH_CONNECTOR_CUSTOMER_MOST_FREQUENT_PURCHASE_MONTH
         = 'connector_data_mapping/customer_data/most_freq_pur_mon';
     const XML_PATH_CONNECTOR_CUSTOMER_FIRST_CATEGORY_PURCHASED
         = 'connector_data_mapping/customer_data/first_category_pur';
-    const XML_PATH_CONNECTOR_CUSTOMER_LAST_CATEGORY_PURCHASED= 'connector_data_mapping/customer_data/last_category_pur';
-    const XML_PATH_CONNECTOR_CUSTOMER_FIRST_BRAND_PURCHASED  = 'connector_data_mapping/customer_data/first_brand_pur';
-    const XML_PATH_CONNECTOR_CUSTOMER_LAST_BRAND_PURCHASED   = 'connector_data_mapping/customer_data/last_brand_pur';
-    const XML_PATH_CONNECTOR_CUSTOMER_SUBSCRIBER_STATUS      = 'connector_data_mapping/customer_data/subscriber_status';
+    const XML_PATH_CONNECTOR_CUSTOMER_LAST_CATEGORY_PURCHASED = 'connector_data_mapping/customer_data/last_category_pur';
+    const XML_PATH_CONNECTOR_CUSTOMER_FIRST_BRAND_PURCHASED = 'connector_data_mapping/customer_data/first_brand_pur';
+    const XML_PATH_CONNECTOR_CUSTOMER_LAST_BRAND_PURCHASED = 'connector_data_mapping/customer_data/last_brand_pur';
+    const XML_PATH_CONNECTOR_CUSTOMER_SUBSCRIBER_STATUS = 'connector_data_mapping/customer_data/subscriber_status';
     const XML_PATH_CONNECTOR_ABANDONED_PRODUCT_NAME
         = 'connector_data_mapping/customer_data/abandoned_prod_name';
-    const XML_PATH_CONNECTOR_CUSTOMER_BILLING_COMPANY_NAME   = 'connector_data_mapping/customer_data/billing_company';
-    const XML_PATH_CONNECTOR_CUSTOMER_DELIVERY_COMPANY_NAME  = 'connector_data_mapping/customer_data/delivery_company';
-    const XML_PATH_CONNECTOR_ENTERPRISE_CURRENT_BALANCE      = 'connector_data_mapping/enterprise_data/reward_points';
-    const XML_PATH_CONNECTOR_ENTERPRISE_REWARD_AMOUNT        = 'connector_data_mapping/enterprise_data/reward_amount';
-    const XML_PATH_CONNECTOR_ENTERPRISE_CREATED_DATE         = 'connector_data_mapping/enterprise_data/created_date';
-    const XML_PATH_CONNECTOR_ENTERPRISE_EXPIRATION_DATE      = 'connector_data_mapping/enterprise_data/expiration_date';
-    const XML_PATH_CONNECTOR_ENTERPIRSE_LAST_USED_DATE       = 'connector_data_mapping/enterprise_data/last_used_date';
-    const XML_PATH_CONNECTOR_ENTERPRISE_CUSTOMER_SEGMENTS   = 'connector_data_mapping/enterprise_data/customer_segment';
+    const XML_PATH_CONNECTOR_CUSTOMER_BILLING_COMPANY_NAME = 'connector_data_mapping/customer_data/billing_company';
+    const XML_PATH_CONNECTOR_CUSTOMER_DELIVERY_COMPANY_NAME = 'connector_data_mapping/customer_data/delivery_company';
+    const XML_PATH_CONNECTOR_ENTERPRISE_CURRENT_BALANCE = 'connector_data_mapping/enterprise_data/reward_points';
+    const XML_PATH_CONNECTOR_ENTERPRISE_REWARD_AMOUNT = 'connector_data_mapping/enterprise_data/reward_amount';
+    const XML_PATH_CONNECTOR_ENTERPRISE_CREATED_DATE = 'connector_data_mapping/enterprise_data/created_date';
+    const XML_PATH_CONNECTOR_ENTERPRISE_EXPIRATION_DATE = 'connector_data_mapping/enterprise_data/expiration_date';
+    const XML_PATH_CONNECTOR_ENTERPIRSE_LAST_USED_DATE = 'connector_data_mapping/enterprise_data/last_used_date';
+    const XML_PATH_CONNECTOR_ENTERPRISE_CUSTOMER_SEGMENTS = 'connector_data_mapping/enterprise_data/customer_segment';
 
     /**
      * Dynamic Content
@@ -248,24 +248,24 @@ class Dotdigitalgroup_Email_Helper_Config
 
 
     //PRODUCT REVIEW REMINDER.
-    const XML_PATH_AUTOMATION_REVIEW_STATUS                  = 'connector_automation_studio/review_settings/status';
-    const XML_PATH_AUTOMATION_REVIEW_DELAY                   = 'connector_automation_studio/review_settings/delay';
-    const XML_PATH_AUTOMATION_REVIEW_CAMPAIGN                = 'connector_automation_studio/review_settings/campaign';
-    const XML_PATH_AUTOMATION_REVIEW_ANCHOR                  = 'connector_automation_studio/review_settings/anchor';
+    const XML_PATH_AUTOMATION_REVIEW_STATUS = 'connector_automation_studio/review_settings/status';
+    const XML_PATH_AUTOMATION_REVIEW_DELAY = 'connector_automation_studio/review_settings/delay';
+    const XML_PATH_AUTOMATION_REVIEW_CAMPAIGN = 'connector_automation_studio/review_settings/campaign';
+    const XML_PATH_AUTOMATION_REVIEW_ANCHOR = 'connector_automation_studio/review_settings/anchor';
 
     /**
      * ROI SECTION.
      */
-    const XML_PATH_CONNECTOR_ROI_TRACKING_ENABLED            = 'connector_configuration/tracking/roi_enabled';
-    const XML_PATH_CONNECTOR_PAGE_TRACKING_ENABLED           = 'connector_configuration/tracking/page_enabled';
+    const XML_PATH_CONNECTOR_ROI_TRACKING_ENABLED = 'connector_configuration/tracking/roi_enabled';
+    const XML_PATH_CONNECTOR_PAGE_TRACKING_ENABLED = 'connector_configuration/tracking/page_enabled';
 
     /**
      * OAUTH
      */
-    const API_CONNECTOR_OAUTH_URL_AUTHORISE                  = 'OAuth2/authorise.aspx?';
-    const API_CONNECTOR_OAUTH_URL_TOKEN                      = 'OAuth2/Tokens.ashx';
-    const API_CONNECTOR_OAUTH_URL_LOG_USER                   = '?oauthtoken=';
-    const CONNECTOR_FEED_LAST_CHECK_TIME                     = 'connector_feed_last_check_time';
+    const API_CONNECTOR_OAUTH_URL_AUTHORISE = 'OAuth2/authorise.aspx?';
+    const API_CONNECTOR_OAUTH_URL_TOKEN = 'OAuth2/Tokens.ashx';
+    const API_CONNECTOR_OAUTH_URL_LOG_USER = '?oauthtoken=';
+    const CONNECTOR_FEED_LAST_CHECK_TIME = 'connector_feed_last_check_time';
 
     /**
      * Reviews SECTION
@@ -316,18 +316,18 @@ class Dotdigitalgroup_Email_Helper_Config
     /**
      * Nosto
      */
-    const API_ENDPOINT                                       = 'https://api.nosto.com';
-    const API_ENDPOINT_TEST                                  = 'https://test.api.nosto.com';
+    const API_ENDPOINT = 'https://api.nosto.com';
+    const API_ENDPOINT_TEST = 'https://test.api.nosto.com';
 
     /**
      * API endpoint
      */
-     const PATH_FOR_API_ENDPOINT                             = 'connector/api/endpoint';
+    const PATH_FOR_API_ENDPOINT = 'connector/api/endpoint';
 
     /**
      * Trial Account
      */
-    const API_CONNECTOR_TRIAL_FORM_URL                       = 'https://magentosignup.dotmailer.com/';
+    const API_CONNECTOR_TRIAL_FORM_URL = 'https://magentosignup.dotmailer.com/';
 
     /**
      * @param int $website
@@ -374,8 +374,8 @@ class Dotdigitalgroup_Email_Helper_Config
     public function getRegionAuthorize($website)
     {
         $apiEndpoint =  Mage::helper('ddg')->getWebsiteConfig(
-            Dotdigitalgroup_Email_Helper_Config::PATH_FOR_API_ENDPOINT, $website
-        ) . DS;
+                Dotdigitalgroup_Email_Helper_Config::PATH_FOR_API_ENDPOINT, $website
+            ) . DS;
         //replace the api with the app prefix from the domain name
         $regionBaseUrl = str_replace('api', 'app', $apiEndpoint);
 

@@ -51,7 +51,7 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
                     Dotdigitalgroup_Email_Model_Importer::MODE_CONTACT_EMAIL_UPDATE,
                     $websiteId
                 );
-            } elseif (! $emailBefore) {
+            } elseif (!$emailBefore) {
                 //for new contacts update email
                 $contactModel->setEmail($email);
             }
@@ -83,7 +83,7 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
         $website   = Mage::app()->getWebsite($websiteId);
 
         //if api is not enabled
-        if (! $website->getConfig(
+        if (!$website->getConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED
         )
         ) {
@@ -94,7 +94,7 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
         $programId = Mage::helper('ddg')->getAutomationIdByType(
             'XML_PATH_CONNECTOR_AUTOMATION_STUDIO_CUSTOMER', $websiteId
         );
-        if (! $programId) {
+        if (!$programId) {
             return $this;
         }
 
@@ -190,7 +190,7 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
             $customer = $customerCollection->getFirstItem();
             //@codingStandardsIgnoreEnd
             //if api is not enabled
-            if (! $website->getConfig(
+            if (!$website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED
             )
             ) {
@@ -272,10 +272,10 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
             $customer      = Mage::getModel('customer/customer');
 
             //if wishlist exist not to save again
-            if (! $emailWishlist->getWishlist($wishlist['wishlist_id'])) {
+            if (!$emailWishlist->getWishlist($wishlist['wishlist_id'])) {
                 $customer->load($wishlist['customer_id']);
                 //customer not found
-                if (! $customer->getId()) {
+                if (!$customer->getId()) {
                     return $this;
                 }
 
@@ -292,7 +292,7 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
                 $website   = Mage::app()->getStore($store)->getWebsite();
 
                 //if api is not enabled
-                if (! $website->getConfig(
+                if (!$website->getConfig(
                     Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED
                 )
                 ) {
@@ -333,7 +333,7 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
     public function wishlistItemSaveAfter(Varien_Event_Observer $observer)
     {
         $object        = $observer->getEvent()->getDataObject();
-        $wishlist      = Mage::getModel('wishlist/wishlist')->load($object->getWishlistId());
+        $wishlist = Mage::getModel('wishlist/wishlist')->load($object->getWishlistId());
         $emailWishlist = Mage::getModel('ddg_automation/wishlist');
         try {
             if ($object->getWishlistId()) {
@@ -375,7 +375,7 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
         $customer = Mage::getModel('customer/customer')->load(
             $object->getCustomerId()
         );
-        $website  = Mage::app()->getStore($customer->getStoreId())->getWebsite();
+        $website = Mage::app()->getStore($customer->getStoreId())->getWebsite();
         $helper   = Mage::helper('ddg');
 
         //sync enabled
@@ -418,7 +418,7 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
     {
         $quote = $observer->getEvent()->getQuote();
         //set flag if no customer id before save.
-        if (! $quote->getCustomerId()) {
+        if (!$quote->getCustomerId()) {
             $quote->setIfCustomerIsNew(1);
         }
 

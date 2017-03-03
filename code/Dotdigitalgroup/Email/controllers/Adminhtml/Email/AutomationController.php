@@ -39,7 +39,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_AutomationController
     public function massDeleteAction()
     {
         $automationIds = $this->getRequest()->getParam('automation');
-        if (! is_array($automationIds)) {
+        if (!is_array($automationIds)) {
             $this->_getSession()->addError($this->__('Please select .'));
         } else {
             $num = Mage::getResourceModel('ddg_automation/automation')
@@ -66,7 +66,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_AutomationController
     {
         $automationIds = $this->getRequest()->getParam('automation');
 
-        if (! is_array($automationIds)) {
+        if (!is_array($automationIds)) {
             $this->_getSession()->addError($this->__('Please select .'));
         } else {
             $num = Mage::getResourceModel('ddg_automation/automation')

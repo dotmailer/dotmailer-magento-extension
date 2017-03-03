@@ -22,7 +22,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Basket_Crosssell
         }
 
         //alert message for last order id is not mapped
-        if (! $lastQuoteId) {
+        if (!$lastQuoteId) {
             $lastQuoteId = '[PLEASE MAP THE LAST QUOTE ID]';
         }
 

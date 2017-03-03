@@ -16,7 +16,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_DashboardController
             if ($currentWebsiteId == $website->getId()) {
                 $passed = Mage::helper('ddg')->isEnabled($website);
 
-                if (! $passed) {
+                if (!$passed) {
                     $this->_redirect(
                         '*/system_config/edit',
                         array('section' => 'connector_api_credentials', 'website' => $website->getCode())
@@ -95,11 +95,11 @@ class Dotdigitalgroup_Email_Adminhtml_Email_DashboardController
         $adminUser = Mage::getSingleton('admin/session')->getUser();
         if (is_array($configState)) {
             $extra = $adminUser->getExtra();
-            if (! is_array($extra)) {
+            if (!is_array($extra)) {
                 $extra = array();
             }
 
-            if (! isset($extra['configState'])) {
+            if (!isset($extra['configState'])) {
                 $extra['configState'] = array();
             }
 

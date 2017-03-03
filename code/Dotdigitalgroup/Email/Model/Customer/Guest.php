@@ -39,7 +39,7 @@ class Dotdigitalgroup_Email_Model_Customer_Guest
                 $this->findAndCreateGuest($website->getId());
 
                 //ready to start sync
-                if (! $this->countGuests) {
+                if (!$this->countGuests) {
                     $helper->log('----------- Start guest sync ----------');
                 }
 
@@ -103,7 +103,7 @@ class Dotdigitalgroup_Email_Model_Customer_Guest
         /**
          * Add guest to contacts table.
          */
-        if (! empty($this->guests)) {
+        if (!empty($this->guests)) {
             //@codingStandardsIgnoreStart
             Mage::getResourceModel('ddg_automation/contact')->insert($this->guests);
             //@codingStandardsIgnoreEnd
@@ -117,7 +117,7 @@ class Dotdigitalgroup_Email_Model_Customer_Guest
     {
         $helper     = Mage::helper('ddg');
         $fileHelper = Mage::helper('ddg/file');
-        $guests     = Mage::getModel('ddg_automation/contact')->getGuests($website);
+        $guests = Mage::getModel('ddg_automation/contact')->getGuests($website);
 
         if ($guests->getSize()) {
             //@codingStandardsIgnoreStart

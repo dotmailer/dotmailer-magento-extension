@@ -31,7 +31,7 @@ class Dotdigitalgroup_Email_Helper_Dashboard extends Mage_Core_Helper_Abstract
         $modules = $magentoConfig->getNode('modules')->children();
         foreach ($modules as $moduleName => $moduleData) {
             // Check only active modules
-            if (! $moduleData->is('active')) {
+            if (!$moduleData->is('active')) {
                 continue;
             }
 
@@ -39,7 +39,7 @@ class Dotdigitalgroup_Email_Helper_Dashboard extends Mage_Core_Helper_Abstract
             $configXmlFile = $magentoConfig->getModuleDir('etc', $moduleName)
                 . DIRECTORY_SEPARATOR . 'config.xml';
             //@codingStandardsIgnoreStart
-            if (! file_exists($configXmlFile)) {
+            if (!file_exists($configXmlFile)) {
                 continue;
             }
             //@codingStandardsIgnoreEnd
@@ -51,7 +51,7 @@ class Dotdigitalgroup_Email_Helper_Dashboard extends Mage_Core_Helper_Abstract
                     foreach ($element->children() as $child) {
                         $type = simplexml_import_dom(dom_import_simplexml($element)->parentNode->parentNode)
                             ->getName();
-                        if (! in_array($type, $this->rewriteTypes)) {
+                        if (!in_array($type, $this->rewriteTypes)) {
                             continue;
                         }
 
@@ -59,7 +59,7 @@ class Dotdigitalgroup_Email_Helper_Dashboard extends Mage_Core_Helper_Abstract
                             dom_import_simplexml($element)->parentNode
                         )->getName();
 
-                        if (! isset(
+                        if (!isset(
                             $rewrites[$type][$groupClassName . '/'
                             . $child->getName()]
                         )
@@ -134,7 +134,7 @@ class Dotdigitalgroup_Email_Helper_Dashboard extends Mage_Core_Helper_Abstract
                         $classes[$i + 1]
                     )
                 ) {
-                    if (! is_a($classes[$i], $classes[$i + 1], true)) {
+                    if (!is_a($classes[$i], $classes[$i + 1], true)) {
                         return true;
                     }
                 }

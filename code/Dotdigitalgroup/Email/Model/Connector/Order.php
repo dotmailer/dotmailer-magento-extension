@@ -353,14 +353,14 @@ class Dotdigitalgroup_Email_Model_Connector_Order
         $orderItemOptions = $orderItem->getProductOptions();
 
         //if product doesn't have options
-        if (! array_key_exists('options', $orderItemOptions)) {
+        if (!array_key_exists('options', $orderItemOptions)) {
             return array();
         }
 
         $orderItemOptions = $orderItemOptions['options'];
 
         //if product options isn't array
-        if (! is_array($orderItemOptions)) {
+        if (!is_array($orderItemOptions)) {
             return array();
         }
 

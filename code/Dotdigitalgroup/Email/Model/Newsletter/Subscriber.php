@@ -44,7 +44,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
             //enabled and mapped
             if ($enabled && $addressBook && $apiEnabled) {
                 //ready to start sync
-                if (! $this->countSubscriber) {
+                if (!$this->countSubscriber) {
                     $helper->log(
                         '---------------------- Start subscriber sync -------------------'
                     );
@@ -108,7 +108,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
         //do not exist in sales order table
         $subscribersWithNoSaleData = $emailContactModel
             ->getSubscribersToImportFromEmails($emailsWithNoSaleData);
-        if (! empty($subscribersWithNoSaleData)) {
+        if (!empty($subscribersWithNoSaleData)) {
             $updated += $this->exportSubscribers(
                 $website, $subscribersWithNoSaleData
             );
@@ -121,7 +121,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
         $subscribersWithSaleData = $emailContactModel
             ->getSubscribersToImportFromEmails($existInSales);
 
-        if (! empty($subscribersWithSaleData)) {
+        if (!empty($subscribersWithSaleData)) {
             $updated += $this->exportSubscribersWithSales(
                 $website, $subscribersWithSaleData
             );

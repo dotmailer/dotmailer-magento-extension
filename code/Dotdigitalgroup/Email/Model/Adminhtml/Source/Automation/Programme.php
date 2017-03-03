@@ -13,7 +13,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Automation_Programme
         $websiteCode = Mage::app()->getRequest()->getParam('website', false);
 
         //website code param
-        if (! $websiteCode) {
+        if (!$websiteCode) {
             $websiteCode = 0;
         }
 

@@ -351,7 +351,7 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
         }
 
         //all rules condition will be with or combination
-        if (! empty($fieldsConditions)) {
+        if (!empty($fieldsConditions)) {
             $column = array();
             $cond = array();
             foreach ($fieldsConditions as $key => $fieldsCondition) {

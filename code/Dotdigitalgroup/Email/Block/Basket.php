@@ -19,7 +19,7 @@ class Dotdigitalgroup_Email_Block_Basket extends Mage_Core_Block_Template
     {
         $params = $this->getRequest()->getParams();
 
-        if (! isset($params['quote_id']) || ! isset($params['code'])) {
+        if (!isset($params['quote_id']) || !isset($params['code'])) {
             Mage::helper('ddg')->log('Basket no quote id or code is set');
 
             return false;
@@ -29,13 +29,13 @@ class Dotdigitalgroup_Email_Block_Basket extends Mage_Core_Block_Template
         $quoteModel = Mage::getModel('sales/quote')->loadByIdWithoutStore($quoteId);
 
         //check for any quote for this email, don't want to render further
-        if (! $quoteModel->getId()) {
+        if (!$quoteModel->getId()) {
             Mage::helper('ddg')->log('no quote found for ' . $quoteId);
 
             return false;
         }
 
-        if (! $quoteModel->getIsActive()) {
+        if (!$quoteModel->getIsActive()) {
             Mage::helper('ddg')->log('Cart is not active : ' . $quoteId);
 
             return false;

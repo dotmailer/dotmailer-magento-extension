@@ -41,7 +41,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Abandoned
                 'lifetime'    => 'SUM(main_table.subtotal)',
                 'average'     => $averageExpr,
                 'total_count' => "COUNT(main_table.entity_id)",
-                'day_count'   => "ROUND(COUNT(main_table.entity_id) / DATEDIFF(date(MAX(main_table.updated_at)),
+                'day_count' => "ROUND(COUNT(main_table.entity_id) / DATEDIFF(date(MAX(main_table.updated_at)),
                  date(MIN(main_table.updated_at))), 2)"
             )
         );

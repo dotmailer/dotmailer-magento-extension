@@ -53,7 +53,7 @@ class Dotdigitalgroup_Email_Block_Feefo extends Mage_Core_Block_Template
         $quoteId    = Mage::app()->getRequest()->getParam('quote_id');
         $quoteModel = Mage::getModel('sales/quote')->load($quoteId);
         //quote id param
-        if (! $quoteModel->getId()) {
+        if (!$quoteModel->getId()) {
             Mage::throwException(
                 Mage::helper('ddg')->__('cannot continue, missing quote data')
             );

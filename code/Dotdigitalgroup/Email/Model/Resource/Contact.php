@@ -357,7 +357,7 @@ class Dotdigitalgroup_Email_Model_Resource_Contact extends Mage_Core_Model_Resou
      */
     public function updateSubscribers($subscribers)
     {
-        try{
+        try {
             $write = $this->_getWriteAdapter();
             $ids = implode(', ', $subscribers);
             $write->update(

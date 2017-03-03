@@ -104,7 +104,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Rules_Grid
             )
         );
 
-        if (! Mage::app()->isSingleStoreMode()) {
+        if (!Mage::app()->isSingleStoreMode()) {
             $this->addColumn(
                 'rule_website', array(
                     'header'   => Mage::helper('salesrule')->__('Website'),

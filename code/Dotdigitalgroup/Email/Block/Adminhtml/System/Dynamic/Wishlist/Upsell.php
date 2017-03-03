@@ -20,7 +20,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Wishlist_Upsell
             $passcode = '[PLEASE SET UP A PASSCODE]';
         }
 
-        if (! $customerId) {
+        if (!$customerId) {
             $customerId = '[PLEASE MAP THE CUSTOMER ID]';
         }
 

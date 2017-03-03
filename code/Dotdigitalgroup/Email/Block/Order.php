@@ -29,7 +29,7 @@ class Dotdigitalgroup_Email_Block_Order extends Dotdigitalgroup_Email_Block_Edc
     public function getOrder()
     {
         $order = Mage::registry('current_order');
-        if (! $order) {
+        if (!$order) {
             Mage::throwException(
                 Mage::helper('ddg')->__('no current_order found for EDC')
             );

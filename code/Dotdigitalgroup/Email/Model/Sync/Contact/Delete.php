@@ -17,7 +17,7 @@ class Dotdigitalgroup_Email_Model_Sync_Contact_Delete extends Dotdigitalgroup_Em
 
             if ($this->client) {
                 $apiContact = $this->client->postContacts($email);
-                if (! isset($apiContact->message) && isset($apiContact->id)) {
+                if (!isset($apiContact->message) && isset($apiContact->id)) {
                     $result = $this->client->deleteContact($apiContact->id);
                 } elseif (isset($apiContact->message) && !isset($apiContact->id)) {
                     $result = $apiContact;
@@ -39,7 +39,7 @@ class Dotdigitalgroup_Email_Model_Sync_Contact_Delete extends Dotdigitalgroup_Em
     {
         $curlError = $this->_checkCurlError($item);
 
-        if (! $curlError) {
+        if (!$curlError) {
             if (isset($result->message) or !$result) {
                 $message = (isset($result->message)) ? $result->message : 'Error unknown';
                 $item->setImportStatus(Dotdigitalgroup_Email_Model_Importer::FAILED)

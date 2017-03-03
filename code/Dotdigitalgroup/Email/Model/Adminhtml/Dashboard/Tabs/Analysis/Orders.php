@@ -38,12 +38,12 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Orders
                     'lifetime'    => 'SUM(main_table.total_revenue_amount)',
                     'average'     => $averageExpr,
                     'total_count' => "SUM(main_table.orders_count)",
-                    'day_count'   => "ROUND(SUM(main_table.orders_count) / DATEDIFF(date(MAX(period)),
+                    'day_count' => "ROUND(SUM(main_table.orders_count) / DATEDIFF(date(MAX(period)),
                      date(MIN(period))), 2)"
                 )
             );
 
-            if (! $isFilter) {
+            if (!$isFilter) {
                 $collection->addFieldToFilter(
                     'store_id',
                     array('eq' => Mage::app()->getStore(
@@ -72,7 +72,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Orders
                         'lifetime'    => "SUM({$expr})",
                         'average'     => "AVG({$expr})",
                         'total_count' => "COUNT({$expr})",
-                        'day_count'   => "ROUND(COUNT({$expr}) / DATEDIFF(date(MAX(created_at)),
+                        'day_count' => "ROUND(COUNT({$expr}) / DATEDIFF(date(MAX(created_at)),
                          date(MIN(created_at))), 2)"
                     )
                 )

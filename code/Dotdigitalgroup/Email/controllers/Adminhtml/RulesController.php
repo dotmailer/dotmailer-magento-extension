@@ -80,7 +80,7 @@ class Dotdigitalgroup_Email_Adminhtml_RulesController
         if ($arrayKey && $id && $attribute && $conditionName && $valueName) {
             $rule = Mage::getModel('ddg_automation/rules')->load($id);
             //rule not found
-            if (! $rule->getId()) {
+            if (!$rule->getId()) {
                 return $this->getResponse()->clearHeaders()->setHeader(
                     'Content-Type', 'application/json'
                 )->setBody('Rule not found!');

@@ -11,7 +11,7 @@ class Dotdigitalgroup_Email_Customer_AccountController
     {
         parent::preDispatch();
 
-        if (! Mage::getSingleton('customer/session')->authenticate($this)) {
+        if (!Mage::getSingleton('customer/session')->authenticate($this)) {
             $this->setFlag('', 'no-dispatch', true);
 
             // adding message in customer login page

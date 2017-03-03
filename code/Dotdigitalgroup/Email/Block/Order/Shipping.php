@@ -23,13 +23,13 @@ class Dotdigitalgroup_Email_Block_Order_Shipping
     public function getOrder()
     {
         $order = Mage::registry('current_order');
-        if (! $order) {
+        if (!$order) {
             Mage::throwException(
                 Mage::helper('ddg')->__('no current_order found for EDC')
             );
         }
 
-        if (! $order->hasShipments()) {
+        if (!$order->hasShipments()) {
             Mage::helper('ddg')->log(
                 'TE - no shipments for order : ' . $order->getId()
             );

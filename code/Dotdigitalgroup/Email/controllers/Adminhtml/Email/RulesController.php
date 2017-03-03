@@ -65,7 +65,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_RulesController
         if ($id) {
             $emailRules->load($id);
 
-            if (! $emailRules->getId()) {
+            if (!$emailRules->getId()) {
                 Mage::getSingleton('adminhtml/session')->addError(
                     Mage::helper('adminhtml')->__('This rule no longer exists.')
                 );
@@ -79,13 +79,13 @@ class Dotdigitalgroup_Email_Adminhtml_Email_RulesController
             $emailRules->getId()
                 ? $emailRules->getName()
                 : $this->__(
-                    'New Rule'
-                )
+                'New Rule'
+            )
         );
 
         // set entered data if was error when we do save
         $data = Mage::getSingleton('adminhtml/session')->getPageData(true);
-        if (! empty($data)) {
+        if (!empty($data)) {
             $emailRules->addData($data);
         }
 
@@ -122,7 +122,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_RulesController
                         $result = $model->checkWebsiteBeforeSave(
                             $websiteId, $data['type'], $id
                         );
-                        if (! $result) {
+                        if (!$result) {
                             $websiteName = Mage::app()->getWebsite($websiteId)
                                 ->getName();
                             $this->_getSession()->addError(
@@ -185,7 +185,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_RulesController
             } catch (Mage_Core_Exception $e) {
                 $this->_getSession()->addError($e->getMessage());
                 $id = (int)$this->getRequest()->getParam('id');
-                if (! empty($id)) {
+                if (!empty($id)) {
                     $this->_redirect('*/*/edit', array('id' => $id));
                 } else {
                     $this->_redirect('*/*/new');

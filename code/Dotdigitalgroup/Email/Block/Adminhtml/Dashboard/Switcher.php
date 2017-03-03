@@ -44,7 +44,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Switcher
                         continue;
                     }
 
-                    if (! $websiteShow) {
+                    if (!$websiteShow) {
                         $websiteShow                             = true;
                         $options['website_' . $website->getId()] = array(
                             'label'    => $website->getName(),
@@ -58,7 +58,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Switcher
                         );
                     }
 
-                    if (! $groupShow) {
+                    if (!$groupShow) {
                         $groupShow                                     = true;
                         $options['group_' . $group->getId() . '_open'] = array(
                             'is_group' => true,
