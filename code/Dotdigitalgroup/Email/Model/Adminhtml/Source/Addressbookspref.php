@@ -3,6 +3,9 @@
 class Dotdigitalgroup_Email_Model_Adminhtml_Source_Addressbookspref
 {
 
+    /**
+     * @return Mage_Core_Model_Website
+     */
     protected function getWebsite()
     {
         $website      = Mage::app()->getWebsite();
@@ -15,7 +18,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Addressbookspref
     }
 
     /**
-     * get address books
+     * Get address books.
      *
      * @return null
      */
@@ -41,7 +44,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Addressbookspref
     }
 
     /**
-     * addressbook options
+     * Addressbook options.
      *
      * @return array
      * @throws Mage_Core_Exception
@@ -50,7 +53,6 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Addressbookspref
     {
         $fields  = array();
         $website = $this->getWebsite();
-
         $enabled = Mage::helper('ddg')->isEnabled($website);
 
         //get address books options
@@ -58,10 +60,10 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Addressbookspref
             $addressBooks = $this->getAddressBooks();
             //set the error message to the select option
             if (isset($addressBooks->message)) {
-                $fields[] = array('value' => 0,
-                                  'label' => Mage::helper('ddg')->__(
-                                      $addressBooks->message
-                                  ));
+                $fields[] = array(
+                    'value' => 0,
+                    'label' => Mage::helper('ddg')->__($addressBooks->message)
+                );
             }
 
             $subscriberAddressBook = Mage::helper('ddg')
@@ -73,8 +75,10 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Addressbookspref
                     if (isset($book->id) && $book->visibility == 'Public'
                         && $book->id != $subscriberAddressBook
                     ) {
-                        $fields[] = array('value' => $book->id,
-                                          'label' => $book->name);
+                        $fields[] = array(
+                            'value' => $book->id,
+                            'label' => $book->name
+                        );
                     }
                 }
             }

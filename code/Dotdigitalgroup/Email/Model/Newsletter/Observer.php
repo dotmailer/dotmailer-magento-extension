@@ -2,7 +2,6 @@
 
 class Dotdigitalgroup_Email_Model_Newsletter_Observer
 {
-
     /**
      * Change the subscribsion for an contact.
      * Add new subscribers to an automation.
@@ -23,8 +22,8 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
         if (!Mage::helper('ddg')->isEnabled($websiteId)) {
             return $this;
         }
-        try {
 
+        try {
             $contactEmail = Mage::getModel('ddg_automation/contact')->loadByCustomerEmail($email, $websiteId);
 
             // only for subscribers
@@ -73,6 +72,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
                         $websiteId
                     );
                 }
+
                 $contactEmail->setIsSubscriber(null)
                     ->setSubscriberStatus(Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED);
             }
@@ -82,6 +82,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
             if ($emailReg) {
                 return $this;
             }
+
             Mage::register($email . '_subscriber_save', $email);
 
             //add subscriber to automation
@@ -92,33 +93,43 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
 
             //update contact
             $contactEmail->save();
-
         } catch (Exception $e) {
             Mage::logException($e);
         }
+
         return $this;
     }
 
+    /**
+     * @param $email
+     * @param $subscriber
+     * @param $websiteId
+     */
     protected function _addSubscriberToAutomation($email, $subscriber, $websiteId)
     {
-
         $storeId = $subscriber->getStoreId();
         $store = Mage::app()->getStore($storeId);
-        $programId = Mage::helper('ddg')->getAutomationIdByType('XML_PATH_CONNECTOR_AUTOMATION_STUDIO_SUBSCRIBER',
-            $websiteId);
+        $programId = Mage::helper('ddg')
+            ->getAutomationIdByType('XML_PATH_CONNECTOR_AUTOMATION_STUDIO_SUBSCRIBER', $websiteId);
         //not mapped ignore
         if (!$programId) {
             return;
         }
+
         try {
             //check the subscriber alredy exists
             $enrolmentCollection = Mage::getModel('ddg_automation/automation')->getCollection()
                 ->addFieldToFilter('email', $email)
-                ->addFieldToFilter('automation_type',
-                    Dotdigitalgroup_Email_Model_Automation::AUTOMATION_TYPE_NEW_SUBSCRIBER)
+                ->addFieldToFilter(
+                    'automation_type',
+                    Dotdigitalgroup_Email_Model_Automation::AUTOMATION_TYPE_NEW_SUBSCRIBER
+                )
                 ->addFieldToFilter('website_id', $websiteId);
+
+            //@codingStandardsIgnoreStart
             $enrolmentCollection->getSelect()->limit(1);
             $enrolment = $enrolmentCollection->getFirstItem();
+            //@codingStandardsIgnoreEnd
 
             //add new subscriber to automation
             if (!$enrolment->getId()) {

@@ -5,7 +5,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ContactController
 {
 
     /**
-     * constructor - set the used module name
+     * Constructor - set the used module name.
      */
     protected function _construct()
     {
@@ -13,7 +13,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ContactController
     }
 
     /**
-     * main page.
+     * Main page.
      */
     public function indexAction()
     {
@@ -39,6 +39,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ContactController
 
             return;
         }
+
         $contactEmail = Mage::getModel('ddg_automation/apiconnector_contact')
             ->syncContact();
         if ($contactEmail) {
@@ -70,6 +71,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ContactController
                 $this->_getSession()->addError($e->getMessage());
             }
         }
+
         $this->getResponse()->setRedirect(
             $this->getUrl(
                 '*/*/', array('store' => $this->getRequest()->getParam('store'))
@@ -83,7 +85,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ContactController
     public function massDeleteAction()
     {
         $contactIds = $this->getRequest()->getParam('contact');
-        if ( ! is_array($contactIds)) {
+        if (!is_array($contactIds)) {
             $this->_getSession()->addError(
                 $this->__('Please select contacts.')
             );
@@ -101,6 +103,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ContactController
                 $this->_getSession()->addError($num->getMessage());
             }
         }
+
         $this->_redirect('*/*/index');
     }
 
@@ -111,7 +114,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ContactController
     {
         $contactIds = $this->getRequest()->getParam('contact');
 
-        if ( ! is_array($contactIds)) {
+        if (!is_array($contactIds)) {
             $this->_getSession()->addError(
                 $this->__('Please select contacts.')
             );
@@ -129,12 +132,13 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ContactController
                 $this->_getSession()->addError($num->getMessage());
             }
         }
+
         $this->_redirect('*/*/index');
     }
 
 
     /**
-     * main grid.
+     * Main grid.
      */
     public function gridAction()
     {
@@ -142,7 +146,9 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ContactController
         $this->renderLayout();
     }
 
-
+    /**
+     * Export action.
+     */
     public function exportCsvAction()
     {
         $fileName = 'contacts.csv';
@@ -153,6 +159,9 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ContactController
         $this->_prepareDownloadResponse($fileName, $content);
     }
 
+    /**
+     * @return bool
+     */
     protected function _isAllowed()
     {
         return Mage::getSingleton('admin/session')->isAllowed(
@@ -160,6 +169,9 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ContactController
         );
     }
 
+    /**
+     * @return mixed
+     */
     protected function _initAction()
     {
         $contactId = (int)$this->getRequest()->getParam('id');
@@ -169,6 +181,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ContactController
         if ($contactId) {
             $contact->load($contactId);
         }
+
         Mage::register('current_contact', $contact);
 
         return $contact;

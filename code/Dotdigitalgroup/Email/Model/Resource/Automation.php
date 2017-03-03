@@ -5,14 +5,19 @@ class Dotdigitalgroup_Email_Model_Resource_Automation
 {
 
     /**
-     * constructor.
+     * Constructor.
      */
     protected function _construct()
     {
         $this->_init('ddg_automation/automation', 'id');
-
     }
 
+    /**
+     * @param $contacts
+     * @param $programStatus
+     * @param $programMessage
+     * @return int
+     */
     public function updateContacts($contacts, $programStatus, $programMessage)
     {
         $conn = $this->_getWriteAdapter();
@@ -37,7 +42,7 @@ class Dotdigitalgroup_Email_Model_Resource_Automation
     }
 
     /**
-     * mass delete
+     * Mass delete.
      *
      * @param $automationIds
      *
@@ -77,19 +82,22 @@ class Dotdigitalgroup_Email_Model_Resource_Automation
 
             return $num;
         } catch (Exception $e) {
-            return $e;
+            return 0;
         }
     }
 
     /**
-     * delete completed records older then 30 days
+     * Delete completed records older then 30 days.
      *
      * @return Exception|int
      */
     public function cleanup()
     {
         try {
-            $date = Mage::app()->getLocale()->date()->subDay(30)->toString('YYYY-MM-dd HH:mm:ss');
+            //@codingStandardsIgnoreStart
+            $date = Mage::app()->getLocale()->date()->subDay(30)
+                ->toString('YYYY-MM-dd HH:mm:ss');
+            //@codingStandardsIgnoreEnd
             $conn = $this->_getWriteAdapter();
             $num = $conn->delete(
                 $this->getMainTable(),

@@ -3,10 +3,14 @@
 class Dotdigitalgroup_Email_Model_Sweettooth_Observer
 {
 
+    /**
+     * @param $observer
+     * @return $this
+     */
     public function ConnectorRewardsPointsIndexerUpdate($observer)
     {
         $customer = $observer->getEvent()->getCustomer();
-        if ( ! $customer) {
+        if (!$customer) {
             return $this;
         }
 

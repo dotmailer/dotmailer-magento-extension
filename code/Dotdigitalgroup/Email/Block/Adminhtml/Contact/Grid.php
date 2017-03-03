@@ -164,7 +164,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Contact_Grid
                 )
             );
         }
-        if ( ! Mage::app()->isSingleStoreMode()) {
+
+        if (!Mage::app()->isSingleStoreMode()) {
             $this->addColumn(
                 'website_id', array(
                     'header'  => Mage::helper('customer')->__('Website'),

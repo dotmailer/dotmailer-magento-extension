@@ -4,7 +4,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Advanced_Attributes
 {
 
     /**
-     * Returns custom order attributes
+     * Returns custom order attributes.
      *
      * @return array
      */

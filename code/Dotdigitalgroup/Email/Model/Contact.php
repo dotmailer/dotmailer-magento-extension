@@ -8,7 +8,7 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
     const EMAIL_SUBSCRIBER_NOT_IMPORTED = null;
 
     /**
-     * constructor
+     * Constructor.
      */
     public function _construct()
     {
@@ -17,7 +17,7 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
     }
 
     /**
-     * Load contact by customer id
+     * Load contact by customer id.
      *
      * @param $customerId
      *
@@ -30,14 +30,16 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
             ->setPageSize(1);
 
         if ($collection->getSize()) {
+            //@codingStandardsIgnoreStart
             return $collection->getFirstItem();
+            //@codingStandardsIgnoreEnd
         }
 
         return $this;
     }
 
     /**
-     * get all customer contacts not imported for a website.
+     * Get all customer contacts not imported for a website.
      *
      * @param     $websiteId
      * @param int $pageSize
@@ -52,7 +54,9 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
             ->addFieldToFilter('customer_id', array('neq' => '0'));
 
 
+        //@codingStandardsIgnoreStart
         $collection->getSelect()->limit($pageSize);
+        //@codingStandardsIgnoreEnd
 
         return $collection;
     }
@@ -72,7 +76,9 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
             ->addFieldToFilter('suppressed', array('null' => true))
             ->addFieldToFilter('website_id', $websiteId);
 
+        //@codingStandardsIgnoreStart
         $collection->getSelect()->limit($pageSize);
+        //@codingStandardsIgnoreEnd
 
         return $collection;
     }
@@ -93,7 +99,9 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
             ->setPageSize(1);
 
         if ($collection->getSize()) {
+            //@codingStandardsIgnoreStart
             return $collection->getFirstItem();
+            //@codingStandardsIgnoreEnd
         } else {
             $this->setEmail($email)
                 ->setWebsiteId($websiteId);
@@ -103,7 +111,7 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
     }
 
     /**
-     * batch non imported subscribers for a website.
+     * Batch non imported subscribers for a website.
      *
      * @param     $website
      * @param int $limit
@@ -126,11 +134,16 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
             $collection->addFieldToFilter('customer_id', array('eq' => 0));
         }
 
+        //@codingStandardsIgnoreStart
         $collection->getSelect()->limit($limit);
-
+        //@codingStandardsIgnoreEnd
         return $collection;
     }
 
+    /**
+     * @param $emails
+     * @return Mage_Eav_Model_Entity_Collection_Abstract
+     */
     public function getSubscribersToImportFromEmails($emails)
     {
         $collection = $this->getCollection()
@@ -140,7 +153,7 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
     }
 
     /**
-     * get all not imported guests for a website.
+     * Get all not imported guests for a website.
      *
      * @param $website
      *
@@ -156,6 +169,9 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
         return $guestCollection;
     }
 
+    /**
+     * @return int
+     */
     public function getNumberOfImportedContacs()
     {
         $collection = $this->getCollection()
@@ -265,5 +281,4 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
 
         return $countContacts;
     }
-
 }

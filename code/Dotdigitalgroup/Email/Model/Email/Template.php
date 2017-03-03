@@ -4,23 +4,28 @@ class Dotdigitalgroup_Email_Model_Email_Template
     extends Mage_Core_Model_Email_Template
 {
 
+    /**
+     * @codingStandardsIgnoreStart
+     * @param array|string $email
+     * @param null $name
+     * @param array $variables
+     * @return bool
+     */
     public function send($email, $name = null, array $variables = array())
     {
-        $_helper = Mage::helper('ddg/transactional');
+        $helper = Mage::helper('ddg/transactional');
         // If it's not enabled, just return the parent result.
-        if ( ! $_helper->isEnabled()) {
+        if (!$helper->isEnabled()) {
             return parent::send($email, $name, $variables);
         }
 
-
         // As per parent class - except addition of before and after send events
-        if ( ! $this->isValidForSend()) {
+        if (!$this->isValidForSend()) {
             Mage::log(
-                'Email is not valid for sending, this is a core error that often means there\'s a problem with your email templates.'
+                'Email is not valid for sending, this is a core error that often means there\'s a problem with your 
+                email templates.'
             );
-            Mage::logException(
-                new Exception('This letter cannot be sent.')
-            ); // translation is intentionally omitted
+            Mage::logException(new Exception('This letter cannot be sent.'));
             return false;
         }
 
@@ -28,7 +33,7 @@ class Dotdigitalgroup_Email_Model_Email_Template
         $names  = is_array($name) ? $name : (array)$name;
         $names  = array_values($names);
         foreach ($emails as $key => $email) {
-            if ( ! isset($names[$key])) {
+            if (!isset($names[$key])) {
                 $names[$key] = substr($email, 0, strpos($email, '@'));
             }
         }
@@ -40,7 +45,6 @@ class Dotdigitalgroup_Email_Model_Email_Template
         ini_set('smtp_port', Mage::getStoreConfig('system/smtp/port'));
 
         $mail = $this->getMail();
-
 
         $setReturnPath = Mage::getStoreConfig(
             self::XML_PATH_SENDING_SET_RETURN_PATH
@@ -89,8 +93,7 @@ class Dotdigitalgroup_Email_Model_Email_Template
         $mail->setFrom($this->getSenderEmail(), $this->getSenderName());
 
         try {
-
-            $transport = $_helper->getTransport();
+            $transport = $helper->getTransport();
 
             $mail->send($transport);
 
@@ -101,6 +104,8 @@ class Dotdigitalgroup_Email_Model_Email_Template
 
             return false;
         }
+
+        //@codingStandardsIgnoreEnd
 
         return true;
     }

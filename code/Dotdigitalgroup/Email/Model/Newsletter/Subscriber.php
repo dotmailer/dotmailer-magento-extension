@@ -8,27 +8,25 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
     const STATUS_UNSUBSCRIBED = 3;
     const STATUS_UNCONFIRMED = 4;
 
-    protected $_start;
+    public $start;
 
     /**
      * Global number of subscriber updated.
      *
-     * @var
+     * @var int
      */
-    protected $_countSubscriber = 0;
+    public $countSubscriber = 0;
 
     /**
      * SUBSCRIBER SYNC.
      *
-     * @return $this
+     * @return array
      */
     public function sync()
     {
         $response = array('success' => true, 'message' => '');
-        /** @var Dotdigitalgroup_Email_Helper_Data $helper */
         $helper = Mage::helper('ddg');
-
-        $this->_start = microtime(true);
+        $this->start = microtime(true);
 
         foreach (Mage::app()->getWebsites(true) as $website) {
             //if subscriber is enabled and mapped
@@ -45,9 +43,8 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
 
             //enabled and mapped
             if ($enabled && $addressBook && $apiEnabled) {
-
                 //ready to start sync
-                if ( ! $this->_countSubscriber) {
+                if (!$this->countSubscriber) {
                     $helper->log(
                         '---------------------- Start subscriber sync -------------------'
                     );
@@ -59,16 +56,15 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
                     $response['message'] .= '</br>' . $website->getName()
                         . ', updated subscribers = ' . $numUpdated;
                 }
-
             }
         }
 
         //global number of subscribers to set the message
-        if ($this->_countSubscriber) {
+        if ($this->countSubscriber) {
+            //@codingStandardsIgnoreStart
             //reponse message
-            $message = 'Total time for sync : ' . gmdate(
-                "H:i:s", microtime(true) - $this->_start
-            );
+            $message = 'Total time for sync : ' . gmdate("H:i:s", microtime(true) - $this->start);
+            //@codingStandardsIgnoreEnd
 
             //put the message in front
             $message .= $response['message'];
@@ -112,12 +108,12 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
         //do not exist in sales order table
         $subscribersWithNoSaleData = $emailContactModel
             ->getSubscribersToImportFromEmails($emailsWithNoSaleData);
-        if (count($subscribersWithNoSaleData)) {
+        if (!empty($subscribersWithNoSaleData)) {
             $updated += $this->exportSubscribers(
                 $website, $subscribersWithNoSaleData
             );
             //add updated number for the website
-            $this->_countSubscriber += $updated;
+            $this->countSubscriber += $updated;
         }
 
         //Subscriber that are guest and also
@@ -125,22 +121,26 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
         $subscribersWithSaleData = $emailContactModel
             ->getSubscribersToImportFromEmails($existInSales);
 
-        if (count($subscribersWithSaleData)) {
+        if (!empty($subscribersWithSaleData)) {
             $updated += $this->exportSubscribersWithSales(
                 $website, $subscribersWithSaleData
             );
             //add updated number for the website
-            $this->_countSubscriber += $updated;
+            $this->countSubscriber += $updated;
         }
 
         return $updated;
     }
 
+    /**
+     * @param $email
+     * @param $subscribers
+     * @return bool
+     */
     protected function getStoreIdForSubscriber($email, $subscribers)
     {
 
         foreach ($subscribers as $subscriber) {
-
             if ($subscriber['subscriber_email'] == $email) {
                 return $subscriber['store_id'];
             }
@@ -156,20 +156,15 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
      * @param $subscribers
      * @return int
      */
-    protected function exportSubscribers(
-        Mage_Core_Model_Website $website,
-        $subscribers
-    ) {
+    protected function exportSubscribers(Mage_Core_Model_Website $website, $subscribers)
+    {
         $updated = 0;
         $fileHelper = Mage::helper('ddg/file');
-        $subscribersFilename = strtolower(
-            $website->getCode() . '_subscribers_' . date('d_m_Y_Hi')
-            . '.csv'
-        );
+        //@codingStandardsIgnoreStart
+        $subscribersFilename = strtolower($website->getCode() . '_subscribers_' . date('d_m_Y_Hi') . '.csv');
+        //@codingStandardsIgnoreEnd
         //get mapped storename
-        $subscriberStorename = Mage::helper('ddg')->getMappedStoreName(
-            $website
-        );
+        $subscriberStorename = Mage::helper('ddg')->getMappedStoreName($website);
         //file headers
         $fileHelper->outputCSV(
             $fileHelper->getFilePath($subscribersFilename),
@@ -186,7 +181,6 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
             ->toArray();
 
         foreach ($subscribers as $subscriber) {
-
             try {
                 $email = $subscriber->getEmail();
                 $storeId = $this->getStoreIdForSubscriber(
@@ -198,17 +192,16 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
                     $fileHelper->getFilePath($subscribersFilename),
                     array($email, 'Html', $storeName)
                 );
+                //@codingStandardsIgnoreStart
                 $subscriber->setSubscriberImported(1)->save();
+                //@codingStandardsIgnoreEnd
                 $updated++;
             } catch (Exception $e) {
                 Mage::logException($e);
             }
         }
 
-
-        Mage::helper('ddg')->log(
-            'Subscriber filename: ' . $subscribersFilename
-        );
+        Mage::helper('ddg')->log('Subscriber filename: ' . $subscribersFilename);
         //register in queue with importer
         Mage::getModel('ddg_automation/importer')->registerQueue(
             Dotdigitalgroup_Email_Model_Importer::IMPORT_TYPE_SUBSCRIBERS,
@@ -222,7 +215,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
     }
 
     /**
-     * Check emails exist in sales order table
+     * Check emails exist in sales order table.
      *
      * @param $emails
      * @return array
@@ -234,10 +227,13 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
         return $collection->getColumnValues('customer_email');
     }
 
-    public function exportSubscribersWithSales(
-        Mage_Core_Model_Website $website,
-        $subscribers
-    ) {
+    /**
+     * @param Mage_Core_Model_Website $website
+     * @param $subscribers
+     * @return int
+     */
+    public function exportSubscribersWithSales(Mage_Core_Model_Website $website, $subscribers)
+    {
         $updated = 0;
         $subscriberIds = $headers = array();
         $fileHelper = Mage::helper('ddg/file');
@@ -248,19 +244,18 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
             $emailContactIdEmail[$emailContact->getId()] = $emailContact->getEmail();
         }
 
-        $subscribersFile = strtolower(
-            $website->getCode() . '_subscribers_with_sales_' . date('d_m_Y_Hi')
+        //@codingStandardsIgnoreStart
+        $subscribersFile = strtolower($website->getCode() . '_subscribers_with_sales_' . date('d_m_Y_Hi')
             . '.csv'
         );
+        //@codingStandardsIgnoreEnd
         $helper->log('Subscriber file with sales : ' . $subscribersFile);
 
         //get subscriber emails
         $emails = $subscribers->getColumnValues('email');
 
         //subscriber collection
-        $collection = $this->getCollection(
-            $emails, $website->getId()
-        );
+        $collection = $this->getCollection($emails, $website->getId());
 
         $mappedHash = $fileHelper->getWebsiteSalesDataFields(
             $website
@@ -300,8 +295,11 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
             $subscriber->clearInstance();
             $updated++;
         }
+
         $subscriberNum = count($subscriberIds);
+        //@codingStandardsIgnoreStart
         if (is_file($fileHelper->getFilePath($subscribersFile))) {
+            //@codingStandardsIgnoreEnd
             if ($subscriberNum > 0) {
                 //register in queue with importer
                 $check = Mage::getModel('ddg_automation/importer')
@@ -324,6 +322,12 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
         return $updated;
     }
 
+    /**
+     * @codingStandardsIgnoreStart
+     * @param $emails
+     * @param int $websiteId
+     * @return Mage_Eav_Model_Entity_Collection_Abstract
+     */
     public function getCollection($emails, $websiteId = 0)
     {
         $salesFlatOrder = Mage::getSingleton('core/resource')

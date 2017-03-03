@@ -4,24 +4,26 @@ class Dotdigitalgroup_Email_Model_Feed extends Mage_AdminNotification_Model_Feed
 {
 
     /**
-     * Check for and extension update
+     * Check for and extension update.
      *
      * @return $this
      */
     public function checkForUpgrade()
     {
         //not enabled
-        if ( ! (bool)Mage::getStoreConfig(
+        if (!(bool)Mage::getStoreConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_FEED_ENABLED
         )
         ) {
-            return;
+            return $this;
         }
 
+        //@codingStandardsIgnoreStart
         //time this was last checked
         if (($this->getFrequency() + $this->getLastUpdate()) > time()) {
             return $this;
         }
+        //@codingStandardsIgnoreEnd
 
         //data feed
         $feedData = array();
@@ -30,13 +32,12 @@ class Dotdigitalgroup_Email_Model_Feed extends Mage_AdminNotification_Model_Feed
 
         if ($feedXml) {
             foreach ($feedXml->release as $data) {
-
                 //only if the version number was updated for the connector
                 if (version_compare(
                     $data->version, Mage::helper('ddg')->getConnectorVersion(),
                     '>'
                 )) {
-
+                    //@codingStandardsIgnoreStart
                     $feedData[] = array(
                         'severity'    => $data->severity,
                         'date_added'  => $this->getDate($data->date_added),
@@ -44,6 +45,7 @@ class Dotdigitalgroup_Email_Model_Feed extends Mage_AdminNotification_Model_Feed
                         'description' => (string)$data->description,
                         'url'         => (string)$data->link,
                     );
+                    //@codingStandardsIgnoreEnd
                 }
             }
 
@@ -53,8 +55,8 @@ class Dotdigitalgroup_Email_Model_Feed extends Mage_AdminNotification_Model_Feed
                     array_reverse($feedData)
                 );
             }
-
         }
+
         //set the last update check
         $this->setLastUpdate();
 
@@ -68,20 +70,22 @@ class Dotdigitalgroup_Email_Model_Feed extends Mage_AdminNotification_Model_Feed
      */
     public function setLastUpdate()
     {
+        //@codingStandardsIgnoreStart
         Mage::app()->saveCache(
             time(),
             Dotdigitalgroup_Email_Helper_Config::CONNECTOR_FEED_LAST_CHECK_TIME
         );
+        //@codingStandardsIgnoreEnd
 
         return $this;
     }
 
     /**
-     * @return SimpleXMLElement|void
+     * @return SimpleXMLElement|string
      */
     public function getFeedUrl()
     {
-        if (is_null($this->_feedUrl)) {
+        if ($this->_feedUrl === null) {
             $this->_feedUrl = (Mage::getStoreConfigFlag(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_FEED_USE_HTTPS
             ) ? 'https://' : 'http://')
@@ -92,7 +96,6 @@ class Dotdigitalgroup_Email_Model_Feed extends Mage_AdminNotification_Model_Feed
 
         return $this->_feedUrl;
     }
-
 
     /**
      * @return int|mixed

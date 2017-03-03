@@ -5,7 +5,7 @@ class Dotdigitalgroup_Email_Model_Resource_Rules
 {
 
     /**
-     * constructor.
+     * Constructor.
      */
     protected function _construct()
     {

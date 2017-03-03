@@ -106,7 +106,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Analysis_Rfm
     /**
      * format price from currency
      *
-     * @param $price
+     * @param $price float
      *
      * @return string
      */
@@ -118,7 +118,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Analysis_Rfm
     public function getTitle()
     {
         return $this->__("RFM Matrix")
-        . "(<a href='https://econsultancy.com/blog/64481-finding-your-best-customers-with-the-rfm-matrix' target='_blank'>"
+            . "(<a href='https://econsultancy.com/blog/64481-finding-your-best-customers-with-the-rfm-matrix' 
+            target='_blank'>"
         . $this->__("Find out more") . "</a>)";
     }
 }

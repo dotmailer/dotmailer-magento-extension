@@ -4,13 +4,18 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Manualcontainer
     extends Mage_Adminhtml_Block_System_Config_Form_Field
 {
 
-    protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element
-    ) {
+    /**
+     * @param Varien_Data_Form_Element_Abstract $element
+     * @return string
+     */
+    protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element)
+    {
         $this->setElement($element);
 
         return
             "<script type='text/javascript'>
-                var manual_product_selector = new ConnectorProductSelectorForm('connector_dynamic_content_manual_product_search_products_push_items');
+                var manual_product_selector = 
+                new ConnectorProductSelectorForm('connector_dynamic_content_manual_product_search_products_push_items');
                 //ajax call and handler
                 getManualProductChooser = function (url) {
                     new Ajax.Request(

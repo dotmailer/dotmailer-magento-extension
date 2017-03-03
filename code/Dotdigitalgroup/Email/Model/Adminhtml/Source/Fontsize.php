@@ -4,7 +4,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Fontsize
 {
 
     /**
-     * Options getter. Styling options
+     * Options getter. Styling options.
      *
      * @return array
      */

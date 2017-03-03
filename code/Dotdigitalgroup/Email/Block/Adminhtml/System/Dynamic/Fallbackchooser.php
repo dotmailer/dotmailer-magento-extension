@@ -4,14 +4,21 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Fallbackchooser
     extends Mage_Adminhtml_Block_System_Config_Form_Field
 {
 
-    protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element
-    ) 
+    /**
+     * @param Varien_Data_Form_Element_Abstract $element
+     * @return mixed
+     */
+    protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element)
     {
         $this->setElement($element);
 
         return $this->_getAddRowButtonHtml($this->__("Choose Products"));
     }
 
+    /**
+     * @param $title
+     * @return mixed
+     */
     protected function _getAddRowButtonHtml($title)
     {
         $action = 'getFallbackProductChooser(\'' . Mage::getUrl(

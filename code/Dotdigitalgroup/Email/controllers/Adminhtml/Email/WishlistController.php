@@ -5,7 +5,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_WishlistController
 {
 
     /**
-     * main page.
+     * Main page.
      */
     public function indexAction()
     {
@@ -16,7 +16,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_WishlistController
     }
 
     /**
-     * Check currently called action by permissions for current user
+     * Check currently called action by permissions for current user.
      *
      * @return bool
      */
