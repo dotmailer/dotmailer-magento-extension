@@ -300,7 +300,7 @@ class Dotdigitalgroup_Email_Model_Resource_Contact
         }
 
         $write  = $this->_getWriteAdapter();
-        $emails = "'" . implode("','", $data) . "'";
+        $emails = '"' . implode('","', $data) . '"';
 
         try {
             //un-subscribe from the email contact table.
