@@ -392,9 +392,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
             ->setTitle('Missing Files : ')
             ->setMessage('Looks Great.');
 
-        $filePath = Mage::getModuleDir(
-                'etc', Dotdigitalgroup_Email_Helper_Config::MODULE_NAME
-            ) . DS . 'files.yaml';
+        $filePath = Mage::getModuleDir('etc', Dotdigitalgroup_Email_Helper_Config::MODULE_NAME) .
+            DS . 'files.yaml';
         //@codingStandardsIgnoreStart
         $config   = Zend_Config_Yaml::decode(file_get_contents($filePath));
         //@codingStandardsIgnoreEnd
@@ -2127,9 +2126,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
     {
         //version that not support the lcfirst method
         if (function_exists('lcfirst') === false) {
-            $method = strtolower(substr(uc_words($name, ''), 0, 1)) . substr(
-                    uc_words($name, ''), 1
-                );
+            $method = strtolower(substr(uc_words($name, ''), 0, 1)) . substr(uc_words($name, ''), 1);
         } else {
             $method = lcfirst(uc_words($name, ''));
         }

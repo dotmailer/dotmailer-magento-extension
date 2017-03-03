@@ -33,6 +33,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_General
         } elseif ($this->getRequest()->getParam('website')) {
             $website = $this->getRequest()->getParam('website');
         }
+
         $client = Mage::helper('ddg')->getWebsiteApiClient($website);
         if ($client) {
             $data = $client->getAccountInfo();
@@ -47,6 +48,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_General
         parent::_prepareLayout();
     }
 
+    /**
+     * Set child item.
+     */
     protected function _setChild()
     {
         foreach ($this->groups as $key => $data) {
@@ -60,6 +64,11 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_General
         }
     }
 
+    /**
+     * Prepare group data.
+     *
+     * @param $data
+     */
     protected function prepareGroupArray($data)
     {
         foreach ($data->properties as $one) {
@@ -71,6 +80,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_General
         }
     }
 
+    /**
+     * Initiate groups.
+     */
     protected function initiateGroupArray()
     {
         $this->groups['account'] = array(
@@ -89,7 +101,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_General
     }
 
     /**
-     * get Tab content title
+     * Get Tab content title.
      *
      * @return string
      */
@@ -99,7 +111,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_General
     }
 
     /**
-     * get column width
+     * Get column width.
      *
      * @return string
      */

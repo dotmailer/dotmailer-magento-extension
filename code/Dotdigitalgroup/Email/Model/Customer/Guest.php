@@ -81,7 +81,7 @@ class Dotdigitalgroup_Email_Model_Customer_Guest
 
         //Exclude existed contacts from collection
         if (!empty($contacts)) {
-            $salesOrderCollection->addFieldToFilter('customer_email', ['nin' => $contacts]);
+            $salesOrderCollection->addFieldToFilter('customer_email', array('nin' => $contacts));
         }
 
         //@codingStandardsIgnoreStart
