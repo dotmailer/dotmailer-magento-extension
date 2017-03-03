@@ -160,7 +160,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
             ->setTitle('Cron Status : ')
             ->setMessage('Cron is running.');
         $message
-                          = 'No cronjob task found. Check if cron is configured correctly.';
+            = 'No cronjob task found. Check if cron is configured correctly.';
         $howToSetupCron
             = 'For more information 
             <a href="http://www.magentocommerce.com/wiki/1_-_installation_and_configuration/how_to_setup_a_cron_job">
@@ -292,12 +292,12 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                 $roiUrl  = Mage::helper('adminhtml')->getUrl(
                     '*/connector/enablewebsiteconfiguration',
                     array('path'    => 'XML_PATH_CONNECTOR_ROI_TRACKING_ENABLED',
-                          'website' => $website->getId())
+                        'website' => $website->getId())
                 );
                 $pageUrl = Mage::helper('adminhtml')->getUrl(
                     '*/connector/enablewebsiteconfiguration',
                     array('path'    => 'XML_PATH_CONNECTOR_PAGE_TRACKING_ENABLED',
-                          'website' => $website->getId())
+                        'website' => $website->getId())
                 );
 
                 $resultContent->setStyle(self::CONNECTOR_DASHBOARD_FAILED)
@@ -501,7 +501,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                 $url = Mage::helper('adminhtml')->getUrl(
                     '*/connector/enablewebsiteconfiguration',
                     array('path'    => 'XML_PATH_CONNECTOR_SYNC_CONTACT_ENABLED',
-                          'website' => $website->getId())
+                        'website' => $website->getId())
                 );
                 $resultContent->setStyle(self::CONNECTOR_DASHBOARD_FAILED)
                     ->setMessage('')
@@ -656,7 +656,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                 $url = Mage::helper('adminhtml')->getUrl(
                     '*/connector/enablewebsiteconfiguration',
                     array('path'    => 'XML_PATH_CONNECTOR_SYNC_SUBSCRIBER_ENABLED',
-                          'website' => $website->getId())
+                        'website' => $website->getId())
                 );
                 $resultContent->setStyle(self::CONNECTOR_DASHBOARD_FAILED)
                     ->setMessage('')
@@ -1049,33 +1049,33 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                 $customerOne = Mage::helper('adminhtml')->getUrl(
                     '*/connector/enablewebsiteconfiguration',
                     array('path'    => 'XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CARTS_ENABLED_1',
-                          'website' => $website->getId())
+                        'website' => $website->getId())
                 );
                 $customerTwo = Mage::helper('adminhtml')->getUrl(
                     '*/connector/enablewebsiteconfiguration',
                     array('path'    => 'XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CARTS_ENABLED_2',
-                          'website' => $website->getId())
+                        'website' => $website->getId())
                 );
                 $customerThree = Mage::helper('adminhtml')->getUrl(
                     '*/connector/enablewebsiteconfiguration',
                     array('path'    => 'XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CARTS_ENABLED_3',
-                          'website' => $website->getId())
+                        'website' => $website->getId())
                 );
                 //guests abandoned links to enable
                 $guestOne = Mage::helper('adminhtml')->getUrl(
                     '*/connector/enablewebsiteconfiguration',
                     array('path'    => 'XML_PATH_CONNECTOR_GUEST_ABANDONED_CARTS_ENABLED_1',
-                          'website' => $website->getId())
+                        'website' => $website->getId())
                 );
                 $guestTwo = Mage::helper('adminhtml')->getUrl(
                     '*/connector/enablewebsiteconfiguration',
                     array('path'    => 'XML_PATH_CONNECTOR_GUEST_ABANDONED_CARTS_ENABLED_2',
-                          'website' => $website->getId())
+                        'website' => $website->getId())
                 );
                 $guestThree = Mage::helper('adminhtml')->getUrl(
                     '*/connector/enablewebsiteconfiguration',
                     array('path'    => 'XML_PATH_CONNECTOR_GUEST_ABANDONED_CARTS_ENABLED_3',
-                          'website' => $website->getId())
+                        'website' => $website->getId())
                 );
 
                 $resultContent->setStyle(self::CONNECTOR_DASHBOARD_FAILED)
@@ -1512,7 +1512,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                 $url = Mage::helper('adminhtml')->getUrl(
                     '*/connector/enablewebsiteconfiguration',
                     array('path'    => 'XML_PATH_CONNECTOR_SYNC_ORDER_ENABLED',
-                          'website' => $website->getId())
+                        'website' => $website->getId())
                 );
                 $resultContent->setStyle(self::CONNECTOR_DASHBOARD_FAILED)
                     ->setMessage('')
@@ -1648,7 +1648,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                 $url = Mage::helper('adminhtml')->getUrl(
                     '*/connector/enablewebsiteconfiguration',
                     array('path'    => 'XML_PATH_CONNECTOR_SYNC_QUOTE_ENABLED',
-                          'website' => $website->getId())
+                        'website' => $website->getId())
                 );
                 $resultContent->setStyle(self::CONNECTOR_DASHBOARD_FAILED)
                     ->setMessage('')
@@ -1699,7 +1699,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                 $url = Mage::helper('adminhtml')->getUrl(
                     '*/connector/enablewebsiteconfiguration',
                     array('path'    => 'XML_PATH_CONNECTOR_SYNC_REVIEW_ENABLED',
-                          'website' => $website->getId())
+                        'website' => $website->getId())
                 );
                 $resultContent->setStyle(self::CONNECTOR_DASHBOARD_FAILED)
                     ->setMessage(
@@ -2164,7 +2164,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                 $url = Mage::helper('adminhtml')->getUrl(
                     '*/connector/enablewebsiteconfiguration',
                     array('path'    => 'XML_PATH_CONNECTOR_DISABLE_NEWSLETTER_SUCCESS',
-                          'website' => $website->getId())
+                        'website' => $website->getId())
                 );
                 $resultContent->setStyle(self::CONNECTOR_DASHBOARD_FAILED)
                     ->setMessage(
@@ -2211,7 +2211,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                 $url = Mage::helper('adminhtml')->getUrl(
                     '*/connector/enablewebsiteconfiguration',
                     array('path'    => 'XML_PATH_CONNECTOR_SYNC_WISHLIST_ENABLED',
-                          'website' => $website->getId())
+                        'website' => $website->getId())
                 );
                 $resultContent->setStyle(self::CONNECTOR_DASHBOARD_FAILED)
                     ->setMessage(
