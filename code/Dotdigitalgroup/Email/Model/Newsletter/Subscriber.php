@@ -125,7 +125,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
 
         //Subscriber that are guest and also
         //exist in sales order table
-        if (!empty($subscribersWithSaleData)) {
+        if (!empty($existInSales)) {
             $subscribersWithSaleData = $emailContactModel
                 ->getSubscribersToImportFromEmails($existInSales);
         }
