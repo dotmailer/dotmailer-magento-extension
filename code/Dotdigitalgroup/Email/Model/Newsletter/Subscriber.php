@@ -98,7 +98,10 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
             ->getSubscribersToImport($website, $limit, false);
 
         $subscribersGuestEmails = $subscribersAreGuest->getColumnValues('email');
-        $existInSales = $this->checkInSales($subscribersGuestEmails);
+        $existInSales = array();
+        if (!empty($subscribersGuestEmails)) {
+            $existInSales = $this->checkInSales($subscribersGuestEmails);
+        }
         $emailsNotInSales = array_diff($subscribersGuestEmails, $existInSales);
 
         $customerSubscribers = $subscribersAreCustomers->getColumnValues('email');
@@ -106,8 +109,11 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
 
         //Subscriber that are customer or/and the one that
         //do not exist in sales order table
-        $subscribersWithNoSaleData = $emailContactModel
-            ->getSubscribersToImportFromEmails($emailsWithNoSaleData);
+        $subscribersWithNoSaleData = array();
+        if (!empty($emailsWithNoSaleData)) {
+            $subscribersWithNoSaleData = $emailContactModel
+                ->getSubscribersToImportFromEmails($emailsWithNoSaleData);
+        }
         if (!empty($subscribersWithNoSaleData)) {
             $updated += $this->exportSubscribers(
                 $website, $subscribersWithNoSaleData
@@ -118,8 +124,11 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
 
         //Subscriber that are guest and also
         //exist in sales order table
-        $subscribersWithSaleData = $emailContactModel
-            ->getSubscribersToImportFromEmails($existInSales);
+        $subscribersWithSaleData = array();
+        if (!empty($subscribersWithSaleData)) {
+            $subscribersWithSaleData = $emailContactModel
+                ->getSubscribersToImportFromEmails($existInSales);
+        }
 
         if (!empty($subscribersWithSaleData)) {
             $updated += $this->exportSubscribersWithSales(
