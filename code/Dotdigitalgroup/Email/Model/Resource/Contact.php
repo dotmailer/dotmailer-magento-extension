@@ -357,7 +357,7 @@ class Dotdigitalgroup_Email_Model_Resource_Contact extends Mage_Core_Model_Resou
      */
     public function setSubscriberImportedForContacts($ids)
     {
-        if (empty($subscribers))
+        if (empty($ids))
             return;
         try {
             $write = $this->_getWriteAdapter();
