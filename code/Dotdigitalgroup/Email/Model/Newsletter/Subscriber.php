@@ -83,6 +83,9 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
      */
     public function exportSubscribersPerWebsite(Mage_Core_Model_Website $website) 
     {
+        $subscribersWithNoSaleData = array();
+        $subscribersWithSaleData = array();
+        $existInSales = array();
         $updated     = 0;
         $limit       = $website->getConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_LIMIT
@@ -98,7 +101,6 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
             ->getSubscribersToImport($website, $limit, false);
 
         $subscribersGuestEmails = $subscribersAreGuest->getColumnValues('email');
-        $existInSales = array();
         if (!empty($subscribersGuestEmails)) {
             $existInSales = $this->checkInSales($subscribersGuestEmails);
         }
@@ -109,7 +111,6 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
 
         //Subscriber that are customer or/and the one that
         //do not exist in sales order table
-        $subscribersWithNoSaleData = array();
         if (!empty($emailsWithNoSaleData)) {
             $subscribersWithNoSaleData = $emailContactModel
                 ->getSubscribersToImportFromEmails($emailsWithNoSaleData);
@@ -124,7 +125,6 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
 
         //Subscriber that are guest and also
         //exist in sales order table
-        $subscribersWithSaleData = array();
         if (!empty($subscribersWithSaleData)) {
             $subscribersWithSaleData = $emailContactModel
                 ->getSubscribersToImportFromEmails($existInSales);
