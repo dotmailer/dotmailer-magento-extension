@@ -99,7 +99,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Installation
      */
     public function getSubscriberSync()
     {
-        return Mage::helper('ddg')->getSubscriberSyncEnabled();
+        return Mage::helper('ddg')->isSubscriberSyncEnabled();
     }
 
     /**

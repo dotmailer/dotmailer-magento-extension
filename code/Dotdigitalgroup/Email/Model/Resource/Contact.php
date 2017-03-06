@@ -351,17 +351,20 @@ class Dotdigitalgroup_Email_Model_Resource_Contact extends Mage_Core_Model_Resou
     }
 
     /**
-     * Update subscriber imported.
+     * Set subscriber imported.
      *
-     * @param $subscribers
+     * @param $ids array
      */
-    public function updateSubscribers($subscribers)
+    public function setSubscriberImportedForContacts($ids)
     {
+        if (empty($subscribers))
+            return;
         try {
             $write = $this->_getWriteAdapter();
-            $ids = implode(', ', $subscribers);
+            $ids = implode(', ', $ids);
             $write->update(
-                $this->getMainTable(), array('subscriber_imported' => 1),
+                $this->getMainTable(),
+                array('subscriber_imported' => Dotdigitalgroup_Email_Model_Contact::EMAIL_SUBSCRIBER_IMPORTED),
                 "email_contact_id IN ($ids)"
             );
         } catch (Exception $e) {

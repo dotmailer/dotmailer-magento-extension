@@ -38,11 +38,6 @@ class Dotdigitalgroup_Email_Model_Customer_Guest
                 //Find and create guest
                 $this->findAndCreateGuest($website->getId());
 
-                //ready to start sync
-                if (!$this->countGuests) {
-                    $helper->log('----------- Start guest sync ----------');
-                }
-
                 //sync guests for website
                 $this->exportGuestPerWebsite($website);
             }
@@ -51,7 +46,7 @@ class Dotdigitalgroup_Email_Model_Customer_Guest
         if ($this->countGuests) {
             //@codingStandardsIgnoreStart
             $helper->log(
-                '---- End Guest total time for guest sync : ' .
+                '---- End Guest sync with total time : ' .
                 gmdate("H:i:s", microtime(true) - $this->start)
             );
             //@codingStandardsIgnoreEnd
