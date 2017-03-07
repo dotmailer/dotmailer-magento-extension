@@ -180,8 +180,8 @@ class Dotdigitalgroup_Email_Helper_File
                 || preg_match("/(?:${delimiterEsc}|${enclosureEsc}|\s)/", $field)
             ) {
                 $output[] = $enclosure . str_replace(
-                        $enclosure, $enclosure . $enclosure, $field
-                    ) . $enclosure;
+                    $enclosure, $enclosure . $enclosure, $field
+                ) . $enclosure;
             } else {
                 $output[] = $field;
             }

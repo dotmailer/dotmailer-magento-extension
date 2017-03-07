@@ -455,6 +455,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
                 $this->saveApiEndpoint($apiEndpoint, $websiteId);
             }
         }
+
         return $apiEndpoint;
     }
 
@@ -476,6 +477,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
                 }
             }
         }
+
         return $apiEndpoint;
     }
 
