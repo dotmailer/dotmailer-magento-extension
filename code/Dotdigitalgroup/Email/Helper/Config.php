@@ -89,29 +89,44 @@ class Dotdigitalgroup_Email_Helper_Config
     const XML_PATH_CONNECTOR_CUSTOMER_LAST_ORDER_DATE = 'connector_data_mapping/customer_data/last_order_date';
     const XML_PATH_CONNECTOR_CUSTOMER_LAST_ORDER_ID = 'connector_data_mapping/customer_data/last_order_id';
     const XML_PATH_CONNECTOR_CUSTOMER_TOTAL_REFUND = 'connector_data_mapping/customer_data/total_refund';
-    const XML_PATH_CONNECTOR_CUSTOMER_LAST_ORDER_INCREMENT_ID = 'connector_data_mapping/customer_data/last_increment_id';
-    const XML_PATH_CONNECTOR_CUSTOMER_MOST_PURCHASED_CATEGORY = 'connector_data_mapping/customer_data/most_pur_category';
-    const XML_PATH_CONNECTOR_CUSTOMER_MOST_PURCHASED_BRAND = 'connector_data_mapping/customer_data/most_pur_brand';
+    const XML_PATH_CONNECTOR_CUSTOMER_LAST_ORDER_INCREMENT_ID =
+        'connector_data_mapping/customer_data/last_increment_id';
+    const XML_PATH_CONNECTOR_CUSTOMER_MOST_PURCHASED_CATEGORY =
+        'connector_data_mapping/customer_data/most_pur_category';
+    const XML_PATH_CONNECTOR_CUSTOMER_MOST_PURCHASED_BRAND =
+        'connector_data_mapping/customer_data/most_pur_brand';
     const XML_PATH_CONNECTOR_CUSTOMER_MOST_FREQUENT_PURCHASE_DAY
         = 'connector_data_mapping/customer_data/most_freq_pur_day';
     const XML_PATH_CONNECTOR_CUSTOMER_MOST_FREQUENT_PURCHASE_MONTH
         = 'connector_data_mapping/customer_data/most_freq_pur_mon';
     const XML_PATH_CONNECTOR_CUSTOMER_FIRST_CATEGORY_PURCHASED
         = 'connector_data_mapping/customer_data/first_category_pur';
-    const XML_PATH_CONNECTOR_CUSTOMER_LAST_CATEGORY_PURCHASED = 'connector_data_mapping/customer_data/last_category_pur';
-    const XML_PATH_CONNECTOR_CUSTOMER_FIRST_BRAND_PURCHASED = 'connector_data_mapping/customer_data/first_brand_pur';
-    const XML_PATH_CONNECTOR_CUSTOMER_LAST_BRAND_PURCHASED = 'connector_data_mapping/customer_data/last_brand_pur';
-    const XML_PATH_CONNECTOR_CUSTOMER_SUBSCRIBER_STATUS = 'connector_data_mapping/customer_data/subscriber_status';
+    const XML_PATH_CONNECTOR_CUSTOMER_LAST_CATEGORY_PURCHASED =
+        'connector_data_mapping/customer_data/last_category_pur';
+    const XML_PATH_CONNECTOR_CUSTOMER_FIRST_BRAND_PURCHASED =
+        'connector_data_mapping/customer_data/first_brand_pur';
+    const XML_PATH_CONNECTOR_CUSTOMER_LAST_BRAND_PURCHASED =
+        'connector_data_mapping/customer_data/last_brand_pur';
+    const XML_PATH_CONNECTOR_CUSTOMER_SUBSCRIBER_STATUS =
+        'connector_data_mapping/customer_data/subscriber_status';
     const XML_PATH_CONNECTOR_ABANDONED_PRODUCT_NAME
         = 'connector_data_mapping/customer_data/abandoned_prod_name';
-    const XML_PATH_CONNECTOR_CUSTOMER_BILLING_COMPANY_NAME = 'connector_data_mapping/customer_data/billing_company';
-    const XML_PATH_CONNECTOR_CUSTOMER_DELIVERY_COMPANY_NAME = 'connector_data_mapping/customer_data/delivery_company';
-    const XML_PATH_CONNECTOR_ENTERPRISE_CURRENT_BALANCE = 'connector_data_mapping/enterprise_data/reward_points';
-    const XML_PATH_CONNECTOR_ENTERPRISE_REWARD_AMOUNT = 'connector_data_mapping/enterprise_data/reward_amount';
-    const XML_PATH_CONNECTOR_ENTERPRISE_CREATED_DATE = 'connector_data_mapping/enterprise_data/created_date';
-    const XML_PATH_CONNECTOR_ENTERPRISE_EXPIRATION_DATE = 'connector_data_mapping/enterprise_data/expiration_date';
-    const XML_PATH_CONNECTOR_ENTERPIRSE_LAST_USED_DATE = 'connector_data_mapping/enterprise_data/last_used_date';
-    const XML_PATH_CONNECTOR_ENTERPRISE_CUSTOMER_SEGMENTS = 'connector_data_mapping/enterprise_data/customer_segment';
+    const XML_PATH_CONNECTOR_CUSTOMER_BILLING_COMPANY_NAME =
+        'connector_data_mapping/customer_data/billing_company';
+    const XML_PATH_CONNECTOR_CUSTOMER_DELIVERY_COMPANY_NAME =
+        'connector_data_mapping/customer_data/delivery_company';
+    const XML_PATH_CONNECTOR_ENTERPRISE_CURRENT_BALANCE =
+        'connector_data_mapping/enterprise_data/reward_points';
+    const XML_PATH_CONNECTOR_ENTERPRISE_REWARD_AMOUNT =
+        'connector_data_mapping/enterprise_data/reward_amount';
+    const XML_PATH_CONNECTOR_ENTERPRISE_CREATED_DATE =
+        'connector_data_mapping/enterprise_data/created_date';
+    const XML_PATH_CONNECTOR_ENTERPRISE_EXPIRATION_DATE =
+        'connector_data_mapping/enterprise_data/expiration_date';
+    const XML_PATH_CONNECTOR_ENTERPIRSE_LAST_USED_DATE =
+        'connector_data_mapping/enterprise_data/last_used_date';
+    const XML_PATH_CONNECTOR_ENTERPRISE_CUSTOMER_SEGMENTS =
+        'connector_data_mapping/enterprise_data/customer_segment';
 
     /**
      * Dynamic Content
@@ -374,8 +389,8 @@ class Dotdigitalgroup_Email_Helper_Config
     public function getRegionAuthorize($website)
     {
         $apiEndpoint =  Mage::helper('ddg')->getWebsiteConfig(
-                Dotdigitalgroup_Email_Helper_Config::PATH_FOR_API_ENDPOINT, $website
-            ) . DS;
+            Dotdigitalgroup_Email_Helper_Config::PATH_FOR_API_ENDPOINT, $website
+        ) . DS;
         //replace the api with the app prefix from the domain name
         $regionBaseUrl = str_replace('api', 'app', $apiEndpoint);
 

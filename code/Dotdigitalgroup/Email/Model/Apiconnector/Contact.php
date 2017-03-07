@@ -21,11 +21,11 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
     public function sync()
     {
         $result = array('success' => true, 'message' => '');
-        /** @var Dotdigitalgroup_Email_Helper_Data $helper */
         $helper       = Mage::helper('ddg');
         $this->start = microtime(true);
         //resourse allocation
         $helper->allowResourceFullExecution();
+
         foreach (Mage::app()->getWebsites(true) as $website) {
             $enabled = Mage::helper('ddg')->getWebsiteConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED,
@@ -35,16 +35,12 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_CONTACT_ENABLED,
                 $website
             );
-            if ($enabled && $sync) {
-                if (!$this->countCustomers) {
-                    $helper->log('---------- Start customer sync ----------');
-                }
 
+            if ($enabled && $sync) {
                 $numUpdated = $this->exportCustomersForWebsite($website);
                 // show message for any number of customers
                 if ($numUpdated) {
-                    $result['message'] .= '</br>' . $website->getName()
-                        . ', updated customers = ' . $numUpdated;
+                    $result['message'] .= '</br>' . $website->getName() . ', updated customers = ' . $numUpdated;
                 }
             }
         }
@@ -52,9 +48,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
         //sync proccessed
         if ($this->countCustomers) {
             //@codingStandardsIgnoreStart
-            $message = 'Total time for sync : ' . gmdate(
-                    "H:i:s", microtime(true) - $this->start
-                ) .
+            $message = 'Total time for Customer sync : ' . gmdate("H:i:s", microtime(true) - $this->start) .
                 ', Total updated = ' . $this->countCustomers;
             //@codingStandardsIgnoreEnd
             $helper->log($message);
@@ -84,7 +78,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
         );
 
         //skip if the mapping field is missing
-        if (!$helper->getCustomerAddressBook($website)) {
+        if (! $helper->getCustomerAddressBook($website)) {
             return 0;
         }
 
@@ -95,7 +89,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
         );
 
         // no contacts for this website
-        if (!$contacts->getSize()) {
+        if (! $contacts->getSize()) {
             return 0;
         }
 
@@ -169,13 +163,10 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
         }
 
         $customerNum = count($customers);
+        $helper->log('Website : ' . $website->getName() . ', customers = ' . $customerNum);
         $helper->log(
-            'Website : ' . $website->getName() . ', customers = ' . $customerNum
-        );
-        $helper->log(
-            '---------------------------- execution time :' . gmdate(
-                "H:i:s", microtime(true) - $this->start
-            )
+            '---------------------------- execution time ' .
+            gmdate("H:i:s", microtime(true) - $this->start)
         );
 
         if (is_file($fileHelper->getFilePath($customersFile))) {
@@ -224,7 +215,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
             $contact = Mage::registry('current_contact');
         }
 
-        if (!$contact->getId()) {
+        if (! $contact->getId()) {
             Mage::getSingleton('adminhtml/session')->addError(
                 'No contact found!'
             );
@@ -239,14 +230,14 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
         $helper    = Mage::helper('ddg');
         $helper->log('---------- Start single customer sync ----------');
         //skip if the mapping field is missing
-        if (!$helper->getCustomerAddressBook($website)) {
+        if (! $helper->getCustomerAddressBook($website)) {
             return false;
         }
 
         $fileHelper = Mage::helper('ddg/file');
 
         $customerId = $contact->getCustomerId();
-        if (!$customerId) {
+        if (! $customerId) {
             Mage::getSingleton('adminhtml/session')->addError(
                 'Cannot manually sync guests!'
             );

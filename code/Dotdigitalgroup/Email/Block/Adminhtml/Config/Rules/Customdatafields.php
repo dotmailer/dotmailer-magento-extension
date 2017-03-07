@@ -4,8 +4,17 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Config_Rules_Customdatafields
     extends Mage_Adminhtml_Block_System_Config_Form_Field_Array_Abstract
 {
 
+    /**
+     * @var mixed
+     */
     protected $_getAttributeRenderer;
+    /**
+     * @var mixed
+     */
     protected $_getConditionsRenderer;
+    /**
+     * @var mixed
+     */
     protected $_getValueRenderer;
 
 
@@ -23,7 +32,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Config_Rules_Customdatafields
     }
 
     /**
-     * prepare render
+     * Prepare render.
      */
     protected function _prepareToRender()
     {
@@ -54,7 +63,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Config_Rules_Customdatafields
     }
 
     /**
-     * render cell template
+     * Render cell template.
      *
      * @param string $columnName
      *
@@ -102,7 +111,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Config_Rules_Customdatafields
     }
 
     /**
-     * Assign extra parameters to row
+     * Assign extra parameters to row.
      *
      * @param Varien_Object $row
      */
@@ -116,7 +125,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Config_Rules_Customdatafields
     }
 
     /**
-     * get rendered for attribute field
+     * Get rendered for attribute field.
      *
      * @return mixed
      */
@@ -132,7 +141,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Config_Rules_Customdatafields
     }
 
     /**
-     * get renderer for conditions field
+     * Get renderer for conditions field.
      *
      * @return mixed
      */
@@ -148,7 +157,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Config_Rules_Customdatafields
     }
 
     /**
-     * get renderer for value field
+     * Get renderer for value field.
      *
      * @return mixed
      */
@@ -163,6 +172,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Config_Rules_Customdatafields
         return $this->_getValueRenderer;
     }
 
+    /**
+     * @return string
+     */
     public function _toHtml()
     {
         $script
@@ -197,8 +209,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Config_Rules_Customdatafields
 
                     function doUpdate(item){
                         var url = '" . Mage::helper('adminhtml')->getUrl(
-                'adminhtml/rules/ajax'
-            ) . "';
+            'adminhtml/rules/ajax'
+        ) . "';
                         var cond = item.up(1).down().next();
                         var condName = cond.down().readAttribute('name');
                         var value = item.up(1).down().next(1);
@@ -229,8 +241,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Config_Rules_Customdatafields
 
                     function doUpdateWithValues(item){
                         var url = '" . Mage::helper('adminhtml')->getUrl(
-                'adminhtml/rules/selected'
-            ) . "';
+            'adminhtml/rules/selected'
+        ) . "';
                         var arrayKey = item.up(1).readAttribute('id');
                         var cond = item.up(1).down().next();
                         var condName = cond.down().readAttribute('name');
@@ -265,8 +277,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Config_Rules_Customdatafields
 
                     function doUpdateForCondition(item){
                         var url = '" . Mage::helper('adminhtml')->getUrl(
-                'adminhtml/rules/value'
-            ) . "';
+            'adminhtml/rules/value'
+        ) . "';
                         var attribute = item.up(1).down();
                         var attributeValue = attribute.down().value;
                         var value = item.up().next();
@@ -288,9 +300,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Config_Rules_Customdatafields
                 });
             </script>";
 
-        return '<input type="hidden" id="' . $this->getElement()->getHtmlId()
-        . '"/>' . parent::_toHtml() . $script;
-
+        return '<input type="hidden" id="' . $this->getElement()->getHtmlId() . '"/>' .
+            parent::_toHtml() . $script;
     }
 
 }

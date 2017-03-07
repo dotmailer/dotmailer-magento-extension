@@ -89,6 +89,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         if (!isset($this->apiEndpoint)) {
             Mage::throwException(Mage::helper('ddg')->__('Dotmailer connector API endpoint cannot be empty.'));
         }
+
         return $this->apiEndpoint;
     }
 
@@ -781,6 +782,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
                 );
             }
         }
+
         $url = $this->getApiEndpoint() . self::REST_TRANSACTIONAL_DATA_IMPORT
             . $collectionName;
         $this->setURl($url)
@@ -1315,6 +1317,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
                 );
             }
         }
+
         $url = $this->getApiEndpoint() . self::REST_TRANSACTIONAL_DATA_IMPORT
             . $collectionName;
         $this->setURl($url)
