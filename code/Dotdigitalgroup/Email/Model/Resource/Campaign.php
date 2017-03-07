@@ -149,6 +149,7 @@ class Dotdigitalgroup_Email_Model_Resource_Campaign
     public function setProcessing($ids, $sendId)
     {
         try {
+            $ids = implode("', '", $ids);
             $bind = array(
                 'send_status' => Dotdigitalgroup_Email_Model_Campaign::PROCESSING,
                 'send_id' => $sendId
