@@ -11,7 +11,7 @@ class Dotdigitalgroup_Email_Block_Coupon extends Mage_Core_Block_Template
     public function generateCoupon()
     {
         $params = $this->getRequest()->getParams();
-        if (!isset($params['id']) || !isset($params['code'])) {
+        if (! isset($params['id']) || !isset($params['code'])) {
             Mage::helper('ddg')->log('Coupon no id or code is set');
 
             return false;
@@ -23,7 +23,7 @@ class Dotdigitalgroup_Email_Block_Coupon extends Mage_Core_Block_Template
         if ($couponCodeId) {
             $rule = Mage::getModel('salesrule/rule')->load($couponCodeId);
             //coupon code id not found
-            if (!$rule->getId()) {
+            if (! $rule->getId()) {
                 Mage::helper('ddg')->log(
                     'Rule with couponId model not found : ' . $couponCodeId
                 );
@@ -73,21 +73,20 @@ class Dotdigitalgroup_Email_Block_Coupon extends Mage_Core_Block_Template
     }
 
     /**
-     * Get style text from config
+     * Get style text from config.
      *
      * @return array
      */
     protected function getStyle()
     {
         return explode(
-            ',', Mage::getStoreConfig(
-            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_COUPON_STYLE
-        )
+            ',',
+            Mage::getStoreConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_COUPON_STYLE)
         );
     }
 
     /**
-     * Get coupon font color
+     * Get coupon font color.
      *
      * @return mixed
      */
@@ -99,7 +98,7 @@ class Dotdigitalgroup_Email_Block_Coupon extends Mage_Core_Block_Template
     }
 
     /**
-     * Get font size
+     * Get font size.
      *
      * @return mixed
      */
@@ -111,7 +110,7 @@ class Dotdigitalgroup_Email_Block_Coupon extends Mage_Core_Block_Template
     }
 
     /**
-     * Get font
+     * Get font.
      *
      * @return mixed
      */
@@ -123,7 +122,7 @@ class Dotdigitalgroup_Email_Block_Coupon extends Mage_Core_Block_Template
     }
 
     /**
-     * Get background color
+     * Get background color.
      *
      * @return mixed
      */

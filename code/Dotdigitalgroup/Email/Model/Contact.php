@@ -6,6 +6,7 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
     const EMAIL_CONTACT_IMPORTED = 1;
     const EMAIL_CONTACT_NOT_IMPORTED = null;
     const EMAIL_SUBSCRIBER_NOT_IMPORTED = null;
+    const EMAIL_SUBSCRIBER_IMPORTED = 1;
 
     /**
      * Constructor.
@@ -111,28 +112,59 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
     }
 
     /**
-     * Batch non imported subscribers for a website.
      *
-     * @param     $website
+     * @param $website
      * @param int $limit
-     * @param boolean $isCustomerCheck
-     *
-     * @return Dotdigitalgroup_Email_Model_Resource_Contact_Collection
+     * @return Mage_Eav_Model_Entity_Collection_Abstract
      */
-    public function getSubscribersToImport($website, $limit = 1000, $isCustomerCheck = true)
+    public function getSubscribersToImport($website, $limit = 1000)
     {
-
         $storeIds = $website->getStoreIds();
         $collection = $this->getCollection()
             ->addFieldToFilter('is_subscriber', array('notnull' => true))
             ->addFieldToFilter('subscriber_imported', array('null' => true))
             ->addFieldToFilter('store_id', array('in' => $storeIds));
 
-        if ($isCustomerCheck) {
-            $collection->addFieldToFilter('customer_id', array('neq' => 0));
-        } else {
-            $collection->addFieldToFilter('customer_id', array('eq' => 0));
-        }
+        //@codingStandardsIgnoreStart
+        $collection->getSelect()->limit($limit);
+        //@codingStandardsIgnoreEnd
+        return $collection;
+    }
+
+
+    /**
+     * @param $website
+     * @param int $limit
+     * @return Mage_Eav_Model_Entity_Collection_Abstract
+     */
+    public function getSubscribersWithCustomerIdToImport($website, $limit = 1000)
+    {
+        $storeIds = $website->getStoreIds();
+        $collection = $this->getCollection()
+            ->addFieldToFilter('is_subscriber', array('notnull' => true))
+            ->addFieldToFilter('subscriber_imported', array('null' => true))
+            ->addFieldToFilter('store_id', array('in' => $storeIds))
+            ->addFieldToFilter('customer_id', array('neq' => 0));
+
+        //@codingStandardsIgnoreStart
+        $collection->getSelect()->limit($limit);
+        //@codingStandardsIgnoreEnd
+        return $collection;
+    }
+
+    /**
+     * @param $website
+     * @param int $limit
+     * @return Mage_Eav_Model_Entity_Collection_Abstract
+     */
+    public function getGuestSubscribersToImport($website, $limit = 1000)
+    {
+        $storeIds = $website->getStoreIds();
+        $collection = $this->getCollection()
+            ->addFieldToFilter('is_subscriber', array('notnull' => true))
+            ->addFieldToFilter('subscriber_imported', array('null' => true))
+            ->addFieldToFilter('store_id', array('in' => $storeIds))
+            ->addFieldToFilter('customer_id', array('eq' => 0));
 
         //@codingStandardsIgnoreStart
         $collection->getSelect()->limit($limit);
@@ -144,7 +176,7 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
      * @param $emails
      * @return Mage_Eav_Model_Entity_Collection_Abstract
      */
-    public function getSubscribersToImportFromEmails($emails)
+    public function getContactWithEmails($emails)
     {
         $collection = $this->getCollection()
             ->addFieldToFilter('email', array('in' => $emails));
@@ -280,5 +312,23 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
             ->getSize();
 
         return $countContacts;
+    }
+
+
+    /**
+     * Get emails with order data.
+     *
+     * @param $emails
+     * @return array
+     */
+    public function getSalesOrderWithCutomerEmails($emails)
+    {
+        if (empty($emails))
+            return array();
+
+        $collection = Mage::getResourceModel('sales/order_collection')
+            ->addFieldToFilter('customer_email', array('in' => $emails));
+
+        return $collection->getColumnValues('customer_email');
     }
 }

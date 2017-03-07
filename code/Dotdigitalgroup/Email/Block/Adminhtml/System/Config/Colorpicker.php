@@ -5,7 +5,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Config_Colorpicker
 {
 
     /**
-     * Generate HTML code for color picker
+     * Generate HTML code for color picker.
      *
      * @param Varien_Data_Form_Element_Abstract $element
      *
@@ -45,7 +45,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Config_Colorpicker
     }
 
     /**
-     * Procolor JS code to display color picker
+     * Procolor JS code to display color picker.
      *
      * @see http://procolor.sourceforge.net/examples.php
      *
@@ -62,7 +62,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Config_Colorpicker
     }
 
     /**
-     * Prototype validation
+     * Prototype validation.
      *
      * @return string
      */
@@ -70,9 +70,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Config_Colorpicker
     {
         return
             '<script type="text/javascript">
-                Validation.add(\'validate-hex\', \'' . Mage::helper('ddg')->__(
-                'Please enter a valid hex color code'
-            ) . '\', function(v) {
+                Validation.add(\'validate-hex\', \'' . Mage::helper('ddg')->__('Please enter a valid hex color code') .
+            '\', function(v) {
                     return /^#(?:[0-9a-fA-F]{3}){1,2}$/.test(v);
                 });
             </script>';

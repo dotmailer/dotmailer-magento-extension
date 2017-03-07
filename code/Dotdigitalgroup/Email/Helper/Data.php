@@ -54,9 +54,8 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
     public function auth($authRequest)
     {
         if ($authRequest != Mage::getStoreConfig(
-                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_CONTENT_PASSCODE
-            )
-        ) {
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_CONTENT_PASSCODE
+        )) {
             return false;
         }
 
@@ -995,7 +994,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      *
      * @return bool
      */
-    public function getSubscriberSyncEnabled($websiteId = 0)
+    public function isSubscriberSyncEnabled($websiteId = 0)
     {
         return Mage::getStoreConfigFlag(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_SUBSCRIBER_ENABLED,

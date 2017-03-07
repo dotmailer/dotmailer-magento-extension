@@ -273,8 +273,8 @@ class Dotdigitalgroup_Email_Model_Sales_Order
         if ($campaignId) {
             foreach ($collection as $order) {
                 $helper->log(
-                    '-- Order Product Reminder: ' . $order->getIncrementId()
-                    . ' Campaign Id: ' . $campaignId
+                    '-- Register campaign : ' . $campaignId . ' for product reminder, order_increment_id : ' .
+                    $order->getIncrementId()
                 );
 
                 try {

@@ -71,10 +71,6 @@ class Dotdigitalgroup_Email_Model_Review extends Mage_Core_Model_Abstract
             $storeIds = $website->getStoreIds();
             if ($enabled && $sync && ! empty($storeIds)) {
                 //start the sync
-                if (!$this->countReviews) {
-                    $helper->log('---------- Start reviews sync ----------');
-                }
-
                 $this->_exportReviewsForWebsite($website);
             }
 
@@ -102,7 +98,7 @@ class Dotdigitalgroup_Email_Model_Review extends Mage_Core_Model_Abstract
 
         if ($this->countReviews) {
             //@codingStandardsIgnoreStart
-            $message = 'Total time for sync : ' . gmdate("H:i:s", microtime(true) - $this->start) .
+            $message = 'Total time for Reviews sync : ' . gmdate("H:i:s", microtime(true) - $this->start) .
                 ', Total synced = ' . $this->countReviews;
             //@codingStandardsIgnoreEnd
             $helper->log($message);
@@ -124,7 +120,7 @@ class Dotdigitalgroup_Email_Model_Review extends Mage_Core_Model_Abstract
         $emailReviews     = $this->_getReviewsToExport($website, $limit);
         $this->reviewIds = $emailReviews->getColumnValues('review_id');
 
-        if (!empty($this->reviewIds)) {
+        if (! empty($this->reviewIds)) {
             $reviews = Mage::getModel('review/review')
                 ->getCollection()
                 ->addFieldToFilter(
