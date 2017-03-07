@@ -61,8 +61,7 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
                 }
             } elseif (!$emailBefore) {
                 //for new contacts update email
-                $contactModel->setEmail($email)
-                    ->setEmailImported(
+                $contactModel->setEmailImported(
                         Dotdigitalgroup_Email_Model_Contact::EMAIL_CONTACT_NOT_IMPORTED
                     );
             }
