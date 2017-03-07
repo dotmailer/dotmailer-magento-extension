@@ -36,30 +36,38 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
 
             //email change detection
             if ($emailBefore && $email != $emailBefore) {
+                //Reload contact model up update email
+                $contactModel = Mage::getModel('ddg_automation/contact')
+                    ->loadByCustomerEmail($emailBefore, $websiteId);
+                $contactModel->setEmail($email);
+
                 Mage::helper('ddg')->log(
                     'email change detected : ' . $email . ', after : '
                     . $emailBefore . ', website id : ' . $websiteId
                 );
-                $data = array(
-                    'emailBefore'  => $emailBefore,
-                    'email'        => $email,
-                    'isSubscribed' => $isSubscribed
-                );
-                Mage::getModel('ddg_automation/importer')->registerQueue(
-                    Dotdigitalgroup_Email_Model_Importer::IMPORT_TYPE_CONTACT_UPDATE,
-                    $data,
-                    Dotdigitalgroup_Email_Model_Importer::MODE_CONTACT_EMAIL_UPDATE,
-                    $websiteId
-                );
+                //Only update in account if it is already imported
+                if($contactModel->getEmailImported() || $contactModel->getSubscriberImported()) {
+                    $data = array(
+                        'emailBefore'  => $emailBefore,
+                        'email'        => $email,
+                        'isSubscribed' => $isSubscribed
+                    );
+                    Mage::getModel('ddg_automation/importer')->registerQueue(
+                        Dotdigitalgroup_Email_Model_Importer::IMPORT_TYPE_CONTACT_UPDATE,
+                        $data,
+                        Dotdigitalgroup_Email_Model_Importer::MODE_CONTACT_EMAIL_UPDATE,
+                        $websiteId
+                    );
+                }
             } elseif (!$emailBefore) {
                 //for new contacts update email
-                $contactModel->setEmail($email);
+                $contactModel->setEmail($email)
+                    ->setEmailImported(
+                        Dotdigitalgroup_Email_Model_Contact::EMAIL_CONTACT_NOT_IMPORTED
+                    );
             }
 
-            $contactModel->setEmailImported(
-                Dotdigitalgroup_Email_Model_Contact::EMAIL_CONTACT_NOT_IMPORTED
-            )
-                ->setCustomerId($customerId)
+            $contactModel->setCustomerId($customerId)
                 ->save();
         } catch (Exception $e) {
             Mage::logException($e);
