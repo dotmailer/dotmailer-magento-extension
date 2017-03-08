@@ -145,18 +145,14 @@ class Dotdigitalgroup_Email_Model_Connector_Quote
          * Billing address.
          */
         if ($quoteData->getBillingAddress()) {
-            $billingData           = $quoteData->getBillingAddress()->getData();
+            $billingData           = $quoteData->getBillingAddress();
             $this->billing_address = array(
-                'billing_address_1' => $this->_getStreet(
-                    $billingData['street'], 1
-                ),
-                'billing_address_2' => $this->_getStreet(
-                    $billingData['street'], 2
-                ),
-                'billing_city'      => $billingData['city'],
-                'billing_region'    => $billingData['region'],
-                'billing_country'   => $billingData['country_id'],
-                'billing_postcode'  => $billingData['postcode'],
+                'billing_address_1' => $billingData->getStreet1(),
+                'billing_address_2' => $billingData->getStreet2(),
+                'billing_city'      => $billingData->getCity(),
+                'billing_region'    => $billingData->getRegion(),
+                'billing_country'   => $billingData->getCountryId(),
+                'billing_postcode'  => $billingData->getPostcode(),
             );
         }
 
@@ -164,19 +160,14 @@ class Dotdigitalgroup_Email_Model_Connector_Quote
          * Shipping address.
          */
         if ($quoteData->getShippingAddress()) {
-            $shippingData = $quoteData->getShippingAddress()->getData();
-
+            $shippingData = $quoteData->getShippingAddress();
             $this->delivery_address = array(
-                'delivery_address_1' => $this->_getStreet(
-                    $shippingData['street'], 1
-                ),
-                'delivery_address_2' => $this->_getStreet(
-                    $shippingData['street'], 2
-                ),
-                'delivery_city'      => $shippingData['city'],
-                'delivery_region'    => $shippingData['region'],
-                'delivery_country'   => $shippingData['country_id'],
-                'delivery_postcode'  => $shippingData['postcode']
+                'delivery_address_1' => $shippingData->getStreet1(),
+                'delivery_address_2' => $shippingData->getStreet2(),
+                'delivery_city'      => $shippingData->getCity(),
+                'delivery_region'    => $shippingData->getRegion(),
+                'delivery_country'   => $shippingData->getCountryId(),
+                'delivery_postcode'  => $shippingData->getPostcode()
             );
         }
 
@@ -241,28 +232,6 @@ class Dotdigitalgroup_Email_Model_Connector_Quote
             $quoteData->getData('grand_total'), 2, '.', ''
         );
 
-    }
-
-    /**
-     * Get the street name by line number.
-     *
-     * @param $street
-     * @param $line
-     *
-     * @return string
-     */
-    protected function _getStreet($street, $line)
-    {
-        $street = explode("\n", $street);
-        if ($line == 1) {
-            return $street[0];
-        }
-
-        if (isset($street[$line - 1])) {
-            return $street[$line - 1];
-        } else {
-            return '';
-        }
     }
 
     /**

@@ -79,8 +79,8 @@ class Dotdigitalgroup_Email_Adminhtml_Email_RulesController
             $emailRules->getId()
                 ? $emailRules->getName()
                 : $this->__(
-                'New Rule'
-            )
+                    'New Rule'
+                )
         );
 
         // set entered data if was error when we do save
