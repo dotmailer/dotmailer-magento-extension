@@ -45,20 +45,18 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
                     'email change detected : ' . $email . ', after : '
                     . $emailBefore . ', website id : ' . $websiteId
                 );
-                //Only update in account if it is already imported
-                if($contactModel->getEmailImported() || $contactModel->getSubscriberImported()) {
-                    $data = array(
-                        'emailBefore'  => $emailBefore,
-                        'email'        => $email,
-                        'isSubscribed' => $isSubscribed
-                    );
-                    Mage::getModel('ddg_automation/importer')->registerQueue(
-                        Dotdigitalgroup_Email_Model_Importer::IMPORT_TYPE_CONTACT_UPDATE,
-                        $data,
-                        Dotdigitalgroup_Email_Model_Importer::MODE_CONTACT_EMAIL_UPDATE,
-                        $websiteId
-                    );
-                }
+                
+                $data = array(
+                    'emailBefore'  => $emailBefore,
+                    'email'        => $email,
+                    'isSubscribed' => $isSubscribed
+                );
+                Mage::getModel('ddg_automation/importer')->registerQueue(
+                    Dotdigitalgroup_Email_Model_Importer::IMPORT_TYPE_CONTACT_UPDATE,
+                    $data,
+                    Dotdigitalgroup_Email_Model_Importer::MODE_CONTACT_EMAIL_UPDATE,
+                    $websiteId
+                );
             } elseif (!$emailBefore) {
                 //for new contacts update email
                 $contactModel->setEmailImported(
