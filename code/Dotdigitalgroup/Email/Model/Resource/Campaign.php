@@ -93,7 +93,7 @@ class Dotdigitalgroup_Email_Model_Resource_Campaign
     public function setMessage($ids, $message, $sendId = false)
     {
         try {
-            $ids = implode(', ', $ids);
+            $ids = implode(", ", $ids);
             if ($sendId) {
                 $map = 'send_id';
             } else {
@@ -109,7 +109,7 @@ class Dotdigitalgroup_Email_Model_Resource_Campaign
                     'send_status' => Dotdigitalgroup_Email_Model_Campaign::FAILED,
                     'sent_at' => $now
                 ),
-                array("$map in ($ids)")
+                "$map in ($ids)"
             );
         } catch (Exception $e) {
             Mage::logException($e);
@@ -158,7 +158,7 @@ class Dotdigitalgroup_Email_Model_Resource_Campaign
             $conn->update(
                 $this->getMainTable(),
                 $bind,
-                array("id in ($idss)")
+                "id in ($ids)"
             );
         } catch (Exception $e) {
             Mage::logException($e);
