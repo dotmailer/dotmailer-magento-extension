@@ -15,7 +15,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Column_Renderer_Subscriber
     {
         $value = $this->_getValue($row);
         $storeId = $row->getStoreId();
-        if($value == 0 && $storeId != 0) {
+        if($value == 0 && $storeId > 0) {
             return Mage::app()->getStore($storeId)->getWebsite()->getName();
         }
         return parent::render($row);
