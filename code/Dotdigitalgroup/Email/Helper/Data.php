@@ -208,7 +208,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      * @param $email
      * @param $websiteId
      *
-     * @return bool
+     * @return bool|string
      */
     public function getContactId($email, $websiteId)
     {
@@ -240,9 +240,11 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         if (isset($response->id)) {
             $contact->setContactId($response->id)
                 ->save();
-        }
 
-        return $response->id;
+            return $response->id;
+        } else {
+            false;
+        }
     }
 
     /**
