@@ -542,10 +542,11 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
     public function getCurlError()
     {
         //if curl error
-        if (!empty($this->curlError)) {
+        if (! empty($this->curlError)) {
             //log curl error
-            $message = 'CURL ERROR ' . $this->curlError;
-            Mage::helper('ddg')->log($message);
+            $message = 'CURL ERROR : ' . $this->curlError;
+            Mage::helper('ddg')->log($message)
+                ->log($this->url);
 
             return $this->curlError;
         }
