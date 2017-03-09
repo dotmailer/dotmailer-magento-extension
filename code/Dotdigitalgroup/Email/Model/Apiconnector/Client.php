@@ -98,7 +98,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
      *
      * @var array
      */
-    public $exludeMessages
+    public $excludeMessages
         = array(
             self::API_ERROR_FEATURENOTACTIVE,
             self::API_ERROR_PROGRAM_NOT_ACTIVE,
@@ -253,7 +253,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
 
         //log the error
         if (isset($response->message)
-            && !in_array($response->message, $this->exludeMessages)
+            && !in_array($response->message, $this->excludeMessages)
         ) {
             $message = 'POST ADDRESS BOOK CONTACTS ' . $url . ', ' . $response->message;
             Mage::helper('ddg')->log($message);
@@ -294,7 +294,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         $response = $this->execute();
         //log error
         if (isset($response->message)
-            && !in_array($response->message, $this->exludeMessages)
+            && !in_array($response->message, $this->excludeMessages)
         ) {
             $message = 'GET CONTACTS IMPORT REPORT  . ' . $url . ' message : '
                 . $response->message;
@@ -322,7 +322,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         //log error
         if (isset($response->message)
             && ! in_array(
-                $response->message, $this->exludeMessages
+                $response->message, $this->excludeMessages
             )
         ) {
             $message = 'GET CONTACT BY email : ' . $email . ' '
@@ -348,7 +348,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         //log error
         if (isset($response->message)
             && ! in_array(
-                $response->message, $this->exludeMessages
+                $response->message, $this->excludeMessages
             )
         ) {
             $message = 'GET ALL ADDRESS BOOKS : ' . $url . ', '
@@ -407,7 +407,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         //log error
         if (isset($response->message)
             && ! in_array(
-                $response->message, $this->exludeMessages
+                $response->message, $this->excludeMessages
             )
         ) {
             $message = 'Postaddressbooks ' . $response->message . ', url :'
@@ -433,7 +433,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         //log error
         if (isset($response->message)
             && ! in_array(
-                $response->message, $this->exludeMessages
+                $response->message, $this->excludeMessages
             )
         ) {
             $message = 'GET CAMPAIGNS ' . $response->message . ' api user : '
@@ -483,7 +483,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         //log error
         if (isset($response->message)
             && ! in_array(
-                $response->message, $this->exludeMessages
+                $response->message, $this->excludeMessages
             )
         ) {
             $message = 'POST CREATE DATAFIELDS ' . $response->message;
@@ -511,7 +511,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         //log error
         if (isset($response->message)
             && ! in_array(
-                $response->message, $this->exludeMessages
+                $response->message, $this->excludeMessages
             )
         ) {
             $message = 'DELETES DATA FIELD :' . $name . ' ' . $response->message;
@@ -536,7 +536,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         //log error
         if (isset($response->message)
             && ! in_array(
-                $response->message, $this->exludeMessages
+                $response->message, $this->excludeMessages
             )
         ) {
             $message = 'GET ALL DATAFIELDS ' . $response->message;
@@ -565,7 +565,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         //log error
         if (isset($response->message)
             && ! in_array(
-                $response->message, $this->exludeMessages
+                $response->message, $this->excludeMessages
             )
         ) {
             $message = 'ERROR : UPDATE SINGLE CONTACT : ' . $url . ' message : '
@@ -594,7 +594,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         //log error
         if (isset($response->message)
             && ! in_array(
-                $response->message, $this->exludeMessages
+                $response->message, $this->excludeMessages
             )
         ) {
             $message = 'DELETES CONTACT : ' . $url . ', ' . $response->message;
@@ -637,7 +637,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         //log error
         if (isset($response->message)
             && ! in_array(
-                $response->message, $this->exludeMessages
+                $response->message, $this->excludeMessages
             )
         ) {
             $message = 'ERROR: UPDATE CONTACT DATAFIELD ' . $url . ' message : '
@@ -672,12 +672,9 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
 
         $response = $this->execute();
         //log error
-        if (isset($response->message)
-            && ! in_array(
-                $response->message, $this->exludeMessages
-            )
-        ) {
-            $message = 'SENDING CAMPAIGN ' . $response->message;
+        if (isset($response->message) && ! in_array($response->message, $this->excludeMessages)) {
+            unset($data['password']);
+            $message = 'SENDING CAMPAIGN - ' . $response->message;
             Mage::helper('ddg')->log($message)
                 ->log($data);
         }
@@ -718,7 +715,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         //log error
         if (isset($response->message)
             && ! in_array(
-                $response->message, $this->exludeMessages
+                $response->message, $this->excludeMessages
             )
         ) {
             $message = 'CREATES A NEW CONTACT : ' . $response->message;
@@ -749,7 +746,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         //log error
         if (isset($response->message)
             && ! in_array(
-                $response->message, $this->exludeMessages
+                $response->message, $this->excludeMessages
             )
         ) {
             $message = 'GET CONTACTS SUPPRESSED SINSE : ' . $dateString
@@ -793,7 +790,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         // log error
         if (isset($response->message)
             && ! in_array(
-                $response->message, $this->exludeMessages
+                $response->message, $this->excludeMessages
             )
         ) {
             $message = ' SEND MULTI TRANSACTIONAL DATA ' . $response->message;
@@ -849,7 +846,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         //log error
         if (isset($response->message)
             && ! in_array(
-                $response->message, $this->exludeMessages
+                $response->message, $this->excludeMessages
             )
         ) {
             $message = 'POST CONTACTS TRANSACTIONAL DATA  '
@@ -912,7 +909,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         //log error
         if (isset($response->message)
             && ! in_array(
-                $response->message, $this->exludeMessages
+                $response->message, $this->excludeMessages
             )
         ) {
             $message = 'GET ACCOUNT INFO for api user : '
@@ -944,7 +941,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         //log error
         if (isset($response->message)
             && ! in_array(
-                $response->message, $this->exludeMessages
+                $response->message, $this->excludeMessages
             )
         ) {
             $message = 'DELETES BULK ADDRESS BOOK CONTACTS ' . $response->message
@@ -977,7 +974,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         //log error
         if (isset($response->message)
             && ! in_array(
-                $response->message, $this->exludeMessages
+                $response->message, $this->excludeMessages
             )
         ) {
             $message = 'Resubscribe : ' . $url . ', message :'
@@ -1006,7 +1003,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         //log error
         if (isset($response->message)
             && ! in_array(
-                $response->message, $this->exludeMessages
+                $response->message, $this->excludeMessages
             )
         ) {
             $message = 'GET CampaignFromAddressList ' . $response->message
@@ -1036,7 +1033,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         //log error
         if (isset($response->message)
             && ! in_array(
-                $response->message, $this->exludeMessages
+                $response->message, $this->excludeMessages
             )
         ) {
             $message = ' CREATES CAMPAIGN ' . $response->message;
@@ -1061,7 +1058,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         //log error
         if (isset($response->message)
             && ! in_array(
-                $response->message, $this->exludeMessages
+                $response->message, $this->excludeMessages
             )
         ) {
             $message = 'Get programmes : ' . $response->message;
@@ -1090,7 +1087,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         //log error
         if (isset($response->message)
             && ! in_array(
-                $response->message, $this->exludeMessages
+                $response->message, $this->excludeMessages
             )
         ) {
             $message = 'Post programs enrolments : ' . $response->message;
@@ -1119,7 +1116,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         //log error
         if (isset($response->message)
             && ! in_array(
-                $response->message, $this->exludeMessages
+                $response->message, $this->excludeMessages
             )
         ) {
             $message = 'Get program by id  ' . $id . ', ' . $response->message;
@@ -1148,7 +1145,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         //log error
         if (isset($response->message)
             && ! in_array(
-                $response->message, $this->exludeMessages
+                $response->message, $this->excludeMessages
             )
         ) {
             $message = 'Get Campaign Summary ' . $response->message
@@ -1230,7 +1227,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         //log error
         if (isset($response->message)
             && ! in_array(
-                $response->message, $this->exludeMessages
+                $response->message, $this->excludeMessages
             )
         ) {
             $message = 'GET CONTACTS ADDRESS BOOKS contact: ' . $contactId
@@ -1258,7 +1255,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         //log error
         if (isset($response->message)
             && ! in_array(
-                $response->message, $this->exludeMessages
+                $response->message, $this->excludeMessages
             )
         ) {
             $message = 'GET API CONTACT LIST ' . $response->message;
@@ -1286,7 +1283,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         //log error
         if (isset($response->message)
             && ! in_array(
-                $response->message, $this->exludeMessages
+                $response->message, $this->excludeMessages
             )
         ) {
             $message = 'GET API CONTACT LIST ' . $response->message;
@@ -1328,7 +1325,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         //log error
         if (isset($response->message)
             && ! in_array(
-                $response->message, $this->exludeMessages
+                $response->message, $this->excludeMessages
             )
         ) {
             $message = ' SEND MULTI TRANSACTIONAL DATA TO ACCOUNT'
@@ -1355,7 +1352,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         //log error
         if (isset($response->message)
             && ! in_array(
-                $response->message, $this->exludeMessages
+                $response->message, $this->excludeMessages
             )
         ) {
             $message = 'GET CAMPAIGNS WITH ACTIVITY SINCE DATE '
@@ -1378,7 +1375,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         //log error
         if (isset($response->message)
             && ! in_array(
-                $response->message, $this->exludeMessages
+                $response->message, $this->excludeMessages
             )
         ) {
             $message = 'GET CAMPAIGN ACTIVITY BY CONTACT ID '
@@ -1407,7 +1404,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         //log error
         if (isset($response->message)
             && ! in_array(
-                $response->message, $this->exludeMessages
+                $response->message, $this->excludeMessages
             )
         ) {
             $message = 'GET CONTACTS IMPORT BY IMPORT ID ' . $response->message;
@@ -1436,7 +1433,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         //log error
         if (isset($response->message)
             && ! in_array(
-                $response->message, $this->exludeMessages
+                $response->message, $this->excludeMessages
             )
         ) {
             $message = 'GET CONTACTS TRANSACTIONAL DATA IMPORT BY IMPORT ID '
@@ -1470,7 +1467,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
             //log error
             if (isset($response->message)
                 && ! in_array(
-                    $response->message, $this->exludeMessages
+                    $response->message, $this->excludeMessages
                 )
             ) {
                 $message = 'GET CONTACT IMPORT REPORT FAULTS: '
@@ -1500,7 +1497,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         //log error
         if (isset($response->message)
             && !in_array(
-                $response->message, $this->exludeMessages
+                $response->message, $this->excludeMessages
             )
         ) {
             $message = 'GETS THE SEND STATUS USING SEND ID: '
