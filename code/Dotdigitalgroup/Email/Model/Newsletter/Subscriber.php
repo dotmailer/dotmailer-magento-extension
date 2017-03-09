@@ -321,8 +321,11 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
                     'store_id',
                     'subscriber_status'
                 )
-            )
-            ->addFieldToFilter('subscriber_email', $emails);
+            );
+        //only when subscriber emails are set
+        if (! empty($emails)) {
+            $collection->addFieldToFilter('subscriber_email', $emails);
+        }
 
         $alias = 'subselect';
         $statuses = Mage::helper('ddg')->getWebsiteConfig(
