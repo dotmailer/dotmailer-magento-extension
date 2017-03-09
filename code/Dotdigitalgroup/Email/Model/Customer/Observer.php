@@ -36,10 +36,16 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
 
             //email change detection
             if ($emailBefore && $email != $emailBefore) {
+                //Reload contact model up update email
+                $contactModel = Mage::getModel('ddg_automation/contact')
+                    ->loadByCustomerEmail($emailBefore, $websiteId);
+                $contactModel->setEmail($email);
+
                 Mage::helper('ddg')->log(
                     'email change detected : ' . $email . ', after : '
                     . $emailBefore . ', website id : ' . $websiteId
                 );
+                
                 $data = array(
                     'emailBefore'  => $emailBefore,
                     'email'        => $email,
@@ -53,13 +59,12 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
                 );
             } elseif (!$emailBefore) {
                 //for new contacts update email
-                $contactModel->setEmail($email);
+                $contactModel->setEmailImported(
+                        Dotdigitalgroup_Email_Model_Contact::EMAIL_CONTACT_NOT_IMPORTED
+                    );
             }
 
-            $contactModel->setEmailImported(
-                Dotdigitalgroup_Email_Model_Contact::EMAIL_CONTACT_NOT_IMPORTED
-            )
-                ->setCustomerId($customerId)
+            $contactModel->setCustomerId($customerId)
                 ->save();
         } catch (Exception $e) {
             Mage::logException($e);
