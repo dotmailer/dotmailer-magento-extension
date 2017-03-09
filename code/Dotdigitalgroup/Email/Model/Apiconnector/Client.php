@@ -672,12 +672,9 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
 
         $response = $this->execute();
         //log error
-        if (isset($response->message)
-            && ! in_array(
-                $response->message, $this->exludeMessages
-            )
-        ) {
-            $message = 'SENDING CAMPAIGN ' . $response->message;
+        if (isset($response->message) && ! in_array($response->message, $this->exludeMessages)) {
+            unset($data['password']);
+            $message = 'SENDING CAMPAIGN - ' . $response->message;
             Mage::helper('ddg')->log($message)
                 ->log($data);
         }
