@@ -88,18 +88,11 @@ class Dotdigitalgroup_Email_Model_Resource_Campaign
      *
      * @param $ids
      * @param $message
-     * @param $sendId
      */
-    public function setMessage($ids, $message, $sendId = false)
+    public function setMessage($ids, $message)
     {
         try {
-            $ids = implode("', '", $ids);
-            if ($sendId) {
-                $map = 'send_id';
-            } else {
-                $map = 'id';
-            }
-
+            $ids = implode(", ", $ids);
             $now = Mage::getSingleton('core/date')->gmtDate();
             $conn = $this->_getWriteAdapter();
             $conn->update(
@@ -109,7 +102,7 @@ class Dotdigitalgroup_Email_Model_Resource_Campaign
                     'send_status' => Dotdigitalgroup_Email_Model_Campaign::FAILED,
                     'sent_at' => $now
                 ),
-                array("$map in ('$ids')")
+                "id in ($ids)"
             );
         } catch (Exception $e) {
             Mage::logException($e);
@@ -149,6 +142,7 @@ class Dotdigitalgroup_Email_Model_Resource_Campaign
     public function setProcessing($ids, $sendId)
     {
         try {
+            $ids = implode(', ', $ids);
             $bind = array(
                 'send_status' => Dotdigitalgroup_Email_Model_Campaign::PROCESSING,
                 'send_id' => $sendId
@@ -157,7 +151,7 @@ class Dotdigitalgroup_Email_Model_Resource_Campaign
             $conn->update(
                 $this->getMainTable(),
                 $bind,
-                array("id in ('$ids')")
+                "id in ($ids)"
             );
         } catch (Exception $e) {
             Mage::logException($e);
