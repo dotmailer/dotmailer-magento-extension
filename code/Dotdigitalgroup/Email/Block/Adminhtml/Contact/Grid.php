@@ -174,6 +174,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Contact_Grid
                     'type'    => 'options',
                     'options' => Mage::getSingleton('adminhtml/system_store')
                         ->getWebsiteOptionHash(true),
+                    'renderer' => 'ddg_automation/adminhtml_column_renderer_subscriber',
                     'index'   => 'website_id',
                 )
             );
