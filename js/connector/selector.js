@@ -16,6 +16,7 @@ ConnectorProductSelectorForm.prototype = {
                     this.chooserSelectedItems.set(d, 1)
                 }
             }
+
             a.reloadParams = {
                 "selected[]": this.chooserSelectedItems.keys()
             }
@@ -44,6 +45,7 @@ ConnectorProductSelectorForm.prototype = {
         } else {
             this.chooserSelectedItems.unset(a.value);
         }
+
         b.reloadParams = {
             "selected[]": this.chooserSelectedItems.keys()
         };
