@@ -26,9 +26,17 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Contact_Grid
     {
         $this->addColumn(
             'email_contact_id', array(
-                'header' => Mage::helper('ddg')->__('Email Contact ID'),
+                'header' => Mage::helper('ddg')->__('ID'),
                 'width'  => '20px',
                 'index'  => 'email_contact_id',
+                'type'   => 'number',
+                'escape' => true,
+            )
+        )->addColumn(
+            'contact_id', array(
+                'header' => Mage::helper('ddg')->__('Contact ID'),
+                'width'  => '20px',
+                'index'  => 'contact_id',
                 'type'   => 'number',
                 'escape' => true,
             )
