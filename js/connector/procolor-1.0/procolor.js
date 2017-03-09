@@ -169,15 +169,18 @@ if (Prototype.Version < "1.6")
 Element.addMethods(
     {
     /* Create a child element with the given options (attributes) and style. */
-    build: function(element, type, options, style) {
+    build: function (element, type, options, style) {
         var e = $(document.createElement(type));
-        $H(options).each(function(pair) { e[pair.key] = pair.value; });
+        $H(options).each(
+            function (pair) {
+            e[pair.key] = pair.value; }
+        );
         if (style) e.setStyle(style);
         element.appendChild(e);
         return e;
     },
     /* Return true if this event was a mouse event that occurred inside the given element. */
-    isEventIn: function(element, event) {
+    isEventIn: function (element, event) {
         var d = element.getDimensions();
         var p = element.cumulativeOffset();
         var x = event.pointerX(), y = event.pointerY();
@@ -194,18 +197,18 @@ Element.addMethods(
 
 var MouseCapture = Class.create(
     {
-    initialize: function() { },
+    initialize: function () { },
     
-    onEvent: function(event, callback) {
+    onEvent: function (event, callback) {
         if (callback && event.type != 'mouseover' && event.type != 'mouseout')
             callback(event, event.type);
         event.stop();
     },
-    setCursor: function(c) {
+    setCursor: function (c) {
         if (this.div)
             this.div.setStyle({ cursor: c });
     },
-    begin: function(callback) {
+    begin: function (callback) {
         /* Create our event listener.  We'll need this object now, and later on to
 		   be able to stop listening to events too. */
         this.listener = this.onEvent.bindAsEventListener(this, callback);
@@ -220,8 +223,10 @@ var MouseCapture = Class.create(
         /* Don't let the browser perform text-selection while capturing. */
         this.old_body_ondrag = document.body.ondrag;
         this.old_body_onselectstart = document.body.onselectstart;
-        document.body.ondrag = function () { return false; };
-        document.body.onselectstart = function () { return false; };
+        document.body.ondrag = function () {
+    return false; };
+        document.body.onselectstart = function () {
+    return false; };
         var body = Element.extend(document.body);
         var dim = body.getDimensions();
         /* Build a (nearly) invisible <div> that covers the entire document and that
@@ -239,7 +244,7 @@ var MouseCapture = Class.create(
             }
         );
     },
-    end: function() {
+    end: function () {
         /* Remove our invisible event-capturing <div>. */
         this.div.remove();
         /* Stop event observing. */
@@ -301,7 +306,7 @@ var ProColor = Class.create(
     */
 
     /* Create this color picker, with the given creation options. */
-    initialize: function(options) {
+    initialize: function (options) {
         /* Determine if we're on an old browser that can't handle alpha PNGs. */
         var browser_version = navigator.appVersion.split("MSIE");
         var browser_version_number = parseFloat(browser_version[1]);
@@ -362,7 +367,7 @@ var ProColor = Class.create(
             this.options.onOpened(this, 'opened');
     },
     /* Reposition the popup properly relative to its parent element. */
-    positionPopup: function() {
+    positionPopup: function () {
         var c_pos = this.div.cumulativeOffset(), c_left = c_pos[0], c_top = c_pos[1];
         var c_dim = this.div.getDimensions(), c_height = c_dim.height, c_width = c_dim.width; 
         var w_height = document.viewport.getHeight(), w_width = document.viewport.getWidth();
@@ -381,7 +386,7 @@ var ProColor = Class.create(
     /* Create the main color picker <div> element.  This sets up the entire color picker
 	   and sets up suitable event watching.  The color-picker will be created VISIBLE.
 	   This returns nothing; it merely updates members of this object. */
-    createDiv: function() {
+    createDiv: function () {
         var style = {
             display: 'block',
             width: this.options.width + 'px',
@@ -465,7 +470,7 @@ var ProColor = Class.create(
     },
     /* Create a <div> at the given relative coordinates with an image as its background,
 	   applying the given CSS style options. */
-    loadBgImage: function(parent, filename, x, y, w, h, options) {
+    loadBgImage: function (parent, filename, x, y, w, h, options) {
         var style = {
             display: 'block',
             position: 'absolute',
@@ -485,7 +490,7 @@ var ProColor = Class.create(
 	   applying the given CSS style options.  This is remarkably similar to
 	   creating the <div> above, except that this object is able to take the
 	   keyboard focus. */
-    createImageButton: function(parent, filename, x, y, w, h, options) {
+    createImageButton: function (parent, filename, x, y, w, h, options) {
         var style = {
             display: 'block',
             position: 'absolute',
@@ -507,7 +512,7 @@ var ProColor = Class.create(
         return element;
     },
     /* Create an edit field at the given relative coordinates with the given event listener. */
-    createEdit: function(parent, x, y, w, h, listener) {
+    createEdit: function (parent, x, y, w, h, listener) {
         x += 5; w -= 9;
         y += 2; h -= 6;
         var style = {
@@ -546,7 +551,7 @@ var ProColor = Class.create(
 	   object is garbage-collected.  After close() has been called, you may call
 	   this.initialize(...) to safely create a new <div> element (and color picker)
 	   within this object again. */
-    close: function() {
+    close: function () {
         if (!this.div) return false;
         if (this.options.onClosing)
             this.options.onClosing(this, 'closing');
@@ -588,7 +593,7 @@ var ProColor = Class.create(
     updateTimeout: false,
     /* This wrapper around update (below) is a hack for IE that delays and queues
 	   high-speed updates to avoid overloading the browser's page renderer. */
-    queuedUpdate: function(mode, color, sources) {
+    queuedUpdate: function (mode, color, sources) {
         if (!Prototype.Browser.IE)
             this.update(mode, color, sources);
         else {
@@ -596,7 +601,7 @@ var ProColor = Class.create(
             t.updateState = { mode:mode, color:color, sources:sources };
             if (t.updateTimeout == false) {
                 t.updateTimeout = setTimeout(
-                    function() {
+                    function () {
                     t.updateTimeout = false;
                     t.update(t.updateState.mode, t.updateState.color, t.updateState.sources);
                     }, 25
@@ -605,7 +610,7 @@ var ProColor = Class.create(
         }
     },
     /* This concludes a series of high-speed updates. */
-    finalUpdate: function() {
+    finalUpdate: function () {
         if (this.updateTimeout) {
             clearTimeout(this.updateTimeout);
             this.updateTimeout = false;
@@ -616,7 +621,7 @@ var ProColor = Class.create(
     /* When one of the input fields changes, update all of the others to
 	   reflect the same state (but take care not to update the originating
 	   field). */
-    update: function(mode, color, sources) {
+    update: function (mode, color, sources) {
         /* Carefully ensure that all of r, g, b, hue, sat, and brt are members
 		   of 'color', and that all of their values are numbers. */
         if (typeof(color) != 'object')
@@ -652,7 +657,10 @@ var ProColor = Class.create(
         if (hsb.brt > 100) hsb.brt = 100;
         /* Determine which sources we're *not* going to update visually. */
         source = { };
-        sources.each(function(s) { source[s] = true; });
+        sources.each(
+            function (s) {
+            source[s] = true; }
+        );
         /* Positional representations allow fractional RGB or HSB values, so do those first. */
 
         var t = this;
@@ -672,6 +680,7 @@ var ProColor = Class.create(
                 top:y - Math.floor(t.wheelsel.height/2) + "px" }
             );
         }
+
         if (!source.bar) {
             var base_hue = Math.floor(hsb.hue / 60);
             var next_hue = (base_hue + 1) % 6;
@@ -706,6 +715,7 @@ var ProColor = Class.create(
             this.g_edit.value = rgb.g;
             this.b_edit.value = rgb.b;
         }
+
         if (!source.hsb) {
             this.hue_edit.value = hsb.hue;
             this.sat_edit.value = hsb.sat;
@@ -721,6 +731,7 @@ var ProColor = Class.create(
                     input.value = value;
                 else input.innerHTML = value;
             }
+
             if (this.options.showInField) {
                 var tc = this.computeTextColor(rgb);
                 input.setStyle(
@@ -736,7 +747,7 @@ var ProColor = Class.create(
 
     /* Safely convert an unknown chunk of data to a decimal value, even if it's a string with
 	   all sorts of weird characters in it. */
-    toNumber: function(x) {
+    toNumber: function (x) {
         switch (typeof x) {
         case 'number':
             return x;
@@ -757,7 +768,7 @@ var ProColor = Class.create(
     },
     /* Format a color, specified as an arbitrary hex string, using the given formatting
 	   string, as defined in the "formatOutput" option for ProColor. */
-    formatOutput: function(color_string, format) {
+    formatOutput: function (color_string, format) {
         if (!format) format = "#{RR}{GG}{BB}";
         var rgb = this.decodeHexColor(color_string);
         if (!rgb) rgb = { r:0, g:0, b:0 };
@@ -765,7 +776,7 @@ var ProColor = Class.create(
     },
     /* Format a color, specified as an RGB object and an HSB object, using the given formatting
 	   string, as defined in the "formatOutput" option for ProColor. */
-    internalFormatOutput: function(rgb, hsb, format) {
+    internalFormatOutput: function (rgb, hsb, format) {
         /* The previous version of this used String.split(), but String.split() is
 		   badly broken on IE, and we don't want to include extra libraries to fix
 		   it, so instead we use some cleverness with String.match() here, which
@@ -773,7 +784,7 @@ var ProColor = Class.create(
         var pieces = format.match(/(\{\w+\}|[^{]+)/g);
         var output = '';
         pieces.each(
-            function(piece) {
+            function (piece) {
             var result;
             switch (piece) {
             case '{RR}': result = rgb.r.toColorPart().toUpperCase(); break;
@@ -796,6 +807,7 @@ var ProColor = Class.create(
             case '{brt}': result = hsb.brt.toString(); break;
             default: result = piece; break;
             }
+
             output += result;
             }
         );
@@ -804,14 +816,14 @@ var ProColor = Class.create(
     /* Take a standard 0-255 RGB value and convert it to its single-digit-hex pseudo-equivalent.
 	   CSS allows us to specify colors as #369, for example, so this function can be used to pack
 	   a truecolor 24-bit color value down to a three-digit 12-bit version like that. */
-    halfColorPart: function(v) {
+    halfColorPart: function (v) {
         return Math.floor((v + 8) / 17).toString(16);
     },
     /* Given a hex color represented in a string, convert that to an RGB object.  This does
 	   its best to decode colors no matter how weird they are, skipping over non-hex characters
 	   and accepting inputs of varying length.  Usually, it returns an RGB object, but if it
 	   absolutely positively cannot convert the input string to RGB, it will return false. */
-    decodeHexColor: function(string) {
+    decodeHexColor: function (string) {
         var matches;
         /* Six-to-eight hex values.  Treat as RRGGBB, RRGGBBA, or RRGGBBAA. */
         if (matches = /^[^0-9A-Fa-f]*([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{0,2})(?:[^0-9A-Fa-f]|$)/.exec(string))
@@ -854,13 +866,13 @@ var ProColor = Class.create(
     },
     /* Compute the "true" brightness of a color, taking into account typical human-eye
 	   brightness perception of the three primary colors. */
-    trueBrightness: function(rgb) {
+    trueBrightness: function (rgb) {
         return (rgb.r / 255 * 0.30) + (rgb.g / 255 * 0.59) + (rgb.b / 255 * 0.11);
     },
     /* Compute a text color given a background color.  This attempts to find a text color
 	   that is reasonably legible against the given background color, and it usually finds
 	   a reasonably tolerable one. */
-    computeTextColor: function(rgb) {
+    computeTextColor: function (rgb) {
         var brt = this.trueBrightness(rgb);
         if (brt < 0.5) {
             var m = Math.floor(brt * 20) + 3;
@@ -870,12 +882,13 @@ var ProColor = Class.create(
             var m = Math.floor((1.0 - brt) * 20) + 3;
             var im = 0;
         }
+
         return { r:Math.floor((rgb.r+im)/m), g:Math.floor((rgb.g+im)/m), b:Math.floor((rgb.b+im)/m) };
     },
     /* Convert an RGB object to a HSB object.  The HSB object may have fractional values in it.
 	   The input RGB object is safely converted to numbers and rounded to integers before
 	   conversion to HSB. */
-    RGBtoHSB: function(rgb) {
+    RGBtoHSB: function (rgb) {
         var r = Math.floor(this.toNumber(rgb.r) + 0.5);
         var g = Math.floor(this.toNumber(rgb.g) + 0.5);
         var b = Math.floor(this.toNumber(rgb.b) + 0.5);
@@ -914,7 +927,7 @@ var ProColor = Class.create(
 	   The input HSB object is safely converted to numbers before conversion to RGB, but is not
 	   rounded to integers, which yields a more accurate conversion.  The RGB values, however,
 	   will be integers, and limited to 0-255 each. */
-    HSBtoRGB: function(hsb) {
+    HSBtoRGB: function (hsb) {
         var v = this.toNumber(hsb.brt);
         if (v < 0) v = 0;
         if (v > 100) v = 100;
@@ -924,6 +937,7 @@ var ProColor = Class.create(
             v = Math.floor(v + 0.5);
             return { r:v, g:v, b:v };
         }
+
         if (s > 100) s = 100;
         var h = this.toNumber(hsb.hue);
         h = h % 360;
@@ -956,14 +970,14 @@ var ProColor = Class.create(
     */
 
     /* When the user has hit Enter or double-clicked, accept the color and close the popup. */
-    acceptAndClose: function() {
+    acceptAndClose: function () {
         if (this.options.onAcceptClick)
             this.options.onAcceptClick(this, 'acceptclick');
         if (this.options.mode == 'popup')
             this.close();
     },
     /* When the user has hit Esc or clicked outside the popup, close the popup. */
-    cancelAndClose: function() {
+    cancelAndClose: function () {
         if (this.options.onCancelClick)
             this.options.onCancelClick(this, 'cancelclick');
         if (this.options.mode == 'popup')
@@ -972,7 +986,7 @@ var ProColor = Class.create(
     /* Because of the way we capture mouse events for tracking, we can't use normal
 	   'dblclick' events, because the browser will never fire them.  So we use
 	   simulated 'dblclick' testing here to achieve a similar result. */
-    closeOnDoubleClick: function(e) {
+    closeOnDoubleClick: function (e) {
         var x = e.pointerX(), y = e.pointerY();
         var date = new Date;
         var time = date.getTime();
@@ -992,7 +1006,7 @@ var ProColor = Class.create(
     },
     /* Compute the brightness given a mouse click on the given *absolute* coordinate
 	   of the brightness slider.  Returns a simple integer, 0 to 100. */
-    brtFromPoint: function(x, y) {
+    brtFromPoint: function (x, y) {
         var d = this.img_bar_upper.getDimensions();
         var p = this.img_bar_upper.cumulativeOffset();
         if (y < p.top) return 100;
@@ -1001,7 +1015,7 @@ var ProColor = Class.create(
     },
     /* Compute the hue (angle) and saturation (radius) from the given *absolute*
 	   coordinate of the wheel.  Returns a partial hsb object (with no brightness value). */
-    hueSatFromPoint: function(x, y) {
+    hueSatFromPoint: function (x, y) {
         var d = this.img_wheel_rgb.getDimensions();
         var p = this.img_wheel_rgb.cumulativeOffset();
         var dy = (y - (p.top + d.height / 2)) / ((d.height - 4) / 2);
@@ -1015,7 +1029,7 @@ var ProColor = Class.create(
     },
     /* Given pixel coordinates of the mouse, return the palette color that lies
 	   under those coordinates.  If the mouse lies outside the palette, return false. */
-    colorFromPalette: function(x, y) {
+    colorFromPalette: function (x, y) {
         var d = this.img_palette.getDimensions();
         var p = this.img_palette.cumulativeOffset();
         if (x < p.left || x >= p.left + d.width)
@@ -1035,7 +1049,7 @@ var ProColor = Class.create(
     /* Perform an update for input from an edit box, correctly updating only the edit
 	   boxes that weren't changed by the user.  'mode' is either 'rgb' or 'hsb', and
 	   determines which edit boxes the user changed. */
-    updateByMode: function(mode) {
+    updateByMode: function (mode) {
         this.update(
             mode, {
             r:this.r_edit.value, g:this.g_edit.value, b:this.b_edit.value,
@@ -1049,7 +1063,7 @@ var ProColor = Class.create(
     */
 
     /* Handle events on the close button (X button) */
-    onCloseEvent: function(e) {
+    onCloseEvent: function (e) {
         switch (e.type) {
         case 'keydown':
             switch (e.keyCode) {
@@ -1084,7 +1098,7 @@ var ProColor = Class.create(
             capture.setCursor('default');
 
             capture.begin(
-                (function(event, type) {
+                (function (event, type) {
                 switch (type) {
                 case 'mouseup':
                 case 'keyup':
@@ -1117,9 +1131,8 @@ var ProColor = Class.create(
         }
     },
     /* Handle events on the brightness slider. */
-    onBarEvent: function(e) {
+    onBarEvent: function (e) {
         switch (e.type) {
-
         case 'keydown':
             var t = this;
             var brt = this.toNumber(t.brt_edit.value), oldbrt = brt;
@@ -1150,6 +1163,7 @@ var ProColor = Class.create(
                 e.stop();
                 break;
             }
+
             if (brt < 0) brt = 0;
             if (brt > 100) brt = 100;
             if (t.options.onChanging && (oldbrt != brt))
@@ -1167,7 +1181,7 @@ var ProColor = Class.create(
             if (t.img_bar_dragger.focus)
                 t.img_bar_dragger.focus();
 
-            var do_update = function(e) {
+            var do_update = function (e) {
                 var hsb = {
                     hue: t.hue_edit.value,
                     sat: t.sat_edit.value,
@@ -1186,7 +1200,7 @@ var ProColor = Class.create(
             capture.setCursor('default');
 
             capture.begin(
-                function(event, type) {
+                function (event, type) {
                 switch (type) {
                 case 'mouseup':
                 case 'keyup':
@@ -1205,9 +1219,8 @@ var ProColor = Class.create(
         }
     },
     /* Handle events on the color wheel. */
-    onWheelEvent: function(e) {
+    onWheelEvent: function (e) {
         switch (e.type) {
-
         case 'keydown':
             var t = this;
             var hue = this.toNumber(t.hue_edit.value), oldhue = hue;
@@ -1247,6 +1260,7 @@ var ProColor = Class.create(
                 e.stop();
                 break;
             }
+
             if (sat < 0) sat = 0;
             if (sat > 100) sat = 100;
             hue = hue % 360;
@@ -1266,7 +1280,7 @@ var ProColor = Class.create(
             if (t.img_wheel_dragger.focus)
                 t.img_wheel_dragger.focus();
 
-            var do_update = function(e) {
+            var do_update = function (e) {
                 var hsb = t.hueSatFromPoint(e.pointerX(), e.pointerY());
                 hsb.brt = t.brt_edit.value;
                 t.queuedUpdate('hsb', hsb, []);
@@ -1282,7 +1296,7 @@ var ProColor = Class.create(
             capture.setCursor('default');
 
             capture.begin(
-                function(event, type) {
+                function (event, type) {
                 switch (type) {
                 case 'mouseup':
                 case 'keyup':
@@ -1301,9 +1315,8 @@ var ProColor = Class.create(
         }
     },
     /* Handle events on the color palette. */
-    onPaletteEvent: function(e) {
+    onPaletteEvent: function (e) {
         switch (e.type) {
-
         case 'mousedown':
             var t = this;
             t.oldcolor = t.color;
@@ -1311,7 +1324,7 @@ var ProColor = Class.create(
             if (t.img_palette.focus)
                 t.img_palette.focus();
 
-            var do_update = function(e) {
+            var do_update = function (e) {
                 var rgb = t.colorFromPalette(e.pointerX(), e.pointerY());
                 if (rgb)
                     t.queuedUpdate('rgb', rgb, []);
@@ -1330,7 +1343,7 @@ var ProColor = Class.create(
             capture.setCursor('default');
 
             capture.begin(
-                function(event, type) {
+                function (event, type) {
                 switch (type) {
                 case 'mouseup':
                 case 'keyup':
@@ -1349,10 +1362,9 @@ var ProColor = Class.create(
         }
     },
     /* Handle events in one of the numeric input boxes on the right. */
-    onNumberBox: function(event, mode, min, max, mod) {
+    onNumberBox: function (event, mode, min, max, mod) {
         var element = Event.element(event);
         switch (event.type) {
-
         case 'keypress':
             /* Only allow numbers to be typed into the input field.  This is more complex
 			   than it sounds, because the browsers do *not* agree on what events appear
@@ -1380,10 +1392,12 @@ var ProColor = Class.create(
                 if (this.options.onChanging)
                     this.options.onChanging(this, 'changing');
             }
+
             if (event.keyCode == Event.KEY_RETURN) {
                 this.acceptAndClose();
                 event.stop();
             }
+
             if (event.keyCode == Event.KEY_ESC) {
                 this.cancelAndClose();
                 event.stop();
@@ -1406,13 +1420,14 @@ var ProColor = Class.create(
                 element.value = v;
                 this.updateByMode(mode);
             }
+
             if (this.options.onChanged && this.oldcolor != this.color)
                 this.options.onChanged(this, 'changed');
             break;
         }
     },
     /* Handle events in the primary formatted-text input field. */
-    onInput: function(event) {
+    onInput: function (event) {
         switch (event.type) {
         case 'keyup':
             if (event.keyCode != Event.KEY_TAB) {
@@ -1420,10 +1435,12 @@ var ProColor = Class.create(
                 if (this.options.onChanging)
                     this.options.onChanging(this, 'changing');
             }
+
             if (event.keyCode == Event.KEY_RETURN) {
                 this.acceptAndClose();
                 event.stop();
             }
+
             if (event.keyCode == Event.KEY_ESC) {
                 this.cancelAndClose();
                 event.stop();
@@ -1452,14 +1469,14 @@ var ProColor = Class.create(
     */
 
     /* Handle clicks outside the popup. */
-    handleCloseClick: function(e) {
+    handleCloseClick: function (e) {
         var elem = $(Event.element(e));
         if (elem == this.div || elem.descendantOf(this.div)) return;
         if (elem == this.input || elem.descendantOf(this.input)) return;
         this.cancelAndClose();
     },
     /* Handle key presses that would close the popup. */
-    handleKeyPress: function(e) {
+    handleKeyPress: function (e) {
         if (e.keyCode == Event.KEY_ESC)
             this.cancelAndClose();
     },
@@ -1469,7 +1486,7 @@ var ProColor = Class.create(
     **  colors will be updated accordingly even if the popup is not open.
     */
 
-    attachButton: function(e, options) {
+    attachButton: function (e, options) {
         e = $(e);
         if (!e) return;
         var imgPath;
@@ -1515,20 +1532,20 @@ var ProColor = Class.create(
         hovered: false,
         inputHandler: false,
         options: { },
-        setImg: function(n) {
+        setImg: function (n) {
             this.setStyle({ backgroundPosition:'0px ' + (n*-24) + 'px' });
         },
-        observeInput: function() {
+        observeInput: function () {
             Event.observe(this.options.input, 'keyup', this.inputHandler);
             Event.observe(this.options.input, 'focus', this.inputHandler);
             Event.observe(this.options.input, 'blur', this.inputHandler);
         },
-        stopObservingInput: function() {
+        stopObservingInput: function () {
             Event.stopObserving(this.options.input, 'keyup', this.inputHandler);
             Event.stopObserving(this.options.input, 'focus', this.inputHandler);
             Event.stopObserving(this.options.input, 'blur', this.inputHandler);
         },
-        toggle: function() {
+        toggle: function () {
             if (this.pressed) {
                 this.setImg(this.hovered ? 1 : 0);
                 this.pressed = false;
@@ -1536,6 +1553,7 @@ var ProColor = Class.create(
                     this.popup.close();
                     this.popup = null;
                 }
+
                 this.observeInput();
             }
             else {
@@ -1548,7 +1566,7 @@ var ProColor = Class.create(
                         Object.clone(this.options), {
                         mode: 'popup',
                         closeButton: true,
-                        onClosed: function(p, a) {
+                        onClosed: function (p, a) {
                         t.popup = null;
                         t.setImg(this.hovered ? 1 : 0);
                         t.pressed = false;
@@ -1562,7 +1580,7 @@ var ProColor = Class.create(
                 );
             }
         },
-        colorSync: function(update_value) {
+        colorSync: function (update_value) {
             var rgb = this.options.pc.decodeHexColor(this.options.input.value);
             if (rgb) {
                 if (this.options.showInField) {
@@ -1574,6 +1592,7 @@ var ProColor = Class.create(
                         }
                     );
                 }
+
                 var newvalue = this.options.pc.internalFormatOutput(
                     rgb,
                     this.options.pc.RGBtoHSB(rgb), this.options.outputFormat
@@ -1589,7 +1608,7 @@ var ProColor = Class.create(
                 }
             }
         },
-        onInput: function(event) {
+        onInput: function (event) {
             switch (event.type) {
             case 'keyup':
                 if (event.keyCode != Event.KEY_TAB && this.options.showInField)
@@ -1601,7 +1620,7 @@ var ProColor = Class.create(
                 break;
             }
         },
-        eventHandler: function(event) {
+        eventHandler: function (event) {
             switch (event.type) {
             case 'click':
                 event.stop();
@@ -1625,7 +1644,10 @@ var ProColor = Class.create(
 				   this event to propagate the rest of the way and leave the browser in a
 				   sensible state. */
                 var t = this;
-                setTimeout(function() { t.toggle(); }, 20);
+                setTimeout(
+                    function () {
+                    t.toggle(); }, 20
+                );
                 break;
             case 'mouseup':
                 break;
@@ -1657,9 +1679,9 @@ var ProColor = Class.create(
 */
 
 Event.observe(
-    window, 'load', function() {
+    window, 'load', function () {
     $$('input.procolor').each(
-        function(e) {
+        function (e) {
         ProColor.prototype.attachButton(e, ProColor.prototype.options);
         }
     );
