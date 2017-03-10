@@ -101,7 +101,7 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
             $response = $client->getSendStatus($campaign->getSendId());
             if (isset($response->message)) {
                 //update  the failed to send email message
-                $this->getResource()->setMessage(array($campaign->getSendId()), $response->message);
+                $this->getResource()->setMessage($campaign->getSendId(), $response->message);
             } elseif ($response->status == 'Sent') {
                 $this->getResource()->setSent($campaign->getSendId());
             }

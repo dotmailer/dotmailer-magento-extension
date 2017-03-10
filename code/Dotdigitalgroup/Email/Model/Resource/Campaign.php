@@ -88,11 +88,17 @@ class Dotdigitalgroup_Email_Model_Resource_Campaign
      *
      * @param $ids
      * @param $message
+     * @param $sendId
      */
-    public function setMessage($ids, $message)
+    public function setMessage($ids, $message, $sendId = false)
     {
         try {
-            $ids = implode(", ", $ids);
+            if($sendId) {
+                $where = "send_id = $sendId";
+            } else {
+                $ids = implode(", ", $ids);
+                $where = "id in ($ids)";
+            }
             $now = Mage::getSingleton('core/date')->gmtDate();
             $conn = $this->_getWriteAdapter();
             $conn->update(
@@ -102,7 +108,7 @@ class Dotdigitalgroup_Email_Model_Resource_Campaign
                     'send_status' => Dotdigitalgroup_Email_Model_Campaign::FAILED,
                     'sent_at' => $now
                 ),
-                "id in ($ids)"
+                $where
             );
         } catch (Exception $e) {
             Mage::logException($e);
