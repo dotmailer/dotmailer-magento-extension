@@ -17,7 +17,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Column_Renderer_Subscriber
         $storeId = $row->getStoreId();
         $websiteHash = Mage::getSingleton('adminhtml/system_store')
             ->getWebsiteOptionHash(true);
-        if($value == 0 && $storeId > 0) {
+        if ($value == 0 && $storeId > 0) {
             return $websiteHash[Mage::app()->getStore($storeId)->getWebsite()->getId()];
         }
         return $websiteHash[$value];
