@@ -27,135 +27,135 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Contact_Grid
         $this->addColumn(
             'email_contact_id', array(
                 'header' => Mage::helper('ddg')->__('ID'),
-                'width'  => '20px',
-                'index'  => 'email_contact_id',
-                'type'   => 'number',
+                'width' => '20px',
+                'index' => 'email_contact_id',
+                'type' => 'number',
                 'escape' => true,
             )
         )->addColumn(
             'contact_id', array(
                 'header' => Mage::helper('ddg')->__('Contact ID'),
-                'width'  => '20px',
-                'index'  => 'contact_id',
-                'type'   => 'number',
+                'width' => '20px',
+                'index' => 'contact_id',
+                'type' => 'number',
                 'escape' => true,
             )
         )->addColumn(
             'email', array(
                 'header' => Mage::helper('ddg')->__('Email'),
-                'align'  => 'left',
-                'width'  => '50px',
-                'index'  => 'email',
-                'type'   => 'text',
+                'align' => 'left',
+                'width' => '50px',
+                'index' => 'email',
+                'type' => 'text',
                 'escape' => true
             )
         )->addColumn(
             'customer_id', array(
                 'header' => Mage::helper('ddg')->__('Customer ID'),
-                'align'  => 'left',
-                'index'  => 'customer_id',
-                'type'   => 'number',
+                'align' => 'left',
+                'index' => 'customer_id',
+                'type' => 'number',
                 'escape' => true
             )
         )->addColumn(
             'is_guest', array(
-                'header'                    => Mage::helper('ddg')->__(
+                'header' => Mage::helper('ddg')->__(
                     'Is Guest'
                 ),
-                'align'                     => 'right',
-                'width'                     => '50px',
-                'index'                     => 'is_guest',
-                'type'                      => 'options',
-                'options'                   => array(
-                    '1'    => 'Guest',
+                'align' => 'right',
+                'width' => '50px',
+                'index' => 'is_guest',
+                'type' => 'options',
+                'options' => array(
+                    '1' => 'Guest',
                     'null' => 'Not Guest'
                 ),
-                'escape'                    => true,
+                'escape' => true,
                 'filter_condition_callback' => array($this,
-                                                     'filterCallbackContact')
+                    'filterCallbackContact')
             )
         )->addColumn(
             'is_subscriber', array(
-                'header'                    => Mage::helper('ddg')->__(
+                'header' => Mage::helper('ddg')->__(
                     'Is Subscriber'
                 ),
-                'width'                     => '50px',
-                'align'                     => 'right',
-                'index'                     => 'is_subscriber',
-                'type'                      => 'options',
-                'options'                   => array(
-                    '1'    => 'Subscriber',
+                'width' => '50px',
+                'align' => 'right',
+                'index' => 'is_subscriber',
+                'type' => 'options',
+                'options' => array(
+                    '1' => 'Subscriber',
                     'null' => 'Not Subscriber'
                 ),
                 'filter_condition_callback' => array($this,
-                                                     'filterCallbackContact'),
-                'escape'                    => true,
+                    'filterCallbackContact'),
+                'escape' => true,
             )
         )->addColumn(
             'subscriber_status', array(
-                'header'  => Mage::helper('ddg')->__('Subscriber Status'),
-                'align'   => 'center',
-                'width'   => '50px',
-                'index'   => 'subscriber_status',
-                'type'    => 'options',
+                'header' => Mage::helper('ddg')->__('Subscriber Status'),
+                'align' => 'center',
+                'width' => '50px',
+                'index' => 'subscriber_status',
+                'type' => 'options',
                 'options' => array(
                     '1' => 'Subscribed',
                     '2' => 'Not Active',
                     '3' => 'Unsubscribed',
                     '4' => 'Unconfirmed'
                 ),
-                'escape'  => true,
+                'escape' => true,
             )
         )->addColumn(
             'email_imported', array(
-                'header'                    => Mage::helper('ddg')->__(
+                'header' => Mage::helper('ddg')->__(
                     'Email Imported'
                 ),
-                'width'                     => '20px',
-                'align'                     => 'center',
-                'index'                     => 'email_imported',
-                'escape'                    => true,
-                'type'                      => 'options',
-                'options'                   => Mage::getModel(
+                'width' => '20px',
+                'align' => 'center',
+                'index' => 'email_imported',
+                'escape' => true,
+                'type' => 'options',
+                'options' => Mage::getModel(
                     'ddg_automation/adminhtml_source_contact_imported'
                 )->getOptions(),
-                'renderer'                  => 'ddg_automation/adminhtml_column_renderer_imported',
+                'renderer' => 'ddg_automation/adminhtml_column_renderer_imported',
                 'filter_condition_callback' => array($this,
-                                                     'filterCallbackContact')
+                    'filterCallbackContact')
             )
         )->addColumn(
             'subscriber_imported', array(
-                'header'                    => Mage::helper('ddg')->__(
+                'header' => Mage::helper('ddg')->__(
                     'Subscriber Imported'
                 ),
-                'width'                     => '20px',
-                'align'                     => 'center',
-                'index'                     => 'subscriber_imported',
-                'type'                      => 'options',
-                'escape'                    => true,
-                'renderer'                  => 'ddg_automation/adminhtml_column_renderer_imported',
-                'options'                   => Mage::getModel(
+                'width' => '20px',
+                'align' => 'center',
+                'index' => 'subscriber_imported',
+                'type' => 'options',
+                'escape' => true,
+                'renderer' => 'ddg_automation/adminhtml_column_renderer_imported',
+                'options' => Mage::getModel(
                     'ddg_automation/adminhtml_source_contact_imported'
                 )->getOptions(),
                 'filter_condition_callback' => array($this,
-                                                     'filterCallbackContact')
+                    'filterCallbackContact')
             )
         )->addColumn(
             'suppressed', array(
-                'header'                    => Mage::helper('ddg')->__(
+                'header' => Mage::helper('ddg')->__(
                     'Suppressed'
                 ),
-                'align'                     => 'right',
-                'width'                     => '50px',
-                'index'                     => 'suppressed',
-                'escape'                    => true,
-                'type'                      => 'options',
-                'options'                   => array(
-                    '1'    => 'Suppressed',
+                'align' => 'right',
+                'width' => '50px',
+                'index' => 'suppressed',
+                'escape' => true,
+                'type' => 'options',
+                'options' => array(
+                    '1' => 'Suppressed',
                     'null' => 'Not Suppressed'
                 ),
                 'filter_condition_callback' => array($this,
-                                                     'filterCallbackContact')
+                    'filterCallbackContact')
             )
         );
 
@@ -164,11 +164,11 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Contact_Grid
             $this->addColumn(
                 'segment_ids', array(
                     'header' => Mage::helper('ddg')->__('Segment Id\'s'),
-                    'align'  => 'right',
-                    'width'  => '50px',
-                    'index'  => 'segment_ids',
+                    'align' => 'right',
+                    'width' => '50px',
+                    'index' => 'segment_ids',
                     'escape' => true,
-                    'type'   => 'text'
+                    'type' => 'text'
                 )
             );
         }
@@ -176,22 +176,23 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Contact_Grid
         if (!Mage::app()->isSingleStoreMode()) {
             $this->addColumn(
                 'website_id', array(
-                    'header'  => Mage::helper('customer')->__('Website'),
-                    'align'   => 'center',
-                    'width'   => '80px',
-                    'type'    => 'options',
+                    'header' => Mage::helper('customer')->__('Website'),
+                    'align' => 'center',
+                    'width' => '80px',
+                    'type' => 'options',
                     'options' => Mage::getSingleton('adminhtml/system_store')
                         ->getWebsiteOptionHash(true),
-                    'index'   => 'website_id',
+                    'renderer' => 'ddg_automation/adminhtml_column_renderer_subscriber',
+                    'index' => 'website_id',
                 )
             );
         }
 
         $this->addColumn(
             'sync', array(
-                'header'   => Mage::helper('ddg')->__('Sync Contact'),
-                'align'    => 'center',
-                'width'    => '80px',
+                'header' => Mage::helper('ddg')->__('Sync Contact'),
+                'align' => 'center',
+                'width' => '80px',
                 'renderer' => 'ddg_automation/adminhtml_column_renderer_sync'
 
             )
@@ -226,14 +227,14 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Contact_Grid
         $this->getMassactionBlock()->setFormFieldName('contact');
         $this->getMassactionBlock()->addItem(
             'delete', array(
-                'label'   => Mage::helper('ddg')->__('Delete'),
-                'url'     => $this->getUrl('*/*/massDelete'),
+                'label' => Mage::helper('ddg')->__('Delete'),
+                'url' => $this->getUrl('*/*/massDelete'),
                 'confirm' => Mage::helper('ddg')->__('Are you sure?'))
         );
         $this->getMassactionBlock()->addItem(
             'resend', array(
                 'label' => Mage::helper('ddg')->__('Resend'),
-                'url'   => $this->getUrl('*/*/massResend'),
+                'url' => $this->getUrl('*/*/massResend'),
 
             )
         );
