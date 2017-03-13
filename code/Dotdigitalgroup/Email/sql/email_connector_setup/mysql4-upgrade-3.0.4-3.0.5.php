@@ -1,5 +1,5 @@
 <?php
-
+//@codingStandardsIgnoreStart
 /** @var Mage_Eav_Model_Entity_Setup $installer */
 
 $installer = $this;
@@ -132,7 +132,7 @@ $installer->getConnection()->createTable($table);
 $source   = Mage::getModel('adminhtml/system_config_source_order_status');
 $statuses = $source->toOptionArray();
 
-if (count($statuses) > 0 && $statuses[0]['value'] == '') {
+if (! empty($statuses) && $statuses[0]['value'] == '') {
     array_shift($statuses);
 }
 

@@ -1,5 +1,5 @@
 <?php
-
+//@codingStandardsIgnoreStart
 /** @var Mage_Eav_Model_Entity_Setup $installer */
 
 $installer = $this;
@@ -22,9 +22,10 @@ if (Mage::helper('ddg')->isEnterprise()) {
         );
     //update contact table with customer segment ids
     $result = $installer->run(
-        "update`{$contactTable}` c,(select customer_id, website_id, group_concat(`segment_id` separator ',') as segmentids
-from `{$segmentTable}` group by customer_id) as s set c.segment_ids = segmentids, c.email_imported = null
-WHERE s.customer_id= c.customer_id and s.website_id = c.website_id"
+        "update`{$contactTable}` c,(select customer_id, website_id, group_concat(`segment_id` separator ',') as 
+        segmentids from `{$segmentTable}` group by customer_id) as s set c.segment_ids = segmentids, 
+        c.email_imported = null
+        WHERE s.customer_id= c.customer_id and s.website_id = c.website_id"
     );
 }
 
