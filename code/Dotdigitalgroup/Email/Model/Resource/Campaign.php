@@ -110,6 +110,31 @@ class Dotdigitalgroup_Email_Model_Resource_Campaign
     }
 
     /**
+     * Set error message on given send id
+     *
+     * @param $sendId
+     * @param $message
+     */
+    public function setMessageWithSendId($sendId, $message)
+    {
+        try {
+            $now = Mage::getSingleton('core/date')->gmtDate();
+            $conn = $this->_getWriteAdapter();
+            $conn->update(
+                $this->getMainTable(),
+                array(
+                    'message' => $message,
+                    'send_status' => Dotdigitalgroup_Email_Model_Campaign::FAILED,
+                    'sent_at' => $now
+                ),
+                array('send_id = ?' => $sendId)
+            );
+        } catch (Exception $e) {
+            Mage::logException($e);
+        }
+    }
+
+    /**
      * Set sent.
      *
      * @param bool $sendId
