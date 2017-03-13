@@ -1,5 +1,5 @@
 <?php
-
+//@codingStandardsIgnoreStart
 $installer = $this;
 
 $installer->startSetup();
@@ -30,7 +30,8 @@ $installer->run(
           KEY `IDX_EMAIL_CONTACT_EMAIL_IMPORTED` (`email_imported`),
           KEY `IDX_EMAIL_CONTACT_suppressed` (`suppressed`),
 	      UNIQUE KEY `IDX_EMAIL_CONTACT_EMAIL` (`email`),
-          CONSTRAINT `FK_EMAIL_CONTACT_WEBSITE_ID_CORE_WEBSITE_WEBSITE_ID` FOREIGN KEY (`website_id`) REFERENCES `core_website` (`website_id`) ON DELETE SET NULL ON UPDATE CASCADE
+          CONSTRAINT `FK_EMAIL_CONTACT_WEBSITE_ID_CORE_WEBSITE_WEBSITE_ID` FOREIGN KEY (`website_id`) 
+          REFERENCES `core_website` (`website_id`) ON DELETE SET NULL ON UPDATE CASCADE
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Email Contacts';"
 );
 
@@ -46,7 +47,8 @@ $installer->run(
 $installer->run(
     "
           INSERT IGNORE INTO {$this->getTable('email_contact')} (`email`, `is_subscriber`, `subscriber_status`)
-          SELECT `subscriber_email`, '1' as col2, '1' as col3 FROM `{$this->getTable('newsletter/subscriber')}` WHERE `customer_id` = 0 AND `subscriber_status` = 1;
+          SELECT `subscriber_email`, '1' as col2, '1' as col3 FROM `{$this->getTable('newsletter/subscriber')}` 
+          WHERE `customer_id` = 0 AND `subscriber_status` = 1;
         "
 );
 

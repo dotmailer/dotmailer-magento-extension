@@ -1,5 +1,5 @@
 <?php
-
+//@codingStandardsIgnoreStart
 $installer = $this;
 $installer->startSetup();
 
@@ -39,8 +39,10 @@ $adminData   = array();
 $adminData[] = array(
     'severity'    => 4,
     'date_added'  => gmdate('Y-m-d H:i:s', time()),
-    'title'       => 'Email Connector Was Installed. Please Enter Your API Credentials & Ensure Cron Jobs Are Running On Your Site (Find Out More)',
-    'description' => 'Email Connector Was Installed. Please Enter Your API Credentials & Ensure Cron Jobs Are Running On Your Site.',
+    'title'       => 'Email Connector Was Installed. Please Enter Your API Credentials & Ensure Cron Jobs Are Running 
+    On Your Site (Find Out More)',
+    'description' => 'Email Connector Was Installed. Please Enter Your API Credentials & Ensure Cron Jobs Are Running 
+    On Your Site.',
     'url'         => 'http://www.magentocommerce.com/wiki/1_-_installation_and_configuration/how_to_setup_a_cron_job'
 );
 
