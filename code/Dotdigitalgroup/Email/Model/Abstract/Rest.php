@@ -370,7 +370,7 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
     protected function setCurlOpts(&$ch)
     {
         //@codingStandardsIgnoreStart
-        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 60);
         curl_setopt($ch, CURLOPT_URL, $this->url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
@@ -542,10 +542,11 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
     public function getCurlError()
     {
         //if curl error
-        if (!empty($this->curlError)) {
+        if (! empty($this->curlError)) {
             //log curl error
-            $message = 'CURL ERROR ' . $this->curlError;
-            Mage::helper('ddg')->log($message);
+            $message = 'CURL ERROR : ' . $this->curlError;
+            Mage::helper('ddg')->log($message)
+                ->log($this->url);
 
             return $this->curlError;
         }
