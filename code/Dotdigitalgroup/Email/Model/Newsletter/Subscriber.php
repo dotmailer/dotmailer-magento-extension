@@ -31,10 +31,9 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
         $response = array('success' => true, 'message' => '');
 
         $this->start = microtime(true);
-
+        $helper = Mage::helper('ddg');
         foreach (Mage::app()->getWebsites(false) as $website) {
             $countSubscribers     = 0;
-            $helper = Mage::helper('ddg');
             $isEnabled      = $helper->isEnabled($website);
             $isMapped       = $helper->getSubscriberAddressBook($website);
             $isSyncEnabled  = $helper->isSubscriberSyncEnabled($website->getId());
@@ -105,6 +104,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
             $message = 'Total time for Subscribers sync : ' . gmdate("H:i:s", microtime(true) - $this->start);
             //@codingStandardsIgnoreEnd
 
+            $helper->log($message);
             //put the message in front
             $message .= $response['message'];
             $response['message'] = $message;
