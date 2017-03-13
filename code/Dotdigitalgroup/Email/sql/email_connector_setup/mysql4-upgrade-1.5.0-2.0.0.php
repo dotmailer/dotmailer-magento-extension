@@ -1,6 +1,6 @@
 <?php
 
-
+//@codingStandardsIgnoreStart
 $installer = $this;
 
 $installer->startSetup();
@@ -19,14 +19,16 @@ try {
           PRIMARY KEY (`email_order_id`),
           KEY `IDX_EMAIL_STORE_ID` (`store_id`),
           KEY `IDX_EMAIL_QUOTE_ID` (`quote_id`),
-          CONSTRAINT `FK_EMAIL_STORE_ID_CORE_STORE_STORE_ID` FOREIGN KEY (`store_id`) REFERENCES `{$this->getTable('core_store')}` (`store_id`) ON DELETE SET NULL ON UPDATE CASCADE
+          CONSTRAINT `FK_EMAIL_STORE_ID_CORE_STORE_STORE_ID` FOREIGN KEY (`store_id`) REFERENCES 
+          `{$this->getTable('core_store')}` (`store_id`) ON DELETE SET NULL ON UPDATE CASCADE
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
     );
 
 
     //Insert and populate email order the table
     $installer->run(
-        "INSERT IGNORE INTO  `{$this->getTable('email_order')}` (`order_id`, `quote_id`, `store_id`, `created_at`, `updated_at`)
+        "INSERT IGNORE INTO  `{$this->getTable('email_order')}` (`order_id`, `quote_id`, `store_id`, `created_at`,
+        `updated_at`)
         SELECT `entity_id`, `quote_id`, `store_id`, `created_at`, `updated_at`
         FROM `{$this->getTable('sales/order')}`;"
     );
@@ -48,7 +50,8 @@ try {
           `suppressed` smallint(1) DEFAULT NULL,
           PRIMARY KEY (`email_contact_id`),
           KEY `IDX_EMAIL_CONTACT_WEBSITE_ID` (`website_id`),
-          CONSTRAINT `FK_EMAIL_CONTACT_WEBSITE_ID_CORE_WEBSITE_WEBSITE_ID` FOREIGN KEY (`website_id`) REFERENCES `core_website` (`website_id`) ON DELETE SET NULL ON UPDATE CASCADE
+          CONSTRAINT `FK_EMAIL_CONTACT_WEBSITE_ID_CORE_WEBSITE_WEBSITE_ID` FOREIGN KEY (`website_id`) REFERENCES 
+          `core_website` (`website_id`) ON DELETE SET NULL ON UPDATE CASCADE
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Email Contact Sync';"
     );
 
