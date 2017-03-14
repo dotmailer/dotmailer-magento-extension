@@ -1,5 +1,5 @@
 <?php
-
+//@codingStandardsIgnoreStart
 /** @var Mage_Eav_Model_Entity_Setup $installer */
 
 $installer = $this;
@@ -399,6 +399,7 @@ $options = array();
 foreach ($statuses as $status) {
     $options[] = $status['value'];
 }
+
 $statusString = implode(',', $options);
 
 $configModel = Mage::getModel('core/config');
@@ -464,6 +465,7 @@ $options = array();
 foreach ($statuses as $status) {
     $options[] = $status['value'];
 }
+
 $statusString = implode(',', $options);
 
 $configModel = Mage::getModel('core/config');
@@ -882,7 +884,6 @@ $installer->getConnection()->query($sqlQuery);
  * Enterprise customer segmentation.
  */
 if (Mage::helper('ddg')->isEnterprise()) {
-
     //contact table
     $contactTable = $installer->getTable('ddg_automation/contact');
     //customer segment table
@@ -899,7 +900,6 @@ if (Mage::helper('ddg')->isEnterprise()) {
         "update`{$contactTable}` c,(select customer_id, website_id, group_concat(`segment_id` separator ',') as segmentids
 from `{$segmentTable}` group by customer_id) as s set c.segment_ids = segmentids, c.email_imported = null WHERE s.customer_id= c.customer_id and s.website_id = c.website_id"
     );
-
 }
 
 $campaignTable = $this->getTable('ddg_automation/campaign');

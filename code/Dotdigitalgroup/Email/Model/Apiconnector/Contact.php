@@ -3,8 +3,15 @@
 class Dotdigitalgroup_Email_Model_Apiconnector_Contact
 {
 
-    protected $_start;
-    protected $_countCustomers = 0;
+    /**
+     * @var
+     */
+    public $start;
+
+    /**
+     * @var int
+     */
+    public $countCustomers = 0;
 
     /**
      * Contact sync.
@@ -14,11 +21,11 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
     public function sync()
     {
         $result = array('success' => true, 'message' => '');
-        /** @var Dotdigitalgroup_Email_Helper_Data $helper */
         $helper       = Mage::helper('ddg');
-        $this->_start = microtime(true);
+        $this->start = microtime(true);
         //resourse allocation
         $helper->allowResourceFullExecution();
+
         foreach (Mage::app()->getWebsites(true) as $website) {
             $enabled = Mage::helper('ddg')->getWebsiteConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED,
@@ -28,25 +35,22 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_CONTACT_ENABLED,
                 $website
             );
-            if ($enabled && $sync) {
 
-                if ( ! $this->_countCustomers) {
-                    $helper->log('---------- Start customer sync ----------');
-                }
+            if ($enabled && $sync) {
                 $numUpdated = $this->exportCustomersForWebsite($website);
                 // show message for any number of customers
                 if ($numUpdated) {
-                    $result['message'] .= '</br>' . $website->getName()
-                        . ', updated customers = ' . $numUpdated;
+                    $result['message'] .= '</br>' . $website->getName() . ', updated customers = ' . $numUpdated;
                 }
             }
         }
+
         //sync proccessed
-        if ($this->_countCustomers) {
-            $message = 'Total time for sync : ' . gmdate(
-                    "H:i:s", microtime(true) - $this->_start
-                ) .
-                ', Total updated = ' . $this->_countCustomers;
+        if ($this->countCustomers) {
+            //@codingStandardsIgnoreStart
+            $message = 'Total time for Customer sync : ' . gmdate("H:i:s", microtime(true) - $this->start) .
+                ', Total updated = ' . $this->countCustomers;
+            //@codingStandardsIgnoreEnd
             $helper->log($message);
             $message .= $result['message'];
             $result['message'] = $message;
@@ -59,9 +63,10 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
      * Execute the contact sync for the website
      * number of customer synced.
      *
+     * @codingStandardsIgnoreStart
      * @param Mage_Core_Model_Website $website
      *
-     * @return int|void
+     * @return int
      */
     public function exportCustomersForWebsite(Mage_Core_Model_Website $website)
     {
@@ -73,7 +78,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
         );
 
         //skip if the mapping field is missing
-        if ( ! $helper->getCustomerAddressBook($website)) {
+        if (! $helper->getCustomerAddressBook($website)) {
             return 0;
         }
 
@@ -84,7 +89,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
         );
 
         // no contacts for this website
-        if ( ! $contacts->getSize()) {
+        if (! $contacts->getSize()) {
             return 0;
         }
 
@@ -118,6 +123,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
                 $allMappedHash[$data['attribute']] = $data['datafield'];
             }
         }
+
         $headers[] = 'Email';
         $headers[] = 'EmailType';
         $fileHelper->outputCSV(
@@ -157,13 +163,10 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
         }
 
         $customerNum = count($customers);
+        $helper->log('Website : ' . $website->getName() . ', customers = ' . $customerNum);
         $helper->log(
-            'Website : ' . $website->getName() . ', customers = ' . $customerNum
-        );
-        $helper->log(
-            '---------------------------- execution time :' . gmdate(
-                "H:i:s", microtime(true) - $this->_start
-            )
+            '---------------------------- execution time ' .
+            gmdate("H:i:s", microtime(true) - $this->start)
         );
 
         if (is_file($fileHelper->getFilePath($customersFile))) {
@@ -186,7 +189,9 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
                 }
             }
         }
-        $this->_countCustomers += $customerNum;
+
+        $this->countCustomers += $customerNum;
+        //@codingStandardsIgnoreEnd
 
         return $customerNum;
     }
@@ -194,6 +199,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
     /**
      * Sync a single contact.
      *
+     * @codingStandardsIgnoreStart
      * @param null $contactId
      *
      * @return mixed
@@ -208,7 +214,8 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
         } else {
             $contact = Mage::registry('current_contact');
         }
-        if ( ! $contact->getId()) {
+
+        if (! $contact->getId()) {
             Mage::getSingleton('adminhtml/session')->addError(
                 'No contact found!'
             );
@@ -223,13 +230,14 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
         $helper    = Mage::helper('ddg');
         $helper->log('---------- Start single customer sync ----------');
         //skip if the mapping field is missing
-        if ( ! $helper->getCustomerAddressBook($website)) {
+        if (! $helper->getCustomerAddressBook($website)) {
             return false;
         }
+
         $fileHelper = Mage::helper('ddg/file');
 
         $customerId = $contact->getCustomerId();
-        if ( ! $customerId) {
+        if (! $customerId) {
             Mage::getSingleton('adminhtml/session')->addError(
                 'Cannot manually sync guests!'
             );
@@ -285,6 +293,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
                 $value     = $customer->getData($attribute);
                 $connectorCustomer->setData($value);
             }
+
             //contact email and email type
             $connectorCustomer->setData($customer->getEmail());
             $connectorCustomer->setData('Html');
@@ -322,13 +331,14 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
                 }
             }
         }
+        //@codingStandardsIgnoreEnd
 
         return $contact->getEmail();
     }
 
 
     /**
-     * get customer collection
+     * Get customer collection.
      *
      * @param $customerIds
      * @param $websiteId
@@ -415,7 +425,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
         $eavAttribute                = Mage::getSingleton('core/resource')
             ->getTableName('eav_attribute');
 
-
+        //@codingStandardsIgnoreStart
         // get the last login date from the log_customer table
         $customerCollection->getSelect()->columns(
             array('last_logged_date' => new Zend_Db_Expr(
@@ -563,6 +573,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
                 array($alias => $subselect),
                 "{$alias}.s_customer_id = e.entity_id"
             );
+        //@codingStandardsIgnoreEnd
 
         return $customerCollection;
     }

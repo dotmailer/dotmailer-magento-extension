@@ -4,7 +4,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Orderstatus
 {
 
     /**
-     * Returns the order statuses
+     * Returns the order statuses.
      *
      * @return array
      */

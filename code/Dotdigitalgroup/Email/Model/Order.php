@@ -6,7 +6,7 @@ class Dotdigitalgroup_Email_Model_Order extends Mage_Core_Model_Abstract
     const EMAIL_ORDER_NOT_IMPORTED = null;
 
     /**
-     * constructor
+     * Constructor.
      */
     public function _construct()
     {
@@ -28,7 +28,6 @@ class Dotdigitalgroup_Email_Model_Order extends Mage_Core_Model_Abstract
         return $this;
     }
 
-
     /**
      * Load the email order by quote id.
      *
@@ -45,7 +44,9 @@ class Dotdigitalgroup_Email_Model_Order extends Mage_Core_Model_Abstract
             ->setPageSize(1);
 
         if ($collection->getSize()) {
+            //@codingStandardsIgnoreStart
             return $collection->getFirstItem();
+            //@codingStandardsIgnoreEnd
         } else {
             $this->setOrderId($orderId)
                 ->setQuoteId($quoteId);
@@ -70,7 +71,9 @@ class Dotdigitalgroup_Email_Model_Order extends Mage_Core_Model_Abstract
             ->addFieldToFilter('store_id', $storeId);
 
         if ($collection->getSize()) {
+            //@codingStandardsIgnoreStart
             return $collection->getFirstItem();
+            //@codingStandardsIgnoreEnd
         } else {
             $now = Mage::getSingleton('core/date')->gmtDate();
 
@@ -81,7 +84,6 @@ class Dotdigitalgroup_Email_Model_Order extends Mage_Core_Model_Abstract
         }
 
         return $this;
-
     }
 
     /**
@@ -94,9 +96,7 @@ class Dotdigitalgroup_Email_Model_Order extends Mage_Core_Model_Abstract
      *
      * @return Dotdigitalgroup_Email_Model_Resource_Order_Collection
      */
-    public function getOrdersToImport($storeIds, $limit, $orderStatuses,
-        $modified = false
-    ) 
+    public function getOrdersToImport($storeIds, $limit, $orderStatuses, $modified = false)
     {
         $collection = $this->getCollection()
             ->addFieldToFilter('store_id', array('in' => $storeIds))
@@ -112,8 +112,9 @@ class Dotdigitalgroup_Email_Model_Order extends Mage_Core_Model_Abstract
             );
         }
 
-
+        //@codingStandardsIgnoreStart
         $collection->getSelect()->limit($limit);
+        //@codingStandardsIgnoreEnd
 
         return $collection;
     }
@@ -132,9 +133,10 @@ class Dotdigitalgroup_Email_Model_Order extends Mage_Core_Model_Abstract
             ->addFieldToFilter('email_imported', 1)
             ->addFieldToFilter('store_id', array('in' => $storeIds));
 
+        //@codingStandardsIgnoreStart
         $collection->getSelect()->limit($limit);
+        //@codingStandardsIgnoreEnd
 
         return $collection;
     }
-
 }

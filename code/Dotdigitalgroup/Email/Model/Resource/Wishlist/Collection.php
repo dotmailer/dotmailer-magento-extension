@@ -5,7 +5,7 @@ class Dotdigitalgroup_Email_Model_Resource_Wishlist_Collection
 {
 
     /**
-     * constructor.
+     * Constructor.
      */
     public function _construct()
     {

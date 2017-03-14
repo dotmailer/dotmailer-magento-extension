@@ -5,7 +5,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ImporterController
 {
 
     /**
-     * main page.
+     * Main page.
      */
     public function indexAction()
     {
@@ -21,7 +21,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ImporterController
     public function massResendAction()
     {
         $ids = $this->getRequest()->getParam('importer');
-        if ( ! is_array($ids)) {
+        if (!is_array($ids)) {
             $this->_getSession()->addError($this->__('Please select import.'));
         } else {
             $num = Mage::getResourceModel('ddg_automation/importer')
@@ -36,9 +36,9 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ImporterController
                 $this->_getSession()->addError($num->getMessage());
             }
         }
+
         $this->_redirect('*/*/index');
     }
-
 
     /**
      * Mass delete contacts.
@@ -46,7 +46,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ImporterController
     public function massDeleteAction()
     {
         $ids = $this->getRequest()->getParam('importer');
-        if ( ! is_array($ids)) {
+        if (!is_array($ids)) {
             $this->_getSession()->addError($this->__('Please select import.'));
         } else {
             $num = Mage::getResourceModel('ddg_automation/importer')
@@ -61,11 +61,12 @@ class Dotdigitalgroup_Email_Adminhtml_Email_ImporterController
                 $this->_getSession()->addError($num->getMessage());
             }
         }
+
         $this->_redirect('*/*/index');
     }
 
     /**
-     * Check currently called action by permissions for current user
+     * Check currently called action by permissions for current user.
      *
      * @return bool
      */

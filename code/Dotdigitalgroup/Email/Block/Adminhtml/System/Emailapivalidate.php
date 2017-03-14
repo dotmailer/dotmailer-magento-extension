@@ -4,16 +4,19 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Emailapivalidate
     extends Mage_Adminhtml_Block_System_Config_Form_Field
 {
 
-    protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element
-    ) 
+    /**
+     * @param Varien_Data_Form_Element_Abstract $element
+     * @return string
+     */
+    protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element)
     {
         $element->setData('onchange', "apiValidation(this.form, this);");
 
         $url = Mage::helper('adminhtml')->getUrl('*/connector/ajaxvalidation');
 
         $element->setData(
-            'after_element_html', "
-            <script>
+            'after_element_html',
+            "<script>
                 document.observe('dom:loaded', function(){
                     apiValidation();
 
@@ -50,8 +53,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Emailapivalidate
                     return false;
                 }
 
-            </script>
-        "
+            </script>"
         );
 
         return parent::_getElementHtml($element);

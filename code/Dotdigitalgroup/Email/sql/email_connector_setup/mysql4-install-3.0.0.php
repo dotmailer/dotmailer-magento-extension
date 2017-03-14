@@ -1,5 +1,5 @@
 <?php
-
+//@codingStandardsIgnoreStart
 /** @var Mage_Eav_Model_Entity_Setup $installer */
 
 $installer = $this;
@@ -405,6 +405,7 @@ $options = array();
 foreach ($statuses as $status) {
     $options[] = $status['value'];
 }
+
 $statusString = implode(',', $options);
 
 $configModel = Mage::getModel('core/config');

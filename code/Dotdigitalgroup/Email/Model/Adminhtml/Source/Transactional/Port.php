@@ -3,6 +3,9 @@
 class Dotdigitalgroup_Email_Model_Adminhtml_Source_Transactional_Port
 {
 
+    /**
+     * @return array
+     */
     public function toOptionArray()
     {
         return array(

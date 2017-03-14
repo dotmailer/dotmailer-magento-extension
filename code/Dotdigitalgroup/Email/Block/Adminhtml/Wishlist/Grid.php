@@ -4,6 +4,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Wishlist_Grid
     extends Mage_Adminhtml_Block_Widget_Grid
 {
 
+    /**
+     * Dotdigitalgroup_Email_Block_Adminhtml_Wishlist_Grid constructor.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -42,7 +45,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Wishlist_Grid
     /**
      * Prepare the grid collumns.
      *
-     * @return $this
+     * @return Mage_Adminhtml_Block_Widget_Grid
      * @throws Exception
      */
     protected function _prepareColumns()

@@ -6,29 +6,40 @@ class Dotdigitalgroup_Email_Model_Sales_Order
     /**
      * @var array
      */
-    protected $_accounts = array();
+    public $accounts = array();
     /**
      * @var string
      */
-    protected $_apiUsername;
+    public $apiUsername;
     /**
      * @var string
      */
-    protected $_apiPassword;
-
+    public $apiPassword;
     /**
      * Global number of orders
      *
      * @var int
      */
-    protected $_countOrders = 0;
-
-    protected $_orderIds;
-    protected $_orderReminderReviewArray = array();
-    protected $_orderIdsForSingleSync;
+    public $countOrders = 0;
+    /**
+     * @var
+     */
+    public $orderIds;
+    /**
+     * @var array
+     */
+    public $orderReminderReviewArray = array();
+    /**
+     * @var
+     */
+    public $orderIdsForSingleSync;
+    /**
+     * @var array
+     */
+    protected $_guests = array();
 
     /**
-     * initial sync the transactional data
+     * Initial sync the transactional data.
      *
      * @return array
      */
@@ -38,17 +49,18 @@ class Dotdigitalgroup_Email_Model_Sales_Order
         // Initialise a return hash containing results of our sync attempt
         $this->_searchAccounts();
 
-        foreach ($this->_accounts as $account) {
-
-            $orders                 = $account->getOrders();
-            $orderIds               = $account->getOrderIds();
-            $ordersForSingleSync    = $account->getOrdersForSingleSync();
-            $orderIdsForSingleSync  = $account->getOrderIdsForSingleSync();
+        foreach ($this->accounts as $account) {
+            $orders = $account->getOrders();
+            $orderIds = $account->getOrderIds();
+            $ordersForSingleSync = $account->getOrdersForSingleSync();
+            $orderIdsForSingleSync = $account->getOrderIdsForSingleSync();
+            $website = $account->getWebsites();
+            //@codingStandardsIgnoreStart
+            $numOrders = count($orders);
             $numOrdersForSingleSync = count($ordersForSingleSync);
-            $website                = $account->getWebsites();
-            $numOrders              = count($orders);
-            $this->_countOrders += $numOrders;
-            $this->_countOrders += $numOrdersForSingleSync;
+            //@codingStandardsIgnoreEnd
+            $this->countOrders += $numOrders;
+            $this->countOrders += $numOrdersForSingleSync;
             //send transactional for any number of orders set
             if ($numOrders) {
                 Mage::helper('ddg')->log(
@@ -67,6 +79,7 @@ class Dotdigitalgroup_Email_Model_Sales_Order
                 if ($check) {
                     $this->_setImported($orderIds);
                 }
+
                 Mage::helper('ddg')->log('----------end order sync----------');
             }
 
@@ -81,28 +94,37 @@ class Dotdigitalgroup_Email_Model_Sales_Order
                             Dotdigitalgroup_Email_Model_Importer::MODE_SINGLE,
                             $website[0]
                         );
-                    if ( ! $check) {
+                    if (!$check) {
                         $error = true;
                     }
                 }
+
                 //if no error then set imported
-                if ( ! $error) {
+                if (!$error) {
                     $this->_setImported($orderIdsForSingleSync, true);
                 }
             }
-            unset($this->_accounts[$account->getApiUsername()]);
+
+            unset($this->accounts[$account->getApiUsername()]);
         }
 
-        if ($this->_countOrders) {
+        /**
+         * Add guest to contacts table.
+         */
+        if (! empty($this->_guests)) {
+            Mage::getResourceModel('ddg_automation/contact')->insertGuest($this->_guests);
+        }
+
+        if ($this->countOrders) {
             $response['message'] = 'Number of updated orders : '
-                . $this->_countOrders;
+                . $this->countOrders;
         }
 
         return $response;
     }
 
     /**
-     * Search the configuration data per website
+     * Search the configuration data per website.
      */
     protected function _searchAccounts()
     {
@@ -110,60 +132,57 @@ class Dotdigitalgroup_Email_Model_Sales_Order
         $helper = Mage::helper('ddg');
 
         foreach (Mage::app()->getWebsites(true) as $website) {
-
-            $this->_orderIds              = array();
-            $this->_orderIdsForSingleSync = array();
-            $apiEnabled                   = $helper->getWebsiteConfig(
+            $this->orderIds = array();
+            $this->orderIdsForSingleSync = array();
+            $apiEnabled = $helper->getWebsiteConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED,
                 $website
             );
-            $storeIds                     = $website->getStoreIds();
+            $storeIds = $website->getStoreIds();
             if ($apiEnabled
                 && $helper->getWebsiteConfig(
                     Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_ORDER_ENABLED,
                     $website
                 )
                 &&
-                ! empty($storeIds)
+                !empty($storeIds)
             ) {
-
-                $this->_apiUsername = $helper->getApiUsername($website);
-                $this->_apiPassword = $helper->getApiPassword($website);
+                $this->apiUsername = $helper->getApiUsername($website);
+                $this->apiPassword = $helper->getApiPassword($website);
 
                 // limit for orders included to sync
                 $limit = Mage::helper('ddg')->getWebsiteConfig(
                     Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT,
                     $website
                 );
-                if ( ! isset($this->_accounts[$this->_apiUsername])) {
-                    $account                              = Mage::getModel(
+                if (!isset($this->accounts[$this->apiUsername])) {
+                    $account = Mage::getModel(
                         'ddg_automation/connector_account'
                     )
-                        ->setApiUsername($this->_apiUsername)
-                        ->setApiPassword($this->_apiPassword);
-                    $this->_accounts[$this->_apiUsername] = $account;
+                        ->setApiUsername($this->apiUsername)
+                        ->setApiPassword($this->apiPassword);
+                    $this->accounts[$this->apiUsername] = $account;
                 }
 
-                $this->_accounts[$this->_apiUsername]->setOrders(
+                $this->accounts[$this->apiUsername]->setOrders(
                     $this->getConnectorOrders($website, $limit)
                 );
                 $orderIds = array_merge(
-                    $this->_accounts[$this->_apiUsername]->getOrderIds(),
-                    $this->_orderIds
+                    $this->accounts[$this->apiUsername]->getOrderIds(),
+                    $this->orderIds
                 );
-                $this->_accounts[$this->_apiUsername]->setOrderIds($orderIds);
-                $this->_accounts[$this->_apiUsername]->setWebsites(
+                $this->accounts[$this->apiUsername]->setOrderIds($orderIds);
+                $this->accounts[$this->apiUsername]->setWebsites(
                     $website->getId()
                 );
-                $this->_accounts[$this->_apiUsername]->setOrdersForSingleSync(
+                $this->accounts[$this->apiUsername]->setOrdersForSingleSync(
                     $this->getConnectorOrders($website, $limit, true)
                 );
                 $orderIdsForSingleSync = array_merge(
-                    $this->_accounts[$this->_apiUsername]->getOrderIdsForSingleSync(
-                    ),
-                    $this->_orderIdsForSingleSync
+                    $this->accounts[$this->apiUsername]->getOrderIdsForSingleSync(),
+                    $this->orderIdsForSingleSync
                 );
-                $this->_accounts[$this->_apiUsername]->setOrderIdsForSingleSync(
+                $this->accounts[$this->apiUsername]->setOrderIdsForSingleSync(
                     $orderIdsForSingleSync
                 );
             }
@@ -171,7 +190,7 @@ class Dotdigitalgroup_Email_Model_Sales_Order
     }
 
     /**
-     * get all order to import.
+     * Get all order to import.
      *
      * @param     $website
      * @param int $limit
@@ -179,17 +198,17 @@ class Dotdigitalgroup_Email_Model_Sales_Order
      *
      * @return array
      */
-    public function getConnectorOrders($website, $limit = 100, $modified = false
-    ) {
-        $orders     = $customers = array();
-        $storeIds   = $website->getStoreIds();
+    public function getConnectorOrders($website, $limit = 100, $modified = false)
+    {
+        $orders = $customers = array();
+        $storeIds = $website->getStoreIds();
         $orderModel = Mage::getModel('ddg_automation/order');
 
         if (empty($storeIds)) {
             return array();
         }
 
-        $helper        = Mage::helper('ddg');
+        $helper = Mage::helper('ddg');
         $orderStatuses = $helper->getConfigSelectedStatus($website);
 
         if ($orderStatuses) {
@@ -213,6 +232,25 @@ class Dotdigitalgroup_Email_Model_Sales_Order
             ->addFieldToFilter('entity_id', array('in' => $orderIds));
         try {
             foreach ($salesOrderCollection as $order) {
+                $storeId = $order->getStoreId();
+                $websiteId = Mage::app()->getStore($storeId)->getWebsiteId();
+                /**
+                 * Add guest to array to add to contacts table.
+                 */
+                if ($order->getCustomerIsGuest()
+                    && $order->getCustomerEmail()
+                ) {
+                    //add guest to the list
+                    if (! isset($this->_guests[$order->getCustomerEmail()])) {
+                        $this->_guests[$order->getCustomerEmail()] = array(
+                            'email' => $order->getCustomerEmail(),
+                            'website_id' => $websiteId,
+                            'store_id' => $storeId,
+                            'is_guest' => 1
+                        );
+                    }
+                }
+
                 if ($order->getId()) {
                     $connectorOrder = Mage::getModel(
                         'ddg_automation/connector_order'
@@ -220,10 +258,11 @@ class Dotdigitalgroup_Email_Model_Sales_Order
                     $connectorOrder->setOrderData($order);
                     $orders[] = $connectorOrder;
                 }
+
                 if ($modified) {
-                    $this->_orderIdsForSingleSync[] = $order->getId();
+                    $this->orderIdsForSingleSync[] = $order->getId();
                 } else {
-                    $this->_orderIds[] = $order->getId();
+                    $this->orderIds[] = $order->getId();
                 }
             }
         } catch (Exception $e) {
@@ -234,22 +273,19 @@ class Dotdigitalgroup_Email_Model_Sales_Order
     }
 
     /**
-     * create product reminder campaigns
-     *
-     * @return bool
+     * Create product reminder campaigns.
      */
     public function createProductReminderReviewCampaigns()
     {
         $this->searchOrdersForProductReminder();
 
-        foreach ($this->_orderReminderReviewArray as $websiteId => $collection)
-        {
+        foreach ($this->orderReminderReviewArray as $websiteId => $collection) {
             $this->registerCampaign($collection, $websiteId);
         }
     }
 
     /**
-     * register review campaign
+     * Register review campaign.
      *
      * @param $collection
      * @param $websiteId
@@ -258,15 +294,14 @@ class Dotdigitalgroup_Email_Model_Sales_Order
      */
     protected function registerCampaign($collection, $websiteId)
     {
-
-        $helper     = Mage::helper('ddg');
+        $helper = Mage::helper('ddg');
         $campaignId = $helper->getReviewReminderCampaign($websiteId);
         //campaign id is selected in config
         if ($campaignId) {
             foreach ($collection as $order) {
                 $helper->log(
-                    '-- Order Product Reminder: ' . $order->getIncrementId()
-                    . ' Campaign Id: ' . $campaignId
+                    '-- Register campaign : ' . $campaignId . ' for product reminder, order_increment_id : ' .
+                    $order->getIncrementId()
                 );
 
                 try {
@@ -285,8 +320,9 @@ class Dotdigitalgroup_Email_Model_Sales_Order
                         $emailCampaign->setCustomerId($order->getCustomerId());
                     }
 
+                    //@codingStandardsIgnoreStart
                     $emailCampaign->save();
-
+                    //@codingStandardsIgnoreEnd
                 } catch (Exception $e) {
                     Mage::logException($e);
                 }
@@ -295,20 +331,18 @@ class Dotdigitalgroup_Email_Model_Sales_Order
     }
 
     /**
-     * search for orders for product review reminder
+     * Search for orders for product review reminder.
      */
     protected function searchOrdersForProductReminder()
     {
-
         $helper = Mage::helper('ddg');
 
         foreach (Mage::app()->getWebsites(true) as $website) {
-
-            $apiEnabled                = $helper->getWebsiteConfig(
+            $apiEnabled = $helper->getWebsiteConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED,
                 $website
             );
-            $reviewReminderEnabled     = $helper->isReviewReminderEnabled(
+            $reviewReminderEnabled = $helper->isReviewReminderEnabled(
                 $website
             );
             $reviewReminderOrderStatus = $helper->getReviewReminderOrderStatus(
@@ -322,7 +356,6 @@ class Dotdigitalgroup_Email_Model_Sales_Order
                 && $reviewReminderOrderStatus
                 && $reviewReminderDelayInDays
             ) {
-
                 //check for website with no stores
                 $storeIds = $website->getStoreIds();
                 if (empty($storeIds)) {
@@ -337,19 +370,20 @@ class Dotdigitalgroup_Email_Model_Sales_Order
                     'order_increment_id'
                 );
 
+                //@codingStandardsIgnoreStart
                 //date time with config delay
                 $date = Mage::app()->getLocale()->date()
                     ->subDay($reviewReminderDelayInDays);
+                //@codingStandardsIgnoreEnd
                 $from = clone $date;
-                $to   = $date->toString('YYYY-MM-dd HH:mm:ss');
+                $to = $date->toString('YYYY-MM-dd HH:mm:ss');
                 $from = $from->subHour(2)
                     ->toString('YYYY-MM-dd HH:mm:ss');
                 //created at date range
                 $createdAt = array('from' => $from, 'to' => $to,
-                                   'date' => true);
+                    'date' => true);
 
-                $orderCollection = Mage::getModel('sales/order')->getCollection(
-                )
+                $orderCollection = Mage::getModel('sales/order')->getCollection()
                     ->addFieldToFilter(
                         'main_table.status', $reviewReminderOrderStatus
                     )
@@ -358,7 +392,7 @@ class Dotdigitalgroup_Email_Model_Sales_Order
                         'main_table.store_id', array('in' => $storeIds)
                     );
 
-                if ( ! empty($campaignOrderIds)) {
+                if (!empty($campaignOrderIds)) {
                     $orderCollection->addFieldToFilter(
                         'main_table.increment_id',
                         array('nin' => $campaignOrderIds)
@@ -366,14 +400,14 @@ class Dotdigitalgroup_Email_Model_Sales_Order
                 }
 
                 //process rules on collection
-                $ruleModel  = Mage::getModel('ddg_automation/rules');
+                $ruleModel = Mage::getModel('ddg_automation/rules');
                 $collection = $ruleModel->process(
                     $orderCollection, Dotdigitalgroup_Email_Model_Rules::REVIEW,
                     $website->getId()
                 );
 
                 if ($collection->getSize()) {
-                    $this->_orderReminderReviewArray[$website->getId()]
+                    $this->orderReminderReviewArray[$website->getId()]
                         = $collection;
                 }
             }
@@ -381,15 +415,15 @@ class Dotdigitalgroup_Email_Model_Sales_Order
     }
 
     /**
-     * get customer last order id
+     * Get customer last order id.
      *
      * @param Mage_Customer_Model_Customer $customer
      *
      * @return bool|Varien_Object
      */
-    public function getCustomerLastOrderId(Mage_Customer_Model_Customer $customer
-    ) {
-        $storeIds   = Mage::app()->getWebsite($customer->getWebsiteId())
+    public function getCustomerLastOrderId(Mage_Customer_Model_Customer $customer)
+    {
+        $storeIds = Mage::app()->getWebsite($customer->getWebsiteId())
             ->getStoreIds();
         $collection = Mage::getModel('sales/order')->getCollection();
         $collection->addFieldToFilter('customer_id', $customer->getId())
@@ -398,22 +432,24 @@ class Dotdigitalgroup_Email_Model_Sales_Order
             ->setOrder('entity_id');
 
         if ($collection->getSize()) {
+            //@codingStandardsIgnoreStart
             return $collection->getFirstItem();
+            //@codingStandardsIgnoreEnd
         } else {
             return false;
         }
     }
 
     /**
-     * get customer last quote id
+     * Get customer last quote id.
      *
      * @param Mage_Customer_Model_Customer $customer
      *
      * @return bool|Varien_Object
      */
-    public function getCustomerLastQuoteId(Mage_Customer_Model_Customer $customer
-    ) {
-        $storeIds   = Mage::app()->getWebsite($customer->getWebsiteId())
+    public function getCustomerLastQuoteId(Mage_Customer_Model_Customer $customer)
+    {
+        $storeIds = Mage::app()->getWebsite($customer->getWebsiteId())
             ->getStoreIds();
         $collection = Mage::getModel('sales/quote')->getCollection();
         $collection->addFieldToFilter('customer_id', $customer->getId())
@@ -422,32 +458,36 @@ class Dotdigitalgroup_Email_Model_Sales_Order
             ->setOrder('entity_id');
 
         if ($collection->getSize()) {
+            //@codingStandardsIgnoreStart
             return $collection->getFirstItem();
+            //@codingStandardsIgnoreEnd
         } else {
             return false;
         }
     }
 
     /**
-     * set imported in bulk query
+     * Set imported in bulk query.
      *
      * @param $ids
      * @param $modified
      */
     protected function _setImported($ids, $modified = false)
     {
-
         try {
             $coreResource = Mage::getSingleton('core/resource');
-            $write        = $coreResource->getConnection('core_write');
-            $tableName    = $coreResource->getTableName('ddg_automation/order');
-            $ids          = implode(', ', $ids);
-            $now          = Mage::getSingleton('core/date')->gmtDate();
+            $write = $coreResource->getConnection('core_write');
+            $tableName = $coreResource->getTableName('ddg_automation/order');
+            $ids = implode(', ', $ids);
+            $now = Mage::getSingleton('core/date')->gmtDate();
 
             if ($modified) {
                 $write->update(
-                    $tableName, array('modified'   => new Zend_Db_Expr('null'),
-                                      'updated_at' => $now),
+                    $tableName,
+                    array(
+                        'modified' => new Zend_Db_Expr('null'),
+                        'updated_at' => $now
+                    ),
                     "order_id IN ($ids)"
                 );
             } else {

@@ -4,7 +4,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Dynamic_Gridview
 {
 
     /**
-     * grid display options.
+     * Grid display options.
      *
      * @return array
      */

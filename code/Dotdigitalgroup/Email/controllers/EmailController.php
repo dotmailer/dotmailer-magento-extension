@@ -40,6 +40,7 @@ class Dotdigitalgroup_Email_EmailController
         if ($root = $this->getLayout()->getBlock('root')) {
             $root->setTemplate('page/blank.phtml');
         }
+
         //content template
         $coupon = $this->getLayout()->createBlock(
             'ddg_automation/coupon', 'connector_coupon', array(
@@ -62,6 +63,7 @@ class Dotdigitalgroup_Email_EmailController
         if ($root = $this->getLayout()->getBlock('root')) {
             $root->setTemplate('page/blank.phtml');
         }
+
         $basket = $this->getLayout()->createBlock(
             'ddg_automation/basket', 'connector_basket', array(
                 'template' => 'connector/basket.phtml'
@@ -128,8 +130,8 @@ class Dotdigitalgroup_Email_EmailController
             //callback url
             $callback = $baseUrl . 'connector/email/callback';
             $data = 'client_id=' . Mage::getStoreConfig(
-                    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CLIENT_ID
-                ) .
+                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CLIENT_ID
+            ) .
                 '&client_secret=' . Mage::getStoreConfig(
                     Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CLIENT_SECRET_ID
                 ) .
@@ -139,10 +141,11 @@ class Dotdigitalgroup_Email_EmailController
 
 
             $url = Mage::helper('ddg/config')->getTokenUrl();
+            //@codingStandardsIgnoreStart
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 60);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
@@ -161,7 +164,9 @@ class Dotdigitalgroup_Email_EmailController
 
             //save the refresh token to the admin user
             $adminUser->setRefreshToken($response->refresh_token)->save();
+            //@codingStandardsIgnoreEnd
         }
+
         //redirect to automation index page
         $this->_redirectReferer(
             Mage::helper('adminhtml')->getUrl('adminhtml/email_studio/index')
@@ -169,7 +174,7 @@ class Dotdigitalgroup_Email_EmailController
     }
 
     /**
-     * quote process action
+     * Quote process action.
      */
     public function getbasketAction()
     {
@@ -197,7 +202,7 @@ class Dotdigitalgroup_Email_EmailController
     }
 
     /**
-     * process customer basket
+     * Process customer basket.
      */
     protected function _handleCustomerBasket()
     {
@@ -207,8 +212,8 @@ class Dotdigitalgroup_Email_EmailController
         );
 
         //if customer is logged in then redirect to cart
-        if ($customerSession->isLoggedIn()
-            && $customerSession->getCustomerId() == $this->_quote->getCustomerId()
+        if ($customerSession->isLoggedIn() &&
+            $customerSession->getCustomerId() == $this->_quote->getCustomerId()
         ) {
             //check session quote for missing items and add
             $this->_checkMissingAndAdd();
@@ -221,13 +226,13 @@ class Dotdigitalgroup_Email_EmailController
 
             $this->_redirectUrl($url);
         } else {
-            //set after auth url.
             // customer will be redirected to cart after successful login
             if ($configCartUrl) {
                 $cartUrl = $configCartUrl;
             } else {
                 $cartUrl = 'checkout/cart';
             }
+
             $customerSession->setAfterAuthUrl(
                 $this->_quote->getStore()->getUrl($cartUrl)
             );
@@ -242,12 +247,13 @@ class Dotdigitalgroup_Email_EmailController
             } else {
                 $loginUrl = 'customer/account/login';
             }
+
             $this->_redirectUrl($this->_quote->getStore()->getUrl($loginUrl));
         }
     }
 
     /**
-     * process guest
+     * Process guest.
      */
     protected function _handleGuestBasket()
     {
@@ -260,11 +266,12 @@ class Dotdigitalgroup_Email_EmailController
         } else {
             $url = 'checkout/cart';
         }
+
         $this->_redirectUrl($this->_quote->getStore()->getUrl($url));
     }
 
     /**
-     * check missing items from current quote and add
+     * Check missing items from current quote and add.
      */
     protected function _checkMissingAndAdd()
     {
@@ -282,6 +289,7 @@ class Dotdigitalgroup_Email_EmailController
                     $currentQuote->addItem($item);
                 }
             }
+
             $currentQuote->collectTotals()->save();
         }
     }

@@ -4,10 +4,13 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Abandoned
     extends Mage_Core_Model_Abstract
 {
 
+    /**
+     * @var array
+     */
     public $storeIds;
 
     /**
-     * prepare collection and needed columns
+     * Prepare collection and needed columns.
      *
      * @return Mage_Sales_Model_Resource_Quote_Collection
      */
@@ -32,14 +35,17 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Abandoned
             0
         );
 
+        //@codingStandardsIgnoreStart
         $collection->getSelect()->columns(
             array(
                 'lifetime'    => 'SUM(main_table.subtotal)',
                 'average'     => $averageExpr,
                 'total_count' => "COUNT(main_table.entity_id)",
-                'day_count'   => "ROUND(COUNT(main_table.entity_id) / DATEDIFF(date(MAX(main_table.updated_at)) , date(MIN(main_table.updated_at))), 2)"
+                'day_count' => "ROUND(COUNT(main_table.entity_id) / DATEDIFF(date(MAX(main_table.updated_at)),
+                 date(MIN(main_table.updated_at))), 2)"
             )
         );
+        //@codingStandardsIgnoreEnd
 
         return $collection;
     }
@@ -64,7 +70,9 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Abandoned
             $this->storeIds = $storeIds;
         }
 
+        //@codingStandardsIgnoreStart
         return $this->getPreparedCollection()->setPageSize(1)->setCurPage(1)
             ->getFirstItem();
+        //@codingStandardsIgnoreEnd
     }
 }

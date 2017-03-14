@@ -4,25 +4,34 @@ class Dotdigitalgroup_Email_Block_Wishlist
     extends Dotdigitalgroup_Email_Block_Edc
 {
 
-    protected $_website;
+    /**
+     * @var
+     */
+    public $website;
 
+    /**
+     * @return bool|Mage_Wishlist_Model_Mysql4_Item_Collection
+     */
     public function getWishlistItems()
     {
         $wishlist = $this->_getWishlist();
-        if ($wishlist && count($wishlist->getItemCollection())) {
+
+        if ($wishlist && !empty($wishlist->getItemCollection())) {
             return $wishlist->getItemCollection();
         } else {
             return false;
         }
     }
 
+    /**
+     * @return bool|Mage_Wishlist_Model_Wishlist
+     */
     protected function _getWishlist()
     {
-
         //customer id param
         $customerId = Mage::app()->getRequest()->getParam('customer_id', false);
 
-        if ( ! $customerId) {
+        if (!$customerId) {
             return false;
         }
 
@@ -33,6 +42,9 @@ class Dotdigitalgroup_Email_Block_Wishlist
         return $wishlistModel;
     }
 
+    /**
+     * @return mixed
+     */
     public function getMode()
     {
         return Mage::helper('ddg')->getWebsiteConfig(

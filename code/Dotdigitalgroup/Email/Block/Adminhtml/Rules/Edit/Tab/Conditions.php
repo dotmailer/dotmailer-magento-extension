@@ -45,6 +45,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Rules_Edit_Tab_Conditions
         return false;
     }
 
+    /**
+     * @return Mage_Adminhtml_Block_Widget_Form
+     */
     protected function _prepareForm()
     {
         $model = Mage::registry('current_ddg_rule');
@@ -73,7 +76,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Rules_Edit_Tab_Conditions
                     '2' => Mage::helper('ddg')->__('ANY'),
                 ),
                 'after_element_html' => '<small>Choose ANY if using multi line conditions for same attribute.
-If multi line conditions for same attribute is used and ALL is chosen then only first one will be taken into account and remaining will be ignored.</small>',
+                If multi line conditions for same attribute is used and ALL is chosen then only first one will be taken
+                 into account and remaining will be ignored.</small>',
             )
         );
 

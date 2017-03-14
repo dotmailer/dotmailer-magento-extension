@@ -28,10 +28,10 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
     const XML_PATH_GUEST_LOSTBASKET_2_CAMPAIGN = 'connector_lost_baskets/guests/campaign_2';
     const XML_PATH_GUEST_LOSTBASKET_3_CAMPAIGN = 'connector_lost_baskets/guests/campaign_3';
 
-    const PENDING = 0;
-    const PROCESSING = 1;
     const SENT = 2;
     const FAILED = 3;
+    const PENDING = 0;
+    const PROCESSING = 1;
 
     //error messages
     const SEND_EMAIL_CONTACT_ID_MISSING = 'Error : missing contact id - will try later to send ';
@@ -40,7 +40,7 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
     const SEND_EMAIL_CONTACT_LIMIT = 10;
 
     /**
-     * constructor
+     * Constructor.
      */
     public function _construct()
     {
@@ -58,6 +58,7 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
         if ($this->isObjectNew()) {
             $this->setCreatedAt($now);
         }
+
         $this->setUpdatedAt($now);
 
         return $this;
@@ -74,6 +75,7 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
         $collection = $this->getCollection()
             ->addFieldToFilter('quote_id', $quoteId)
             ->addFieldToFilter('store_id', $storeId);
+        //@codingStandardsIgnoreStart
         $collection->getSelect()->limit(1);
 
         if ($collection->getSize()) {
@@ -82,12 +84,16 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
             $this->setQuoteId($quoteId)
                 ->setStoreId($storeId);
         }
+        //@codingStandardsIgnoreEnd
 
         return $this;
     }
 
 
-    private function _checkSendStatus($website)
+    /**
+     * @param $website
+     */
+    protected function _checkSendStatus($website)
     {
         $campaigns = $this->_getEmailCampaigns($website->getStoreIds(), self::PROCESSING, true);
         foreach ($campaigns as $campaign) {
@@ -95,7 +101,7 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
             $response = $client->getSendStatus($campaign->getSendId());
             if (isset($response->message)) {
                 //update  the failed to send email message
-                $this->getResource()->setMessage(array($campaign->getSendId()), $response->message);
+                $this->getResource()->setMessageWithSendId($campaign->getSendId(), $response->message);
             } elseif ($response->status == 'Sent') {
                 $this->getResource()->setSent($campaign->getSendId());
             }
@@ -104,6 +110,8 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
 
     /**
      * Sending the campaigns.
+     *
+     * @codingStandardsIgnoreStart
      */
     public function sendCampaigns()
     {
@@ -114,12 +122,12 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
             //start send process
             $emailsToSend = $this->_getEmailCampaigns($website->getStoreIds());
             $campaignsToSend = array();
-            foreach ($emailsToSend as $campaign) {
 
+            foreach ($emailsToSend as $campaign) {
                 $email = $campaign->getEmail();
                 $campaignId = $campaign->getCampaignId();
                 $websiteId = $website->getId();
-                $client    = Mage::helper('ddg')->getWebsiteApiClient(
+                $client = Mage::helper('ddg')->getWebsiteApiClient(
                     $websiteId
                 );
 
@@ -145,7 +153,8 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
                         if (is_numeric($contactId)) {
                             //update data fields for order review camapigns
                             if ($campaign->getEventName() == 'Order Review') {
-                                $order = Mage::getModel('sales/order')->loadByIncrementId($campaign->getOrderIncrementId());
+                                $order = Mage::getModel('sales/order')
+                                    ->loadByIncrementId($campaign->getOrderIncrementId());
 
                                 if ($lastOrderId = $website->getConfig(
                                     Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_LAST_ORDER_ID
@@ -156,8 +165,10 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
                                         'Value' => $order->getId()
                                     );
                                 }
+
                                 if ($orderIncrementId = $website->getConfig(
-                                    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_LAST_ORDER_INCREMENT_ID
+                                    Dotdigitalgroup_Email_Helper_Config::
+                                    XML_PATH_CONNECTOR_CUSTOMER_LAST_ORDER_INCREMENT_ID
                                 )
                                 ) {
                                     $data[] = array(
@@ -173,12 +184,13 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
                                     );
                                 }
                             }
+
                             $campaignsToSend[$campaignId]['contacts'][] = $contactId;
                             $campaignsToSend[$campaignId]['ids'][] = $campaign->getId();
                         } else {
                             //update the failed to send email message error message
                             $campaign->setSendStatus(self::FAILED)
-                                ->setMessage('contact id returned is not numeric for email ' . $email)
+                                ->setMessage('Send not permitted. Contact is suppressed.')
                                 ->save();
                         }
                     } catch (Exception $e) {
@@ -186,6 +198,7 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
                     }
                 }
             }
+
             foreach ($campaignsToSend as $campaignId => $data) {
                 if (isset($data['contacts']) && isset($data['client'])) {
                     $contacts = $data['contacts'];
@@ -197,7 +210,7 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
                         //update  the failed to send email message
                         $this->getResource()->setMessage($data['ids'], $response->message);
                     } elseif (isset($response->id)) {
-                        $this->getResource()->setProcessing($campaignId, $response->id);
+                        $this->getResource()->setProcessing($data['ids'], $response->id);
                     } else {
                         //update  the failed to send email message
                         $this->getResource()->setMessage($data['ids'], 'No send id returned.');
@@ -205,10 +218,11 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
                 }
             }
         }
+        //@codingStandardsIgnoreEnd
     }
 
     /**
-     * Get campaign collection
+     * Get campaign collection.
      *
      * @param $storeIds
      * @param $sendStatus
@@ -222,6 +236,7 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
             ->addFieldToFilter('campaign_id', array('notnull' => true))
             ->addFieldToFilter('store_id', array('in' => $storeIds));
 
+        //@codingStandardsIgnoreStart
         //check for send id
         if ($sendIdCheck) {
             $emailCollection->addFieldToFilter('send_id', array('notnull' => true))
@@ -234,6 +249,7 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
 
 
         $emailCollection->getSelect()->limit(self::SEND_EMAIL_CONTACT_LIMIT);
+        //@codingStandardsIgnoreEnd
         return $emailCollection;
     }
 }

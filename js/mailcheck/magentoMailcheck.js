@@ -7,7 +7,7 @@
 
 var Mailcheck = Class.create();
 Mailcheck.prototype = {
-    initialize: function(options) {
+    initialize: function (options) {
         this.options = Object.extend(
             {
             elements: ".validate-email"
@@ -17,7 +17,7 @@ Mailcheck.prototype = {
 
         // Observe blur on each email field
         $$(this.options.elements).each(
-            function(email) {
+            function (email) {
             Event.observe(email,'blur',this.checkEmail.bindAsEventListener(this));
             }.bind(this)
         );
@@ -31,7 +31,7 @@ Mailcheck.prototype = {
      * Checks the email value for errors and shows validation
      * @param event
      */
-    checkEmail: function(event) {
+    checkEmail: function (event) {
         var el = $(Event.element(event));
 
         var opts = {
@@ -39,8 +39,11 @@ Mailcheck.prototype = {
             email: el.value,
 
             // Show suggetions after email input
-            suggested: function(element, suggestion) {
-                $$('.mailcheck-advice').each(function(advice_element) { advice_element.remove(); });
+            suggested: function (element, suggestion) {
+                $$('.mailcheck-advice').each(
+                    function (advice_element) {
+                    advice_element.remove(); }
+                );
 
                 // Ensure the suggestion text can be translated.
                 var suggestion_text = Translator.translate('Did you mean');
@@ -50,7 +53,7 @@ Mailcheck.prototype = {
             },
 
             // When no response clear any old suggestions
-            empty: function() {
+            empty: function () {
                 if(el.next('.mailcheck-advice')) {
                     el.next('.mailcheck-advice').remove();
                 }
@@ -59,12 +62,12 @@ Mailcheck.prototype = {
 
         // These two functions handle mailcheck suggestion() only accepting a single input
         var oldSuggested = opts.suggested;
-        opts.suggested = function(result) {
+        opts.suggested = function (result) {
             oldSuggested(el, result);
         };
 
         var oldEmpty = opts.empty;
-        opts.empty = function(result) {
+        opts.empty = function (result) {
             oldEmpty(el, result)
         };
 
@@ -77,7 +80,7 @@ Mailcheck.prototype = {
      * When user clicks on suggestion, update email input and remove suggestion
      * @param event
      */
-    useSuggestion: function(event) {
+    useSuggestion: function (event) {
         event.stop();
         var el = $(Event.element(event));
 

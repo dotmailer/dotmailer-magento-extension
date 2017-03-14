@@ -3,6 +3,9 @@
 class Dotdigitalgroup_Email_Model_Adminhtml_Source_Addressbookspref
 {
 
+    /**
+     * @return Mage_Core_Model_Website
+     */
     protected function getWebsite()
     {
         $website      = Mage::app()->getWebsite();
@@ -15,32 +18,33 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Addressbookspref
     }
 
     /**
-     * get address books
+     * Get address books.
      *
      * @return null
      */
     protected function getAddressBooks()
     {
         $website = $this->getWebsite();
-        $client  = Mage::getModel('ddg_automation/apiconnector_client');
-        $client->setApiUsername(Mage::helper('ddg')->getApiUsername($website))
-            ->setApiPassword(Mage::helper('ddg')->getApiPassword($website));
+        $client = Mage::helper('ddg')->getWebsiteApiClient($website);
 
         $savedAddressBooks = Mage::registry('addressbooks');
+        $addressBooks = false;
         //get saved address books from registry
         if ($savedAddressBooks) {
             $addressBooks = $savedAddressBooks;
         } else {
             // api all address books
-            $addressBooks = $client->getAddressBooks();
-            Mage::register('addressbooks', $addressBooks);
+            if ($client) {
+                $addressBooks = $client->getAddressBooks();
+                Mage::register('addressbooks', $addressBooks);
+            }
         }
 
         return $addressBooks;
     }
 
     /**
-     * addressbook options
+     * Addressbook options.
      *
      * @return array
      * @throws Mage_Core_Exception
@@ -49,7 +53,6 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Addressbookspref
     {
         $fields  = array();
         $website = $this->getWebsite();
-
         $enabled = Mage::helper('ddg')->isEnabled($website);
 
         //get address books options
@@ -57,10 +60,10 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Addressbookspref
             $addressBooks = $this->getAddressBooks();
             //set the error message to the select option
             if (isset($addressBooks->message)) {
-                $fields[] = array('value' => 0,
-                                  'label' => Mage::helper('ddg')->__(
-                                      $addressBooks->message
-                                  ));
+                $fields[] = array(
+                    'value' => 0,
+                    'label' => Mage::helper('ddg')->__($addressBooks->message)
+                );
             }
 
             $subscriberAddressBook = Mage::helper('ddg')
@@ -72,8 +75,10 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Addressbookspref
                     if (isset($book->id) && $book->visibility == 'Public'
                         && $book->id != $subscriberAddressBook
                     ) {
-                        $fields[] = array('value' => $book->id,
-                                          'label' => $book->name);
+                        $fields[] = array(
+                            'value' => $book->id,
+                            'label' => $book->name
+                        );
                     }
                 }
             }

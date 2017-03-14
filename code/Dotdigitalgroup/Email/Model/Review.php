@@ -2,16 +2,28 @@
 
 class Dotdigitalgroup_Email_Model_Review extends Mage_Core_Model_Abstract
 {
-
-    protected $_start;
-    protected $_countReviews;
-    protected $_reviews;
-    protected $_reviewIds;
-
     const EMAIL_REVIEW_IMPORTED = 1;
 
     /**
-     * constructor
+     * @var mixed
+     */
+    public $start;
+    /**
+     * @var
+     */
+    public $countReviews;
+    /**
+     * @var
+     */
+    public $reviews;
+    /**
+     * @var array
+     */
+    public $reviewIds;
+
+
+    /**
+     * Constructor.
      */
     public function _construct()
     {
@@ -35,17 +47,19 @@ class Dotdigitalgroup_Email_Model_Review extends Mage_Core_Model_Abstract
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function sync()
     {
         $response            = array('success' => true, 'message' => '');
         $helper              = Mage::helper('ddg');
-        $this->_countReviews = 0;
-        $this->_reviews      = array();
-        $this->_start        = microtime(true);
+        $this->countReviews = 0;
+        $this->reviews = array();
+        $this->start = microtime(true);
         //resource allocation
         $helper->allowResourceFullExecution();
         foreach (Mage::app()->getWebsites(true) as $website) {
-
             $enabled  = Mage::helper('ddg')->getWebsiteConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED,
                 $website
@@ -57,14 +71,11 @@ class Dotdigitalgroup_Email_Model_Review extends Mage_Core_Model_Abstract
             $storeIds = $website->getStoreIds();
             if ($enabled && $sync && ! empty($storeIds)) {
                 //start the sync
-                if ( ! $this->_countReviews) {
-                    $helper->log('---------- Start reviews sync ----------');
-                }
                 $this->_exportReviewsForWebsite($website);
             }
 
-            if (isset($this->_reviews[$website->getId()])) {
-                $reviews = $this->_reviews[$website->getId()];
+            if (isset($this->reviews[$website->getId()])) {
+                $reviews = $this->reviews[$website->getId()];
                 //send reviews as transactional data
                 //register in queue with importer
                 $check = Mage::getModel('ddg_automation/importer')
@@ -76,16 +87,20 @@ class Dotdigitalgroup_Email_Model_Review extends Mage_Core_Model_Abstract
                     );
                 //if no error then set imported
                 if ($check) {
-                    $this->getResource()->setImported($this->_reviewIds);
+                    $this->getResource()->setImported($this->reviewIds);
                 }
-                $this->_countReviews += count($reviews);
+
+                //@codingStandardsIgnoreStart
+                $this->countReviews += count($reviews);
+                //@codingStandardsIgnoreEnd
             }
         }
 
-        if ($this->_countReviews) {
-            $message = 'Total time for sync : ' . gmdate(
-                "H:i:s", microtime(true) - $this->_start
-            ) . ', Total synced = ' . $this->_countReviews;
+        if ($this->countReviews) {
+            //@codingStandardsIgnoreStart
+            $message = 'Total time for Reviews sync : ' . gmdate("H:i:s", microtime(true) - $this->start) .
+                ', Total synced = ' . $this->countReviews;
+            //@codingStandardsIgnoreEnd
             $helper->log($message);
             $response['message'] = $message;
         }
@@ -93,24 +108,27 @@ class Dotdigitalgroup_Email_Model_Review extends Mage_Core_Model_Abstract
         return $response;
     }
 
-    protected function _exportReviewsForWebsite(Mage_Core_Model_Website $website
-    ) 
+    /**
+     * @param Mage_Core_Model_Website $website
+     */
+    protected function _exportReviewsForWebsite(Mage_Core_Model_Website $website)
     {
         $limit            = Mage::helper('ddg')->getWebsiteConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT,
             $website
         );
         $emailReviews     = $this->_getReviewsToExport($website, $limit);
-        $this->_reviewIds = $emailReviews->getColumnValues('review_id');
+        $this->reviewIds = $emailReviews->getColumnValues('review_id');
 
-        if ( ! empty($this->_reviewIds)) {
+        if (! empty($this->reviewIds)) {
             $reviews = Mage::getModel('review/review')
                 ->getCollection()
                 ->addFieldToFilter(
-                    'main_table.review_id', array('in' => $this->_reviewIds)
+                    'main_table.review_id', array('in' => $this->reviewIds)
                 )
                 ->addFieldToFilter('customer_id', array('notnull' => 'true'));
 
+            //@codingStandardsIgnoreStart
             $reviews->getSelect()
                 ->joinLeft(
                     array('c' => Mage::getSingleton('core/resource')
@@ -127,8 +145,7 @@ class Dotdigitalgroup_Email_Model_Review extends Mage_Core_Model_Abstract
                             ->addIdFilter($mageReview->getEntityPkValue())
                             ->setStoreId($mageReview->getStoreId())
                             ->addAttributeToSelect(
-                                array('product_url', 'name', 'store_id',
-                                      'small_image')
+                                array('product_url', 'name', 'store_id', 'small_image')
                             )
                             ->setPage(1, 1)
                             ->getFirstItem();
@@ -159,18 +176,22 @@ class Dotdigitalgroup_Email_Model_Review extends Mage_Core_Model_Abstract
                                 $ratingItem->getRatingCode(), $rating
                             );
                         }
-                        $this->_reviews[$website->getId()][] = $connectorReview;
+                        $this->reviews[$website->getId()][] = $connectorReview;
                     } catch (Exception $e) {
                         Mage::logException($e);
                     }
                 }
             }
+            //@codingStandardsIgnoreEnd
         }
     }
 
-    protected function _getReviewsToExport(Mage_Core_Model_Website $website,
-        $limit = 100
-    ) 
+    /**
+     * @param Mage_Core_Model_Website $website
+     * @param int $limit
+     * @return Varien_Data_Collection
+     */
+    protected function _getReviewsToExport(Mage_Core_Model_Website $website, $limit = 100)
     {
         return $this->getCollection()
             ->addFieldToFilter('review_imported', array('null' => 'true'))

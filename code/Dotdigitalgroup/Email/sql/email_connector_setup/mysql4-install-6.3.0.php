@@ -6,7 +6,7 @@ $installer = $this;
 $installer->startSetup();
 
 /**
- * create Contact table.
+ * Create contact table.
  */
 $contactTable = $installer->getTable('ddg_automation/contact');
 
@@ -17,79 +17,79 @@ if ($installer->getConnection()->isTableExists($contactTable)) {
 $table = $installer->getConnection()->newTable($contactTable);
 $table->addColumn(
     'email_contact_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
-    'primary'  => true,
+    'primary' => true,
     'identity' => true,
     'unsigned' => true,
     'nullable' => false
-    ), 'Primary Key'
+), 'Primary Key'
 )
     ->addColumn(
         'is_guest', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => true,
-        ), 'Is Guest'
+    ), 'Is Guest'
     )
     ->addColumn(
         'contact_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => true,
-        ), 'Connector Contact ID'
+    ), 'Connector Contact ID'
     )
     ->addColumn(
         'customer_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-        ), 'Customer ID'
+    ), 'Customer ID'
     )
     ->addColumn(
         'website_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-        'default'  => '0'
-        ), 'Website ID'
+        'default' => '0'
+    ), 'Website ID'
     )
     ->addColumn(
         'store_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-        'default'  => '0'
-        ), 'Store ID'
+        'default' => '0'
+    ), 'Store ID'
     )
     ->addColumn(
         'email', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'nullable' => false,
-        'default'  => ''
-        ), 'Customer Email'
+        'default' => ''
+    ), 'Customer Email'
     )
     ->addColumn(
         'is_subscriber', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => true,
-        ), 'Is Subscriber'
+    ), 'Is Subscriber'
     )
     ->addColumn(
         'subscriber_status', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => true,
-        ), 'Subscriber status'
+    ), 'Subscriber status'
     )
     ->addColumn(
         'email_imported', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => true,
-        ), 'Is Imported'
+    ), 'Is Imported'
     )
     ->addColumn(
         'subscriber_imported', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => true,
-        ), 'Subscriber Imported'
+    ), 'Subscriber Imported'
     )
     ->addColumn(
         'suppressed', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => true,
-        ), 'Is Suppressed'
+    ), 'Is Suppressed'
     )
     ->addIndex(
         $installer->getIdxName($contactTable, array('email_contact_id')),
@@ -131,6 +131,10 @@ $table->addColumn(
         $installer->getIdxName($contactTable, array('email')),
         array('email')
     )
+    ->addIndex(
+        $installer->getIdxName($contactTable, array('contact_id')),
+        array('contact_id')
+    )
     ->addForeignKey(
         $installer->getFkName(
             $contactTable, 'website_id', 'core/website', 'website_id'
@@ -142,7 +146,7 @@ $table->addColumn(
 $installer->getConnection()->createTable($table);
 
 /**
- * Order table
+ * Create order table
  */
 $orderTable = $installer->getTable('ddg_automation/order');
 
@@ -153,48 +157,48 @@ if ($installer->getConnection()->isTableExists($orderTable)) {
 $table = $installer->getConnection()->newTable($orderTable);
 $table->addColumn(
     'email_order_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
-    'primary'  => true,
+    'primary' => true,
     'identity' => true,
     'unsigned' => true,
     'nullable' => false
-    ), 'Primary Key'
+), 'Primary Key'
 )
     ->addColumn(
         'order_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-        ), 'Order ID'
+    ), 'Order ID'
     )
     ->addColumn(
         'order_status', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'unsigned' => true,
         'nullable' => false,
-        ), 'Order Status'
+    ), 'Order Status'
     )
     ->addColumn(
         'quote_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-        ), 'Sales Quote ID'
+    ), 'Sales Quote ID'
     )
     ->addColumn(
         'store_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-        'default'  => '0'
-        ), 'Store ID'
+        'default' => '0'
+    ), 'Store ID'
     )
     ->addColumn(
         'email_imported', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => true,
-        ), 'Is Order Imported'
+    ), 'Is Order Imported'
     )
     ->addColumn(
         'modified', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => true,
-        ), 'Is Order Modified'
+    ), 'Is Order Modified'
     )
     ->addColumn(
         'created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(),
@@ -243,7 +247,7 @@ $table->addColumn(
 $installer->getConnection()->createTable($table);
 
 /**
- * Campaign table.
+ * Create campaign table.
  */
 $campaignTable = $installer->getTable('ddg_automation/campaign');
 
@@ -254,76 +258,82 @@ if ($installer->getConnection()->isTableExists($campaignTable)) {
 $table = $installer->getConnection()->newTable($campaignTable);
 $table->addColumn(
     'id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
-    'primary'  => true,
+    'primary' => true,
     'identity' => true,
     'unsigned' => true,
     'nullable' => false
-    ), 'Primary Key'
+), 'Primary Key'
 )
     ->addColumn(
         'campaign_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-        ), 'Campaign ID'
+    ), 'Campaign ID'
     )
     ->addColumn(
         'email', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'nullable' => false,
-        'default'  => ''
-        ), 'Contact Email'
+        'default' => ''
+    ), 'Contact Email'
     )
     ->addColumn(
         'customer_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-        ), 'Customer ID'
-    )
-    ->addColumn(
-        'is_sent', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
-        'unsigned' => true,
-        'nullable' => true,
-        ), 'Is Sent'
+    ), 'Customer ID'
     )
     ->addColumn(
         'sent_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(),
         'Send Date'
     )
     ->addColumn(
-        'order_increment_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
+        'order_increment_id', Varien_Db_Ddl_Table::TYPE_VARCHAR, 50, array(
         'unsigned' => true,
         'nullable' => false,
-        ), 'Order Increment ID'
+    ), 'Order Increment ID'
     )
     ->addColumn(
         'quote_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-        ), 'Sales Quote ID'
+    ), 'Sales Quote ID'
     )
     ->addColumn(
         'message', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'nullable' => false,
-        'default'  => ''
-        ), 'Errror Message'
+        'default' => ''
+    ), 'Error Message'
     )
     ->addColumn(
         'checkout_method', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'nullable' => false,
-        'default'  => ''
-        ), 'Checkout Method Used'
+        'default' => ''
+    ), 'Checkout Method Used'
     )
     ->addColumn(
         'store_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-        'default'  => '0'
-        ), 'Store ID'
+        'default' => '0'
+    ), 'Store ID'
     )
     ->addColumn(
         'event_name', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'nullable' => false,
-        'default'  => ''
-        ), 'Event Name'
+        'default' => ''
+    ), 'Event Name'
+    )
+    ->addColumn(
+        'send_id', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
+        'nullable' => false,
+        'default' => ''
+    ), 'Campaign send id'
+    )
+    ->addColumn(
+        'send_status', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
+        'nullable' => false,
+        'default' => 0
+    ), 'Send status'
     )
     ->addColumn(
         'created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(),
@@ -346,8 +356,12 @@ $table->addColumn(
         array('email')
     )
     ->addIndex(
-        $installer->getIdxName($campaignTable, array('is_sent')),
-        array('is_sent')
+        $installer->getIdxName($campaignTable, array('send_id')),
+        array('send_id')
+    )
+    ->addIndex(
+        $installer->getIdxName($campaignTable, array('send_status')),
+        array('send_status')
     )
     ->addIndex(
         $installer->getIdxName($campaignTable, array('created_at')),
@@ -388,321 +402,10 @@ $table->addColumn(
 $installer->getConnection()->createTable($table);
 
 /**
- * Admin notification message
- */
-$adminData   = array();
-$adminData[] = array(
-    'severity'    => 4,
-    'date_added'  => gmdate('Y-m-d H:i:s', time()),
-    'title'       => 'Email Connector Was Installed. Please Enter Your API Credentials & Ensure Cron Jobs Are Running On Your Site (Find Out More)',
-    'description' => 'Email Connector Was Installed. Please Enter Your API Credentials & Ensure Cron Jobs Are Running On Your Site.',
-    'url'         => 'http://www.magentocommerce.com/wiki/1_-_installation_and_configuration/how_to_setup_a_cron_job'
-);
-
-Mage::getModel('adminnotification/inbox')->parse($adminData);
-
-/**
- * Populate tables
- */
-$select = $installer->getConnection()->select()
-    ->from(
-        array('customer' => $this->getTable('customer_entity')),
-        array('customer_id' => 'entity_id', 'email', 'website_id', 'store_id')
-    );
-
-$insertArray = array('customer_id', 'email', 'website_id', 'store_id');
-$sqlQuery    = $select->insertFromSelect($contactTable, $insertArray, false);
-$installer->getConnection()->query($sqlQuery);
-
-// subscribers that are not customers
-$select      = $installer->getConnection()->select()
-    ->from(
-        array('subscriber' => $installer->getTable('newsletter/subscriber')),
-        array(
-            'email' => 'subscriber_email',
-            'col2'  => new Zend_Db_Expr('1'),
-            'col3'  => new Zend_Db_Expr('1'),
-            'store_id'
-        )
-    )
-    ->where('customer_id =?', 0)
-    ->where('subscriber_status =?', 1);
-$insertArray = array('email', 'is_subscriber', 'subscriber_status', 'store_id');
-$sqlQuery    = $select->insertFromSelect($contactTable, $insertArray, false);
-$installer->getConnection()->query($sqlQuery);
-
-
-//Update contacts with customers that are subscribers
-$select = $installer->getConnection()->select();
-
-//join
-$select->joinLeft(
-    array('ns' => $installer->getTable('newsletter/subscriber')),
-    "dc.customer_id = ns.customer_id",
-    array(
-        'is_subscriber' => new Zend_Db_Expr('1'),
-        'subscriber_status' => new Zend_Db_Expr('1')
-    )
-)
-    ->where('ns.subscriber_status =?', 1);
-
-//update query from select
-$updateSql = $select->crossUpdateFromSelect(array('dc' => $contactTable));
-
-//run query
-$installer->getConnection()->query($updateSql);
-
-
-
-//Insert and populate email order the table
-$select      = $installer->getConnection()->select()
-    ->from(
-        $installer->getTable('sales/order'),
-        array('order_id' => 'entity_id', 'quote_id', 'store_id', 'created_at',
-              'updated_at', 'order_status' => 'status')
-    );
-$insertArray = array('order_id', 'quote_id', 'store_id', 'created_at',
-                     'updated_at', 'order_status');
-
-$sqlQuery = $select->insertFromSelect($orderTable, $insertArray, false);
-$installer->getConnection()->query($sqlQuery);
-
-//Save all order statuses as string
-$source   = Mage::getModel('adminhtml/system_config_source_order_status');
-$statuses = $source->toOptionArray();
-
-if (count($statuses) > 0 && $statuses[0]['value'] == '') {
-    array_shift($statuses);
-}
-
-$options = array();
-foreach ($statuses as $status) {
-    $options[] = $status['value'];
-}
-
-$statusString = implode(',', $options);
-
-$configModel = Mage::getModel('core/config');
-$configModel->saveConfig(
-    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_ORDER_STATUS,
-    $statusString
-);
-
-$admin = $installer->getTable('admin/user');
-$installer->getConnection()->addColumn(
-    $installer->getTable('admin/user'), 'refresh_token', array(
-        'type'     => Varien_Db_Ddl_Table::TYPE_TEXT,
-        'length'   => 256,
-        'nullable' => true,
-        'default'  => null,
-        'comment'  => 'Email connector refresh token'
-    )
-);
-
-$campaignTable = $installer->getTable('ddg_automation/campaign');
-$installer->getConnection()->modifyColumn(
-    $campaignTable, 'order_increment_id', 'VARCHAR(50)'
-);
-
-//Insert status column to email_order table
-$orderTable = $installer->getTable('ddg_automation/order');
-
-$installer->getConnection()->addColumn(
-    $orderTable, 'order_status', array(
-        'type'     => Varien_Db_Ddl_Table::TYPE_TEXT,
-        'length'   => 256,
-        'nullable' => false,
-        'default'  => null,
-        'comment'  => 'Order Status'
-    )
-);
-
-//populate order status in email_order table
-$select = $installer->getConnection()->select();
-
-//join
-$select->joinLeft(
-    array('sfo' => $installer->getTable('sales/order')),
-    "eo.order_id = sfo.entity_id",
-    array('order_status' => 'sfo.status')
-);
-
-//update query from select
-$updateSql = $select->crossUpdateFromSelect(array('eo' => $orderTable));
-
-//run query
-$installer->getConnection()->query($updateSql);
-
-//Save all order statuses as string to extension's config value
-$source   = Mage::getModel('adminhtml/system_config_source_order_status');
-$statuses = $source->toOptionArray();
-
-if (count($statuses) > 0 && $statuses[0]['value'] == '') {
-    array_shift($statuses);
-}
-
-$options = array();
-foreach ($statuses as $status) {
-    $options[] = $status['value'];
-}
-
-$statusString = implode(',', $options);
-
-$configModel = Mage::getModel('core/config');
-$configModel->saveConfig(
-    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_ORDER_STATUS,
-    $statusString
-);
-
-//add columns to table
-$campaignTable = $installer->getTable('ddg_automation/campaign');
-$installer->getConnection()->addColumn(
-    $campaignTable, 'subject', array(
-        'type'     => Varien_Db_Ddl_Table::TYPE_TEXT,
-        'unsigned' => true,
-        'nullable' => false,
-        'default'  => '',
-        'comment'  => 'Email Subject'
-    )
-);
-$installer->getConnection()->addColumn(
-    $campaignTable, 'html_content', array(
-        'type'     => Varien_Db_Ddl_Table::TYPE_TEXT,
-        'unsigned' => true,
-        'nullable' => false,
-        'default'  => '',
-        'comment'  => 'Email Html Content'
-    )
-);
-$installer->getConnection()->addColumn(
-    $campaignTable, 'plain_text_content', array(
-        'type'     => Varien_Db_Ddl_Table::TYPE_TEXT,
-        'unsigned' => true,
-        'nullable' => false,
-        'default'  => '',
-        'comment'  => 'Email Plain Text Content'
-    )
-);
-$installer->getConnection()->addColumn(
-    $campaignTable, 'from_name', array(
-        'type'     => Varien_Db_Ddl_Table::TYPE_TEXT,
-        'unsigned' => true,
-        'nullable' => false,
-        'default'  => '',
-        'comment'  => 'Email From Name'
-    )
-);
-$installer->getConnection()->addColumn(
-    $campaignTable, 'create_message', array(
-        'type'     => Varien_Db_Ddl_Table::TYPE_TEXT,
-        'unsigned' => true,
-        'nullable' => false,
-        'default'  => '',
-        'comment'  => 'Create Campaign Message'
-    )
-);
-$installer->getConnection()->addColumn(
-    $campaignTable, 'contact_message', array(
-        'type'     => Varien_Db_Ddl_Table::TYPE_TEXT,
-        'unsigned' => true,
-        'nullable' => false,
-        'default'  => '',
-        'comment'  => 'Contact Message'
-    )
-);
-$installer->getConnection()->addColumn(
-    $campaignTable, 'is_created', array(
-        'type'     => Varien_Db_Ddl_Table::TYPE_SMALLINT,
-        'unsigned' => true,
-        'nullable' => true,
-        'comment'  => 'Is Campaign Created'
-    )
-);
-$installer->getConnection()->addColumn(
-    $campaignTable, 'is_copy', array(
-        'type'     => Varien_Db_Ddl_Table::TYPE_SMALLINT,
-        'unsigned' => true,
-        'nullable' => true,
-        'comment'  => 'Is Copy'
-    )
-);
-$installer->getConnection()->addColumn(
-    $campaignTable, 'type', array(
-        'type'     => Varien_Db_Ddl_Table::TYPE_SMALLINT,
-        'unsigned' => true,
-        'nullable' => false,
-        'default'  => '1',
-        'comment'  => 'Type. 1: Campaign, 2: Create'
-    )
-);
-$installer->getConnection()->addColumn(
-    $campaignTable, 'website_id', array(
-        'type'     => Varien_Db_Ddl_Table::TYPE_INTEGER,
-        'unsigned' => true,
-        'nullable' => false,
-        'default'  => '0',
-        'comment'  => 'Website Id'
-    )
-);
-
-
-/**
- * create Config table.
- */
-$configTable = $installer->getTable('ddg_automation/config');
-
-if ($installer->getConnection()->isTableExists($configTable)) {
-    $installer->getConnection()->dropTable($configTable);
-}
-
-$table = $installer->getConnection()->newTable($configTable);
-$table->addColumn(
-    'email_config_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
-    'primary'  => true,
-    'identity' => true,
-    'unsigned' => true,
-    'nullable' => false
-    ), 'Primary Key'
-)
-    ->addColumn(
-        'path', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
-        'nullable' => true,
-        ), 'Config Path'
-    )
-    ->addColumn(
-        'scope', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
-        'nullable' => true,
-        ), 'Config Scope'
-    )
-    ->addColumn(
-        'value', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
-        'nullable' => false,
-        'default'  => ''
-        ), 'Config Value'
-    )
-    ->addColumn(
-        'is_api', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
-        'unsigned' => true,
-        'nullable' => true,
-        ), 'Only For Api Calls'
-    )
-    ->addColumn(
-        'created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(),
-        'Creation Time'
-    )
-    ->addColumn(
-        'updated_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(),
-        'Update Time'
-    )
-    ->setComment('Connector Config Data');
-$installer->getConnection()->createTable($table);
-
-/**
- * create review table
+ * Create review table
  */
 $reviewTable = $installer->getTable('ddg_automation/review');
 
-//drop table if exist
 if ($installer->getConnection()->isTableExists($reviewTable)) {
     $installer->getConnection()->dropTable($reviewTable);
 }
@@ -710,35 +413,35 @@ if ($installer->getConnection()->isTableExists($reviewTable)) {
 $table = $installer->getConnection()->newTable($reviewTable);
 $table->addColumn(
     'id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
-    'primary'  => true,
+    'primary' => true,
     'identity' => true,
     'unsigned' => true,
     'nullable' => false
-    ), 'Primary Key'
+), 'Primary Key'
 )
     ->addColumn(
         'review_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-        ), 'Review Id'
+    ), 'Review Id'
     )
     ->addColumn(
         'customer_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-        ), 'Customer ID'
+    ), 'Customer ID'
     )
     ->addColumn(
         'store_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-        ), 'Store Id'
+    ), 'Store Id'
     )
     ->addColumn(
         'review_imported', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => true,
-        ), 'Review Imported'
+    ), 'Review Imported'
     )
     ->addColumn(
         'created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(),
@@ -775,54 +478,11 @@ $table->addColumn(
     ->setComment('Connector Reviews');
 $installer->getConnection()->createTable($table);
 
-//populate review table
-$inCond = $installer->getConnection()->prepareSqlCondition(
-    'review_detail.customer_id', array('notnull' => true)
-);
-$select = $installer->getConnection()->select()
-    ->from(
-        array('review' => $installer->getTable('review/review')),
-        array('review_id'  => 'review.review_id',
-              'created_at' => 'review.created_at')
-    )
-    ->joinLeft(
-        array('review_detail' => $installer->getTable('review/review_detail')),
-        "review_detail.review_id = review.review_id",
-        array('store_id'    => 'review_detail.store_id',
-              'customer_id' => 'review_detail.customer_id')
-    )
-    ->where($inCond);
-
-$insertArray = array('review_id', 'created_at', 'store_id', 'customer_id');
-$sqlQuery    = $select->insertFromSelect($reviewTable, $insertArray, false);
-$installer->getConnection()->query($sqlQuery);
-
-//add columns to table
-$campaignTable = $installer->getTable('ddg_automation/campaign');
-$installer->getConnection()->addColumn(
-    $campaignTable, 'from_address', array(
-        'type'     => Varien_Db_Ddl_Table::TYPE_TEXT,
-        'unsigned' => true,
-        'nullable' => true,
-        'default'  => null,
-        'comment'  => 'Email From Address'
-    )
-);
-$installer->getConnection()->addColumn(
-    $campaignTable, 'attachment_id', array(
-        'type'     => Varien_Db_Ddl_Table::TYPE_INTEGER,
-        'unsigned' => true,
-        'nullable' => true,
-        'default'  => null,
-        'comment'  => 'Attachment Id'
-    )
-);
-
 /**
- * create wishlist table
+ * Create wishlist table
  */
 $wishlistTable = $installer->getTable('ddg_automation/wishlist');
-//drop table if exist
+
 if ($installer->getConnection()->isTableExists($wishlistTable)) {
     $installer->getConnection()->dropTable($wishlistTable);
 }
@@ -830,47 +490,47 @@ if ($installer->getConnection()->isTableExists($wishlistTable)) {
 $table = $installer->getConnection()->newTable($wishlistTable);
 $table->addColumn(
     'id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
-    'primary'  => true,
+    'primary' => true,
     'identity' => true,
     'unsigned' => true,
     'nullable' => false
-    ), 'Primary Key'
+), 'Primary Key'
 )
     ->addColumn(
         'wishlist_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-        ), 'Wishlist Id'
+    ), 'Wishlist Id'
     )
     ->addColumn(
         'item_count', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-        ), 'Item Count'
+    ), 'Item Count'
     )
     ->addColumn(
         'customer_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-        ), 'Customer ID'
+    ), 'Customer ID'
     )
     ->addColumn(
         'store_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-        ), 'Store Id'
+    ), 'Store Id'
     )
     ->addColumn(
         'wishlist_imported', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => true,
-        ), 'Wishlist Imported'
+    ), 'Wishlist Imported'
     )
     ->addColumn(
         'wishlist_modified', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => true,
-        ), 'Wishlist Modified'
+    ), 'Wishlist Modified'
     )
     ->addColumn(
         'created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(),
@@ -908,35 +568,18 @@ $table->addColumn(
         $installer->getIdxName($wishlistTable, array('updated_at')),
         array('updated_at')
     )
+    ->addIndex(
+        $installer->getIdxName($wishlistTable, array('store_id')),
+        array('store_id')
+    )
     ->setComment('Connector Wishlist');
 $installer->getConnection()->createTable($table);
 
-//wishlist populate
-$select = $installer->getConnection()->select()
-    ->from(
-        array('wishlist' => $installer->getTable('wishlist/wishlist')),
-        array('wishlist_id', 'customer_id', 'created_at' => 'updated_at')
-    )->joinLeft(
-        array('ce' => $installer->getTable('customer_entity')),
-        "wishlist.customer_id = ce.entity_id",
-        array('store_id')
-    )->joinInner(
-        array('wi' => $installer->getTable('wishlist/item')),
-        "wishlist.wishlist_id = wi.wishlist_id",
-        array('item_count' => 'count(wi.wishlist_id)')
-    )->group('wi.wishlist_id');
-
-$insertArray = array('wishlist_id', 'customer_id', 'created_at', 'store_id',
-                     'item_count');
-$sqlQuery    = $select->insertFromSelect($wishlistTable, $insertArray, false);
-$installer->getConnection()->query($sqlQuery);
-
-
 /**
- * create quote table.
+ * Create quote table.
  */
 $quoteTable = $installer->getTable('ddg_automation/quote');
-//drop table if exist
+
 if ($installer->getConnection()->isTableExists($quoteTable)) {
     $installer->getConnection()->dropTable($quoteTable);
 }
@@ -944,47 +587,41 @@ if ($installer->getConnection()->isTableExists($quoteTable)) {
 $table = $installer->getConnection()->newTable($quoteTable);
 $table->addColumn(
     'id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
-    'primary'  => true,
+    'primary' => true,
     'identity' => true,
     'unsigned' => true,
     'nullable' => false
-    ), 'Primary Key'
+), 'Primary Key'
 )
     ->addColumn(
         'quote_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-        ), 'Quote Id'
+    ), 'Quote Id'
     )
     ->addColumn(
         'customer_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-        ), 'Customer ID'
+    ), 'Customer ID'
     )
     ->addColumn(
         'store_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-        ), 'Store Id'
+    ), 'Store Id'
     )
     ->addColumn(
         'imported', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => true,
-        ), 'Quote Imported'
+    ), 'Quote Imported'
     )
     ->addColumn(
         'modified', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => true,
-        ), 'Quote Modified'
-    )
-    ->addColumn(
-        'converted_to_order', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
-        'unsigned' => true,
-        'nullable' => true,
-        ), 'Quote Converted To Order'
+    ), 'Quote Modified'
     )
     ->addColumn(
         'created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(),
@@ -1025,60 +662,109 @@ $table->addColumn(
     ->setComment('Connector Quotes');
 $installer->getConnection()->createTable($table);
 
-//populate quote table
-$select = $installer->getConnection()->select()
-    ->from(
-        $installer->getTable('sales/quote'),
-        array('quote_id' => 'entity_id', 'store_id', 'customer_id',
-              'created_at')
-    )
-    ->where('customer_id !=?', null)
-    ->where('is_active =?', 1)
-    ->where('items_count >?', 0);
-
-$insertArray = array('quote_id', 'store_id', 'customer_id', 'created_at');
-$sqlQuery    = $select->insertFromSelect($quoteTable, $insertArray, false);
-$installer->getConnection()->query($sqlQuery);
-
 /**
- * Enterprise customer segmentation.
+ * Create automation table.
  */
-if (Mage::helper('ddg')->isEnterprise()) {
-    //contact table
-    $contactTable = $installer->getTable('ddg_automation/contact');
-    //customer segment table
-    $segmentTable = $installer->getTable('enterprise_customersegment/customer');
-    //add additional column with segment ids
-    $installer->getConnection()->addColumn(
-        $contactTable,
-        'segment_ids',
-        'mediumtext'
-    );
+$automationTable = $installer->getTable('ddg_automation/automation');
 
-    //update contact table with customer segment ids
-    $result = $installer->run(
-        "update`{$contactTable}` c,(select customer_id, website_id, group_concat(`segment_id` separator ',') as segmentids
-from `{$segmentTable}` group by customer_id) as s set c.segment_ids = segmentids, c.email_imported = null WHERE s.customer_id= c.customer_id and s.website_id = c.website_id"
-    );
+if ($installer->getConnection()->isTableExists($automationTable)) {
+    $installer->getConnection()->dropTable($automationTable);
 }
 
-$campaignTable = $installer->getTable('ddg_automation/campaign');
-
-$installer->getConnection()->dropColumn($campaignTable, 'from_address');
-$installer->getConnection()->dropColumn($campaignTable, 'attachment_id');
-$installer->getConnection()->dropColumn($campaignTable, 'subject');
-$installer->getConnection()->dropColumn($campaignTable, 'html_content');
-$installer->getConnection()->dropColumn($campaignTable, 'plain_text_content');
-$installer->getConnection()->dropColumn($campaignTable, 'from_name');
-$installer->getConnection()->dropColumn($campaignTable, 'is_created');
-$installer->getConnection()->dropColumn($campaignTable, 'is_copy');
-$installer->getConnection()->dropColumn($campaignTable, 'type');
-$installer->getConnection()->dropColumn($campaignTable, 'website_id');
-$installer->getConnection()->dropColumn($campaignTable, 'create_message');
-$installer->getConnection()->dropColumn($campaignTable, 'contact_message');
+$table = $installer->getConnection()->newTable($automationTable);
+$table->addColumn(
+    'id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
+    'primary' => true,
+    'identity' => true,
+    'unsigned' => true,
+    'nullable' => false
+), 'Primary Key'
+)
+    ->addColumn(
+        'automation_type', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
+        'nullable' => true,
+    ), 'Automation Type'
+    )
+    ->addColumn(
+        'store_name', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
+        'nullable' => true,
+    ), 'Store Name'
+    )
+    ->addColumn(
+        'enrolment_status', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
+        'nullable' => false,
+    ), 'Entrolment Status'
+    )
+    ->addColumn(
+        'email', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
+        'nullable' => true,
+    ), 'Email'
+    )
+    ->addColumn(
+        'type_id', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
+        'nullable' => true,
+    ), 'Type ID'
+    )
+    ->addColumn(
+        'program_id', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
+        'nullable' => true,
+    ), 'Program ID'
+    )
+    ->addColumn(
+        'website_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
+        'unsigned' => true,
+        'nullable' => false,
+    ), 'Website Id'
+    )
+    ->addColumn(
+        'message', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
+        'nullable' => false,
+    ), 'Message'
+    )
+    ->addColumn(
+        'created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(),
+        'Creation Time'
+    )
+    ->addColumn(
+        'updated_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(),
+        'Update Time'
+    )
+    ->addIndex(
+        $installer->getIdxName($automationTable, array('automation_type')),
+        array('automation_type')
+    )->addIndex(
+        $installer->getIdxName($automationTable, array('enrolment_status')),
+        array('enrolment_status')
+    )
+    ->addIndex(
+        $installer->getIdxName($automationTable, array('type_id')),
+        array('type_id')
+    )
+    ->addIndex(
+        $installer->getIdxName($automationTable, array('email')),
+        array('email')
+    )
+    ->addIndex(
+        $installer->getIdxName($automationTable, array('program_id')),
+        array('program_id')
+    )
+    ->addIndex(
+        $installer->getIdxName($automationTable, array('created_at')),
+        array('created_at')
+    )
+    ->addIndex(
+        $installer->getIdxName($automationTable, array('updated_at')),
+        array('updated_at')
+    )
+    ->addIndex(
+        $installer->getIdxName($automationTable, array('website_id')),
+        array('website_id')
+    )
+    ->setComment('Automation Status');
+$installer->getConnection()->createTable($table);
 
 /**
- * create catalog table.
+ * Create catalog table.
  */
 $catalogTable = $installer->getTable('ddg_automation/catalog');
 
@@ -1089,29 +775,29 @@ if ($installer->getConnection()->isTableExists($catalogTable)) {
 $table = $installer->getConnection()->newTable($catalogTable);
 $table->addColumn(
     'id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
-    'primary'  => true,
+    'primary' => true,
     'identity' => true,
     'unsigned' => true,
     'nullable' => false
-    ), 'Primary Key'
+), 'Primary Key'
 )
     ->addColumn(
         'product_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => false,
-        ), 'Product Id'
+    ), 'Product Id'
     )
     ->addColumn(
         'imported', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => true,
-        ), 'Product Imported'
+    ), 'Product Imported'
     )
     ->addColumn(
         'modified', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => true,
-        ), 'Product Modified'
+    ), 'Product Modified'
     )
     ->addColumn(
         'created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(),
@@ -1145,20 +831,7 @@ $table->addColumn(
 $installer->getConnection()->createTable($table);
 
 /**
- * Populate catalog table
- */
-$select      = $installer->getConnection()->select()
-    ->from(
-        array('catalog' => $installer->getTable('catalog/product')),
-        array('product_id' => 'catalog.entity_id',
-              'created_at' => 'catalog.created_at')
-    );
-$insertArray = array('product_id', 'created_at');
-$sqlQuery    = $select->insertFromSelect($catalogTable, $insertArray, false);
-$installer->getConnection()->query($sqlQuery);
-
-/**
- * create rules table.
+ * Create rules table.
  */
 $rulesTable = $installer->getTable('ddg_automation/rules');
 
@@ -1169,47 +842,47 @@ if ($installer->getConnection()->isTableExists($rulesTable)) {
 $table = $installer->getConnection()->newTable($rulesTable);
 $table->addColumn(
     'id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
-    'primary'  => true,
+    'primary' => true,
     'identity' => true,
     'unsigned' => true,
     'nullable' => false
-    ), 'Primary Key'
+), 'Primary Key'
 )
     ->addColumn(
         'name', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'nullable' => false,
-        'default'  => ''
-        ), 'Rule Name'
+        'default' => ''
+    ), 'Rule Name'
     )
     ->addColumn(
         'website_ids', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'nullable' => false,
-        'default'  => '0'
-        ), 'Website Id'
+        'default' => '0'
+    ), 'Website Id'
     )
     ->addColumn(
         'type', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'nullable' => false,
-        'default'  => 0
-        ), 'Rule Type'
+        'default' => 0
+    ), 'Rule Type'
     )
     ->addColumn(
         'status', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'nullable' => false,
-        'default'  => 0
-        ), 'Status'
+        'default' => 0
+    ), 'Status'
     )
     ->addColumn(
         'combination', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'nullable' => false,
-        'default'  => '1'
-        ), 'Rule Condition'
+        'default' => '1'
+    ), 'Rule Condition'
     )
     ->addColumn(
         'condition', Varien_Db_Ddl_Table::TYPE_BLOB, null, array(
         'nullable' => false,
-        'default'  => ''
-        ), 'Rule Condition'
+        'default' => ''
+    ), 'Rule Condition'
     )
     ->addColumn(
         'created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(),
@@ -1222,41 +895,8 @@ $table->addColumn(
     ->setComment('Connector Rules');
 $installer->getConnection()->createTable($table);
 
-$configModel = Mage::getModel('core/config');
-//Save all product types as string to extension's config value
-$types   = Mage::getModel('ddg_automation/adminhtml_source_sync_catalog_type')
-    ->toOptionArray();
-$options = array();
-foreach ($types as $type) {
-    $options[] = $type['value'];
-}
-
-$typeString = implode(',', $options);
-
-//Save all product visibilities as string to extension's config value
-$visibilities = Mage::getModel(
-    'ddg_automation/adminhtml_source_sync_catalog_visibility'
-)->toOptionArray();
-$options      = array();
-foreach ($visibilities as $visibility) {
-    $options[] = $visibility['value'];
-}
-
-$visibilityString = implode(',', $options);
-
-//save config value
-$configModel->saveConfig(
-    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_CATALOG_TYPE,
-    $typeString
-);
-$configModel->saveConfig(
-    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_CATALOG_VISIBILITY,
-    $visibilityString
-);
-
-
 /**
- * create email importer table.
+ * Create email importer table.
  */
 $importerTable = $installer->getTable('ddg_automation/importer');
 
@@ -1267,59 +907,59 @@ if ($installer->getConnection()->isTableExists($importerTable)) {
 $table = $installer->getConnection()->newTable($importerTable);
 $table->addColumn(
     'id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
-    'primary'  => true,
+    'primary' => true,
     'identity' => true,
     'unsigned' => true,
     'nullable' => false
-    ), 'Primary Key'
+), 'Primary Key'
 )
     ->addColumn(
         'import_type', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'nullable' => false,
-        'default'  => ''
-        ), 'Import Type'
+        'default' => ''
+    ), 'Import Type'
     )
     ->addColumn(
         'website_id', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'nullable' => false,
-        'default'  => '0'
-        ), 'Website Id'
+        'default' => '0'
+    ), 'Website Id'
     )
     ->addColumn(
         'import_status', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'nullable' => false,
-        'default'  => 0
-        ), 'Import Status'
+        'default' => 0
+    ), 'Import Status'
     )
     ->addColumn(
         'import_id', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'nullable' => false,
-        'default'  => ''
-        ), 'Import Id'
+        'default' => ''
+    ), 'Import Id'
     )
     ->addColumn(
         'import_data', Varien_Db_Ddl_Table::TYPE_BLOB, '2M', array(
         'nullable' => false,
-        'default'  => ''
-        ), 'Import Data'
+        'default' => ''
+    ), 'Import Data'
     )
     ->addColumn(
         'import_mode', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'nullable' => false,
-        'default'  => ''
-        ), 'Import Mode'
+        'default' => ''
+    ), 'Import Mode'
     )
     ->addColumn(
         'import_file', Varien_Db_Ddl_Table::TYPE_TEXT, null, array(
         'nullable' => false,
-        'default'  => ''
-        ), 'Import File'
+        'default' => ''
+    ), 'Import File'
     )
     ->addColumn(
         'message', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'nullable' => false,
-        'default'  => ''
-        ), 'Error Message'
+        'default' => ''
+    ), 'Error Message'
     )
     ->addColumn(
         'created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(),
@@ -1362,8 +1002,8 @@ $table->addColumn(
         array('updated_at')
     )
     ->addIndex(
-        $installer->getIdxName($importerTable, array('message')),
-        array('message')
+        $installer->getIdxName($importerTable, array('import_id')),
+        array('import_id')
     )
     ->addIndex(
         $installer->getIdxName($importerTable, array('import_started')),
@@ -1373,129 +1013,297 @@ $table->addColumn(
         $installer->getIdxName($importerTable, array('import_finished')),
         array('import_finished')
     )
+    ->addIndex(
+        $installer->getIdxName($importerTable, array('import_mode')),
+        array('import_mode')
+    )
     ->setComment('Email Importer');
 $installer->getConnection()->createTable($table);
 
 /**
- * drop config table
+ * Populate email_contact table
  */
-$configTable = $installer->getTable('ddg_automation/config');
+$select = $installer->getConnection()->select()
+    ->from(
+        array('customer' => $this->getTable('customer_entity')),
+        array('customer_id' => 'entity_id', 'email', 'website_id', 'store_id')
+    );
 
-//drop config table if exist
-if ($installer->getConnection()->isTableExists($configTable)) {
-    $installer->getConnection()->dropTable($configTable);
+$insertArray = array('customer_id', 'email', 'website_id', 'store_id');
+$sqlQuery = $select->insertFromSelect($contactTable, $insertArray, false);
+$installer->getConnection()->query($sqlQuery);
+
+// subscribers that are not customers
+$select = $installer->getConnection()->select()
+    ->from(
+        array('subscriber' => $installer->getTable('newsletter/subscriber')),
+        array(
+            'email' => 'subscriber_email',
+            'col2' => new Zend_Db_Expr('1'),
+            'col3' => new Zend_Db_Expr('1'),
+            'store_id'
+        )
+    )
+    ->where('customer_id =?', 0)
+    ->where('subscriber_status =?', 1);
+$insertArray = array('email', 'is_subscriber', 'subscriber_status', 'store_id');
+$sqlQuery = $select->insertFromSelect($contactTable, $insertArray, false);
+$installer->getConnection()->query($sqlQuery);
+
+//Update contacts with customers that are subscribers
+$customerIds = Mage::getResourceModel('newsletter/subscriber_collection')
+    ->addFieldToFilter('subscriber_status', 1)
+    ->addFieldToFilter('customer_id', array('gt' => 0))
+    ->getColumnValues('customer_id');
+
+if (!empty($customerIds)) {
+    $customerIds = implode(', ', $customerIds);
+    $installer->getConnection()->update(
+        $contactTable,
+        array(
+            'is_subscriber' => new Zend_Db_Expr('1'),
+            'subscriber_status' => new Zend_Db_Expr('1')
+        ),
+        "customer_id in ($customerIds)"
+    );
+}
+
+//Enterprise customer segmentation.
+if (Mage::helper('ddg')->isEnterprise()) {
+    //customer segment table
+    $segmentTable = $installer->getTable('enterprise_customersegment/customer');
+    //add additional column with segment ids
+    $installer->getConnection()->addColumn(
+        $contactTable,
+        'segment_ids',
+        'mediumtext'
+    );
+
+    //update contact table with customer segment ids
+    $result = $installer->run(
+        "update`{$contactTable}` c,(select customer_id, website_id, group_concat(`segment_id` separator ',') as 
+        segmentids from `{$segmentTable}` group by customer_id) as s set c.segment_ids = segmentids,
+         c.email_imported = null WHERE s.customer_id= c.customer_id and s.website_id = c.website_id"
+    );
 }
 
 /**
- * modify email_quote table
+ * Populate email_order table
  */
-$quoteTable = $installer->getTable('ddg_automation/quote');
-//remove column
-$installer->getConnection()->dropColumn($quoteTable, 'converted_to_order');
+$select = $installer->getConnection()->select()
+    ->from(
+        $installer->getTable('sales/order'),
+        array(
+            'order_id' => 'entity_id',
+            'quote_id',
+            'store_id',
+            'created_at',
+            'updated_at',
+            'order_status' => 'status'
+        )
+    );
+$insertArray = array(
+    'order_id',
+    'quote_id',
+    'store_id',
+    'created_at',
+    'updated_at',
+    'order_status'
+);
 
+$sqlQuery = $select->insertFromSelect($orderTable, $insertArray, false);
+$installer->getConnection()->query($sqlQuery);
 
-$automationTable = $installer->getTable('ddg_automation/automation');
+/**
+ * Populate email_review table
+ */
+$inCond = $installer->getConnection()->prepareSqlCondition(
+    'review_detail.customer_id', array('notnull' => true)
+);
+$select = $installer->getConnection()->select()
+    ->from(
+        array('review' => $installer->getTable('review/review')),
+        array(
+            'review_id' => 'review.review_id',
+            'created_at' => 'review.created_at'
+        )
+    )
+    ->joinLeft(
+        array('review_detail' => $installer->getTable('review/review_detail')),
+        "review_detail.review_id = review.review_id",
+        array(
+            'store_id' => 'review_detail.store_id',
+            'customer_id' => 'review_detail.customer_id'
+        )
+    )
+    ->where($inCond);
 
-//drop table if exist
-if ($installer->getConnection()->isTableExists($automationTable)) {
-    $installer->getConnection()->dropTable($automationTable);
+$insertArray = array('review_id', 'created_at', 'store_id', 'customer_id');
+$sqlQuery = $select->insertFromSelect($reviewTable, $insertArray, false);
+$installer->getConnection()->query($sqlQuery);
+
+/**
+ * Populate email_wishlist table
+ */
+$select = $installer->getConnection()->select()
+    ->from(
+        array('wishlist' => $installer->getTable('wishlist/wishlist')),
+        array('wishlist_id', 'customer_id', 'created_at' => 'updated_at')
+    )->joinLeft(
+        array('ce' => $installer->getTable('customer_entity')),
+        "wishlist.customer_id = ce.entity_id",
+        array('store_id')
+    )->joinInner(
+        array('wi' => $installer->getTable('wishlist/item')),
+        "wishlist.wishlist_id = wi.wishlist_id",
+        array('item_count' => 'count(wi.wishlist_id)')
+    )->group('wi.wishlist_id');
+
+$insertArray = array(
+    'wishlist_id',
+    'customer_id',
+    'created_at',
+    'store_id',
+    'item_count'
+);
+$sqlQuery = $select->insertFromSelect($wishlistTable, $insertArray, false);
+$installer->getConnection()->query($sqlQuery);
+
+/**
+ * Populate email_quote table
+ */
+$select = $installer->getConnection()->select()
+    ->from(
+        $installer->getTable('sales/quote'),
+        array(
+            'quote_id' => 'entity_id',
+            'store_id',
+            'customer_id',
+            'created_at'
+        )
+    )
+    ->where('customer_id !=?', null)
+    ->where('is_active =?', 1)
+    ->where('items_count >?', 0);
+
+$insertArray = array('quote_id', 'store_id', 'customer_id', 'created_at');
+$sqlQuery = $select->insertFromSelect($quoteTable, $insertArray, false);
+$installer->getConnection()->query($sqlQuery);
+
+/**
+ * Populate email_catalog table
+ */
+$select = $installer->getConnection()->select()
+    ->from(
+        array('catalog' => $installer->getTable('catalog/product')),
+        array(
+            'product_id' => 'catalog.entity_id',
+            'created_at' => 'catalog.created_at'
+        )
+    );
+$insertArray = array('product_id', 'created_at');
+$sqlQuery = $select->insertFromSelect($catalogTable, $insertArray, false);
+$installer->getConnection()->query($sqlQuery);
+
+/**
+ * Save values to config
+ */
+//Save all product types as string to extension's config value
+$configModel = Mage::getModel('core/config');
+$types = Mage::getModel('ddg_automation/adminhtml_source_sync_catalog_type')
+    ->toOptionArray();
+$options = array();
+foreach ($types as $type) {
+    $options[] = $type['value'];
 }
 
-$table = $installer->getConnection()->newTable($automationTable);
-$table->addColumn(
-    'id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
-    'primary'  => true,
-    'identity' => true,
-    'unsigned' => true,
-    'nullable' => false
-    ), 'Primary Key'
-)
-    ->addColumn(
-        'automation_type', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
-        'nullable' => true,
-        ), 'Automation Type'
-    )
-    ->addColumn(
-        'store_name', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
-        'nullable' => true,
-        ), 'Automation Type'
-    )
-    ->addColumn(
-        'enrolment_status', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
-        'nullable' => false,
-        ), 'Entrolment Status'
-    )
-    ->addColumn(
-        'email', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
-        'nullable' => true,
-        ), 'Email'
-    )
-    ->addColumn(
-        'type_id', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
-        'nullable' => true,
-        ), 'Type ID'
-    )
-    ->addColumn(
-        'program_id', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
-        'nullable' => true,
-        ), 'Program ID'
-    )
-    ->addColumn(
-        'website_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
-        'unsigned' => true,
-        'nullable' => false,
-        ), 'Website Id'
-    )
-    ->addColumn(
-        'message', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
-        'nullable' => false,
-        ), 'Message'
-    )
-    ->addColumn(
-        'created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(),
-        'Creation Time'
-    )
-    ->addColumn(
-        'updated_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(),
-        'Update Time'
-    )
-    ->addIndex(
-        $installer->getIdxName($automationTable, array('automation_type')),
-        array('automation_type')
-    )->addIndex(
-        $installer->getIdxName($automationTable, array('enrolment_status')),
-        array('enrolment_status')
-    )
-    ->addIndex(
-        $installer->getIdxName($automationTable, array('type_id')),
-        array('type_id')
-    )
-    ->addIndex(
-        $installer->getIdxName($automationTable, array('email')),
-        array('email')
-    )
-    ->addIndex(
-        $installer->getIdxName($automationTable, array('program_id')),
-        array('program_id')
-    )
-    ->addIndex(
-        $installer->getIdxName($automationTable, array('message')),
-        array('message')
-    )
-    ->addIndex(
-        $installer->getIdxName($automationTable, array('created_at')),
-        array('created_at')
-    )
-    ->addIndex(
-        $installer->getIdxName($automationTable, array('updated_at')),
-        array('updated_at')
-    )
-    ->addIndex(
-        $installer->getIdxName($automationTable, array('website_id')),
-        array('website_id')
-    )
-    ->setComment('Automation Status');
-$installer->getConnection()->createTable($table);
+$typeString = implode(',', $options);
 
+//Save all product visibilities as string to extension's config value
+$visibilities = Mage::getModel(
+    'ddg_automation/adminhtml_source_sync_catalog_visibility'
+)->toOptionArray();
+$options = array();
+foreach ($visibilities as $visibility) {
+    $options[] = $visibility['value'];
+}
+
+$visibilityString = implode(',', $options);
+
+//save config value
+$configModel->saveConfig(
+    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_CATALOG_TYPE,
+    $typeString
+);
+$configModel->saveConfig(
+    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_CATALOG_VISIBILITY,
+    $visibilityString
+);
+
+/**
+ * Add column to coupon table
+ */
+$installer->getConnection()->addColumn(
+    $installer->getTable('salesrule/coupon'), 'generated_by_dotmailer', array(
+        'type' => Varien_Db_Ddl_Table::TYPE_SMALLINT,
+        'nullable' => true,
+        'default' => null,
+        'comment' => '1 = Generated by dotmailer',
+    )
+);
+
+/**
+ * Save all order statuses as string
+ */
+$source = Mage::getModel('adminhtml/system_config_source_order_status');
+$statuses = $source->toOptionArray();
+
+if (count($statuses) > 0 && $statuses[0]['value'] == '') {
+    array_shift($statuses);
+}
+
+$options = array();
+foreach ($statuses as $status) {
+    $options[] = $status['value'];
+}
+
+$statusString = implode(',', $options);
+
+$configModel = Mage::getModel('core/config');
+$configModel->saveConfig(
+    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_ORDER_STATUS,
+    $statusString
+);
+
+/**
+ * Add column to admin_user table
+ */
+$admin = $installer->getTable('admin/user');
+$installer->getConnection()->addColumn(
+    $installer->getTable('admin/user'), 'refresh_token', array(
+        'type' => Varien_Db_Ddl_Table::TYPE_TEXT,
+        'length' => 256,
+        'nullable' => true,
+        'default' => null,
+        'comment' => 'Email connector refresh token'
+    )
+);
+
+/**
+ * Admin notification message
+ */
+$adminData = array();
+$adminData[] = array(
+    'severity' => 4,
+    'date_added' => gmdate('Y-m-d H:i:s', time()),
+    'title' => 'Email Connector Was Installed. Please Enter Your API Credentials & Ensure Cron Jobs Are Running On Your Site (Find Out More)',
+    'description' => 'Email Connector Was Installed. Please Enter Your API Credentials & Ensure Cron Jobs Are Running On Your Site.',
+    'url' => 'http://www.magentocommerce.com/wiki/1_-_installation_and_configuration/how_to_setup_a_cron_job'
+);
+
+Mage::getModel('adminnotification/inbox')->parse($adminData);
+
+//clear cache
+Mage::app()->cleanCache();
 
 $installer->endSetup();

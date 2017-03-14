@@ -4,24 +4,25 @@ class Dotdigitalgroup_Email_ResponseController
     extends Mage_Core_Controller_Front_Action
 {
 
+    /**
+     * @throws Exception
+     */
     protected function authenticate()
     {
         //authenticate ip address
         $authIp = Mage::helper('ddg')->authIpAddress();
 
-        if ( ! $authIp) {
-            $e = new Exception(
-                'You are not authorised to view content of this page.'
-            );
-            Mage::logException($e);
-            throw new Exception($e->getMessage());
+        if (!$authIp) {
+            $message = 'You are not authorised to view content of this page.';
+            Mage::throwException($message);
         }
+
         //authenticate
         $auth = Mage::helper('ddg')->auth(
             $this->getRequest()->getParam('code')
         );
 
-        if ( ! $auth) {
+        if (!$auth) {
             $this->sendResponse();
             Mage::throwException(
                 Mage::helper('ddg')->__('Authentication failed!')
@@ -40,17 +41,17 @@ class Dotdigitalgroup_Email_ResponseController
         try {
             if (strlen($output) < 3 && $flag == false) {
                 $this->sendResponse();
-
             } elseif ($flag && strpos($output, '<table') === false) {
-
                 $this->sendResponse();
             }
         } catch (Exception $e) {
-            Mage::logException($e);
-            throw new Exception($e->getMessage());
+            Mage::throwException($e->getMessage());
         }
     }
 
+    /**
+     * @throws Exception
+     */
     protected function sendResponse()
     {
         try {
@@ -64,8 +65,7 @@ class Dotdigitalgroup_Email_ResponseController
                 ->setHeader('Content-type', 'text/html; charset=UTF-8', true);
             $this->getResponse()->sendHeaders();
         } catch (Exception $e) {
-            Mage::logException($e);
-            throw new Exception($e->getMessage());
+            Mage::throwException($e->getMessage());
         }
     }
 }

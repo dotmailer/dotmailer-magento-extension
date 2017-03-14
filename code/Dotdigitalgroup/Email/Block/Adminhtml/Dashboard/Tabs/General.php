@@ -4,7 +4,10 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_General
     extends Mage_Adminhtml_Block_Dashboard_Bar
 {
 
-    public $group = array();
+    /**
+     * @var array
+     */
+    public $groups = array();
 
     /**
      * Set the template.
@@ -30,15 +33,14 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_General
         } elseif ($this->getRequest()->getParam('website')) {
             $website = $this->getRequest()->getParam('website');
         }
-        $apiUsername = Mage::helper('ddg')->getApiUsername($website);
-        $apiPassword = Mage::helper('ddg')->getApiPassword($website);
-        $data        = Mage::getModel('ddg_automation/apiconnector_client')
-            ->setApiUsername($apiUsername)
-            ->setApiPassword($apiPassword)
-            ->getAccountInfo();
 
-        if (isset($data->id)) {
-            $this->prepareGroupArray($data);
+        $client = Mage::helper('ddg')->getWebsiteApiClient($website);
+        if ($client) {
+            $data = $client->getAccountInfo();
+
+            if (isset($data->id)) {
+                $this->prepareGroupArray($data);
+            }
         }
 
         $this->_setChild();
@@ -46,9 +48,12 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_General
         parent::_prepareLayout();
     }
 
+    /**
+     * Set child item.
+     */
     protected function _setChild()
     {
-        foreach ($this->group as $key => $data) {
+        foreach ($this->groups as $key => $data) {
             $this->setChild(
                 $key,
                 $this->getLayout()->createBlock(
@@ -59,20 +64,28 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_General
         }
     }
 
+    /**
+     * Prepare group data.
+     *
+     * @param $data
+     */
     protected function prepareGroupArray($data)
     {
         foreach ($data->properties as $one) {
-            foreach ($this->group as $key => $type) {
+            foreach ($this->groups as $key => $type) {
                 if (array_key_exists($one->name, $type)) {
-                    $this->group[$key][$one->name] = $one->value;
+                    $this->groups[$key][$one->name] = $one->value;
                 }
             }
         }
     }
 
+    /**
+     * Initiate groups.
+     */
     protected function initiateGroupArray()
     {
-        $this->group['account'] = array(
+        $this->groups['account'] = array(
             'Title'                      => 'Account',
             'Name'                       => $this->__('Not Available'),
             'MainMobilePhoneNumber'      => $this->__('Not Available'),
@@ -80,7 +93,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_General
             'AvailableEmailSendsCredits' => $this->__('Not Available')
         );
 
-        $this->group['api'] = array(
+        $this->groups['api'] = array(
             'Title'             => 'Api',
             'APILocale'         => $this->__('Not Available'),
             'ApiCallsRemaining' => $this->__('Not Available')
@@ -88,7 +101,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_General
     }
 
     /**
-     * get Tab content title
+     * Get Tab content title.
      *
      * @return string
      */
@@ -98,7 +111,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_General
     }
 
     /**
-     * get column width
+     * Get column width.
      *
      * @return string
      */

@@ -5,9 +5,9 @@ class Dotdigitalgroup_Email_Model_Api2_Subscriber_Rest_Admin_V1
 {
 
     /**
-     * Create a subscriber
+     * Create a subscriber.
      *
-     * @return array
+     * @return string
      */
 
     public function _create()
@@ -37,7 +37,6 @@ class Dotdigitalgroup_Email_Model_Api2_Subscriber_Rest_Admin_V1
                 //save subscriber
                 Mage::getModel('newsletter/subscriber')->setData($data)
                     ->save();
-
             } catch (Mage_Api2_Exception $e) {
                 Mage::helper('ddg')->log($e->getMessage());
             } catch (Exception $e) {
@@ -48,7 +47,6 @@ class Dotdigitalgroup_Email_Model_Api2_Subscriber_Rest_Admin_V1
 
             return json_encode($json);
         }
-
     }
 
     /**
@@ -60,18 +58,17 @@ class Dotdigitalgroup_Email_Model_Api2_Subscriber_Rest_Admin_V1
     public function _retrieve()
     {
         $email = $this->getRequest()->getParam('email', false);
-        if ( ! $email) {
+        if (!$email) {
             Mage::helper('ddg')->log('Subscriber id is not set');
 
             return array();
         }
-        try {
 
+        try {
             $data = Mage::getModel('newsletter/subscriber')->loadByEmail($email)
                 ->getData();
 
             return json_encode($data);
-
         } catch (Mage_Api2_Exception $e) {
             Mage::helper('ddg')->log($e->getMessage());
         } catch (Exception $e) {

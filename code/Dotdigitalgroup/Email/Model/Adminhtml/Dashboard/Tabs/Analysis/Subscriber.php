@@ -4,8 +4,14 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Subscriber
     extends Mage_Core_Model_Abstract
 {
 
+    /**
+     * @var
+     */
     public $storeIds;
 
+    /**
+     * @return mixed
+     */
     protected function calculateOperationalDaysFromOrder()
     {
         $collection = Mage::getResourceModel('sales/order_collection');
@@ -17,6 +23,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Subscriber
             );
         }
 
+        //@codingStandardsIgnoreStart
         $collection->getSelect()->columns(
             array(
                 'days' => "DATEDIFF(date(NOW()) , date(MIN(created_at)))"
@@ -25,8 +32,12 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Subscriber
 
         return $collection->setPageSize(1)->setCurPage(1)->getFirstItem()
             ->getDays();
+        //@codingStandardsIgnoreEnd
     }
 
+    /**
+     * @return Mage_Newsletter_Model_Resource_Subscriber_Collection|Object
+     */
     protected function _getCollection()
     {
         $collection = Mage::getResourceModel(
@@ -44,7 +55,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Subscriber
     }
 
     /**
-     * prepare collection
+     * Prepare collection.
      *
      * @return Varien_Object
      */

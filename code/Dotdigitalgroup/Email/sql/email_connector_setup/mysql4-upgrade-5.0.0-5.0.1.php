@@ -11,6 +11,7 @@ $automationTable = $installer->getTable('ddg_automation/automation');
 if ($installer->getConnection()->isTableExists($automationTable)) {
     $installer->getConnection()->dropTable($automationTable);
 }
+
 $table = $installer->getConnection()->newTable($automationTable);
 $table->addColumn(
     'id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(

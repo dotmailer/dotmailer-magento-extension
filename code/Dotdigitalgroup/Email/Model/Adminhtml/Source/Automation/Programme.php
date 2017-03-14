@@ -13,16 +13,19 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Automation_Programme
         $websiteCode = Mage::app()->getRequest()->getParam('website', false);
 
         //website code param
-        if ( ! $websiteCode) {
+        if (!$websiteCode) {
             $websiteCode = 0;
-        }//use admin
+        }
 
         $website = Mage::app()->getWebsite($websiteCode);
 
-        $fields[] = array('value' => '0',
-                          'label' => Mage::helper('ddg')->__('-- Disabled --'));
+        $fields[] = array(
+            'value' => '0',
+            'label' => Mage::helper('ddg')->__('-- Disabled --')
+        );
 
         $client = Mage::helper('ddg')->getWebsiteApiClient($website);
+
         if (Mage::helper('ddg')->isEnabled($website)
             && $client instanceof Dotdigitalgroup_Email_Model_Apiconnector_Client
         ) {
@@ -43,5 +46,4 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Automation_Programme
 
         return $fields;
     }
-
 }

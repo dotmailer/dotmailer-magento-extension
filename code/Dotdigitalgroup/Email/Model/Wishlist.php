@@ -4,25 +4,25 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
 {
 
     /**
-     * @var int
+     * @var mixed
      */
-    protected $_start;
+    public $start;
     /**
      *
      * @var array
      */
-    protected $_wishlists;
+    public $wishlists;
     /**
      * @var int
      */
-    protected $_count = 0;
+    public $countWishlists = 0;
     /**
      * @var array
      */
-    protected $_wishlistIds;
+    public $wishlistIds;
 
     /**
-     * constructor
+     * Constructor.
      */
     public function _construct()
     {
@@ -57,8 +57,10 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
             ->addFieldToFilter('wishlist_id', $wishListId)
             ->setPageSize(1);
 
-        if ($collection->count()) {
+        if ($collection->getSize()) {
+            //@codingStandardsIgnoreStart
             return $collection->getFirstItem();
+            //@codingStandardsIgnoreEnd
         }
 
         return false;
@@ -86,17 +88,13 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
                 $website
             );
             $storeIds   = $website->getStoreIds();
+
             if ($enabled && $apiEnabled && ! empty($storeIds)) {
-                //using bulk api
-                $helper->log(
-                    '---------- Start wishlist bulk sync ----------'
-                    . $website->getName()
-                );
-                $this->_start = microtime(true);
+                $this->start = microtime(true);
                 $this->_exportWishlistForWebsite($website);
                 //send wishlist as transactional data
-                if (isset($this->_wishlists[$website->getId()])) {
-                    $websiteWishlists = $this->_wishlists[$website->getId()];
+                if (isset($this->wishlists[$website->getId()])) {
+                    $websiteWishlists = $this->wishlists[$website->getId()];
 
                     //register in queue with importer
                     $check = Mage::getModel('ddg_automation/importer')
@@ -109,48 +107,54 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
 
                     //set imported
                     if ($check) {
-                        $this->getResource()->setImported($this->_wishlistIds);
+                        $this->getResource()->setImported($this->wishlistIds);
                     }
                 }
-                $message = 'Total time for wishlist bulk sync : ' . gmdate(
-                    "H:i:s", microtime(true) - $this->_start
-                );
-                $helper->log($message);
+
+                if ($this->countWishlists) {
+                    //@codingStandardsIgnoreStart
+                    $message = 'Total time for Wishlist bulk sync : ' . gmdate("H:i:s", microtime(true) - $this->start);
+                    //@codingStandardsIgnoreEnd
+                    $helper->log($message);
+                }
+
 
                 //using single api
                 $this->_exportWishlistForWebsiteInSingle($website);
             }
         }
-        $response['message'] = "Wishlists updated: " . $this->_count;
+
+        $response['message'] = "Wishlists updated: " . $this->countWishlists;
 
         return $response;
     }
 
     /**
-     * Sync single wishlist.
+     * Sync Single wishlist.
      *
      * @param Mage_Core_Model_Website $website
      */
     protected function _exportWishlistForWebsite(Mage_Core_Model_Website $website)
     {
         //reset wishlists
-        $this->_wishlists   = array();
-        $this->_wishlistIds = array();
+        $this->wishlists = array();
+        $this->wishlistIds = array();
         $limit              = Mage::helper('ddg')->getWebsiteConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT,
             $website
         );
         $emailWishlist      = $this->_getWishlistToImport($website, $limit);
-        $this->_wishlistIds = $emailWishlist->getColumnValues('wishlist_id');
+        $this->wishlistIds = $emailWishlist->getColumnValues('wishlist_id');
 
-        if ( ! empty($this->_wishlistIds)) {
+        if (! empty($this->wishlistIds)) {
             $collection = Mage::getModel('wishlist/wishlist')
                 ->getCollection()
                 ->addFieldToFilter(
-                    'main_table.wishlist_id', array('in' => $this->_wishlistIds)
+                    'main_table.wishlist_id', array('in' => $this->wishlistIds)
                 )
                 ->addFieldToFilter('customer_id', array('notnull' => 'true'));
 
+            //@codingStandardsIgnoreStart
             $collection->getSelect()
                 ->joinLeft(
                     array('c' => Mage::getSingleton('core/resource')
@@ -158,7 +162,7 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
                     'c.entity_id = customer_id',
                     array('email', 'store_id')
                 );
-
+            //@codingStandardsIgnoreEnd
             foreach ($collection as $wishlist) {
                 $connectorWishlist = Mage::getModel(
                     'ddg_automation/customer_wishlist'
@@ -171,7 +175,6 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
                 $wishListItemCollection = $wishlist->getItemCollection();
                 if ($wishListItemCollection->getSize()) {
                     foreach ($wishListItemCollection as $item) {
-                        /* @var $product Mage_Catalog_Model_Product */
                         $product      = $item->getProduct();
                         $wishlistItem = Mage::getModel(
                             'ddg_automation/customer_wishlist_item', $product
@@ -180,10 +183,11 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
                             ->setPrice($product);
                         //store for wishlists
                         $connectorWishlist->setItem($wishlistItem);
-                        $this->_count++;
+                        $this->countWishlists++;
                     }
+
                     //set wishlists for later use
-                    $this->_wishlists[$website->getId()][] = $connectorWishlist;
+                    $this->wishlists[$website->getId()][] = $connectorWishlist;
                 }
             }
         }
@@ -206,7 +210,9 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
             )
             ->addFieldToFilter('item_count', array('gt' => 0));
 
+        //@codingStandardsIgnoreStart
         $collection->getSelect()->limit($limit);
+        //@codingStandardsIgnoreEnd
 
         return $collection;
     }
@@ -226,12 +232,13 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
         $collection         = $this->_getModifiedWishlistToImport(
             $website, $limit
         );
-        $this->_wishlistIds = array();
+        $this->wishlistIds = array();
         //email_wishlist wishlist ids
         $wishlistIds = $collection->getColumnValues('wishlist_id');
 
         $wishlistCollection = Mage::getModel('wishlist/wishlist')->getCollection()
             ->addFieldToFilter('wishlist_id', array('in' => $wishlistIds));
+        //@codingStandardsIgnoreStart
         $wishlistCollection->getSelect()
             ->joinLeft(
                 array('c' => Mage::getSingleton('core/resource')
@@ -239,9 +246,9 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
                 'c.entity_id = customer_id',
                 array('email', 'store_id')
             );
+        //@codingStandardsIgnoreEnd
 
         foreach ($wishlistCollection as $wishlist) {
-
             $wishlistId = $wishlist->getid();
             $wishlistItems = $wishlist->getItemCollection();
 
@@ -253,7 +260,6 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
 
             if ($wishlistItems->getSize()) {
                 foreach ($wishlistItems as $item) {
-                    /* @var $product Mage_Catalog_Model_Product */
                     $product      = $item->getProduct();
                     $wishlistItem = Mage::getModel(
                         'ddg_automation/customer_wishlist_item', $product
@@ -262,10 +268,11 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
                         ->setPrice($product);
                     //store for wishlists
                     $connectorWishlist->setItem($wishlistItem);
-                    $this->_count++;
+                    $this->countWishlists++;
                 }
+
                 //send wishlist as transactional data
-                $this->_start = microtime(true);
+                $this->start = microtime(true);
                 //register in queue with importer
                 $check = Mage::getModel('ddg_automation/importer')
                     ->registerQueue(
@@ -275,7 +282,7 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
                         $website->getId()
                     );
                 if ($check) {
-                    $this->_wishlistIds[] = $wishlistId;
+                    $this->wishlistIds[] = $wishlistId;
                 }
             } else {
                 //register in queue with importer
@@ -287,12 +294,13 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
                         $website->getId()
                     );
                 if ($check) {
-                    $this->_wishlistIds[] = $wishlistId;
+                    $this->wishlistIds[] = $wishlistId;
                 }
             }
         }
-        if ( ! empty($this->_wishlistIds)) {
-            $this->getResource()->setImported($this->_wishlistIds, true);
+
+        if (!empty($this->wishlistIds)) {
+            $this->getResource()->setImported($this->wishlistIds, true);
         }
     }
 
@@ -313,7 +321,9 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
             )
             ->addFieldToSelect('wishlist_id');
 
+        //@codingStandardsIgnoreStart
         $collection->getSelect()->limit($limit);
+        //@codingStandardsIgnoreEnd
 
         return $collection;
     }

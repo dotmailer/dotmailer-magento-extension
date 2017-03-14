@@ -18,13 +18,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Switcher
     public function getStoreSelectOptions()
     {
         $section = $this->getRequest()->getParam('section');
-
         $curWebsite = $this->getRequest()->getParam('website');
         $curStore   = $this->getRequest()->getParam('store');
-
         $storeModel = Mage::getSingleton('adminhtml/system_store');
-        /* @var $storeModel Mage_Adminhtml_Model_System_Store */
-
         $url = Mage::getModel('adminhtml/url');
 
         $options            = array();
@@ -41,12 +37,14 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Switcher
                 if ($group->getWebsiteId() != $website->getId()) {
                     continue;
                 }
+
                 $groupShow = false;
                 foreach ($storeModel->getStoreCollection() as $store) {
                     if ($store->getGroupId() != $group->getId()) {
                         continue;
                     }
-                    if ( ! $websiteShow) {
+
+                    if (!$websiteShow) {
                         $websiteShow                             = true;
                         $options['website_' . $website->getId()] = array(
                             'label'    => $website->getName(),
@@ -59,7 +57,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Switcher
                             'style'    => 'padding-left:16px; background:#DDD; font-weight:bold;',
                         );
                     }
-                    if ( ! $groupShow) {
+
+                    if (!$groupShow) {
                         $groupShow                                     = true;
                         $options['group_' . $group->getId() . '_open'] = array(
                             'is_group' => true,
@@ -68,6 +67,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Switcher
                             'style'    => 'padding-left:32px;'
                         );
                     }
+
                     $options['store_' . $store->getId()] = array(
                         'label'    => $store->getName(),
                         'url'      => $url->getUrl(
@@ -78,6 +78,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Switcher
                         'style'    => '',
                     );
                 }
+
                 if ($groupShow) {
                     $options['group_' . $group->getId() . '_close'] = array(
                         'is_group' => true,
@@ -97,7 +98,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Switcher
      */
     public function getHintHtml()
     {
-        return Mage::getBlockSingleton('adminhtml/store_switcher')->getHintHtml(
-        );
+        return Mage::getBlockSingleton('adminhtml/store_switcher')->getHintHtml();
     }
 }

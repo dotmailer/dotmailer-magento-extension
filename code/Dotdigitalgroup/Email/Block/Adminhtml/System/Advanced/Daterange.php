@@ -28,6 +28,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Advanced_Daterange
                     </p>" . $date->getElementHtml() .
                 "</div>";
         }
+
         $js = "
             <script type='application/javascript'>
                 var j = jQuery.noConflict();

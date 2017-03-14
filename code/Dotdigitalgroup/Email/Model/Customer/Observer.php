@@ -36,10 +36,16 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
 
             //email change detection
             if ($emailBefore && $email != $emailBefore) {
+                //Reload contact model up update email
+                $contactModel = Mage::getModel('ddg_automation/contact')
+                    ->loadByCustomerEmail($emailBefore, $websiteId);
+                $contactModel->setEmail($email);
+
                 Mage::helper('ddg')->log(
                     'email change detected : ' . $email . ', after : '
                     . $emailBefore . ', website id : ' . $websiteId
                 );
+                
                 $data = array(
                     'emailBefore'  => $emailBefore,
                     'email'        => $email,
@@ -51,15 +57,14 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
                     Dotdigitalgroup_Email_Model_Importer::MODE_CONTACT_EMAIL_UPDATE,
                     $websiteId
                 );
-
-            } elseif ( ! $emailBefore) {
+            } elseif (!$emailBefore) {
                 //for new contacts update email
-                $contactModel->setEmail($email);
+                $contactModel->setEmailImported(
+                    Dotdigitalgroup_Email_Model_Contact::EMAIL_CONTACT_NOT_IMPORTED
+                );
             }
-            $contactModel->setEmailImported(
-                Dotdigitalgroup_Email_Model_Contact::EMAIL_CONTACT_NOT_IMPORTED
-            )
-                ->setCustomerId($customerId)
+
+            $contactModel->setCustomerId($customerId)
                 ->save();
         } catch (Exception $e) {
             Mage::logException($e);
@@ -69,22 +74,21 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
     }
 
     /**
-     * Customer register success
+     * Customer register success.
      *
      * @param Varien_Event_Observer $observer
      *
      * @return $this
      */
-    public function handleCustomerRegiterSuccess(Varien_Event_Observer $observer
-    ) {
+    public function handleCustomerRegiterSuccess(Varien_Event_Observer $observer)
+    {
         /** @var $customer Mage_Customer_Model_Customer */
         $customer  = $observer->getEvent()->getCustomer();
         $websiteId = $customer->getWebsiteId();
         $website   = Mage::app()->getWebsite($websiteId);
 
-
         //if api is not enabled
-        if ( ! $website->getConfig(
+        if (!$website->getConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED
         )
         ) {
@@ -186,11 +190,12 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
                 ->getCollection()
                 ->addAttributeToSelect('email')
                 ->addAttributeToFilter('entity_id', $customerId);
+            //@codingStandardsIgnoreStart
             $customerCollection->getSelect()->limit(1);
             $customer = $customerCollection->getFirstItem();
-
+            //@codingStandardsIgnoreEnd
             //if api is not enabled
-            if ( ! $website->getConfig(
+            if (!$website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED
             )
             ) {
@@ -221,7 +226,7 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
     }
 
     /**
-     * register review
+     * Register review.
      *
      * @param $review
      */
@@ -239,7 +244,7 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
     }
 
     /**
-     * wishlist save after observer. save new wishlist in the email_wishlist table.
+     * Wishlist save after observer. save new wishlist in the email_wishlist table.
      *
      * @param Varien_Event_Observer $observer
      *
@@ -259,7 +264,7 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
     }
 
     /**
-     * register wishlist
+     * Register wishlist.
      *
      * @param $wishlist
      *
@@ -272,13 +277,13 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
             $customer      = Mage::getModel('customer/customer');
 
             //if wishlist exist not to save again
-            if ( ! $emailWishlist->getWishlist($wishlist['wishlist_id'])) {
-
+            if (!$emailWishlist->getWishlist($wishlist['wishlist_id'])) {
                 $customer->load($wishlist['customer_id']);
                 //customer not found
-                if ( ! $customer->getId()) {
-                    return false;
+                if (!$customer->getId()) {
+                    return $this;
                 }
+
                 $email      = $customer->getEmail();
                 $wishlistId = $wishlist['wishlist_id'];
                 $websiteId  = $customer->getWebsiteId();
@@ -292,7 +297,7 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
                 $website   = Mage::app()->getStore($store)->getWebsite();
 
                 //if api is not enabled
-                if ( ! $website->getConfig(
+                if (!$website->getConfig(
                     Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED
                 )
                 ) {
@@ -319,7 +324,6 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
                         ->setProgramId($programId);
                     $automation->save();
                 }
-
             }
         } catch (Exception $e) {
             Mage::logException($e);
@@ -327,16 +331,14 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
     }
 
     /**
-     * wishlist item save after
+     * Wishlist item save after.
      *
      * @param Varien_Event_Observer $observer
      */
     public function wishlistItemSaveAfter(Varien_Event_Observer $observer)
     {
         $object        = $observer->getEvent()->getDataObject();
-        $wishlist      = Mage::getModel('wishlist/wishlist')->load(
-            $object->getWishlistId()
-        );
+        $wishlist = Mage::getModel('wishlist/wishlist')->load($object->getWishlistId());
         $emailWishlist = Mage::getModel('ddg_automation/wishlist');
         try {
             if ($object->getWishlistId()) {
@@ -368,7 +370,7 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
     }
 
     /**
-     * wishlist delete observer
+     * Wishlist delete observer.
      *
      * @param Varien_Event_Observer $observer
      */
@@ -378,8 +380,7 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
         $customer = Mage::getModel('customer/customer')->load(
             $object->getCustomerId()
         );
-        $website  = Mage::app()->getStore($customer->getStoreId())->getWebsite(
-        );
+        $website = Mage::app()->getStore($customer->getStoreId())->getWebsite();
         $helper   = Mage::helper('ddg');
 
         //sync enabled
@@ -413,7 +414,7 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
     }
 
     /**
-     * Quote submit before observer
+     * Quote submit before observer.
      *
      * @param Varien_Event_Observer $observer
      * @return $this
@@ -425,11 +426,12 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
         if (!$quote->getCustomerId()) {
             $quote->setIfCustomerIsNew(1);
         }
+
         return $this;
     }
 
     /**
-     * Quote submit success observer
+     * Quote submit success observer.
      *
      * @param Varien_Event_Observer $observer
      * @return $this
@@ -450,6 +452,7 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
             //do enrolment
             $this->_automationEnrolment($quote->getCustomer(), $programId);
         }
+
         return $this;
     }
 

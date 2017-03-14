@@ -2,6 +2,9 @@
 
 class Dotdigitalgroup_Email_Adminhtml_CustomerController extends Mage_Adminhtml_Controller_Action
 {
+    /**
+     * Customer tab stats.
+     */
     public function statAction()
     {
         $this->getResponse()->setBody(
@@ -9,6 +12,9 @@ class Dotdigitalgroup_Email_Adminhtml_CustomerController extends Mage_Adminhtml_
         );
     }
 
+    /**
+     * @return bool
+     */
     protected function _isAllowed()
     {
         return Mage::getSingleton('admin/session')->isAllowed(

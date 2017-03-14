@@ -3,20 +3,34 @@
 class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Rfm
     extends Mage_Core_Model_Abstract
 {
-
-    public $rfm = array();
-    protected $_store = 0;
-    protected $_group = 0;
-    protected $_website = 0;
-
-    protected $_resultCount;
-
     const RECENCY = 'Recency';
     const FREQUENCY = 'Frequency';
     const MONETARY = 'Monetary';
 
     /**
-     * prepare collection and needed columns
+     * @var array
+     */
+    public $rfm = array();
+    /**
+     * @var int
+     */
+    public $store = 0;
+    /**
+     * @var int
+     */
+    public $groupId = 0;
+    /**
+     * @var int
+     */
+    public $website = 0;
+
+    /**
+     * @var
+     */
+    public $resultCount;
+
+    /**
+     * Prepare collection and needed columns.
      *
      * @return Mage_Sales_Model_Resource_Order_Collection
      * @throws Mage_Core_Exception
@@ -42,23 +56,24 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Rfm
             ->addFieldToFilter('customer_id', array('neq' => 'null'))
             ->addOrder('created_at');
 
-        if ($this->_store) {
-            $collection->addFieldToFilter('store_id', $this->_store);
-        } else if ($this->_website) {
-            $storeIds = Mage::app()->getWebsite($this->_website)->getStoreIds();
+        if ($this->store) {
+            $collection->addFieldToFilter('store_id', $this->store);
+        } else if ($this->website) {
+            $storeIds = Mage::app()->getWebsite($this->website)->getStoreIds();
             $collection->addFieldToFilter('store_id', array('in' => $storeIds));
-        } else if ($this->_group) {
-            $storeIds = Mage::app()->getGroup($this->_group)->getStoreIds();
+        } else if ($this->groupId) {
+            $storeIds = Mage::app()->getGroup($this->groupId)->getStoreIds();
             $collection->addFieldToFilter('store_id', array('in' => $storeIds));
         }
 
         $expr     = Mage::getResourceModel('ddg_automation/contact')
             ->getSalesAmountExpression($collection);
-        $isFilter = $this->_store || $this->_website || $this->_group;
+        $isFilter = $this->store || $this->website || $this->groupId;
         if ($isFilter == 0) {
             $expr = '(' . $expr . ') * main_table.base_to_global_rate';
         }
 
+        //@codingStandardsIgnoreStart
         $collection->getSelect()
             ->reset(Zend_Db_Select::COLUMNS)
             ->columns(
@@ -69,12 +84,13 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Rfm
                 )
             )
             ->group('customer_id');
+        //@codingStandardsIgnoreEnd
 
         return $collection;
     }
 
     /**
-     * calculate quartiles
+     * Calculate quartiles.
      *
      * @param $array
      *
@@ -82,7 +98,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Rfm
      */
     protected function calculateQuartile($array)
     {
-        $count = $this->_resultCount;
+        $count = $this->resultCount;
         if ($count == 0) {
             return array(
                 "Low"    => 0,
@@ -91,19 +107,19 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Rfm
             );
         }
 
-        $first  = intval(round(.25 * ($count + 1)));
-        $second = intval(round(.50 * ($count + 1)));
-        $third  = intval(round(.75 * ($count + 1)));
+        $first = (int)round(.25 * ($count + 1));
+        $second = (int)round(.50 * ($count + 1));
+        $third = (int)round(.75 * ($count + 1));
 
-        if ( ! array_key_exists($first, $array)) {
+        if (!array_key_exists($first, $array)) {
             $first = $this->getClosest($first, $array);
         }
 
-        if ( ! array_key_exists($second, $array)) {
+        if (!array_key_exists($second, $array)) {
             $second = $this->getClosest($second, $array);
         }
 
-        if ( ! array_key_exists($third, $array)) {
+        if (!array_key_exists($third, $array)) {
             $third = $this->getClosest($third, $array);
         }
 
@@ -115,12 +131,11 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Rfm
     }
 
     /**
-     * find closest index key from array
+     * Find closest index key from array.
      *
      * @param $search
      * @param $arr
-     *
-     * @return mix
+     * @return int|null|string
      */
     protected function getClosest($search, $arr)
     {
@@ -129,11 +144,8 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Rfm
             if ($search == $key) {
                 return $search;
             }
-            if ($closest == null
-                || abs($search - $closest) > abs(
-                    $key - $search
-                )
-            ) {
+
+            if ($closest == null || abs($search - $closest) > abs($key - $search)) {
                 $closest = $key;
             }
         }
@@ -142,28 +154,18 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Rfm
     }
 
     /**
-     *  prepare rfm data
+     *  Prepare rfm data.
      */
     protected function prepareRfm()
     {
         $collection      = $this->getPreparedCollection();
         $contactResource = Mage::getResourceModel('ddg_automation/contact');
-
-        $values                     = $contactResource->prepareFrequency(
-            $collection
-        );
-        $this->_resultCount         = count($values);
+        $values = $contactResource->prepareFrequency($collection);
+        $this->resultCount = count($values);
         $this->rfm[self::FREQUENCY] = $this->calculateQuartile($values);
-
-
-        $values                   = $contactResource->prepareRecency(
-            $collection
-        );
+        $values = $contactResource->prepareRecency($collection);
         $this->rfm[self::RECENCY] = $this->calculateQuartile($values);
-
-        $values                    = $contactResource->prepareMonetary(
-            $collection
-        );
+        $values = $contactResource->prepareMonetary($collection);
         $this->rfm[self::MONETARY] = $this->calculateQuartile($values);
     }
 
@@ -176,9 +178,9 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Rfm
      */
     public function getPreparedRfm($store = 0, $website = 0, $group = 0)
     {
-        $this->_store   = $store;
-        $this->_group   = $group;
-        $this->_website = $website;
+        $this->store = $store;
+        $this->groupId = $group;
+        $this->website = $website;
 
         $this->prepareRfm();
 
