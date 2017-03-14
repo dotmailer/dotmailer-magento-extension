@@ -1918,7 +1918,8 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         );
         $addressBookMap = array(
             'Magento_Customers' => Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMERS_ADDRESS_BOOK_ID,
-            'Magento_Subscribers' => Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SUBSCRIBERS_ADDRESS_BOOK_ID,
+            'Magento_Subscribers'
+                => Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SUBSCRIBERS_ADDRESS_BOOK_ID,
             'Magento_Guests' => Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_GUEST_ADDRESS_BOOK_ID
         );
         $error = false;
@@ -1933,7 +1934,8 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
                 if ($addressBookName !== '') {
                     $response = $client->postAddressBooks($addressBookName, $visibility);
                     if (isset($response->message) &&
-                        $response->message != Dotdigitalgroup_Email_Model_Apiconnector_Client::API_ERROR_ADDRESSBOOK_DUPLICATE
+                        $response->message
+                            != Dotdigitalgroup_Email_Model_Apiconnector_Client::API_ERROR_ADDRESSBOOK_DUPLICATE
                     ) {
                         $error = true;
                     } else {
