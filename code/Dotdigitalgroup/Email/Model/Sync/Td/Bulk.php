@@ -24,6 +24,7 @@ class Dotdigitalgroup_Email_Model_Sync_Td_Bulk extends Dotdigitalgroup_Email_Mod
                             continue;
                         }
                     }
+
                     $result = $this->client->postContactsTransactionalDataImport($importData, $item->getImportType());
                     $this->_handleItemAfterSync($item, $result);
                 }
