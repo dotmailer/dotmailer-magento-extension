@@ -343,17 +343,20 @@ class Dotdigitalgroup_Email_Model_Resource_Contact extends Mage_Core_Model_Resou
     public function insertGuest($data)
     {
         try {
+            $contacts = array_keys($data);
             $emailsExistInTable = Mage::getModel('ddg_automation/contact')
                 ->getCollection()
-                ->addFieldToFilter('email', array('in' => $data))
+                ->addFieldToFilter('email', array('in' => $contacts))
                 ->getColumnValues('email');
 
             foreach ($emailsExistInTable as $duplicate) {
                 unset($data[$duplicate]);
             }
 
-            $write = $this->_getWriteAdapter();
-            $write->insertMultiple($this->getMainTable(), $data);
+            if (! empty($data)) {
+                $write = $this->_getWriteAdapter();
+                $write->insertMultiple($this->getMainTable(), $data);
+            }
         } catch (Exception $e) {
             Mage::throwException($e->getMessage());
         }
