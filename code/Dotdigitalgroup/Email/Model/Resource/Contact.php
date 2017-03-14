@@ -349,7 +349,7 @@ class Dotdigitalgroup_Email_Model_Resource_Contact extends Mage_Core_Model_Resou
                 ->addFieldToFilter('email', array('in' => $contacts))
                 ->getColumnValues('email');
 
-            $guests = array_diff_key($data, array_reverse($emailsExistInTable));
+            $guests = array_diff_key($data, array_flip($emailsExistInTable));
 
             if (! empty($guests)) {
                 $write = $this->_getWriteAdapter();
