@@ -111,8 +111,8 @@ class Dotdigitalgroup_Email_Model_Sales_Order
         /**
          * Add guest to contacts table.
          */
-        if (!empty($this->_guests)) {
-            Mage::getResourceModel('ddg_automation/contact')->insert($this->_guests);
+        if (! empty($this->_guests)) {
+            Mage::getResourceModel('ddg_automation/contact')->insertGuest($this->_guests);
         }
 
         if ($this->countOrders) {
@@ -241,12 +241,14 @@ class Dotdigitalgroup_Email_Model_Sales_Order
                     && $order->getCustomerEmail()
                 ) {
                     //add guest to the list
-                    $this->_guests[] = array(
-                        'email' => $order->getCustomerEmail(),
-                        'website_id' => $websiteId,
-                        'store_id' => $storeId,
-                        'is_guest' => 1
-                    );
+                    if (! isset($this->_guests[$order->getCustomerEmail()])) {
+                        $this->_guests[$order->getCustomerEmail()] = array(
+                            'email' => $order->getCustomerEmail(),
+                            'website_id' => $websiteId,
+                            'store_id' => $storeId,
+                            'is_guest' => 1
+                        );
+                    }
                 }
 
                 if ($order->getId()) {
@@ -272,8 +274,6 @@ class Dotdigitalgroup_Email_Model_Sales_Order
 
     /**
      * Create product reminder campaigns.
-     *
-     * @return bool
      */
     public function createProductReminderReviewCampaigns()
     {
