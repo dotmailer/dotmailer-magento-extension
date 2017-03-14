@@ -32,6 +32,22 @@ Compatibility
 
 # Upgrade notice
 
+# V6.3.0
+###### Features
+- Code audit 2017.
+- Improve the order sync by delaying the import. 
+- Added R3 IP.
+
+###### Bug fixes
+- Subscribers with datafields fixes.
+- Email change detection to update the same contact.
+- Campaign bulk sync proccessing ids.
+- Quote validation for billing/shipping address.
+- Increased cURL timeout for TD imports.
+- Improve install script running time for updating subscribers.
+- Transactional emails only available on global level.
+- Revert the finding guest feature.
+
 # V6.2.5
 ###### Features
  - Sync sales data fields for guest subscribers
