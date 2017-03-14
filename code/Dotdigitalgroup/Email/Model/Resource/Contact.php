@@ -349,13 +349,11 @@ class Dotdigitalgroup_Email_Model_Resource_Contact extends Mage_Core_Model_Resou
                 ->addFieldToFilter('email', array('in' => $contacts))
                 ->getColumnValues('email');
 
-            foreach ($emailsExistInTable as $duplicate) {
-                unset($data[$duplicate]);
-            }
+            $guests = array_diff_key($data, array_reverse($emailsExistInTable));
 
-            if (! empty($data)) {
+            if (! empty($guests)) {
                 $write = $this->_getWriteAdapter();
-                $write->insertMultiple($this->getMainTable(), $data);
+                $write->insertMultiple($this->getMainTable(), $guests);
             }
         } catch (Exception $e) {
             Mage::throwException($e->getMessage());
