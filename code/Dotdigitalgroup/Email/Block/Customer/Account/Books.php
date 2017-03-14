@@ -172,12 +172,16 @@ class Dotdigitalgroup_Email_Block_Customer_Account_Books
                                 ->name]
                         )) {
                             if ($processedConnectorDataFields[$dataFieldFromConfig]->type == "Date") {
-                                $value = $processedContactDataFields[$processedConnectorDataFields[$dataFieldFromConfig]->name];
+                                $value = $processedContactDataFields[
+                                    $processedConnectorDataFields[$dataFieldFromConfig]->name
+                                ];
                                 //@codingStandardsIgnoreStart
                                 $value = Mage::app()->getLocale()->date($value)->toString("Y/M/d");
                                 //@codingStandardsIgnoreEnd
                             } else {
-                                $value = $processedContactDataFields[$processedConnectorDataFields[$dataFieldFromConfig]->name];
+                                $value = $processedContactDataFields[
+                                    $processedConnectorDataFields[$dataFieldFromConfig]->name
+                                ];
                             }
                         }
 
