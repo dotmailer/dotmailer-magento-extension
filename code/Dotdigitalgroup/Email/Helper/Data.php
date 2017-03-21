@@ -73,6 +73,17 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * Replaces a number of instances where the mappedCustomerId value is checked against an empty string
+     *
+     * @return string
+     */
+    public function getMappedCustomerIdWithWarning()
+    {
+        $customerId = $this->getMappedCustomerId();
+        return !empty($customerId) ? $customerId : '[PLEASE MAP THE CUSTOMER ID]';
+    }
+
+    /**
      * @return mixed
      */
     public function getMappedOrderId()
@@ -111,6 +122,17 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         return Mage::getStoreConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_MAPPING_LAST_ORDER_ID
         );
+    }
+
+    /**
+     * Replaces a number of instances where the lastOrderId value is checked against an empty string
+     *
+     * @return string
+     */
+    public function getLastOrderIdWithWarning()
+    {
+        $lastOrderId = $this->getLastOrderId();
+        return !empty($lastOrderId) ? $lastOrderId : '[PLEASE MAP THE LAST ORDER ID]';
     }
 
     /**

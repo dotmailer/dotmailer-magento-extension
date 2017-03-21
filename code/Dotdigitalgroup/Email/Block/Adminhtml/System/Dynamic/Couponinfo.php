@@ -10,10 +10,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Couponinfo
      */
     protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element)
     {
-        //base url
         $baseUrl = Mage::helper('ddg')->generateDynamicUrl();
-
-        //config code
         $passcode = Mage::helper('ddg')->getPasscodeWithWarning();
 
         //full url

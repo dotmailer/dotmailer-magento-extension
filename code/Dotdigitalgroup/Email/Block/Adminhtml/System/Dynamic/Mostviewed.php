@@ -10,13 +10,14 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Mostviewed
      */
     protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element)
     {
-        //base url for dynamic content
         $baseUrl = Mage::helper('ddg')->generateDynamicUrl();
         $passcode = Mage::helper('ddg')->getPasscodeWithWarning();
 
         //full url for dynamic content
         $text = sprintf(
-            '%sconnector/report/mostviewed/code/%s', $baseUrl, $passcode
+            '%sconnector/report/mostviewed/code/%s',
+            $baseUrl,
+            $passcode
         );
         $element->setData('value', $text);
 

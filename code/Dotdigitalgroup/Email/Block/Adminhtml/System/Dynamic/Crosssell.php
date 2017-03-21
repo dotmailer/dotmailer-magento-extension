@@ -10,22 +10,16 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Crosssell
      */
     protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element)
     {
-        //base url
         $baseUrl = Mage::helper('ddg')->generateDynamicUrl();
-        //config passcode
         $passcode = Mage::helper('ddg')->getPasscodeWithWarning();
-        //last order id for dynamic page
-        $lastOrderId = Mage::helper('ddg')->getLastOrderId();
-
-        //alert message for last order id is not mapped
-        if (!$lastOrderId) {
-            $lastOrderId = '[PLEASE MAP THE LAST ORDER ID]';
-        }
+        $lastOrderId = Mage::helper('ddg')->getLastOrderIdWithWarning();
 
         //full url for dynamic content
         $text = sprintf(
-            '%sconnector/products/crosssell/code/%s/order_id/@%s@', $baseUrl,
-            $passcode, $lastOrderId
+            '%sconnector/products/crosssell/code/%s/order_id/@%s@',
+            $baseUrl,
+            $passcode,
+            $lastOrderId
         );
         $element->setData('value', $text);
 

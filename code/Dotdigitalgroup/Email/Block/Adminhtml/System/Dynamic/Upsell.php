@@ -10,21 +10,15 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Upsell
      */
     protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element)
     {
-        //passcode to append for url
         $passcode = Mage::helper('ddg')->getPasscodeWithWarning();
-        //last order id witch information will be generated
-        $lastOrderid = Mage::helper('ddg')->getLastOrderId();
-
-        if (!$lastOrderid) {
-            $lastOrderid = '[PLEASE MAP THE LAST ORDER ID]';
-        }
-
-        //generate the base url and display for default store id
+        $lastOrderid = Mage::helper('ddg')->getLastOrderIdWithWarning();
         $baseUrl = Mage::helper('ddg')->generateDynamicUrl();
 
         $text = sprintf(
-            '%sconnector/products/upsell/code/%s/order_id/@%s@', $baseUrl,
-            $passcode, $lastOrderid
+            '%sconnector/products/upsell/code/%s/order_id/@%s@',
+            $baseUrl,
+            $passcode,
+            $lastOrderid
         );
         $element->setData('value', $text);
 
