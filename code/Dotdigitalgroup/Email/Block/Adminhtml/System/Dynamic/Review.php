@@ -11,13 +11,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Review
     protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element)
     {
         //passcode to append for url
-        $passcode = Mage::helper('ddg')->getPasscode();
+        $passcode = Mage::helper('ddg')->getPasscodeWithWarning();
         //last order id witch information will be generated
         $lastOrderId = Mage::helper('ddg')->getLastOrderId();
-
-        if ($passcode == '') {
-            $passcode = '[PLEASE SET UP A PASSCODE]';
-        }
 
         if (!$lastOrderId) {
             $lastOrderId = '[PLEASE MAP THE LAST ORDER ID]';

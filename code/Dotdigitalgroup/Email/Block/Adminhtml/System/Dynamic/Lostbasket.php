@@ -12,20 +12,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Lostbasket
     {
         //base url for dynamic content
         $baseUrl = Mage::helper('ddg')->generateDynamicUrl();
-        $passcode = Mage::helper('ddg')->getPasscode();
-
+        $passcode = Mage::helper('ddg')->getPasscodeWithWarning();
         //last quote id for dynamic page
-        $lastQuoteId = Mage::helper('ddg')->getLastQuoteId();
-
-        //config passcode
-        if ($passcode == '') {
-            $passcode = '[PLEASE SET UP A PASSCODE]';
-        }
-
-        //alert message for last order id is not mapped
-        if (!$lastQuoteId) {
-            $lastQuoteId = '[PLEASE MAP THE LAST QUOTE ID]';
-        }
+        $lastQuoteId = Mage::helper('ddg')->getLastQuoteIdWithWarning();
 
         // full url
         $text = sprintf(

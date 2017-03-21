@@ -12,11 +12,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Mostviewed
     {
         //base url for dynamic content
         $baseUrl = Mage::helper('ddg')->generateDynamicUrl();
-        $passcode = Mage::helper('ddg')->getPasscode();
-
-        if ($passcode == '') {
-            $passcode = '[PLEASE SET UP A PASSCODE]';
-        }
+        $passcode = Mage::helper('ddg')->getPasscodeWithWarning();
 
         //full url for dynamic content
         $text = sprintf(

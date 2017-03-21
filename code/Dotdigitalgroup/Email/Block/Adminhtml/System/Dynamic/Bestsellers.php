@@ -14,11 +14,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Bestsellers
         $baseUrl = Mage::helper('ddg')->generateDynamicUrl();
 
         //config passcode
-        $passcode = Mage::helper('ddg')->getPasscode();
-
-        if ($passcode == '') {
-            $passcode = '[PLEASE SET UP A PASSCODE]';
-        }
+        $passcode = Mage::helper('ddg')->getPasscodeWithWarning();
 
         //full url
         $text = sprintf(

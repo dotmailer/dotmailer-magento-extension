@@ -14,12 +14,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Recentlyviewed
         $baseUrl = Mage::helper('ddg')->generateDynamicUrl();
 
         //config passcode
-        $passcode = Mage::helper('ddg')->getPasscode();
+        $passcode = Mage::helper('ddg')->getPasscodeWithWarning();
         $customerId = Mage::helper('ddg')->getMappedCustomerId();
-
-        if ($passcode == '') {
-            $passcode = '[PLEASE SET UP A PASSCODE]';
-        }
 
         if (!$customerId) {
             $customerId = '[PLEASE MAP THE CUSTOMER ID]';

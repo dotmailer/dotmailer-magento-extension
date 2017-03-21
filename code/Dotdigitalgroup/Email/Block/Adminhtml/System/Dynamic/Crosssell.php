@@ -13,13 +13,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Crosssell
         //base url
         $baseUrl = Mage::helper('ddg')->generateDynamicUrl();
         //config passcode
-        $passcode = Mage::helper('ddg')->getPasscode();
+        $passcode = Mage::helper('ddg')->getPasscodeWithWarning();
         //last order id for dynamic page
         $lastOrderId = Mage::helper('ddg')->getLastOrderId();
-
-        if ($passcode == '') {
-            $passcode = '[PLEASE SET UP A PASSCODE]';
-        }
 
         //alert message for last order id is not mapped
         if (!$lastOrderId) {

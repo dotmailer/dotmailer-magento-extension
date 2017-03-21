@@ -93,6 +93,17 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * Replaces a number of instances where the passcode value is checked against an empty string
+     *
+     * @return string
+     */
+    public function getPasscodeWithWarning()
+    {
+        $passcode = $this->getPasscode();
+        return !empty($passcode) ? $passcode : '[PLEASE SET UP A PASSCODE]';
+    }
+
+    /**
      * @return mixed
      */
     public function getLastOrderId()
@@ -110,7 +121,17 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         return Mage::getStoreConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_MAPPING_LAST_QUOTE_ID
         );
+    }
 
+    /**
+     * Replaces a number of instances where the lastQuoteId value is checked against an empty string
+     *
+     * @return string
+     */
+    public function getLastQuoteIdWithWarning()
+    {
+        $lastQuoteId = $this->getLastQuoteId();
+        return !empty($lastQuoteId) ? $lastQuoteId : '[PLEASE MAP THE LAST QUOTE ID]';
     }
 
     /**
