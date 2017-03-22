@@ -61,17 +61,13 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
                     return $this;
                 }
 
-                //update contact id for the subscriber
-                $contactId = $contactEmail->getContactId();
-                //get the contact id
-                if (!$contactId) {
-                    Mage::getModel('ddg_automation/importer')->registerQueue(
-                        Dotdigitalgroup_Email_Model_Importer::IMPORT_TYPE_SUBSCRIBER_UPDATE,
-                        array('email' => $email, 'id' => $contactEmail->getId()),
-                        Dotdigitalgroup_Email_Model_Importer::MODE_SUBSCRIBER_UPDATE,
-                        $websiteId
-                    );
-                }
+                //Add subscriber update to importer queue
+                Mage::getModel('ddg_automation/importer')->registerQueue(
+                    Dotdigitalgroup_Email_Model_Importer::IMPORT_TYPE_SUBSCRIBER_UPDATE,
+                    array('email' => $email, 'id' => $contactEmail->getId()),
+                    Dotdigitalgroup_Email_Model_Importer::MODE_SUBSCRIBER_UPDATE,
+                    $websiteId
+                );
 
                 $contactEmail->setIsSubscriber(null)
                     ->setSubscriberStatus(Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED);
