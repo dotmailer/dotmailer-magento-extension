@@ -3,8 +3,14 @@
 class Dotdigitalgroup_Email_Model_Customer_Guest
 {
 
-    protected $_countGuests = 0;
-    protected $_start;
+    /**
+     * @var int
+     */
+    public $countGuests = 0;
+    /**
+     * @var
+     */
+    public $start;
 
     /**
      * GUEST SYNC.
@@ -12,50 +18,49 @@ class Dotdigitalgroup_Email_Model_Customer_Guest
     public function sync()
     {
         /** @var Dotdigitalgroup_Email_Helper_Data $helper */
-        $helper       = Mage::helper('ddg');
-        $this->_start = microtime(true);
+        $helper = Mage::helper('ddg');
+        $this->start = microtime(true);
         foreach (Mage::app()->getWebsites() as $website) {
-
             //check if the guest is mapped and enabled
-            $enabled     = $helper->getGuestAddressBook($website);
+            $enabled = $helper->getGuestAddressBook($website);
             $syncEnabled = $website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_GUEST_ENABLED
             );
-            $apiEnabled  = $helper->getWebsiteConfig(
+            $apiEnabled = $helper->getWebsiteConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED,
                 $website
             );
             if ($enabled && $syncEnabled && $apiEnabled) {
-
-                //ready to start sync
-                if ( ! $this->_countGuests) {
-                    $helper->log('----------- Start guest sync ----------');
-                }
-
                 //sync guests for website
                 $this->exportGuestPerWebsite($website);
             }
         }
-        if ($this->_countGuests) {
+
+        if ($this->countGuests) {
+            //@codingStandardsIgnoreStart
             $helper->log(
-                '---- End Guest total time for guest sync : ' . gmdate(
-                    "H:i:s", microtime(true) - $this->_start
-                )
+                '---- End Guest sync with total time : ' .
+                gmdate("H:i:s", microtime(true) - $this->start)
             );
+            //@codingStandardsIgnoreEnd
         }
     }
 
+    /**
+     * @param Mage_Core_Model_Website $website
+     */
     public function exportGuestPerWebsite(Mage_Core_Model_Website $website)
     {
-        $helper     = Mage::helper('ddg');
+        $helper = Mage::helper('ddg');
         $fileHelper = Mage::helper('ddg/file');
-        $guests     = Mage::getModel('ddg_automation/contact')->getGuests(
-            $website
-        );
+        $guests = Mage::getModel('ddg_automation/contact')->getGuests($website);
+
         if ($guests->getSize()) {
+            //@codingStandardsIgnoreStart
             $guestFilename = strtolower(
                 $website->getCode() . '_guest_' . date('d_m_Y_Hi') . '.csv'
             );
+            //@codingStandardsIgnoreEnd
             $helper->log('Guest file: ' . $guestFilename);
             $storeName = $helper->getMappedStoreName($website);
             $fileHelper->outputCSV(
@@ -65,22 +70,23 @@ class Dotdigitalgroup_Email_Model_Customer_Guest
             foreach ($guests as $guest) {
                 $email = $guest->getEmail();
                 try {
-                    $guest->setEmailImported(
-                        Dotdigitalgroup_Email_Model_Contact::EMAIL_CONTACT_IMPORTED
-                    )
+                    //@codingStandardsIgnoreStart
+                    $guest->setEmailImported(Dotdigitalgroup_Email_Model_Contact::EMAIL_CONTACT_IMPORTED)
                         ->save();
+                    //@codingStandardsIgnoreEnd
                     $storeName = $website->getName();
                     // save data for guests
                     $fileHelper->outputCSV(
                         $fileHelper->getFilePath($guestFilename),
                         array($email, 'Html', $storeName)
                     );
-                    $this->_countGuests++;
+                    $this->countGuests++;
                 } catch (Exception $e) {
                     Mage::logException($e);
                 }
             }
-            if ($this->_countGuests) {
+
+            if ($this->countGuests) {
                 //register in queue with importer
                 Mage::getModel('ddg_automation/importer')->registerQueue(
                     Dotdigitalgroup_Email_Model_Importer::IMPORT_TYPE_GUEST,

@@ -3,12 +3,21 @@
 class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
 {
 
-    protected $_start;
-    protected $_countProducts = 0;
-    protected $_productIds;
+    /**
+     * @var mixed
+     */
+    public $start;
+    /**
+     * @var int
+     */
+    public $countProducts = 0;
+    /**
+     * @var array
+     */
+    public $productIds;
 
     /**
-     * constructor
+     * Constructor.
      */
     public function _construct()
     {
@@ -33,7 +42,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
     }
 
     /**
-     * catalog sync
+     * Catalog sync.
      *
      * @return array
      */
@@ -41,7 +50,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
     {
         $response     = array('success' => true, 'message' => '');
         $helper       = Mage::helper('ddg');
-        $this->_start = microtime(true);
+        $this->start = microtime(true);
         $importer     = Mage::getModel('ddg_automation/importer');
 
         //resource allocation
@@ -54,14 +63,13 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
         );
 
         if ($enabled && $sync) {
-            $helper->log('---------- Start catalog sync ----------');
-
             //remove product with product id set and no product
             $coreResource = Mage::getSingleton('core/resource');
             $write        = $coreResource->getConnection('core_write');
             $catalogTable = $coreResource->getTableName(
                 'ddg_automation/catalog'
             );
+            //@codingStandardsIgnoreStart
             $select       = $write->select();
             $select->reset()
                 ->from(
@@ -79,6 +87,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
             $deleteSql = $select->deleteFromSelect('c');
             //run query
             $write->query($deleteSql);
+            //@codingStandardsIgnoreEnd
 
             $scope = Mage::getStoreConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_CATALOG_VALUES
@@ -100,12 +109,13 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
 
                     //set imported
                     if ($check) {
-                        $this->getResource()->setImported($this->_productIds);
+                        $this->getResource()->setImported($this->productIds);
                     }
 
                     //set number of product imported
-                    $this->_countProducts += count($products);
+                    $this->countProducts += count($products);
                 }
+
                 //using single api
                 $this->_exportInSingle(
                     Mage_Catalog_Model_Abstract::DEFAULT_STORE_ID,
@@ -132,13 +142,16 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
                         //set imported
                         if ($check) {
                             $this->getResource()->setImported(
-                                $this->_productIds
+                                $this->productIds
                             );
                         }
 
+                        //@codingStandardsIgnoreStart
                         //set number of product imported
-                        $this->_countProducts += count($products);
+                        $this->countProducts += count($products);
+                        //@codingStandardsIgnoreEnd
                     }
+
                     //using single api
                     $this->_exportInSingle(
                         $store, 'Catalog_' . $websiteCode . '_' . $storeCode,
@@ -148,10 +161,11 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
             }
         }
 
-        if ($this->_countProducts) {
-            $message = 'Total time for sync : ' . gmdate(
-                "H:i:s", microtime(true) - $this->_start
-            ) . ', Total synced = ' . $this->_countProducts;
+        if ($this->countProducts) {
+            //@codingStandardsIgnoreStart
+            $message = 'Total time for Catalog sync : ' . gmdate("H:i:s", microtime(true) - $this->start) .
+                ', Total synced = ' . $this->countProducts;
+            //@codingStandardsIgnoreEnd
             $helper->log($message);
             $response['message'] = $message;
         }
@@ -160,7 +174,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
     }
 
     /**
-     * export catalog
+     * Export catalog.
      *
      * @param $store
      *
@@ -170,7 +184,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
     {
         $products = $this->_getProductsToExport($store);
         if ($products) {
-            $this->_productIds = $products->getColumnValues('entity_id');
+            $this->productIds = $products->getColumnValues('entity_id');
             $connectorProducts = array();
             foreach ($products as $product) {
                 $connectorProduct    = Mage::getModel(
@@ -194,7 +208,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
      */
     protected function _exportInSingle($store, $collectionName, $websiteId)
     {
-        $this->_productIds = array();
+        $this->productIds = array();
 
         $products = $this->_getProductsToExport($store, true);
         if ($products) {
@@ -213,19 +227,19 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
                     );
 
                 if ($check) {
-                    $this->_productIds[] = $product->getId();
+                    $this->productIds[] = $product->getId();
                 }
             }
 
-            if ( ! empty($this->_productIds)) {
-                $this->getResource()->setImported($this->_productIds, true);
-                $this->_countProducts += count($this->_productIds);
+            if (! empty($this->productIds)) {
+                $this->getResource()->setImported($this->productIds, true);
+                $this->countProducts += count($this->productIds);
             }
         }
     }
 
     /**
-     * get product collection
+     * Get product collection.
      *
      * @param $store
      * @param $modified
@@ -299,7 +313,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
     }
 
     /**
-     * product save after event processor
+     * Product save after event processor.
      *
      * @param Varien_Event_Observer $observer
      */
@@ -319,7 +333,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
     }
 
     /**
-     * product delete after event processor
+     * Product delete after event processor.
      *
      * @param Varien_Event_Observer $observer
      */
@@ -334,9 +348,9 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
                 if ($item->getImported()) {
                     $this->_deleteFromAccount($productId);
                 }
+
                 //delete from table
                 $item->delete();
-
             }
         } catch (Exception $e) {
             Mage::logException($e);
@@ -344,7 +358,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
     }
 
     /**
-     * delete piece of transactional data by key
+     * Delete piece of transactional data by key.
      *
      * @param $key
      */
@@ -369,6 +383,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
                     Mage_Catalog_Model_Abstract::DEFAULT_STORE_ID
                 );
             }
+
             if ($scope == 2) {
                 $stores = Mage::app()->getStores();
                 /** @var $store Mage_Core_Model_Store */
@@ -389,7 +404,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
     }
 
     /**
-     * load product. return item otherwise create item
+     * Load product, return item otherwise create item.
      *
      * @param $productId
      *
@@ -402,7 +417,9 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
             ->setPageSize(1);
 
         if ($collection->getSize()) {
+            //@codingStandardsIgnoreStart
             return $collection->getFirstItem();
+            //@codingStandardsIgnoreEnd
         } else {
             $this->setProductId($productId)->save();
         }
@@ -411,7 +428,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
     }
 
     /**
-     * core config data save before event
+     * Core config data save before event.
      *
      * @param Varien_Event_Observer $observer
      *
@@ -419,7 +436,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
      */
     public function handleConfigSaveBefore(Varien_Event_Observer $observer)
     {
-        if ( ! Mage::registry('core_config_data_save_before')) {
+        if (! Mage::registry('core_config_data_save_before')) {
             if ($groups = $observer->getEvent()->getConfigData()->getGroups()) {
                 if (isset($groups['catalog_sync']['fields']['catalog_values']['value'])) {
                     $value
@@ -429,8 +446,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
             }
         }
 
-
-        if ( ! Mage::registry('core_config_data_save_before_status')) {
+        if (! Mage::registry('core_config_data_save_before_status')) {
             if ($groups = $observer->getEvent()->getConfigData()->getGroups()) {
                 if (isset($groups['data_fields']['fields']['order_statuses']['value'])) {
                     $value
@@ -442,12 +458,11 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
             }
         }
 
-
         return $this;
     }
 
     /**
-     * core config data save after event
+     * Core config data save after event.
      *
      * @param Varien_Event_Observer $observer
      *
@@ -456,7 +471,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
     public function handleConfigSaveAfter(Varien_Event_Observer $observer)
     {
         try {
-            if ( ! Mage::registry('core_config_data_save_after_done')) {
+            if (! Mage::registry('core_config_data_save_after_done')) {
                 if ($groups = $observer->getEvent()->getConfigData()->getGroups(
                 )
                 ) {
@@ -467,9 +482,12 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
                             'core_config_data_save_before'
                         );
                         if ($configAfter != $configBefore) {
+                            //@codingStandardsIgnoreStart
                             //reset catalog to re-import
                             $this->getResource()->reset();
+                            //@codingStandardsIgnoreEnd
                         }
+
                         Mage::register(
                             'core_config_data_save_after_done', true
                         );
@@ -477,7 +495,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
                 }
             }
 
-            if ( ! Mage::registry('core_config_data_save_after_done_status')) {
+            if (! Mage::registry('core_config_data_save_after_done_status')) {
                 if ($groups = $observer->getEvent()->getConfigData()->getGroups(
                 )
                 ) {
@@ -492,6 +510,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
                             Mage::getResourceModel('ddg_automation/contact')
                                 ->resetAllContacts();
                         }
+
                         Mage::register(
                             'core_config_data_save_after_done_status', true
                         );

@@ -3,6 +3,9 @@
 class Dotdigitalgroup_Email_Model_Adminhtml_Source_Publicdatafields
 {
 
+    /**
+     * @return Mage_Core_Model_Website
+     */
     protected function getWebsite()
     {
         $website      = Mage::app()->getWebsite();
@@ -15,7 +18,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Publicdatafields
     }
 
     /**
-     * get data fields
+     * Get data fields.
      *
      * @return mixed
      */
@@ -52,16 +55,14 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Publicdatafields
             //set the api error message for the first option
             if (isset($datafields->message)) {
                 //message
-                $fields[] = array('value' => 0,
-                                  'label' => Mage::helper('ddg')->__(
-                                      $datafields->message
-                                  ));
+                $fields[] = array(
+                    'value' => 0,
+                    'label' => Mage::helper('ddg')->__($datafields->message)
+                );
             } else {
                 //loop for all datafields option
                 foreach ($datafields as $datafield) {
-                    if (isset($datafield->name)
-                        && $datafield->visibility == 'Public'
-                    ) {
+                    if (isset($datafield->name) && $datafield->visibility == 'Public') {
                         $fields[] = array(
                             'value' => $datafield->name,
                             'label' => Mage::helper('ddg')->__($datafield->name)

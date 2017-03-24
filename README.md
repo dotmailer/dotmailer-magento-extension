@@ -22,7 +22,7 @@ Don't forget to enable symlinks in:
 Facts
 -----
 - community & enterprise version.
-- current version [config.xml](https://github.com/dotmailer/dotmailer-magento-extension/blob/master/code/Dotdigitalgroup/Email/etc/config.xml#L5)
+- current version - V.6.2.5 [config.xml](https://github.com/dotmailer/dotmailer-magento-extension/blob/master/code/Dotdigitalgroup/Email/etc/config.xml)
 - also available on Magento Connect [link](http://www.magentocommerce.com/magento-connect/dotmailer-truly-integrated-email-marketing.html)
 
 Compatibility
@@ -31,6 +31,45 @@ Compatibility
 
 
 # Upgrade notice
+
+# V6.3.0
+###### Features
+- Code audit 2017.
+- Improve the order sync by delaying the import. 
+- Added R3 IP.
+
+###### Bug fixes
+- Subscribers with datafields fixes.
+- Email change detection to update the same contact.
+- Campaign bulk sync proccessing ids.
+- Quote validation for billing/shipping address.
+- Increased cURL timeout for TD imports.
+- Improve install script running time for updating subscribers.
+- Transactional emails only available on global level.
+- Revert the finding guest feature.
+
+# V6.2.5
+###### Features
+ - Sync sales data fields for guest subscribers
+###### Bug fixes
+ - Orders import with custom options fix.
+ - Remove Campaign "is_sent" column what is not used anymore.
+ - Set the correct customer store for "go to cart" link.
+ - Customer stats email activity.
+ - Fix the sale coupon rules exception.
+ - Guest finding and grouping.
+ - Send email for new account compatibility with > 1.9.3.0.
+ - Store name populated wrong when using automation for new subscribers.
+ - Update product visibility for the EDC content.
+  
+# V6.2.4
+###### Bug fixes
+ - EDC table content check fix.
+
+# V6.2.3
+###### Bug fixes
+ - Double coupon codes generated.
+ - Strict data type for orders.
 
 # V6.2.1
 ###### Improvements
@@ -197,13 +236,11 @@ Compatibility
  - Customer trend data.
 
 ## Bug fixes
-
  - Sync limits lowered to 5000 contacts and 200 orders.
  - Review is submited before it's approved.
  - Abandoned Carts triggered from the "LAST_QUOTE_ID".
 
 # V3.3.0
-
 ## Features
 - Nosto Integration.
 - Easy Email Capture(trademark).

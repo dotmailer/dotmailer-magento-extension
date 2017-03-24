@@ -53,7 +53,6 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Observer
                 $website
             )
         ) {
-
             $helper->disableConfigForWebsite(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_CONTACT_ENABLED
             );
@@ -61,6 +60,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Observer
                 'The Contact Sync Disabled - No Addressbook Selected !'
             );
         }
+
         if (! $subscriberAddressBook
             && $helper->getWebsiteConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_SUBSCRIBER_ENABLED,
@@ -121,29 +121,37 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Observer
                     Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED,
                     0, $scope, $scopeId
                 );
+            } elseif (is_object($isValid)) {
+                //save endpoint for account
+                $this->saveApiEndpoint($apiUsername, $apiPassword, $scopeId);
             }
 
-            //check if returned value is an object
-            if (is_object($isValid)) {
-                //save endpoint for account
-                foreach ($isValid->properties as $property) {
-                    if ($property->name == 'ApiEndpoint'
-                        && strlen(
-                            $property->value
-                        )
-                    ) {
-                        $config->saveConfig(
-                            Dotdigitalgroup_Email_Helper_Config::PATH_FOR_API_ENDPOINT,
-                            $property->value
-                        );
-                        break;
-                    }
-                }
-            }
             $config->cleanCache();
         }
 
         return $this;
+    }
+
+    /**
+     * Save api endpoint
+     *
+     * @param $apiUsername
+     * @param $apiPassword
+     * @param $website
+     */
+    public function saveApiEndpoint($apiUsername, $apiPassword, $website = 0)
+    {
+        $helper = Mage::helper('ddg');
+        $website = Mage::app()->getWebsite($website);
+        $client = $helper->getWebsiteApiClient($website);
+        if ($client) {
+            $client->setApiUsername($apiUsername)
+                ->setApiPassword($apiPassword);
+            $apiEndpoint = $helper->getApiEndPointFromApi($client);
+            if ($apiEndpoint) {
+                $helper->saveApiEndpoint($apiEndpoint, $website->getId());
+            }
+        }
     }
 
     /**
@@ -186,26 +194,26 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Observer
      *
      * @return $this
      */
-    protected function addContactsFromWebsiteSegments($customerId, $segmentIds,
-        $websiteId
-    ) {
-
+    protected function addContactsFromWebsiteSegments($customerId, $segmentIds, $websiteId)
+    {
         if (empty($segmentIds) || ! $customerId) {
             return $this;
         }
+
         $segmentIds = implode(',', $segmentIds);
 
-        $contact = Mage::getModel('ddg_automation/contact')->getCollection()
-            ->addFieldToFilter('customer_id', $customerId)
-            ->addFieldToFilter('website_id', $websiteId)
-            ->setPageSize(1)
-            ->getFirstItem();
         try {
+            //@codingStandardsIgnoreStart
+            $contact = Mage::getModel('ddg_automation/contact')->getCollection()
+                ->addFieldToFilter('customer_id', $customerId)
+                ->addFieldToFilter('website_id', $websiteId)
+                ->setPageSize(1)
+                ->getFirstItem();
+            //@codingStandardsIgnoreEnd
 
             $contact->setSegmentIds($segmentIds)
                 ->setEmailImported()
                 ->save();
-
         } catch (Exception $e) {
             Mage::logException($e);
         }

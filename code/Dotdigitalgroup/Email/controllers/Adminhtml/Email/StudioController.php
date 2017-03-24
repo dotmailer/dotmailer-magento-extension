@@ -9,7 +9,6 @@ class Dotdigitalgroup_Email_Adminhtml_Email_StudioController
      */
     public function indexAction()
     {
-
         $this->_title($this->__('Automation Studio'));
         $this->loadLayout();
         $this->_setActiveMenu('email_connector');
@@ -21,14 +20,18 @@ class Dotdigitalgroup_Email_Adminhtml_Email_StudioController
 
         $this->getLayout()->getBlock('connector_iframe')
             ->setText(
-                "<iframe src=" . $loginuserUrl
-                . " width=100% height=1650 frameborder='0' scrolling='no' style='margin:0;padding: 0;display:block;'></iframe>"
+                "<iframe src=" . $loginuserUrl .
+                " width=100% height=1650 frameborder='0' scrolling='no' style='margin:0;padding:0;display:block;'>
+                </iframe>"
             );
 
 
         $this->renderLayout();
     }
 
+    /**
+     * @return bool
+     */
     protected function _isAllowed()
     {
         return Mage::getSingleton('admin/session')->isAllowed(
@@ -39,12 +42,6 @@ class Dotdigitalgroup_Email_Adminhtml_Email_StudioController
     /**
      * Generate new token and connect from the admin.
      *
-     *   POST httpsː//my.dotmailer.com/OAuth2/Tokens.ashx HTTP/1.1
-     *   Content-Type: application/x-www-form-urlencoded
-     *   client_id=QVNY867m2DQozogTJfUmqA%253D%253D&
-     *   redirect_uri=https%3a%2f%2flocalhost%3a10999%2fcallback.aspx
-     *   &client_secret=SndpTndiSlhRawAAAAAAAA%253D%253D
-     *   &grant_type=authorization_code
      */
     public function generatetokenAction()
     {
@@ -57,8 +54,8 @@ class Dotdigitalgroup_Email_Adminhtml_Email_StudioController
         if ($refreshToken) {
             $code   = Mage::helper('ddg')->getCode();
             $params = 'client_id=' . Mage::getStoreConfig(
-                    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CLIENT_ID
-                ) .
+                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CLIENT_ID
+            ) .
                 '&client_secret=' . Mage::getStoreConfig(
                     Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CLIENT_SECRET_ID
                 ) .
@@ -70,7 +67,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_StudioController
             Mage::helper('ddg')->log(
                 'token code : ' . $code . ', params : ' . $params
             );
-
+            //@codingStandardsIgnoreStart
             /**
              * Refresh Token request.
              */
@@ -78,7 +75,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_StudioController
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 60);
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
             curl_setopt($ch, CURLOPT_POST, count($params));
             curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
@@ -95,12 +92,13 @@ class Dotdigitalgroup_Email_Adminhtml_Email_StudioController
                     . curl_error($ch)
                 );
             }
+
             curl_close($ch);
 
             $token = $response->access_token;
+            //@codingStandardsIgnoreEnd
 
             return $token;
-
         } else {
             Mage::getSingleton('adminhtml/session')->addNotice(
                 'Please Connect To Access The Page.'
@@ -124,6 +122,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_StudioController
             if ($adminUser->getRefreshToken()) {
                 $adminUser->setRefreshToken()->save();
             }
+
             Mage::getSingleton('adminhtml/session')->addSuccess(
                 'Successfully disconnected'
             );

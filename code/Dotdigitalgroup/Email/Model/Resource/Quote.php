@@ -5,7 +5,7 @@ class Dotdigitalgroup_Email_Model_Resource_Quote
 {
 
     /**
-     * constructor.
+     * Constructor.
      */
     protected function _construct()
     {
@@ -13,7 +13,7 @@ class Dotdigitalgroup_Email_Model_Resource_Quote
     }
 
     /**
-     * get sales_flat_quote table description
+     * Get sales_flat_quote table description.
      *
      * @return array
      */
@@ -27,26 +27,44 @@ class Dotdigitalgroup_Email_Model_Resource_Quote
     /**
      * Reset the email quote for re-import.
      *
+     * @param null $from
+     * @param null $to
      * @return int
      */
-    public function resetQuotes()
+    public function resetQuotes($from = null, $to = null)
     {
         $conn = $this->_getWriteAdapter();
         try {
+            if ($from && $to) {
+                $where = array(
+                    'created_at >= ?' => $from . ' 00:00:00',
+                    'created_at <= ?' => $to . ' 23:59:59',
+                    'imported is ?' => new Zend_Db_Expr('not null')
+                );
+            } else {
+                $where = $conn->quoteInto(
+                    'imported is ?', new Zend_Db_Expr('not null')
+                );
+            }
+
             $num = $conn->update(
                 $this->getMainTable(),
-                array('imported' => new Zend_Db_Expr('null'),
-                      'modified' => new Zend_Db_Expr('null'))
+                array(
+                    'imported' => new Zend_Db_Expr('null'),
+                    'modified' => new Zend_Db_Expr('null')
+                ),
+                $where
             );
 
             return $num;
         } catch (Exception $e) {
             Mage::logException($e);
+            return 0;
         }
     }
 
     /**
-     * set imported in bulk query
+     * Set imported in bulk query.
      *
      * @param $ids
      */

@@ -2,34 +2,34 @@
 
 class Dotdigitalgroup_Email_Model_Connector_Datafield
 {
-	/**
-	 * @var string
-	 */
-	public $name;
-	/**
-	 * @var string
-	 */
-	public $type;
-	/**
-	 * @var string
-	 */
-	public $visibility;
-	/**
-	 * @var string
-	 */
-	public $defaultValue;
-	/**
-	 * Contact datafields.
-	 * @var array
-	 */
-	public $datafields = array();
+    /**
+     * @var string
+     */
+    public $name;
+    /**
+     * @var string
+     */
+    public $type;
+    /**
+     * @var string
+     */
+    public $visibility;
+    /**
+     * @var string
+     */
+    public $defaultValue;
+    /**
+     * Contact datafields.
+     * @var array
+     */
+    public $datafields = array();
 
-	/**
-	 * Contact default datafields.
-	 *
-	 * @var array
-	 */
-	private $_contactDatafields = array(
+    /**
+     * Contact default datafields.
+     *
+     * @var array
+     */
+    public $contactDatafields = array(
         'customer_id' => array(
             'name' => 'CUSTOMER_ID',
             'type' => 'numeric',
@@ -192,9 +192,9 @@ class Dotdigitalgroup_Email_Model_Connector_Datafield
             'visibility' => 'private',
         ),
         'total_refund' => array(
-	        'name' => 'TOTAL_REFUND',
-	        'type' => 'numeric',
-	        'visibility' => 'private',
+            'name' => 'TOTAL_REFUND',
+            'type' => 'numeric',
+            'visibility' => 'private',
         ),
         'review_count' => array(
             'name' => 'REVIEW_COUNT',
@@ -273,7 +273,7 @@ class Dotdigitalgroup_Email_Model_Connector_Datafield
      */
     public function setContactDatafields($contactDatafields)
     {
-        $this->_contactDatafields = $contactDatafields;
+        $this->contactDatafields = $contactDatafields;
     }
 
     /**
@@ -281,20 +281,20 @@ class Dotdigitalgroup_Email_Model_Connector_Datafield
      */
     public function getContactDatafields()
     {
-        return $this->_contactDatafields;
+        return $this->contactDatafields;
     }
 
-	/**
-	 * set a single datafield.
-	 *
-	 * @param $name
-	 * @param $value
-	 * @param string $type
-	 * @param string $visibility
-	 *
-	 * @return array
-	 */
-	public function setDatafield($name, $value, $type = 'string', $visibility = 'private')
+    /**
+     * Set a single datafield.
+     *
+     * @param $name
+     * @param $value
+     * @param string $type
+     * @param string $visibility
+     *
+     * @return array
+     */
+    public function setDatafield($name, $value, $type = 'string', $visibility = 'private')
     {
         $this->datafields[] = array(
             'name' => $name,
@@ -302,7 +302,7 @@ class Dotdigitalgroup_Email_Model_Connector_Datafield
             'type' => $type,
             'visibility' => $visibility
         );
+
         return $this->datafields;
     }
-
 }

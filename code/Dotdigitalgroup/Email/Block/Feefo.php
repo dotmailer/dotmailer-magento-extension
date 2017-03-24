@@ -17,7 +17,7 @@ class Dotdigitalgroup_Email_Block_Feefo extends Mage_Core_Block_Template
     }
 
     /**
-     * get customer's service score logo and output it
+     * Get customer's service score logo and output it.
      *
      * @return string
      */
@@ -31,6 +31,7 @@ class Dotdigitalgroup_Email_Block_Feefo extends Mage_Core_Block_Template
         if ($helper->getFeefoLogoTemplate()) {
             $template = '&template=' . $helper->getFeefoLogoTemplate();
         }
+
         $fullUrl   = $url . $logon . $template;
         $vendorUrl = 'http://www.feefo.com/feefo/viewvendor.jsp?logon='
             . $logon;
@@ -42,7 +43,7 @@ class Dotdigitalgroup_Email_Block_Feefo extends Mage_Core_Block_Template
     }
 
     /**
-     * get quote products to show feefo reviews
+     * Get quote products to show feefo reviews.
      *
      * @return array
      */
@@ -52,7 +53,7 @@ class Dotdigitalgroup_Email_Block_Feefo extends Mage_Core_Block_Template
         $quoteId    = Mage::app()->getRequest()->getParam('quote_id');
         $quoteModel = Mage::getModel('sales/quote')->load($quoteId);
         //quote id param
-        if ( ! $quoteModel->getId()) {
+        if (!$quoteModel->getId()) {
             Mage::throwException(
                 Mage::helper('ddg')->__('cannot continue, missing quote data')
             );
@@ -76,7 +77,7 @@ class Dotdigitalgroup_Email_Block_Feefo extends Mage_Core_Block_Template
     }
 
     /**
-     * get product reviews from feefo
+     * Get product reviews from feefo.
      *
      * @return array
      */
@@ -97,6 +98,7 @@ class Dotdigitalgroup_Email_Block_Feefo extends Mage_Core_Block_Template
                 . "&mode=productonly";
             $doc = new DOMDocument();
             $xsl = new XSLTProcessor();
+            //@codingStandardsIgnoreStart
             if ($check) {
                 $doc->load($feeforDir . DS . "feedback.xsl");
             } else {
@@ -105,11 +107,13 @@ class Dotdigitalgroup_Email_Block_Feefo extends Mage_Core_Block_Template
 
             $xsl->importStyleSheet($doc);
             $doc->load($url);
+            //@codingStandardsIgnoreEnd
             $productReview = $xsl->transformToXML($doc);
 
             if (strpos($productReview, '<td') !== false) {
                 $reviews[$name] = $xsl->transformToXML($doc);
             }
+
             $check = false;
         }
 

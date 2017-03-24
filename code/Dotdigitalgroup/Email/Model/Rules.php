@@ -1,28 +1,47 @@
 <?php
 
 /**
+ * @codingStandardsIgnoreStart
  * Class Dotdigitalgroup_Email_Model_Rules
  */
 class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
 {
-    const ABANDONED = 1;
     const REVIEW = 2;
+    const ABANDONED = 1;
 
-    protected $_defaultOptions;
-    protected $_conditionMap;
-    protected $_attributeMapForQuote;
-    protected $_attributeMapForOrder;
-    protected $_productAttribute;
-    protected $_used = array();
+    /**
+     * @var array
+     */
+    public $defaultOptions;
+    /**
+     * @var
+     */
+    public $conditionMap;
+    /**
+     * @var
+     */
+    public $attributeMapForQuote;
+    /**
+     * @var
+     */
+    public $attributeMapForOrder;
+    /**
+     * @var
+     */
+    public $productAttribute;
+    /**
+     * @var array
+     */
+    public $used = array();
 
     /**
      * Constructor.
      */
     public function _construct()
     {
-        $this->_defaultOptions = Mage::getModel('ddg_automation/adminhtml_source_rules_type')->defaultOptions();
+        $this->defaultOptions = Mage::getModel('ddg_automation/adminhtml_source_rules_type')->defaultOptions();
 
-        $this->_conditionMap = array(
+        $this->conditionMap = array(
                 'eq' => 'neq',
                 'neq' => 'eq',
                 'gteq' => 'lt',
@@ -32,7 +51,7 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
                 'like' => 'nlike',
                 'nlike' => 'like'
             );
-        $this->_attributeMapForQuote = array(
+        $this->attributeMapForQuote = array(
                 'method' => 'method',
                 'shipping_method' => 'shipping_method',
                 'country_id' => 'country_id',
@@ -45,7 +64,7 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
                 'items_qty' => 'main_table.items_qty',
                 'customer_email' => 'main_table.customer_email',
             );
-        $this->_attributeMapForOrder = array(
+        $this->attributeMapForOrder = array(
                 'method' => 'method',
                 'shipping_method' => 'main_table.shipping_method',
                 'country_id' => 'country_id',
@@ -63,7 +82,7 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
     }
 
     /**
-     * before save
+     * Before save.
      *
      * @return $this|Mage_Core_Model_Abstract
      */
@@ -76,13 +95,15 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
         } else {
             $this->setUpdatedAt($now);
         }
+
         $this->setCondition(serialize($this->getCondition()));
         $this->setWebsiteIds(implode(',', $this->getWebsiteIds()));
+
         return $this;
     }
 
     /**
-     * after load
+     * After load.
      *
      * @return $this
      */
@@ -90,11 +111,12 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
     {
         parent::_afterLoad();
         $this->setCondition(unserialize($this->getCondition()));
+
         return $this;
     }
 
     /**
-     * check if rule already exist for website
+     * Check if rule already exist for website.
      *
      * @param $websiteId
      * @param $type
@@ -110,16 +132,18 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
         if ($ruleId) {
             $collection->addFieldToFilter('id', array('neq' => $ruleId));
         }
+
         $collection->setPageSize(1);
 
         if ($collection->getSize()) {
             return false;
         }
+
         return true;
     }
 
     /**
-     * get website active rule
+     * Get website active rule.
      *
      * @param $type
      * @param $websiteId
@@ -136,11 +160,12 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
         if ($collection->getSize()) {
             return $collection->getFirstItem();
         }
+
         return array();
     }
 
     /**
-     * process rule on collection
+     * Process rule on collection.
      *
      * @param $collection
      * @param $type
@@ -157,6 +182,7 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
 
         //if rule has no conditions then return the collection untouched
         $condition = unserialize($rule->getCondition());
+
         if (empty($condition)) {
             return $collection;
         }
@@ -194,7 +220,6 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
                     array('items_qty')
                 )->where('order_address.address_type = ?', 'shipping');
         }
-
         //process rule on collection according to combination
         $combination = $rule->getCombination();
 
@@ -202,15 +227,15 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
         if ($combination == 1) {
             return $this->_processAndCombination($collection, $condition, $type);
         }
+
         //ANY TRUE
         if ($combination == 2) {
             return $this->_processOrCombination($collection, $condition, $type);
         }
-
     }
 
     /**
-     * process And combination on collection
+     * Process And combination on collection.
      *
      * @param $collection
      * @param $conditions
@@ -230,18 +255,19 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
             }
 
             //ignore conditions for already used attribute
-            if (in_array($attribute, $this->_used)) {
+            if (in_array($attribute, $this->used)) {
                 continue;
             }
-            //set used to check later
-            $this->_used[] = $attribute;
 
-            if ($type == self::REVIEW && isset($this->_attributeMapForOrder[$attribute])) {
-                $attribute = $this->_attributeMapForOrder[$attribute];
-            } elseif ($type == self::ABANDONED && isset($this->_attributeMapForQuote[$attribute])) {
-                $attribute = $this->_attributeMapForQuote[$attribute];
+            //set used to check later
+            $this->used[] = $attribute;
+
+            if ($type == self::REVIEW && isset($this->attributeMapForOrder[$attribute])) {
+                $attribute = $this->attributeMapForOrder[$attribute];
+            } elseif ($type == self::ABANDONED && isset($this->attributeMapForQuote[$attribute])) {
+                $attribute = $this->attributeMapForQuote[$attribute];
             } else {
-                $this->_productAttribute[] = $condition;
+                $this->productAttribute[] = $condition;
                 continue;
             }
 
@@ -255,14 +281,16 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
                 if ($cond == 'like' or $cond == 'nlike') {
                     $value = '%' . $value . '%';
                 }
-                $collection->addFieldToFilter($attribute, array($this->_conditionMap[$cond] => $value));
+
+                $collection->addFieldToFilter($attribute, array($this->conditionMap[$cond] => $value));
             }
         }
+
         return $this->_processProductAttributes($collection);
     }
 
     /**
-     * process Or combination on collection
+     * Process OR combination on collection.
      *
      * @param $collection
      * @param $conditions
@@ -283,12 +311,12 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
                 continue;
             }
 
-            if ($type == self::REVIEW && isset($this->_attributeMapForQuote[$attribute])) {
-                $attribute = $this->_attributeMapForOrder[$attribute];
-            } elseif ($type == self::ABANDONED && isset($this->_attributeMapForOrder[$attribute])) {
-                $attribute = $this->_attributeMapForQuote[$attribute];
+            if ($type == self::REVIEW && isset($this->attributeMapForQuote[$attribute])) {
+                $attribute = $this->attributeMapForOrder[$attribute];
+            } elseif ($type == self::ABANDONED && isset($this->attributeMapForOrder[$attribute])) {
+                $attribute = $this->attributeMapForQuote[$attribute];
             } else {
-                $this->_productAttribute[] = $condition;
+                $this->productAttribute[] = $condition;
                 continue;
             }
 
@@ -298,25 +326,30 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
                         $multiFieldsConditions[$attribute][] = array('notnull' => true);
                         continue;
                     }
+
                     $fieldsConditions[$attribute] = array('notnull' => true);
                 } elseif ($value == '0') {
                     if (isset($fieldsConditions[$attribute])) {
                         $multiFieldsConditions[$attribute][] = array($cond => true);;
                         continue;
                     }
+
                     $fieldsConditions[$attribute] = array($cond => true);
                 }
             } else {
                 if ($cond == 'like' or $cond == 'nlike') {
                     $value = '%' . $value . '%';
                 }
+
                 if (isset($fieldsConditions[$attribute])) {
-                    $multiFieldsConditions[$attribute][] = array($this->_conditionMap[$cond] => $value);
+                    $multiFieldsConditions[$attribute][] = array($this->conditionMap[$cond] => $value);
                     continue;
                 }
-                $fieldsConditions[$attribute] = array($this->_conditionMap[$cond] => $value);
+
+                $fieldsConditions[$attribute] = array($this->conditionMap[$cond] => $value);
             }
         }
+
         //all rules condition will be with or combination
         if (!empty($fieldsConditions)) {
             $column = array();
@@ -331,16 +364,18 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
                     }
                 }
             }
+
             $collection->addFieldToFilter(
                 $column,
                 $cond
             );
         }
+
         return $this->_processProductAttributes($collection);
     }
 
     /**
-     * process product attributes on collection
+     * Process product attributes on collection.
      *
      * @param $collection
      * @return mixed
@@ -349,7 +384,7 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
     {
 
         //if no product attribute or collection empty return collection
-        if (empty($this->_productAttribute) or !$collection->getSize()) {
+        if (empty($this->productAttribute) or !$collection->getSize()) {
             return $collection;
         }
 
@@ -365,7 +400,7 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
                     $product
                 );
 
-                foreach ($this->_productAttribute as $productAttribute) {
+                foreach ($this->productAttribute as $productAttribute) {
                     $attribute = $productAttribute['attribute'];
                     $cond = $productAttribute['conditions'];
                     $value = $productAttribute['cvalue'];
@@ -376,6 +411,7 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
                         } elseif ($value == '1') {
                             $cond = 'eq';
                         }
+
                         $value = '';
                     }
 
@@ -398,8 +434,9 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
                             foreach ($exploded as $one) {
                                 $getter .= ucfirst($one);
                             }
+
                             $attributeValue = call_user_func(array($product, $getter));
-                            //if retrieved value is an array then loop through all array values. example can be categories
+                            //if retrieved value is an array then loop through all array values. Ex. categories
                             if (is_array($attributeValue)) {
                                 foreach ($attributeValue as $attrValue) {
                                     //evaluate conditions on values. if true then unset item from collection
@@ -420,43 +457,46 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
                 }
             }
         }
+
         return $collection;
     }
 
     /**
-     * evaluate two values against condition
+     * Evaluate two values against condition.
      *
-     * @param $var1
+     *
+     * @param $varOne
      * @param $op
-     * @param $var2
+     * @param $varTwo
      * @return bool
      */
-    protected function _evaluate($var1, $op, $var2)
+    protected function _evaluate($varOne, $op, $varTwo)
     {
         switch ($op) {
             case "eq":
-                return $var1 == $var2;
+                return $varOne == $varTwo;
             case "neq":
-                return $var1 != $var2;
+                return $varOne != $varTwo;
             case "gteq":
-                return $var1 >= $var2;
+                return $varOne >= $varTwo;
             case "lteq":
-                return $var1 <= $var2;
+                return $varOne <= $varTwo;
             case "gt":
-                return $var1 > $var2;
+                return $varOne > $varTwo;
             case "lt":
-                return $var1 < $var2;
+                return $varOne < $varTwo;
             case "like":
-                if (strpos($var2, $var1) !== false) {
+                if (strpos($varTwo, $varOne) !== false) {
                     return true;
                 }
                 break;
             case "nlike":
-                if (strpos($var2, $var1) === false) {
+                if (strpos($varTwo, $varOne) === false) {
                     return true;
                 }
                 break;
         }
+
         return false;
     }
 }

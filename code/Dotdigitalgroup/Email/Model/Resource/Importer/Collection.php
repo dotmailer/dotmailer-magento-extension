@@ -5,7 +5,7 @@ class Dotdigitalgroup_Email_Model_Resource_Importer_Collection
 {
 
     /**
-     * constructor.
+     * cConstructor.
      */
     protected function _construct()
     {

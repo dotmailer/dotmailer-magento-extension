@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @codingStandardsIgnoreStart
+ * Class Dotdigitalgroup_Email_Model_Customer_Review
+ */
 class Dotdigitalgroup_Email_Model_Customer_Review
 {
 
@@ -56,13 +60,13 @@ class Dotdigitalgroup_Email_Model_Customer_Review
     }
 
     /**
-     * @param $customer_id
+     * @param $customerId
      *
      * @return $this
      */
-    public function setCustomerId($customer_id)
+    public function setCustomerId($customerId)
     {
-        $this->customer_id = (int)$customer_id;
+        $this->customer_id = (int)$customerId;
 
         return $this;
     }

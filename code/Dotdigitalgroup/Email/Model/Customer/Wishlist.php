@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @codingStandardsIgnoreStart
+ * Class Dotdigitalgroup_Email_Model_Customer_Wishlist
+ */
 class Dotdigitalgroup_Email_Model_Customer_Wishlist
 {
 

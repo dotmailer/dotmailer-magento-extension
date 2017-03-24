@@ -19,20 +19,19 @@ class Dotdigitalgroup_Email_Block_Order_Creditmemo
     /**
      * Get current Order.
      *
-     * @return Mage_Sales_Model_Order
+     * @return Mage_Sales_Model_Order|false
      * @throws Exception
      */
     public function getOrder()
     {
         $order = Mage::registry('current_order');
-        if ( ! $order) {
+        if (!$order) {
             Mage::throwException(
                 Mage::helper('ddg')->__('no current_order found for EDC')
             );
         }
 
-        if ( ! $order->hasCreditmemos()) {
-            
+        if (!$order->hasCreditmemos()) {
             Mage::helper('ddg')->log(
                 'TE - no creditmemo for order : ' . $order->getId()
             );

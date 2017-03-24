@@ -4,17 +4,14 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Advanced_Abandonedlimit
 {
 
     /**
-     * available times
+     * Available times.
      *
      * @var array
      */
-    protected $_times
-        = array(0, 1, 2, 3, 4, 5, 6, 12, 24, 36, 48, 60, 72, 84, 96, 108, 120,
-                240);
-
+    public $times = array(0, 1, 2, 3, 4, 5, 6, 12, 24, 36, 48, 60, 72, 84, 96, 108, 120, 240);
 
     /**
-     * send to campain options hours
+     * Send to campain options hours.
      *
      * @return array
      */
@@ -22,9 +19,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Advanced_Abandonedlimit
     {
         $result = $row = array();
         $i      = 0;
-        foreach ($this->_times as $one) {
-
-
+        foreach ($this->times as $one) {
             if ($i == 0) {
                 $row = array('value' => $one,
                              'label' => Mage::helper('ddg')->__('No Limit'));
@@ -39,6 +34,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Advanced_Abandonedlimit
                     'label' => Mage::helper('ddg')->__($one . ' Hours')
                 );
             }
+
             $result[] = $row;
             $i++;
         }

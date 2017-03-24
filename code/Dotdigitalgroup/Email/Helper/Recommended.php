@@ -2,7 +2,6 @@
 
 class Dotdigitalgroup_Email_Helper_Recommended extends Mage_Core_Helper_Abstract
 {
-
     const XML_PATH_RELATED_PRODUCTS_TYPE = 'connector_dynamic_content/products/related_display_type';
     const XML_PATH_UPSELL_PRODUCTS_TYPE = 'connector_dynamic_content/products/upsell_display_type';
     const XML_PATH_CROSSSELL_PRODUCTS_TYPE = 'connector_dynamic_content/products/crosssell_display_type';
@@ -25,6 +24,9 @@ class Dotdigitalgroup_Email_Helper_Recommended extends Mage_Core_Helper_Abstract
     const XML_PATH_PRODUCTPUSH_ITEMS = 'connector_dynamic_content/manual_product_search/products_push_items';
     const XML_PATH_FALLBACK_PRODUCTS_ITEMS = 'connector_dynamic_content/fallback_products/product_list';
 
+    /**
+     * @var array
+     */
     public $periods = array('week', 'month', 'year');
 
     /**
@@ -63,42 +65,62 @@ class Dotdigitalgroup_Email_Helper_Recommended extends Mage_Core_Helper_Abstract
         return $type;
     }
 
+    /**
+     * @return mixed
+     */
     public function getRelatedProductsType()
     {
         return Mage::getStoreConfig(self::XML_PATH_RELATED_PRODUCTS_TYPE);
     }
 
+    /**
+     * @return mixed
+     */
     public function getUpsellProductsType()
     {
         return Mage::getStoreConfig(self::XML_PATH_UPSELL_PRODUCTS_TYPE);
 
     }
 
+    /**
+     * @return mixed
+     */
     public function getCrosssellProductsType()
     {
         return Mage::getStoreConfig(self::XML_PATH_CROSSSELL_PRODUCTS_TYPE);
     }
 
+    /**
+     * @return mixed
+     */
     public function getBestSellerProductsType()
     {
         return Mage::getStoreConfig(self::XML_PATH_BESTSELLER_PRODUCT_TYPE);
     }
 
+    /**
+     * @return mixed
+     */
     public function getMostViewedProductsType()
     {
         return Mage::getStoreConfig(self::XML_PATH_MOSTVIEWED_PRODUCT_TYPE);
     }
 
+    /**
+     * @return mixed
+     */
     public function getRecentlyviewedProductsType()
     {
         return Mage::getStoreConfig(self::XML_PATH_RECENTLYVIEWED_PRODUCT_TYPE);
     }
 
+    /**
+     * @return mixed
+     */
     public function getProductpushProductsType()
     {
         return Mage::getStoreConfig(self::XML_PATH_PRODUCTPUSH_TYPE);
     }
-
 
     /**
      * Limit of products displayed.
@@ -151,11 +173,13 @@ class Dotdigitalgroup_Email_Helper_Recommended extends Mage_Core_Helper_Abstract
         return $result;
     }
 
+    /**
+     * @return array
+     */
     public function getFallbackIds()
     {
-        $fallbackIds = Mage::getStoreConfig(
-            self::XML_PATH_FALLBACK_PRODUCTS_ITEMS
-        );
+        $fallbackIds = Mage::getStoreConfig(self::XML_PATH_FALLBACK_PRODUCTS_ITEMS);
+
         if ($fallbackIds) {
             return explode(
                 ',',
@@ -166,8 +190,13 @@ class Dotdigitalgroup_Email_Helper_Recommended extends Mage_Core_Helper_Abstract
         return array();
     }
 
+    /**
+     * @param $config
+     * @return string
+     */
     public function getTimeFromConfig($config)
     {
+        //@codingStandardsIgnoreStart
         $now = new Zend_Date();
         $period = '';
         if ($config == 'mostviewed') {
@@ -197,13 +226,16 @@ class Dotdigitalgroup_Email_Helper_Recommended extends Mage_Core_Helper_Abstract
 
             return $period->tostring(Zend_Date::ISO_8601);
         }
+        //@codingStandardsIgnoreEnd
     }
 
+    /**
+     * @return array
+     */
     public function getProductPushIds()
     {
         $productIds = Mage::getStoreConfig(self::XML_PATH_PRODUCTPUSH_ITEMS);
 
         return explode(',', $productIds);
     }
-
 }

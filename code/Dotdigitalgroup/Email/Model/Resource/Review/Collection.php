@@ -5,7 +5,7 @@ class Dotdigitalgroup_Email_Model_Resource_Review_Collection
 {
 
     /**
-     * constructor.
+     * Constructor.
      */
     public function _construct()
     {

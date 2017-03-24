@@ -1,7 +1,6 @@
 <?php
 
-class Dotdigitalgroup_Email_Model_Apiconnector_Test
-    extends Dotdigitalgroup_Email_Model_Apiconnector_Client
+class Dotdigitalgroup_Email_Model_Apiconnector_Test extends Dotdigitalgroup_Email_Model_Apiconnector_Client
 {
 
     /**
@@ -14,25 +13,26 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Test
      */
     public function validate($apiUsername, $apiPassword)
     {
-        if ($apiUsername && $apiPassword) {
-            $this->setApiUsername($apiUsername)
-                ->setApiPassword($apiPassword);
-            $accountInfo = $this->getAccountInfo();
-            if (isset($accountInfo->message)) {
-                Mage::getSingleton('adminhtml/session')->addError(
-                    $accountInfo->message
-                );
-                Mage::helper('ddg')->log(
-                    'VALIDATION ERROR :  ' . $accountInfo->message
-                );
-
-                return false;
-            }
-
-            return $accountInfo;
+        if (! $apiUsername || ! $apiPassword) {
+            return false;
         }
 
-        return false;
+        $this->setApiUsername($apiUsername)
+            ->setApiPassword($apiPassword);
+        $accountInfo = $this->getAccountInfo();
+
+        if (isset($accountInfo->message)) {
+            Mage::getSingleton('adminhtml/session')->addError(
+                $accountInfo->message
+            );
+            Mage::helper('ddg')->log(
+                'VALIDATION ERROR :  ' . $accountInfo->message
+            );
+
+            return false;
+        }
+
+        return $accountInfo;
     }
 
     /**

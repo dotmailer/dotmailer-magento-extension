@@ -3,7 +3,7 @@
 class Dotdigitalgroup_Email_Model_Observer
 {
     /**
-     * before block to html observer
+     * Before block to html observer.
      *
      * @param Varien_Event_Observer $observer
      */
@@ -46,7 +46,7 @@ class Dotdigitalgroup_Email_Model_Observer
     }
 
     /**
-     * Callback action for .
+     * Callback action for.
      *
      * @param $collection
      * @param $column

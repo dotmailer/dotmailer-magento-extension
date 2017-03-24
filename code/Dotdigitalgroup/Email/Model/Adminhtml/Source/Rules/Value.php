@@ -4,7 +4,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Rules_Value
 {
 
     /**
-     * get element type
+     * Get element type.
      *
      * @param $attribute
      *
@@ -32,7 +32,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Rules_Value
     }
 
     /**
-     * get options array
+     * Get options array.
      *
      * @param      $attribute
      * @param bool $isEmpty
@@ -52,37 +52,27 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Rules_Value
 
         switch ($attribute) {
             case 'country_id':
-                $options = Mage::getModel(
-                    'adminhtml/system_config_source_country'
-                )
+                $options = Mage::getModel('adminhtml/system_config_source_country')
                     ->toOptionArray();
                 break;
 
             case 'region_id':
-                $options = Mage::getModel(
-                    'adminhtml/system_config_source_allregion'
-                )
+                $options = Mage::getModel('adminhtml/system_config_source_allregion')
                     ->toOptionArray();
                 break;
 
             case 'shipping_method':
-                $options = Mage::getModel(
-                    'adminhtml/system_config_source_shipping_allmethods'
-                )
+                $options = Mage::getModel('adminhtml/system_config_source_shipping_allmethods')
                     ->toOptionArray();
                 break;
 
             case 'method':
-                $options = Mage::getModel(
-                    'adminhtml/system_config_source_payment_allmethods'
-                )
+                $options = Mage::getModel('adminhtml/system_config_source_payment_allmethods')
                     ->toOptionArray();
                 break;
 
             case 'customer_group_id':
-                $options = Mage::getModel(
-                    'adminhtml/system_config_source_customer_group'
-                )
+                $options = Mage::getModel('adminhtml/system_config_source_customer_group')
                     ->toOptionArray();
                 break;
 
@@ -99,15 +89,13 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Rules_Value
     }
 
     /**
-     * options array
+     * Options array.
      *
      * @return array
      */
     public function toOptionArray()
     {
-        $options = Mage::getModel(
-            'adminhtml/system_config_source_payment_allmethods'
-        )
+        $options = Mage::getModel('adminhtml/system_config_source_payment_allmethods')
             ->toOptionArray();
 
         return $options;

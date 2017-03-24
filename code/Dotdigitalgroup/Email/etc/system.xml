@@ -2088,7 +2088,7 @@
             <frontend_type>text</frontend_type>
             <sort_order>7000</sort_order>
             <show_in_default>1</show_in_default>
-            <show_in_website>1</show_in_website>
+            <show_in_website>0</show_in_website>
             <show_in_store>0</show_in_store>
             <groups>
                 <ddg_transactional translate="label" module="ddg">
@@ -2096,7 +2096,7 @@
                     <frontend_type>text</frontend_type>
                     <sort_order>9000</sort_order>
                     <show_in_default>1</show_in_default>
-                    <show_in_website>1</show_in_website>
+                    <show_in_website>0</show_in_website>
                     <show_in_store>0</show_in_store>
                     <fields>
                         <enabled translate="label" module="ddg">
@@ -2105,8 +2105,8 @@
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <sort_order>10</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
                         </enabled>
                         <send_mode translate="label" module="ddg">
                             <label>Send Mode</label>
@@ -2114,15 +2114,15 @@
                             <source_model>ddg_automation/adminhtml_source_transactional_mode</source_model>
                             <sort_order>15</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
                         </send_mode>
                         <host translate="label" module="ddg">
                             <label>Host</label>
                             <sort_order>20</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
                             <backend_model>ddg_automation/adminhtml_model_transactional_host</backend_model>
                             <depends><send_mode>smtp</send_mode></depends>
                         </host>
@@ -2130,8 +2130,8 @@
                             <label>Username</label>
                             <sort_order>30</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
                             <backend_model>ddg_automation/adminhtml_model_transactional_username</backend_model>
                         </username>
                         <password translate="label" module="ddg">
@@ -2139,8 +2139,8 @@
                             <frontend_type>password</frontend_type>
                             <sort_order>40</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
                         </password>
                         <port translate="label" module="ddg">
                             <label>Port</label>
@@ -2148,8 +2148,8 @@
                             <frontend_type>select</frontend_type>
                             <source_model>ddg_automation/adminhtml_source_transactional_port</source_model>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
                             <depends><send_mode>smtp</send_mode></depends>
                         </port>
                         <debug_mode translate="label comment" module="ddg">
@@ -2158,8 +2158,8 @@
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <sort_order>60</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
                             <comment>Debug information in system.log file.</comment>
                         </debug_mode>
                     </fields>
@@ -2933,7 +2933,7 @@
                         <reimport_customers  translate="label comment" module="ddg" >
                             <label>Refresh Customers</label>
                             <frontend_model>ddg_automation/adminhtml_system_advanced_resetcustomersimport</frontend_model>
-                            <sort_order>80</sort_order>
+                            <sort_order>70</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -2942,12 +2942,22 @@
                         <reimport_subscribers module="ddg" translate="label comment">
                             <label>Refresh Subscribers</label>
                             <frontend_model>ddg_automation/adminhtml_system_advanced_reimportsubscribers</frontend_model>
-                            <sort_order>90</sort_order>
+                            <sort_order>80</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                             <comment><![CDATA[Mark all subscribers to be imported.]]></comment>
                         </reimport_subscribers>
+                        <reimport_dates translate="label" module="ddg">
+                            <label>Date Range</label>
+                            <frontend_model>ddg_automation/adminhtml_system_advanced_daterange</frontend_model>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>
+                                <![CDATA[IMPORTANT - No need to save config to use date range values! If any of the data range is not selected then full data refresh will be done. This Date Range does not apply on Customer and Subscribers.]]></comment>
+                        </reimport_dates>
                         <reimport_orders module="ddg" translate="label comment">
                             <label>Refresh Orders Data</label>
                             <frontend_model>ddg_automation/adminhtml_system_advanced_reimportorders</frontend_model>

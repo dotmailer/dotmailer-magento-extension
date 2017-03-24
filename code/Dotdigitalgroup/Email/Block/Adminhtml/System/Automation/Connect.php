@@ -18,7 +18,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Automation_Connect
         $ssl      = $this->_checkForSecureUrl();
         $disabled = false;
         //disable for ssl missing
-        if ( ! $ssl) {
+        if (!$ssl) {
             $disabled = true;
         }
 
@@ -45,7 +45,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Automation_Connect
     {
 
         $baseUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB, true);
-        if ( ! preg_match('/https/', $baseUrl)) {
+        if (!preg_match('/https/', $baseUrl)) {
             return false;
         }
 

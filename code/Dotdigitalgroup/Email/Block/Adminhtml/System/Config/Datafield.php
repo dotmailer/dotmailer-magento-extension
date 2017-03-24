@@ -12,7 +12,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Config_Datafield
      * @return string
      */
     protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element
-    ) {
+    )
+    {
         $url     = Mage::helper('adminhtml')->getUrl(
             '*/connector/createnewdatafield'
         );
@@ -32,7 +33,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Config_Datafield
                     if(datafield_name && datafield_type && datafield_access){
                         new Ajax.Request(reloadurl, {
                             method: 'post',
-                            parameters: {'name' : datafield_name, 'type' : datafield_type, 'default' : datafield_default, 'access' : datafield_access, 'website': '$website'},
+                            parameters: {'name' : datafield_name, 'type' : datafield_type,
+                             'default' : datafield_default, 'access' : datafield_access, 'website': '$website'},
                             onComplete: function(transport) {
                                 window.location.reload();
                             }

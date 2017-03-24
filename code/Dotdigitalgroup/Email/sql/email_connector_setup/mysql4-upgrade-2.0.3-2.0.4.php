@@ -1,5 +1,5 @@
 <?php
-
+//@codingStandardsIgnoreStart
 $installer = $this;
 
 
@@ -25,7 +25,8 @@ $installer->run(
 $installer->run(
     "
     ALTER TABLE `{$this->getTable('email_contact')}`
-      ADD CONSTRAINT `FK_EMAIL_CONTACT_WEBSITE_ID_CORE_WEBSITE_WEBSITE_ID` FOREIGN KEY (`website_id`) REFERENCES `{$installer->getTable('core_website')}`
+      ADD CONSTRAINT `FK_EMAIL_CONTACT_WEBSITE_ID_CORE_WEBSITE_WEBSITE_ID` FOREIGN KEY (`website_id`) 
+      REFERENCES `{$installer->getTable('core_website')}`
       (`website_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 "

@@ -5,12 +5,11 @@ class Dotdigitalgroup_Email_Model_Resource_Campaign
 {
 
     /**
-     * constructor.
+     * Constructor.
      */
     protected function _construct()
     {
         $this->_init('ddg_automation/campaign', 'id');
-
     }
 
     /**
@@ -48,7 +47,9 @@ class Dotdigitalgroup_Email_Model_Resource_Campaign
             $conn = $this->_getWriteAdapter();
             $num  = $conn->update(
                 $this->getMainTable(),
-                array('is_sent' => new Zend_Db_Expr('null')),
+                array(
+                    'send_status' => Dotdigitalgroup_Email_Model_Campaign::PENDING
+                ),
                 array('id IN(?)' => $campaignIds)
             );
 
@@ -59,14 +60,17 @@ class Dotdigitalgroup_Email_Model_Resource_Campaign
     }
 
     /**
-     * delete completed records older then 30 days
+     * Delete completed records older then 30 days.
      *
      * @return Exception|int
      */
     public function cleanup()
     {
         try {
-            $date = Mage::app()->getLocale()->date()->subDay(30)->toString('YYYY-MM-dd HH:mm:ss');
+            //@codingStandardsIgnoreStart
+            $date = Mage::app()->getLocale()->date()->subDay(30)
+                ->toString('YYYY-MM-dd HH:mm:ss');
+            //@codingStandardsIgnoreEnd
             $conn = $this->_getWriteAdapter();
             $num = $conn->delete(
                 $this->getMainTable(),
@@ -80,21 +84,15 @@ class Dotdigitalgroup_Email_Model_Resource_Campaign
     }
 
     /**
-     * Set error message
+     * Set error message.
      *
      * @param $ids
      * @param $message
-     * @param $sendId
      */
-    public function setMessage($ids, $message, $sendId = false)
+    public function setMessage($ids, $message)
     {
         try {
-            $ids = implode("', '", $ids);
-            if ($sendId) {
-                $map = 'send_id';
-            } else {
-                $map = 'id';
-            }
+            $ids = implode(", ", $ids);
             $now = Mage::getSingleton('core/date')->gmtDate();
             $conn = $this->_getWriteAdapter();
             $conn->update(
@@ -104,7 +102,7 @@ class Dotdigitalgroup_Email_Model_Resource_Campaign
                     'send_status' => Dotdigitalgroup_Email_Model_Campaign::FAILED,
                     'sent_at' => $now
                 ),
-                array("$map in ('$ids')")
+                "id in ($ids)"
             );
         } catch (Exception $e) {
             Mage::logException($e);
@@ -112,7 +110,32 @@ class Dotdigitalgroup_Email_Model_Resource_Campaign
     }
 
     /**
-     * Set sent
+     * Set error message on given send id
+     *
+     * @param $sendId
+     * @param $message
+     */
+    public function setMessageWithSendId($sendId, $message)
+    {
+        try {
+            $now = Mage::getSingleton('core/date')->gmtDate();
+            $conn = $this->_getWriteAdapter();
+            $conn->update(
+                $this->getMainTable(),
+                array(
+                    'message' => $message,
+                    'send_status' => Dotdigitalgroup_Email_Model_Campaign::FAILED,
+                    'sent_at' => $now
+                ),
+                array('send_id = ?' => $sendId)
+            );
+        } catch (Exception $e) {
+            Mage::logException($e);
+        }
+    }
+
+    /**
+     * Set sent.
      *
      * @param bool $sendId
      */
@@ -136,14 +159,15 @@ class Dotdigitalgroup_Email_Model_Resource_Campaign
     }
 
     /**
-     * Set processing
+     * Set processing.
      *
-     * @param $campaignId
+     * @param $ids
      * @param bool $sendId
      */
-    public function setProcessing($campaignId, $sendId)
+    public function setProcessing($ids, $sendId)
     {
         try {
+            $ids = implode(', ', $ids);
             $bind = array(
                 'send_status' => Dotdigitalgroup_Email_Model_Campaign::PROCESSING,
                 'send_id' => $sendId
@@ -152,7 +176,7 @@ class Dotdigitalgroup_Email_Model_Resource_Campaign
             $conn->update(
                 $this->getMainTable(),
                 $bind,
-                array('campaign_id = ?' => $campaignId)
+                "id in ($ids)"
             );
         } catch (Exception $e) {
             Mage::logException($e);

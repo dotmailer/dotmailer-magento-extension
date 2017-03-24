@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @codingStandardsIgnoreStart
+ * Class Dotdigitalgroup_Email_Model_Connector_Quote
+ */
 class Dotdigitalgroup_Email_Model_Connector_Quote
 {
 
@@ -68,7 +72,9 @@ class Dotdigitalgroup_Email_Model_Connector_Quote
      */
     public $currency;
 
-
+    /**
+     * @var string
+     */
     public $couponCode;
 
     /**
@@ -76,10 +82,13 @@ class Dotdigitalgroup_Email_Model_Connector_Quote
      */
     public $custom = array();
 
+    /**
+     * @var
+     */
     protected $_attributeSet;
 
     /**
-     * set the quote information
+     * Set the quote information.
      *
      * @param Mage_Sales_Model_Quote $quoteData
      */
@@ -100,6 +109,7 @@ class Dotdigitalgroup_Email_Model_Connector_Quote
             $this->delivery_total  = $quoteData->getShippingAddress()
                 ->getShippingAmount();
         }
+
         $this->currency = $quoteData->getStoreCurrencyCode();
         if ($payment = $quoteData->getPayment()) {
             $this->payment = $payment->getMethod();
@@ -107,9 +117,7 @@ class Dotdigitalgroup_Email_Model_Connector_Quote
 
         $this->couponCode = $quoteData->getCouponCode();
 
-        /**
-         * custom quote attributes
-         */
+        /* custom quote attributes */
         $helper           = Mage::helper('ddg');
         $website          = Mage::app()->getStore($quoteData->getStore())
             ->getWebsite();
@@ -137,37 +145,29 @@ class Dotdigitalgroup_Email_Model_Connector_Quote
          * Billing address.
          */
         if ($quoteData->getBillingAddress()) {
-            $billingData           = $quoteData->getBillingAddress()->getData();
+            $billingData           = $quoteData->getBillingAddress();
             $this->billing_address = array(
-                'billing_address_1' => $this->_getStreet(
-                    $billingData['street'], 1
-                ),
-                'billing_address_2' => $this->_getStreet(
-                    $billingData['street'], 2
-                ),
-                'billing_city'      => $billingData['city'],
-                'billing_region'    => $billingData['region'],
-                'billing_country'   => $billingData['country_id'],
-                'billing_postcode'  => $billingData['postcode'],
+                'billing_address_1' => $billingData->getStreet1(),
+                'billing_address_2' => $billingData->getStreet2(),
+                'billing_city'      => $billingData->getCity(),
+                'billing_region'    => $billingData->getRegion(),
+                'billing_country'   => $billingData->getCountryId(),
+                'billing_postcode'  => $billingData->getPostcode(),
             );
         }
+
         /**
          * Shipping address.
          */
         if ($quoteData->getShippingAddress()) {
-            $shippingData = $quoteData->getShippingAddress()->getData();
-
+            $shippingData = $quoteData->getShippingAddress();
             $this->delivery_address = array(
-                'delivery_address_1' => $this->_getStreet(
-                    $shippingData['street'], 1
-                ),
-                'delivery_address_2' => $this->_getStreet(
-                    $shippingData['street'], 2
-                ),
-                'delivery_city'      => $shippingData['city'],
-                'delivery_region'    => $shippingData['region'],
-                'delivery_country'   => $shippingData['country_id'],
-                'delivery_postcode'  => $shippingData['postcode']
+                'delivery_address_1' => $shippingData->getStreet1(),
+                'delivery_address_2' => $shippingData->getStreet2(),
+                'delivery_city'      => $shippingData->getCity(),
+                'delivery_region'    => $shippingData->getRegion(),
+                'delivery_country'   => $shippingData->getCountryId(),
+                'delivery_postcode'  => $shippingData->getPostcode()
             );
         }
 
@@ -177,7 +177,6 @@ class Dotdigitalgroup_Email_Model_Connector_Quote
          * @var Mage_Sales_Model_Quote_Item $productItem
          */
         foreach ($quoteData->getAllItems() as $productItem) {
-
             $product = $productItem->getProduct();
 
             if ($product) {
@@ -236,30 +235,7 @@ class Dotdigitalgroup_Email_Model_Connector_Quote
     }
 
     /**
-     * get the street name by line number
-     *
-     * @param $street
-     * @param $line
-     *
-     * @return string
-     */
-    protected function _getStreet($street, $line)
-    {
-        $street = explode("\n", $street);
-        if ($line == 1) {
-            return $street[0];
-        }
-        if (isset($street[$line - 1])) {
-
-            return $street[$line - 1];
-        } else {
-
-            return '';
-        }
-    }
-
-    /**
-     * exposes the class as an array of objects.
+     * Exposes the class as an array of objects.
      *
      * @return array
      */
@@ -270,7 +246,7 @@ class Dotdigitalgroup_Email_Model_Connector_Quote
     }
 
     /**
-     * get custom attribute value
+     * Get custom attribute value.
      *
      * @param $field
      * @param $quoteData
@@ -321,7 +297,7 @@ class Dotdigitalgroup_Email_Model_Connector_Quote
     }
 
     /**
-     * create property on runtime
+     * Create property on runtime.
      *
      * @param $field
      * @param $value
@@ -332,7 +308,7 @@ class Dotdigitalgroup_Email_Model_Connector_Quote
     }
 
     /**
-     * get attribute set name
+     * Get attribute set name.
      *
      * @param Mage_Catalog_Model_Product $product
      *
@@ -365,7 +341,7 @@ class Dotdigitalgroup_Email_Model_Connector_Quote
     }
 
     /**
-     * load attribute model
+     * Load attribute model.
      *
      * @param Mage_Catalog_Model_Product $product
      */

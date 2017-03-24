@@ -1,5 +1,5 @@
 <?php
-
+//@codingStandardsIgnoreStart
 /** @var Mage_Eav_Model_Entity_Setup $installer */
 
 $installer = $this;
@@ -13,6 +13,7 @@ $catalogTable = $installer->getTable('ddg_automation/catalog');
 if ($installer->getConnection()->isTableExists($catalogTable)) {
     $installer->getConnection()->dropTable($catalogTable);
 }
+
 $table = $installer->getConnection()->newTable($catalogTable);
 $table->addColumn(
     'id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
@@ -84,6 +85,7 @@ $rulesTable = $installer->getTable('ddg_automation/rules');
 if ($installer->getConnection()->isTableExists($rulesTable)) {
     $installer->getConnection()->dropTable($rulesTable);
 }
+
 $table = $installer->getConnection()->newTable($rulesTable);
 $table->addColumn(
     'id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
@@ -148,6 +150,7 @@ $options = array();
 foreach ($types as $type) {
     $options[] = $type['value'];
 }
+
 $typeString = implode(',', $options);
 
 //Save all product visibilities as string to extension's config value
@@ -158,6 +161,7 @@ $options      = array();
 foreach ($visibilities as $visibility) {
     $options[] = $visibility['value'];
 }
+
 $visibilityString = implode(',', $options);
 
 //save config value
@@ -179,6 +183,7 @@ $importerTable = $installer->getTable('ddg_automation/importer');
 if ($installer->getConnection()->isTableExists($importerTable)) {
     $installer->getConnection()->dropTable($importerTable);
 }
+
 $table = $installer->getConnection()->newTable($importerTable);
 $table->addColumn(
     'id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(

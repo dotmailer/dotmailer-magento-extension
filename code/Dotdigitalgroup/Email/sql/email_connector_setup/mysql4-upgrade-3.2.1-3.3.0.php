@@ -1,5 +1,5 @@
 <?php
-
+//@codingStandardsIgnoreStart
 /** @var Mage_Eav_Model_Entity_Setup $installer */
 
 $installer = $this;
