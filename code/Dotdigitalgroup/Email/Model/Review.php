@@ -98,7 +98,7 @@ class Dotdigitalgroup_Email_Model_Review extends Mage_Core_Model_Abstract
 
         if ($this->countReviews) {
             //@codingStandardsIgnoreStart
-            $message = 'Total time for Reviews sync : ' . gmdate("H:i:s", microtime(true) - $this->start) .
+            $message = '----------- Reviews sync ----------- : ' . gmdate("H:i:s", microtime(true) - $this->start) .
                 ', Total synced = ' . $this->countReviews;
             //@codingStandardsIgnoreEnd
             $helper->log($message);

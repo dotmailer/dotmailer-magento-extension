@@ -48,7 +48,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
         //sync proccessed
         if ($this->countCustomers) {
             //@codingStandardsIgnoreStart
-            $message = 'Total time for Customer sync : ' . gmdate("H:i:s", microtime(true) - $this->start) .
+            $message = '----------- Customer sync ----------- : ' . gmdate("H:i:s", microtime(true) - $this->start) .
                 ', Total updated = ' . $this->countCustomers;
             //@codingStandardsIgnoreEnd
             $helper->log($message);

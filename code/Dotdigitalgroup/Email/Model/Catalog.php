@@ -163,7 +163,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
 
         if ($this->countProducts) {
             //@codingStandardsIgnoreStart
-            $message = 'Total time for Catalog sync : ' . gmdate("H:i:s", microtime(true) - $this->start) .
+            $message = '----------- Catalog sync ----------- : ' . gmdate("H:i:s", microtime(true) - $this->start) .
                 ', Total synced = ' . $this->countProducts;
             //@codingStandardsIgnoreEnd
             $helper->log($message);
