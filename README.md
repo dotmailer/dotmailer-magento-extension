@@ -32,6 +32,11 @@ Compatibility
 
 # Upgrade notice
 
+# V6.3.1
+###### Bug fixes
+ - Subscribers not getting removed from the address book(#233).
+ - Subscriber marked as unsubscribed but not updated in account(#244).
+  
 # V6.3.0
 ###### Features
 - Code audit 2017.
