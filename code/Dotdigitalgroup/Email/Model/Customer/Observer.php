@@ -59,12 +59,11 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
                 );
             } elseif (!$emailBefore) {
                 //for new contacts update email
-                $contactModel->setEmailImported(
-                    Dotdigitalgroup_Email_Model_Contact::EMAIL_CONTACT_NOT_IMPORTED
-                );
+                $contactModel->setEmail($email);
             }
 
-            $contactModel->setCustomerId($customerId)
+            $contactModel->setEmailImported(Dotdigitalgroup_Email_Model_Contact::EMAIL_CONTACT_NOT_IMPORTED)
+                ->setCustomerId($customerId)
                 ->save();
         } catch (Exception $e) {
             Mage::logException($e);
