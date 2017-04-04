@@ -28,8 +28,9 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
 
             // only for subscribers
             if ($subscriberStatus == Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED) {
-                //Set contact as subscribed
+                //update subscriber status and reset the import
                 $contactEmail->setSubscriberStatus($subscriberStatus)
+                    ->setSubscriberImported(null)
                     ->setIsSubscriber('1');
 
                 //Subscriber subscribed when it is suppressed in table then re-subscribe
