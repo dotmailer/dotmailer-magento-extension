@@ -321,13 +321,10 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
         $to = Zend_Date::now($locale)->toString(Zend_Date::ISO_8601);
         //@codingStandardsIgnoreEnd
 
-        $storeId = Mage::app()->getStore()->getStoreId();
         $productCollection = Mage::getResourceModel('reports/product_collection')
             ->addViewsCount($from, $to)
-            ->setPageSize($limit);
-
-        // filter by store id
-        $productCollection->getSelect()->where('report_table_views.store_id ='. $storeId);
+            ->setPageSize($limit)
+            ->addWebsiteFilter();
 
         $catId   = Mage::app()->getRequest()->getParam('category_id');
         $catName = Mage::app()->getRequest()->getParam('category_name');
