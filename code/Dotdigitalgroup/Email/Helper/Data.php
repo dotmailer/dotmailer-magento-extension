@@ -948,7 +948,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getOrderSyncEnabled($websiteId = 0)
     {
-        return Mage::getStoreConfigFlag(
+        return (bool)$this->getWebsiteConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_ORDER_ENABLED,
             $websiteId
         );
@@ -961,7 +961,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getCatalogSyncEnabled($websiteId = 0)
     {
-        return Mage::getStoreConfigFlag(
+        return (bool)$this->getWebsiteConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_CATALOG_ENABLED,
             $websiteId
         );
@@ -974,7 +974,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getContactSyncEnabled($websiteId = 0)
     {
-        return Mage::getStoreConfigFlag(
+        return (bool)$this->getWebsiteConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_CONTACT_ENABLED,
             $websiteId
         );
@@ -987,7 +987,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getGuestSyncEnabled($websiteId = 0)
     {
-        return Mage::getStoreConfigFlag(
+        return (bool)$this->getWebsiteConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_GUEST_ENABLED,
             $websiteId
         );
@@ -1000,7 +1000,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function isSubscriberSyncEnabled($websiteId = 0)
     {
-        return Mage::getStoreConfigFlag(
+        return (bool)$this->getWebsiteConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_SUBSCRIBER_ENABLED,
             $websiteId
         );
@@ -1086,12 +1086,10 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getApiResponseTimeLimit($websiteId = 0)
     {
-        $website = Mage::app()->getWebsite($websiteId);
-        $limit = $website->getConfig(
-            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DEBUG_API_REQUEST_LIMIT
+        return $this->getWebsiteConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DEBUG_API_REQUEST_LIMIT,
+            $websiteId
         );
-
-        return $limit;
     }
 
     /**
