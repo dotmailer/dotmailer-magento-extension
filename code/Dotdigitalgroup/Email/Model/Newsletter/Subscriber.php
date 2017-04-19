@@ -471,4 +471,69 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
 
         return $collection;
     }
+
+    /**
+     * Un-subscribe suppressed contacts.
+     * @return mixed
+     */
+    public function unsubscribe()
+    {
+        $limit = 5;
+        $max_to_select = 1000;
+        $result['customers'] = 0;
+        $date = Mage::app()->getLocale()->date()->subHour(24);
+        $suppressedEmails = array();
+
+        // Datetime format string
+        $dateString = $date->toString(Zend_Date::W3C);
+
+        /**
+         * Sync all suppressed for each store
+         */
+        foreach (Mage::app()->getWebsites(true) as $website) {
+            $client = Mage::helper('ddg')->getWebsiteApiClient($website);
+            $skip = $i = 0;
+            $contacts = array();
+
+            // Not enabled and valid credentials
+            if (! $client) {
+                continue;
+            }
+
+            //there is a maximum of request we need to loop to get more suppressed contacts
+            for ($i=0; $i<= $limit;$i++) {
+                $apiContacts = $client->getContactsSuppressedSinceDate($dateString, $max_to_select , $skip);
+
+                // skip no more contacts or the api request failed
+                if(empty($apiContacts) || isset($apiContacts->message)) {
+                    break;
+                }
+                $contacts = array_merge($contacts, $apiContacts);
+                $skip += 1000;
+            }
+
+            // Contacts to un-subscribe
+            foreach ($contacts as $apiContact) {
+                if (isset($apiContact->suppressedContact)) {
+                    $suppressedContact = $apiContact->suppressedContact;
+                    $email = $suppressedContact->email;
+                    try{
+                        $subscriber = Mage::getModel('newsletter/subscriber')->loadByEmail($email);
+                        if ($subscriber->getStatus() == Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED) {
+                            $subscriber->setStatus(Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED);
+                            $subscriber->save();
+                            $suppressedEmails[] = $email;
+                        }
+                    }catch (Exception $e){
+                        Mage::logException($e);
+                    }
+                }
+            }
+        }
+        //Mark suppressed contacts
+        if (! empty($suppressedEmails)) {
+            Mage::getResourceModel('ddg_automation/contact')->unsubscribe($suppressedEmails);
+        }
+        return $result;
+    }
 }

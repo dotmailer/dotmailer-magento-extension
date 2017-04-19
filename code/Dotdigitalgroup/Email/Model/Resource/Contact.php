@@ -312,6 +312,7 @@ class Dotdigitalgroup_Email_Model_Resource_Contact extends Mage_Core_Model_Resou
             $write->update(
                 $this->getMainTable(),
                 array(
+                    'is_subscriber' => new Zend_Db_Expr('null'),
                     'subscriber_status' => Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED,
                     'suppressed' => 1
                 ),
