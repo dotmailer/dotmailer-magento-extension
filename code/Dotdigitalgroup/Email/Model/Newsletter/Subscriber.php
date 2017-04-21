@@ -520,8 +520,6 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
                     try{
                         $subscriber = Mage::getModel('newsletter/subscriber')->loadByEmail($email);
                         if ($subscriber->getStatus() == Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED) {
-                            $subscriber->setStatus(Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED);
-                            $subscriber->save();
                             $suppressedEmails[] = $email;
                         }
                     }catch (Exception $e){
