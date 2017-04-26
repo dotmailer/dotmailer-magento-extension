@@ -69,11 +69,11 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Orders
             $collection->getSelect()
                 ->columns(
                     array(
-                        'lifetime'    => "SUM({$expr})",
-                        'average'     => "AVG({$expr})",
-                        'total_count' => "COUNT({$expr})",
-                        'day_count' => "ROUND(COUNT({$expr}) / DATEDIFF(date(MAX(created_at)),
-                         date(MIN(created_at))), 2)"
+                        'lifetime'    => new Zend_Db_Expr("SUM({$expr})"),
+                        'average'     => new Zend_Db_Expr("AVG({$expr})"),
+                        'total_count' => new Zend_Db_Expr("COUNT({$expr})"),
+                        'day_count' => new Zend_Db_Expr("ROUND(COUNT({$expr}) / DATEDIFF(date(MAX(created_at)),
+                         date(MIN(created_at))), 2)")
                     )
                 )
                 ->where('main_table.status NOT IN(?)', $statuses)
