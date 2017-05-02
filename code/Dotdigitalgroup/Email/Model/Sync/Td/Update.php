@@ -17,6 +17,13 @@ class Dotdigitalgroup_Email_Model_Sync_Td_Update extends Dotdigitalgroup_Email_M
                 if (strpos($item->getImportType(), 'Catalog_') !== false) {
                     $result = $this->client->postContactsTransactionalData($importData, $item->getImportType(), true);
                 } else {
+                    if ($item->getImportType() == Dotdigitalgroup_Email_Model_Importer::IMPORT_TYPE_ORDERS) {
+                        //Skip if one hour has not passed from created
+                        if (Mage::helper('ddg')->getDateDifference($item->getCreatedAt()) < 3600) {
+                            continue;
+                        }
+                    }
+
                     $result = $this->client->postContactsTransactionalData($importData, $item->getImportType());
                 }
 
