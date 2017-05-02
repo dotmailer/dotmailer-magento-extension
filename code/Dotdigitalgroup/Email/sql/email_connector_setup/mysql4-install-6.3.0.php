@@ -1013,10 +1013,6 @@ $table->addColumn(
         $installer->getIdxName($importerTable, array('import_finished')),
         array('import_finished')
     )
-    ->addIndex(
-        $installer->getIdxName($importerTable, array('import_mode')),
-        array('import_mode')
-    )
     ->setComment('Email Importer');
 $installer->getConnection()->createTable($table);
 
