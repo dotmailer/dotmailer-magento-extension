@@ -946,7 +946,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      *
      * @return bool
      */
-    public function getOrderSyncEnabled($websiteId = 0)
+    public function isOrderSyncEnabled($websiteId = 0)
     {
         return (bool)$this->getWebsiteConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_ORDER_ENABLED,
@@ -959,7 +959,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      *
      * @return bool
      */
-    public function getCatalogSyncEnabled($websiteId = 0)
+    public function isCatalogSyncEnabled($websiteId = 0)
     {
         return (bool)$this->getWebsiteConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_CATALOG_ENABLED,
@@ -972,7 +972,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      *
      * @return bool
      */
-    public function getContactSyncEnabled($websiteId = 0)
+    public function isContactSyncEnabled($websiteId = 0)
     {
         return (bool)$this->getWebsiteConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_CONTACT_ENABLED,
@@ -985,7 +985,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      *
      * @return bool
      */
-    public function getGuestSyncEnabled($websiteId = 0)
+    public function isGuestSyncEnabled($websiteId = 0)
     {
         return (bool)$this->getWebsiteConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_GUEST_ENABLED,

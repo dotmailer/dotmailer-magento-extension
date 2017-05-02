@@ -83,7 +83,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Installation
      */
     public function getCatalogSync()
     {
-        return Mage::helper('ddg')->getCatalogSyncEnabled();
+        return Mage::helper('ddg')->isCatalogSyncEnabled();
     }
 
     /**
@@ -91,7 +91,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Installation
      */
     public function getOrderSync()
     {
-        return Mage::helper('ddg')->getOrderSyncEnabled();
+        return Mage::helper('ddg')->isOrderSyncEnabled();
     }
 
     /**
@@ -107,7 +107,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Installation
      */
     public function getGuestSync()
     {
-        return Mage::helper('ddg')->getGuestSyncEnabled();
+        return Mage::helper('ddg')->isGuestSyncEnabled();
     }
 
     /**
@@ -115,7 +115,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Installation
      */
     public function getCustomerSync()
     {
-        return Mage::helper('ddg')->getContactSyncEnabled();
+        return Mage::helper('ddg')->isContactSyncEnabled();
     }
 
     /**
