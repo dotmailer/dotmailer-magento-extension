@@ -479,7 +479,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
     public function unsubscribe()
     {
         $limit = 5;
-        $max_to_select = 1000;
+        $maxToSelect = 1000;
         $result['customers'] = 0;
         $date = Mage::app()->getLocale()->date()->subHour(24);
         $suppressedEmails = array();
@@ -502,7 +502,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
 
             //there is a maximum of request we need to loop to get more suppressed contacts
             for ($i=0; $i<= $limit;$i++) {
-                $apiContacts = $client->getContactsSuppressedSinceDate($dateString, $max_to_select , $skip);
+                $apiContacts = $client->getContactsSuppressedSinceDate($dateString, $maxToSelect , $skip);
 
                 // skip no more contacts or the api request failed
                 if(empty($apiContacts) || isset($apiContacts->message)) {
@@ -516,15 +516,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
             foreach ($contacts as $apiContact) {
                 if (isset($apiContact->suppressedContact)) {
                     $suppressedContact = $apiContact->suppressedContact;
-                    $email = $suppressedContact->email;
-                    try{
-                        $subscriber = Mage::getModel('newsletter/subscriber')->loadByEmail($email);
-                        if ($subscriber->getStatus() == Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED) {
-                            $suppressedEmails[] = $email;
-                        }
-                    }catch (Exception $e){
-                        Mage::logException($e);
-                    }
+                    $suppressedEmails[] = $suppressedContact->email;
                 }
             }
         }
