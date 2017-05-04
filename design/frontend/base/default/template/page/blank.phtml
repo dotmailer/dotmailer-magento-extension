@@ -1,1 +1,9 @@
-<?php echo $this->getChildHtml('content');
+<?php echo $this->getChildHtml('content'); ?>
+
+<script type="text/javascript">
+    var viewPortTag=document.createElement('meta');
+    viewPortTag.id="viewport";
+    viewPortTag.name = "viewport";
+    viewPortTag.content = "width=device-width; initial-scale=1.0;";
+    document.getElementsByTagName('head')[0].appendChild(viewPortTag);
+</script>
