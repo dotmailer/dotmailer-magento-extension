@@ -257,6 +257,8 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
      */
     protected function _getBestSellersCollection($mode, $limit)
     {
+        $catId   = Mage::app()->getRequest()->getParam('category_id', false);
+        $catName = Mage::app()->getRequest()->getParam('category_name', false);
         $from   = Mage::helper('ddg/recommended')->getTimeFromConfig($mode);
         $locale = Mage::app()->getLocale()->getLocale();
         //@codingStandardsIgnoreStart
@@ -264,9 +266,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
         //@codingStandardsIgnoreEnd
 
         $productCollection = Mage::getResourceModel('reports/product_collection')
-            ->addAttributeToSelect(
-                array('product_url', 'name', 'store_id', 'small_image', 'price')
-            )
+            ->addAttributeToSelect(array('product_url', 'name', 'store_id', 'small_image', 'price'))
             ->addOrderedQty($from, $to)
             ->setOrder('ordered_qty', 'desc')
             ->addWebsiteFilter(Mage::app()->getWebsite()->getId())
@@ -274,11 +274,6 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
 
         Mage::getSingleton('cataloginventory/stock')
             ->addInStockFilterToCollection($productCollection);
-        $productCollection->addAttributeToFilter('is_saleable', true)
-            ->addAttributeToFilter('visibility', $this->_visibility);
-
-        $catId   = Mage::app()->getRequest()->getParam('category_id', false);
-        $catName = Mage::app()->getRequest()->getParam('category_name', false);
 
         //check for params
         if ($catId or $catName) {
@@ -298,6 +293,15 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
             );
         }
 
+        $productIds = $productCollection->getColumnValues('entity_id');
+
+        //fix for catalog flat tables
+        $productCollection = Mage::getModel('catalog/product')->getCollection()
+            ->addPriceData()
+            ->addAttributeToSelect('*')
+            ->addAttributeToFilter('visibility', $this->_visibility)
+            ->addIdFilter($productIds);
+
         return $productCollection;
     }
 
@@ -312,9 +316,9 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
     protected function _getMostViewedCollection($mode, $limit)
     {
         $productsToDisplay = array();
-        $from              = Mage::helper('ddg/recommended')->getTimeFromConfig(
-            $mode
-        );
+        $catId   = Mage::app()->getRequest()->getParam('category_id');
+        $catName = Mage::app()->getRequest()->getParam('category_name');
+        $from              = Mage::helper('ddg/recommended')->getTimeFromConfig($mode);
         $locale            = Mage::app()->getLocale()->getLocale();
 
         //@codingStandardsIgnoreStart
@@ -324,8 +328,6 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
             ->addViewsCount($from, $to)
             ->setPageSize($limit);
 
-        $catId   = Mage::app()->getRequest()->getParam('category_id');
-        $catName = Mage::app()->getRequest()->getParam('category_name');
         if ($catId or $catName) {
             $category = Mage::getModel('catalog/category');
 
