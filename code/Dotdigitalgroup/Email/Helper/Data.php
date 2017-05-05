@@ -2028,4 +2028,16 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
 
         return false;
     }
+
+    /**
+     * Get difference between dates
+     *
+     * @param $created
+     * @return false|int
+     */
+    public function getDateDifference($created)
+    {
+        $now = Mage::getSingleton('core/date')->gmtDate();
+        return strtotime($now) - strtotime($created);
+    }
 }
