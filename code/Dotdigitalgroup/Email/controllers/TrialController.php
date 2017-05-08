@@ -3,68 +3,40 @@
 class Dotdigitalgroup_Email_TrialController
     extends Mage_Core_Controller_Front_Action
 {
-
-    /**
-     * @var array
-     */
-    public $params;
-
-    /**
-     * @var array
-     */
-    public $ipRanges = array(
-        '104.40.179.234',
-        '104.40.159.161',
-        '191.233.82.46',
-        '104.46.48.100',
-        '104.40.187.26'
-    );
-
-    /**
-     *
-     */
-    public function preDispatch()
-    {
-        $this->params = $this->getRequest()->getParams();
-
-        //if ip is not in range send error response
-        if (!in_array(Mage::helper('core/http')->getRemoteAddr(), $this->ipRanges) or
-            !isset($params['accountId']) or !isset($params['apiUser']) or !isset($params['pass'])
-        ) {
-            $this->sendAjaxResponse(true, $this->_getErrorHtml());
-        }
-
-        if (empty($params['accountId']) or empty($params['apiUser']) or empty($params['pass'])) {
-            $this->sendAjaxResponse(true, $this->_getErrorHtml());
-        }
-
-        parent::preDispatch();
-    }
-
     /**
      * Trial account call back action.
      */
     public function accountcallbackAction()
     {
-        $helper = Mage::helper('ddg');
-        //Save api details
-        $apiConfigStatus = $helper->saveApiCreds($this->params['apiUser'], $this->params['pass']);
-        //Setup data fields
-        $dataFieldsStatus = $helper->setupDataFields();
-        //Setup create address book
-        $addressBookStatus = $helper->createAddressBooks();
-        //enable syncs
-        $syncStatus = $helper->enableSyncForTrial();
-        //if apiEndpoint then save it
-        if (isset($this->params['apiEndpoint'])) {
-            $helper->saveApiEndPoint($this->params['apiEndpoint']);
-        }
-
-        //if all true send success response
-        if ($apiConfigStatus && $dataFieldsStatus && $addressBookStatus && $syncStatus) {
-            $this->sendAjaxResponse(false, $this->_getSuccessHtml());
-        } else {
+        $params = $this->getRequest()->getParams();
+        if (empty($params['apiUser']) or empty($params['pass'])) {
             $this->sendAjaxResponse(true, $this->_getErrorHtml());
+        } else {
+            $helper = Mage::helper('ddg');
+
+            //Save api details
+            $apiConfigStatus = $helper->saveApiCreds($params['apiUser'], $params['pass']);
+
+            //Setup data fields
+            $dataFieldsStatus = $helper->setupDataFields();
+
+            //Setup create address book
+            $addressBookStatus = $helper->createAddressBooks();
+
+            //enable syncs
+            $syncStatus = $helper->enableSyncForTrial();
+
+            //if apiEndpoint then save it
+            if (isset($params['apiEndpoint'])) {
+                $helper->saveApiEndPoint($params['apiEndpoint']);
+            }
+
+            //if all true send success response
+            if ($apiConfigStatus && $dataFieldsStatus && $addressBookStatus && $syncStatus) {
+                $this->sendAjaxResponse(false, $this->_getSuccessHtml());
+            } else {
+                $this->sendAjaxResponse(true, $this->_getErrorHtml());
+            }
         }
     }
 

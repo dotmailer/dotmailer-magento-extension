@@ -1864,20 +1864,26 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
     public function setupDataFields()
     {
         $error = false;
-        $apiModel = Mage::helper('ddg')->getWebsiteApiClient();
+        $apiModel = false;
+        $helper = Mage::helper('ddg');
+
+        if ($helper->isEnabled()) {
+            $apiModel = $helper->getWebsiteApiClient();
+        }
 
         if (!$apiModel) {
-            return false;
+            $error = true;
+            $helper->log('setupDataFields client is not enabled');
         } else {
-            $dataFields = Mage::getModel('ddg_automation/connector_datafield')->getContactDatafields();
-            foreach ($dataFields as $key => $dataField) {
-                $response = $apiModel->postDataFields($dataField);
-                //ignore existing datafields message
-                if (isset($response->message) &&
-                    $response->message != Dotdigitalgroup_Email_Model_Apiconnector_Client::API_ERROR_DATAFIELD_EXISTS
-                ) {
-                    $error = true;
-                } else {
+            //validate account
+            $accountInfo = $apiModel->getAccountInfo();
+            if (isset($accountInfo->message)) {
+                $helper->log('setupDataFields ' . $accountInfo->message);
+                $error = true;
+            } else {
+                $dataFields = Mage::getModel('ddg_automation/connector_datafield')->getContactDatafields();
+                foreach ($dataFields as $key => $dataField) {
+                    $apiModel->postDataFields($dataField);
                     try {
                         //@codingStandardsIgnoreStart
                         //map the successfully created data field
@@ -1892,14 +1898,9 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
                     }
                 }
             }
-
-            if ($error) {
-                return false;
-            } else {
-                Mage::getConfig()->cleanCache();
-                return true;
-            }
         }
+
+        return $error == true ? false : true;
     }
 
     /**
@@ -1914,50 +1915,75 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
             array('name' => 'Magento_Subscribers', 'visibility' => 'Private'),
             array('name' => 'Magento_Guests', 'visibility' => 'Private'),
         );
-        $addressBookMap = array(
-            'Magento_Customers' => Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMERS_ADDRESS_BOOK_ID,
-            'Magento_Subscribers'
-                => Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SUBSCRIBERS_ADDRESS_BOOK_ID,
-            'Magento_Guests' => Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_GUEST_ADDRESS_BOOK_ID
-        );
         $error = false;
-        $client = Mage::helper('ddg')->getWebsiteApiClient();
+        $client = false;
+        $helper = Mage::helper('ddg');
+
+        if ($helper->isEnabled()) {
+            $client = $helper->getWebsiteApiClient();
+        }
 
         if (!$client) {
-            return false;
+            $error = true;
+            $helper->log('createAddressBooks client is not enabled');
         } else {
-            foreach ($addressBooks as $addressBook) {
-                $addressBookName = $addressBook['name'];
-                $visibility = $addressBook['visibility'];
-                if ($addressBookName !== '') {
-                    $response = $client->postAddressBooks($addressBookName, $visibility);
-                    if (isset($response->message) &&
-                        $response->message
-                            != Dotdigitalgroup_Email_Model_Apiconnector_Client::API_ERROR_ADDRESSBOOK_DUPLICATE
-                    ) {
-                        $error = true;
-                    } else {
-                        try {
-                            //@codingStandardsIgnoreStart
-                            //map the successfully created address book
-                            $config = new Mage_Core_Model_Config();
-                            //@codingStandardsIgnoreEnd
-                            $config->saveConfig($addressBookMap[$addressBookName], $response->id);
-                            Mage::helper('ddg')->log('successfully connected address book : ' . $addressBookName);
-                        } catch (Exception $e) {
-                            Mage::logException($e);
-                            $error = true;
+            //validate account
+            $accountInfo = $client->getAccountInfo();
+            if (isset($accountInfo->message)) {
+                $helper->log('createAddressBooks ' . $accountInfo->message);
+                $error = true;
+            } else {
+                foreach ($addressBooks as $addressBook) {
+                    $addressBookName = $addressBook['name'];
+                    $visibility = $addressBook['visibility'];
+                    if (!empty($addressBookName)) {
+                        $response = $client->postAddressBooks($addressBookName, $visibility);
+                        if (isset($response->id)) {
+                            $this->mapAddressBook($addressBookName, $response->id);
+                        } else {
+                            $response = $client->getAddressBooks();
+                            if (!isset($response->message)) {
+                                foreach ($response as $book) {
+                                    if ($book->name == $addressBookName) {
+                                        $this->mapAddressBook($addressBookName, $book->id);
+                                        break;
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             }
         }
 
-        if ($error) {
-            return false;
-        } else {
-            Mage::getConfig()->cleanCache();
-            return true;
+        return $error == true ? false : true;
+    }
+
+    /**
+     * Map the successfully created address book
+     *
+     * @param $name
+     * @param $id
+     */
+    public function mapAddressBook($name, $id)
+    {
+        //@codingStandardsIgnoreStart
+        $config = new Mage_Core_Model_Config();
+        //@codingStandardsIgnoreEnd
+
+        $addressBookMap = array(
+            'Magento_Customers' => Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMERS_ADDRESS_BOOK_ID,
+            'Magento_Subscribers'
+            => Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SUBSCRIBERS_ADDRESS_BOOK_ID,
+            'Magento_Guests' => Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_GUEST_ADDRESS_BOOK_ID
+        );
+
+        try {
+            //map the successfully created address book
+            $config->saveConfig($addressBookMap[$name], $id);
+            Mage::helper('ddg')->log('successfully connected address book : ' . $name);
+        } catch (Exception $e) {
+            Mage::logException($e);
         }
     }
 
@@ -2001,5 +2027,17 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         }
 
         return false;
+    }
+
+    /**
+     * Get difference between dates
+     *
+     * @param $created
+     * @return false|int
+     */
+    public function getDateDifference($created)
+    {
+        $now = Mage::getSingleton('core/date')->gmtDate();
+        return strtotime($now) - strtotime($created);
     }
 }
