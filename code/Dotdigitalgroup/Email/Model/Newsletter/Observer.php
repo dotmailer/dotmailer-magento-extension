@@ -12,8 +12,10 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
      */
     public function handleNewsletterSubscriberSave(Varien_Event_Observer $observer)
     {
+        /** @var Mage_Newsletter_Model_Subscriber $subscriber */
         $subscriber = $observer->getEvent()->getSubscriber();
         $email = $subscriber->getEmail();
+        $customerId = $subscriber->getCustomerId();
         $storeId = $subscriber->getStoreId();
         $subscriberStatus = $subscriber->getSubscriberStatus();
         $websiteId = Mage::app()->getStore($subscriber->getStoreId())->getWebsiteId();
@@ -24,7 +26,18 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
         }
 
         try {
-            $contactEmail = Mage::getModel('ddg_automation/contact')->loadByCustomerEmail($email, $websiteId);
+            //If we have customer id then load by website id
+            if ($customerId) {
+                $contactEmail = Mage::getModel('ddg_automation/contact')
+                    ->loadByCustomerEmail($email, $websiteId);
+            } else { //In case of guest subscriber load by store id
+                $contactEmail = Mage::getModel('ddg_automation/contact')
+                    ->loadBySubscriberEmail($email, $storeId);
+
+                if (! $contactEmail->getId()) {
+                    $contactEmail->setEmail($email);
+                }
+            }
 
             // only for subscribers
             if ($subscriberStatus == Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED) {
