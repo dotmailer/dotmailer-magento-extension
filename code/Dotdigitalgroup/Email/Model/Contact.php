@@ -112,6 +112,30 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
     }
 
     /**
+     * Load Contact by Email filter by store.
+     *
+     * @param $email
+     * @param $storeId
+     *
+     * @return $this
+     */
+    public function loadBySubscriberEmail($email, $storeId)
+    {
+        $collection = $this->getCollection()
+            ->addFieldToFilter('email', $email)
+            ->addFieldToFilter('store_id', $storeId)
+            ->setPageSize(1);
+
+        if ($collection->getSize()) {
+            //@codingStandardsIgnoreStart
+            return $collection->getFirstItem();
+            //@codingStandardsIgnoreEnd
+        }
+
+        return $this;
+    }
+
+    /**
      *
      * @param $website
      * @param int $limit
