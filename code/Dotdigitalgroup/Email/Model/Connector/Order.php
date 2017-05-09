@@ -60,7 +60,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
      *
      * @var string
      */
-    public $payment;
+    public $payment = '';
     /**
      * @var string
      */
@@ -114,8 +114,21 @@ class Dotdigitalgroup_Email_Model_Connector_Order
         );
         $this->currency        = $orderData->getStoreCurrencyCode();
 
-        if ($payment = $orderData->getPayment()) {
-            $this->payment = $payment->getMethodInstance()->getTitle();
+        /**
+         * This will check if payment record is not removed from db
+         * and payment method instance exist in magento
+         */
+        $payment = $orderData->getPayment();
+        //If payment is type of payment model
+        if($payment instanceof Mage_Sales_Model_Order_Payment) {
+            //If payment method returns valid string
+            if(strlen($payment->getMethod())) {
+                $instance = Mage::helper('payment')->getMethodInstance($payment->getMethod());
+                //If instance is type of payment abstract model
+                if($instance instanceof Mage_Payment_Model_Method_Abstract) {
+                    $this->payment = $payment->getMethodInstance()->getTitle();
+                }
+            }
         }
 
         $this->couponCode = $orderData->getCouponCode();
