@@ -30,7 +30,17 @@ Compatibility
 - Magento >= 1.6.2
 
 
-# Upgrade notice
+# V6.3.2 Release Notes
+    - We’ve fixed a problem in which store views didn’t exist.
+    - Bulk order sync now has a delay (of 60 mins) before being imported.
+    - Trial account enhancements that we’ve already implemented in our Magento 2 connector are now also implemented for Magento 1.
+    - We’ve fixed the collection filter for flat products.
+    - External dynamic content wasn’t aligning centrally on mobile devices; it does now.
+    - Changes in 'Subscriber' status weren't being sent back to Magento from dotmailer; this has been fixed.
+    - We’ve implemented an IP address change.
+    - Before creating a contact, an automatic check is made to ensure the API is enabled.
+    - The class Zend_DB_Expr is now used for columns with expressions.
+    - We’ve fixed a problem relating to the website ID that’s used when getting a store’s configuration in the helper.
 
 # V6.3.0
 ###### Features
@@ -405,5 +415,3 @@ Compatibility
 * Subscriber Sync - fix the contact id when to unsubscribe.
 * Subscriber Sync Empty Request.
 * Change the time format for filenames.
-
-
