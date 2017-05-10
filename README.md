@@ -22,7 +22,7 @@ Don't forget to enable symlinks in:
 Facts
 -----
 - community & enterprise version.
-- current version - V.6.2.5 [config.xml](https://github.com/dotmailer/dotmailer-magento-extension/blob/master/code/Dotdigitalgroup/Email/etc/config.xml)
+- current version - [config.xml](https://github.com/dotmailer/dotmailer-magento-extension/blob/master/code/Dotdigitalgroup/Email/etc/config.xml)
 - also available on Magento Connect [link](http://www.magentocommerce.com/magento-connect/dotmailer-truly-integrated-email-marketing.html)
 
 Compatibility
@@ -42,6 +42,11 @@ Compatibility
     - The class Zend_DB_Expr is now used for columns with expressions.
     - We’ve fixed a problem relating to the website ID that’s used when getting a store’s configuration in the helper.
 
+# V6.3.1
+###### Bug fixes
+ - Unsubscribers from Magento weren’t being removed successfully from the subscriber address book; they are again now(#233).
+ - Contact datafields weren't getting updated in dotmailer for existing customers in Magento whose data changed; this has been fixed.(#244)
+  
 # V6.3.0
 ###### Features
 - Code audit 2017.
