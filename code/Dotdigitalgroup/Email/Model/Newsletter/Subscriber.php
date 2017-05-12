@@ -33,6 +33,9 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
         $this->start = microtime(true);
         $helper = Mage::helper('ddg');
         foreach (Mage::app()->getWebsites(false) as $website) {
+            if(empty($website->getStoreIds())) {
+                continue;
+            }
             $countSubscribers     = 0;
             $isEnabled      = $helper->isEnabled($website);
             $isMapped       = $helper->getSubscriberAddressBook($website);

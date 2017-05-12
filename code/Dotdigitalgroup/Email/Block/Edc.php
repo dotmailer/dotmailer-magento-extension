@@ -324,9 +324,11 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
         //@codingStandardsIgnoreStart
         $to = Zend_Date::now($locale)->toString(Zend_Date::ISO_8601);
         //@codingStandardsIgnoreEnd
+
         $productCollection = Mage::getResourceModel('reports/product_collection')
             ->addViewsCount($from, $to)
-            ->setPageSize($limit);
+            ->setPageSize($limit)
+            ->addWebsiteFilter();
 
         if ($catId or $catName) {
             $category = Mage::getModel('catalog/category');
