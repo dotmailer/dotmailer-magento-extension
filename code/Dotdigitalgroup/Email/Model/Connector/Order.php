@@ -114,8 +114,12 @@ class Dotdigitalgroup_Email_Model_Connector_Order
         );
         $this->currency        = $orderData->getStoreCurrencyCode();
 
-        if ($payment = $orderData->getPayment()) {
-            $this->payment = $payment->getMethodInstance()->getTitle();
+        try {
+            if ($payment = $orderData->getPayment()) {
+                $this->payment = $payment->getMethodInstance()->getTitle();
+            }
+        } catch (Exception $e) {
+            $this->payment = '';
         }
 
         $this->couponCode = $orderData->getCouponCode();
