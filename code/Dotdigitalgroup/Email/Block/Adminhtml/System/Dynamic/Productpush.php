@@ -10,17 +10,14 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Productpush
      */
     protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element)
     {
-        //generate base url
         $baseUrl = Mage::helper('ddg')->generateDynamicUrl();
-        $passcode = Mage::helper('ddg')->getPasscode();
-
-        if ($passcode == '') {
-            $passcode = '[PLEASE SET UP A PASSCODE]';
-        }
+        $passcode = Mage::helper('ddg')->getPasscodeWithWarning();
 
         //full url for dynamic content
         $text = sprintf(
-            '%sconnector/products/push/code/%s', $baseUrl, $passcode
+            '%sconnector/products/push/code/%s',
+            $baseUrl,
+            $passcode
         );
         $element->setData('value', $text);
 

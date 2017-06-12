@@ -1,8 +1,10 @@
 <?php
 
+/**
+ * Class Dotdigitalgroup_Email_Model_Abstract_Rest
+ */
 abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
 {
-
     /**
      * @var null
      */
@@ -145,12 +147,9 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
      */
     public function toJSON($pretty = false)
     {
-
-        if (!$pretty) {
-            return json_encode($this->expose());
-        } else {
-            return $this->prettyPrint(json_encode($this->expose()));
-        }
+        return !$pretty
+            ? json_encode($this->expose())
+            : $this->prettyPrint(json_encode($this->expose()));
     }
 
     /**
@@ -344,12 +343,8 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
     {
         $this->setCurlOpts($ch);
         //@codingStandardsIgnoreStart
-        if ($this->isNotJson) {
-            $this->responseBody = curl_exec($ch);
-        } else {
-            $this->responseBody = json_decode(curl_exec($ch));
-        }
-
+        $response = curl_exec($ch);
+        $this->responseBody = $this->isNotJson ? $response : json_decode($response);
         $this->responseInfo = curl_getinfo($ch);
 
         //if curl error found
@@ -376,8 +371,12 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt(
-            $ch, CURLOPT_HTTPHEADER, array('Accept: ' . $this->acceptType,
-                                           'Content-Type: application/json')
+            $ch,
+            CURLOPT_HTTPHEADER,
+            array(
+                'Accept: ' . $this->acceptType,
+                'Content-Type: application/json'
+            )
         );
         //@codingStandardsIgnoreEnd
     }

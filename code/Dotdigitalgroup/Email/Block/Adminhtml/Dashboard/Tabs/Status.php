@@ -1001,19 +1001,19 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
 
         foreach (Mage::app()->getWebsites() as $website) {
             $websiteName       = $website->getName();
-            $abandonedCusomerOne = ($website->getConfig(
+            $abandonedCustomerOne = ($website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CARTS_ENABLED_1
             ))
                 ? true
                 :
                 'Disabled!';
-            $abandonedCusomerTwo = ($website->getConfig(
+            $abandonedCustomerTwo = ($website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CARTS_ENABLED_2
             ))
                 ? true
                 :
                 'Disabled!';
-            $abandonedCusomerThree = ($website->getConfig(
+            $abandonedCustomerThree = ($website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CARTS_ENABLED_3
             ))
                 ? true
@@ -1038,8 +1038,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                 :
                 'Disabled!';
 
-            if ($abandonedCusomerOne !== true || $abandonedCusomerTwo !== true
-                || $abandonedCusomerThree !== true
+            if ($abandonedCustomerOne !== true
+                || $abandonedCustomerTwo !== true
+                || $abandonedCustomerThree !== true
                 || $abandonedGuestOne !== true
                 || $abandonedGuestTwo !== true
                 || $abandonedGuestThree !== true
@@ -1082,14 +1083,14 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                     ->setTable(
                         array(
                             'Website'              => $websiteName,
-                            'Customer Abandoned 1' => ($abandonedCusomerOne
-                                !== true) ? $abandonedCusomerOne . ' <a href="'
+                            'Customer Abandoned 1' => ($abandonedCustomerOne
+                                !== true) ? $abandonedCustomerOne . ' <a href="'
                                 . $customerOne . '">enable</a>' : 'Enabled',
-                            'Customer Abandoned 2' => ($abandonedCusomerTwo
-                                !== true) ? $abandonedCusomerTwo . ' <a href="'
+                            'Customer Abandoned 2' => ($abandonedCustomerTwo
+                                !== true) ? $abandonedCustomerTwo . ' <a href="'
                                 . $customerTwo . '">enable</a>' : 'Enabled',
-                            'Customer Abandoned 3' => ($abandonedCusomerThree
-                                !== true) ? $abandonedCusomerThree . ' <a href="'
+                            'Customer Abandoned 3' => ($abandonedCustomerThree
+                                !== true) ? $abandonedCustomerThree . ' <a href="'
                                 . $customerThree . '">enable</a>' : 'Enabled',
                             'Guest Abandoned 1' => ($abandonedGuestOne
                                 !== true) ? $abandonedGuestOne . ' <a href="'
