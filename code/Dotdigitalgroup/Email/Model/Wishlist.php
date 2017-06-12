@@ -113,7 +113,8 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
 
                 if ($this->countWishlists) {
                     //@codingStandardsIgnoreStart
-                    $message = 'Total time for Wishlist bulk sync : ' . gmdate("H:i:s", microtime(true) - $this->start);
+                    $message = '----------- Wishlist bulk sync ----------- : ' .
+                        gmdate("H:i:s", microtime(true) - $this->start);
                     //@codingStandardsIgnoreEnd
                     $helper->log($message);
                 }

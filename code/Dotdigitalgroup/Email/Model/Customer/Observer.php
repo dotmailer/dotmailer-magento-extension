@@ -19,6 +19,11 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
         $customerId   = $customer->getEntityId();
         $isSubscribed = $customer->getIsSubscribed();
 
+        //check if enabled
+        if (! Mage::helper('ddg')->isEnabled($websiteId)) {
+            return $this;
+        }
+
         try {
             // fix for a multiple hit of the observer
             $emailReg = Mage::registry($email . '_customer_save');
@@ -59,12 +64,11 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
                 );
             } elseif (!$emailBefore) {
                 //for new contacts update email
-                $contactModel->setEmailImported(
-                    Dotdigitalgroup_Email_Model_Contact::EMAIL_CONTACT_NOT_IMPORTED
-                );
+                $contactModel->setEmail($email);
             }
 
-            $contactModel->setCustomerId($customerId)
+            $contactModel->setEmailImported(Dotdigitalgroup_Email_Model_Contact::EMAIL_CONTACT_NOT_IMPORTED)
+                ->setCustomerId($customerId)
                 ->save();
         } catch (Exception $e) {
             Mage::logException($e);
