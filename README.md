@@ -29,6 +29,10 @@ Compatibility
 -------------
 - Magento >= 1.6.2
 
+# Contribution
+
+For contribution please use "testing" branch to create PR agains. Thanks!
+
 
 # V6.3.2 Release Notes
     - We’ve fixed a problem in which store views didn’t exist.
