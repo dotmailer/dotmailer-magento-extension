@@ -327,6 +327,8 @@ class Dotdigitalgroup_Email_Helper_Config
         = 'connector_developer_settings/import_settings/orders';
     const XML_PATH_CONNECTOR_IP_RESTRICTION_ADDRESSES
         = 'connector_developer_settings/ip_restriction/ip_addresses';
+    const XML_PATH_CONNECTOR_ENABLE_SUBSCRIBER_SALES_DATA
+        = 'connector_developer_settings/import_settings/subscriber_sales_data_enabled';
 
     /**
      * Nosto
