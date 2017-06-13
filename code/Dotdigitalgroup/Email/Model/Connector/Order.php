@@ -60,7 +60,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
      *
      * @var string
      */
-    public $payment = '';
+    public $payment = 'unknown';
     /**
      * @var string
      */
