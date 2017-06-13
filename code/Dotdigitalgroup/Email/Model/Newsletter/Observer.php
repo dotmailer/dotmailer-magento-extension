@@ -121,7 +121,6 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
         /** @var Mage_Newsletter_Model_Subscriber $subscriber */
         $subscriber = $observer->getEvent()->getSubscriber();
         $email = $subscriber->getEmail();
-        $subscriber->getStoreId();
         $storeId = $subscriber->getStoreId();
         $websiteId = Mage::app()->getStore($storeId)->getWebsiteId();
         $customerId = $subscriber->getCustomerId();
@@ -132,23 +131,18 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED,
             $websiteId
         );
-        //sync enabled
-        $syncEnabled = $helper->getWebsiteConfig(
-            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_SUBSCRIBER_ENABLED,
-            $websiteId
-        );
 
         /**
          * Remove contact.
          */
-        if ($enabled && $syncEnabled) {
+        if ($enabled) {
             try {
                 if ($customerId) {
                     $contactModel = Mage::getModel('ddg_automation/contact')
                         ->loadByCustomerEmail($email, $websiteId);
                 } else {
                     $contactModel = Mage::getModel('ddg_automation/contact')
-                        ->loadBySubscriberEmail($email, $storeId);
+                        ->loadContactByStoreId($email, $storeId);
                 }
 
                 if ($contactModel->getId()) {

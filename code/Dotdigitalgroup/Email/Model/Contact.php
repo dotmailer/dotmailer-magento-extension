@@ -119,7 +119,7 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
      *
      * @return $this
      */
-    public function loadBySubscriberEmail($email, $storeId)
+    public function loadContactByStoreId($email, $storeId)
     {
         $collection = $this->getCollection()
             ->addFieldToFilter('email', $email)
