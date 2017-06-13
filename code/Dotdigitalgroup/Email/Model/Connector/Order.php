@@ -60,7 +60,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
      *
      * @var string
      */
-    public $payment;
+    public $payment = 'unknown';
     /**
      * @var string
      */
@@ -114,8 +114,12 @@ class Dotdigitalgroup_Email_Model_Connector_Order
         );
         $this->currency        = $orderData->getStoreCurrencyCode();
 
-        if ($payment = $orderData->getPayment()) {
-            $this->payment = $payment->getMethodInstance()->getTitle();
+        try {
+            if ($payment = $orderData->getPayment()) {
+                $this->payment = $payment->getMethodInstance()->getTitle();
+            }
+        } catch (Exception $e) {
+            $this->payment = 'unknown';
         }
 
         $this->couponCode = $orderData->getCouponCode();
