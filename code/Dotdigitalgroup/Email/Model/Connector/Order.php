@@ -261,8 +261,12 @@ class Dotdigitalgroup_Email_Model_Connector_Order
      */
     public function expose()
     {
-        return get_object_vars($this);
-
+        return array_diff_key(
+            get_object_vars($this),
+            array_flip([
+                '_attributeSet'
+            ])
+        );
     }
 
     protected function _getCustomAttributeValue($field, $orderData)

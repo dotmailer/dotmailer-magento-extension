@@ -22,16 +22,30 @@ Don't forget to enable symlinks in:
 Facts
 -----
 - community & enterprise version.
-- current version - V.6.2.5 [config.xml](https://github.com/dotmailer/dotmailer-magento-extension/blob/master/code/Dotdigitalgroup/Email/etc/config.xml)
+- current version - [config.xml](https://github.com/dotmailer/dotmailer-magento-extension/blob/master/code/Dotdigitalgroup/Email/etc/config.xml)
 - also available on Magento Connect [link](http://www.magentocommerce.com/magento-connect/dotmailer-truly-integrated-email-marketing.html)
 
 Compatibility
 -------------
 - Magento >= 1.6.2
 
+# V6.3.2 Release Notes
+ - We’ve fixed a problem in which store views didn’t exist.
+ - Bulk order sync now has a delay (of 60 mins) before being imported.
+ - Trial account enhancements that we’ve already implemented in our Magento 2 connector are now also implemented for Magento 1.
+ - We’ve fixed the collection filter for flat products.
+ - External dynamic content wasn’t aligning centrally on mobile devices; it does now.
+ - Changes in 'Subscriber' status weren't being sent back to Magento from dotmailer; this has been fixed.
+ - We’ve implemented an IP address change.
+ - Before creating a contact, an automatic check is made to ensure the API is enabled.
+ - The class Zend_DB_Expr is now used for columns with expressions.
+ - We’ve fixed a problem relating to the website ID that’s used when getting a store’s configuration in the helper.
 
-# Upgrade notice
-
+# V6.3.1
+###### Bug fixes
+ - Unsubscribers from Magento weren’t being removed successfully from the subscriber address book; they are again now(#233).
+ - Contact datafields weren't getting updated in dotmailer for existing customers in Magento whose data changed; this has been fixed.(#244)
+  
 # V6.3.0
 ###### Features
 - Code audit 2017.
@@ -405,5 +419,3 @@ Compatibility
 * Subscriber Sync - fix the contact id when to unsubscribe.
 * Subscriber Sync Empty Request.
 * Change the time format for filenames.
-
-
