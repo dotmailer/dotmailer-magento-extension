@@ -60,7 +60,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
      *
      * @var string
      */
-    public $payment = '';
+    public $payment = 'unknown';
     /**
      * @var string
      */
@@ -119,7 +119,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
                 $this->payment = $payment->getMethodInstance()->getTitle();
             }
         } catch (Exception $e) {
-            $this->payment = '';
+            $this->payment = 'unknown';
         }
 
         $this->couponCode = $orderData->getCouponCode();
