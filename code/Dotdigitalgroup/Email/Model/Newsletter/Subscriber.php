@@ -324,7 +324,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
             );
         //only when subscriber emails are set
         if (! empty($emails)) {
-            $collection->addFieldToFilter('subscriber_email', $emails);
+            $collection->addFieldToFilter('subscriber_email', array('in' => $emails));
         }
 
         $alias = 'subselect';

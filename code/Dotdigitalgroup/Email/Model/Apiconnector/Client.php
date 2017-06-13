@@ -776,7 +776,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
                 $orders[] = array(
                     'Key'               => $one->id,
                     'ContactIdentifier' => $one->email,
-                    'Json'              => json_encode($one)
+                    'Json'              => json_encode($one->expose())
                 );
             }
         }
