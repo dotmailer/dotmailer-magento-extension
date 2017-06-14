@@ -32,7 +32,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
                     ->loadByCustomerEmail($email, $websiteId);
             } else { //In case of guest subscriber load by store id
                 $contactEmail = Mage::getModel('ddg_automation/contact')
-                    ->loadBySubscriberEmail($email, $storeId);
+                    ->loadContactByStoreId($email, $storeId);
 
                 if (! $contactEmail->getId()) {
                     $contactEmail->setEmail($email);
