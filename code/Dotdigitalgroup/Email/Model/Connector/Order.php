@@ -119,13 +119,10 @@ class Dotdigitalgroup_Email_Model_Connector_Order
          * and payment method instance exist in magento
          */
         $payment = $orderData->getPayment();
-        //If payment is type of payment model
-        if($payment instanceof Mage_Sales_Model_Order_Payment) {
-            //If payment method returns valid string
-            if(strlen($payment->getMethod())) {
+        if($payment) {
+            if($payment->getMethod()) {
                 $instance = Mage::helper('payment')->getMethodInstance($payment->getMethod());
-                //If instance is type of payment abstract model
-                if($instance instanceof Mage_Payment_Model_Method_Abstract) {
+                if($instance) {
                     $this->payment = $payment->getMethodInstance()->getTitle();
                 }
             }
