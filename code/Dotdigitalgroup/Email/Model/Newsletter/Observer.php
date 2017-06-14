@@ -15,7 +15,6 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
         /** @var Mage_Newsletter_Model_Subscriber $subscriber */
         $subscriber = $observer->getEvent()->getSubscriber();
         $email = $subscriber->getEmail();
-        $customerId = $subscriber->getCustomerId();
         $storeId = $subscriber->getStoreId();
         $subscriberStatus = $subscriber->getSubscriberStatus();
         $websiteId = Mage::app()->getStore($subscriber->getStoreId())->getWebsiteId();
@@ -26,17 +25,11 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
         }
 
         try {
-            //If we have customer id then load by website id
-            if ($customerId) {
-                $contactEmail = Mage::getModel('ddg_automation/contact')
-                    ->loadByCustomerEmail($email, $websiteId);
-            } else { //In case of guest subscriber load by store id
-                $contactEmail = Mage::getModel('ddg_automation/contact')
-                    ->loadContactByStoreId($email, $storeId);
+            $contactEmail = Mage::getModel('ddg_automation/contact')
+                ->loadContactByStoreId($email, $storeId);
 
-                if (! $contactEmail->getId()) {
-                    $contactEmail->setEmail($email);
-                }
+            if (! $contactEmail->getId()) {
+                $contactEmail->setEmail($email);
             }
 
             // only for subscribers
