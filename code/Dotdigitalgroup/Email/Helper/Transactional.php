@@ -9,7 +9,7 @@ class Dotdigitalgroup_Email_Helper_Transactional
     const XML_PATH_DDG_TRANSACTIONAL_USERNAME = 'connector_transactional_emails/ddg_transactional/username';
     const XML_PATH_DDG_TRANSACTIONAL_PASSWORD = 'connector_transactional_emails/ddg_transactional/password';
     const XML_PATH_DDG_TRANSACTIONAL_PORT = 'connector_transactional_emails/ddg_transactional/port';
-    const XML_PATH_DDG_TRANSACTIONAL_DEBUG = 'connector_transactional_emails/ddg_transactional/debug';
+    const XML_PATH_DDG_TRANSACTIONAL_DEBUG = 'connector_transactional_emails/ddg_transactional/debug_mode';
 
 
     /**
@@ -77,7 +77,9 @@ class Dotdigitalgroup_Email_Helper_Transactional
         );
 
         if ($this->isDebugEnabled()) {
-            Mage::log('Mail transport config : ' . implode(',', $config));
+            $configToLog = $config;
+            unset($configToLog['password']);
+            Mage::log('Mail transport config : ' . implode(',', $configToLog));
         }
 
         $transport = new Zend_Mail_Transport_Smtp(
