@@ -116,7 +116,6 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
         $email = $subscriber->getEmail();
         $storeId = $subscriber->getStoreId();
         $websiteId = Mage::app()->getStore($storeId)->getWebsiteId();
-        $customerId = $subscriber->getCustomerId();
         $helper    = Mage::helper('ddg');
 
         //api enabled
@@ -130,13 +129,8 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
          */
         if ($enabled) {
             try {
-                if ($customerId) {
-                    $contactModel = Mage::getModel('ddg_automation/contact')
-                        ->loadByCustomerEmail($email, $websiteId);
-                } else {
-                    $contactModel = Mage::getModel('ddg_automation/contact')
-                        ->loadContactByStoreId($email, $storeId);
-                }
+                $contactModel = Mage::getModel('ddg_automation/contact')
+                    ->loadContactByStoreId($email, $storeId);
 
                 if ($contactModel->getId()) {
                     //If contact is a customer or guest order contact
@@ -150,8 +144,8 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
                         );
 
                         //Remove subscriber from contact
-                        $contactModel->getResource()->removeSubscriberFromContact($email);
-                    } else { //If contacts is only a subscriber
+                        $contactModel->getResource()->updateSubscriberFromContact($email);
+                    } else {
                         //Add to importer queue
                         Mage::getModel('ddg_automation/importer')
                             ->registerQueue(

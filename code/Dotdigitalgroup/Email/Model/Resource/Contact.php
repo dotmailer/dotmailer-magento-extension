@@ -388,7 +388,7 @@ class Dotdigitalgroup_Email_Model_Resource_Contact extends Mage_Core_Model_Resou
      *
      * @param $email
      */
-    public function removeSubscriberFromContact($email)
+    public function updateSubscriberFromContact($email)
     {
         $conn = $this->getReadConnection();
         $write  = $this->_getWriteAdapter();
