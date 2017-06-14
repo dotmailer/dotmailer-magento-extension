@@ -42,30 +42,39 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
             if ($isEnabled && $isMapped && $isSyncEnabled) {
                 $emailContactModel = Mage::getModel('ddg_automation/contact');
                 $limit = $website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_LIMIT);
+                $subscriberGuestWithSalesEmails = array();
+                $isSubscriberSalesDataEnabled = $helper->getWebsiteConfig(
+                    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_ENABLE_SUBSCRIBER_SALES_DATA,
+                    $website
+                );
 
                 //guest subscribers emails
                 $subscribersWithGuestEmails = $emailContactModel->getGuestSubscribersToImport($website, $limit)
                     ->getColumnValues('email');
-                //sales order emails for guest customer
-                $subscriberGuestWithSalesEmails = $emailContactModel
-                    ->getSalesOrderWithCutomerEmails($subscribersWithGuestEmails);
 
-                /**
-                 * Export subscriber guests with sales data.
-                 */
-                if (! empty($subscriberGuestWithSalesEmails)) {
+                //Only sync subscriber with sales data if enabled
+                if ($isSubscriberSalesDataEnabled) {
+                    //sales order emails for guest customer
+                    $subscriberGuestWithSalesEmails = $emailContactModel
+                        ->getSalesOrderWithCutomerEmails($subscribersWithGuestEmails);
 
                     /**
-                     * Register subscribers into importer.
-                     * Subscriber that are guest and also exist in sales order table.
+                     * Export subscriber guests with sales data.
                      */
-                    $countSubscribers += $this->exportSubscribersWithSales(
-                        $website,
-                        $emailContactModel->getContactWithEmails($subscriberGuestWithSalesEmails)
-                    );
+                    if (! empty($subscriberGuestWithSalesEmails)) {
 
-                    //add updated number for the website
-                    $this->countGlobalSubscribers += $countSubscribers;
+                        /**
+                         * Register subscribers into importer.
+                         * Subscriber that are guest and also exist in sales order table.
+                         */
+                        $countSubscribers += $this->exportSubscribersWithSales(
+                            $website,
+                            $emailContactModel->getContactWithEmails($subscriberGuestWithSalesEmails)
+                        );
+
+                        //add updated number for the website
+                        $this->countGlobalSubscribers += $countSubscribers;
+                    }
                 }
 
                 /**
