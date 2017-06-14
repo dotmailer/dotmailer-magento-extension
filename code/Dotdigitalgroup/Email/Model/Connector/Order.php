@@ -60,7 +60,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
      *
      * @var string
      */
-    public $payment;
+    public $payment = 'unknown';
     /**
      * @var string
      */
@@ -114,8 +114,18 @@ class Dotdigitalgroup_Email_Model_Connector_Order
         );
         $this->currency        = $orderData->getStoreCurrencyCode();
 
-        if ($payment = $orderData->getPayment()) {
-            $this->payment = $payment->getMethodInstance()->getTitle();
+        /**
+         * This will check if payment record is not removed from db
+         * and payment method instance exist in magento
+         */
+        $payment = $orderData->getPayment();
+        if($payment) {
+            if($payment->getMethod()) {
+                $instance = Mage::helper('payment')->getMethodInstance($payment->getMethod());
+                if($instance) {
+                    $this->payment = $payment->getMethodInstance()->getTitle();
+                }
+            }
         }
 
         $this->couponCode = $orderData->getCouponCode();
@@ -248,8 +258,12 @@ class Dotdigitalgroup_Email_Model_Connector_Order
      */
     public function expose()
     {
-        return get_object_vars($this);
-
+        return array_diff_key(
+            get_object_vars($this),
+            array_flip([
+                '_attributeSet'
+            ])
+        );
     }
 
     protected function _getCustomAttributeValue($field, $orderData)

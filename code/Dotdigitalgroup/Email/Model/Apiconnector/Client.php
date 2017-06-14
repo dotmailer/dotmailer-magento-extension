@@ -776,7 +776,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
                 $orders[] = array(
                     'Key'               => $one->id,
                     'ContactIdentifier' => $one->email,
-                    'Json'              => json_encode($one)
+                    'Json'              => json_encode($one->expose())
                 );
             }
         }
@@ -1305,32 +1305,18 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
      */
     public function postAccountTransactionalDataImport($transactionalData, $collectionName = 'Catalog_Default')
     {
-        $orders = array();
-        foreach ($transactionalData as $one) {
-            if (isset($one->id)) {
-                $orders[] = array(
-                    'Key'               => $one->id,
-                    'ContactIdentifier' => 'account',
-                    'Json'              => json_encode($one->expose())
-                );
-            }
-        }
+        $url = $this->getApiEndpoint() . self::REST_TRANSACTIONAL_DATA_IMPORT . $collectionName;
 
-        $url = $this->getApiEndpoint() . self::REST_TRANSACTIONAL_DATA_IMPORT
-            . $collectionName;
         $this->setURl($url)
             ->setVerb('POST')
-            ->buildPostBody($orders);
+            ->buildPostBody($transactionalData);
 
         $response = $this->execute();
+
         //log error
-        if (isset($response->message)
-            && ! in_array(
-                $response->message, $this->excludeMessages
-            )
-        ) {
-            $message = ' SEND MULTI TRANSACTIONAL DATA TO ACCOUNT'
-                . $response->message;
+        if (isset($response->message) && ! in_array($response->message, $this->excludeMessages)) {
+
+            $message = 'SEND MULTI TRANSACTIONAL DATA TO ACCOUNT : ' . $response->message;
             Mage::helper('ddg')->log($message);
         }
 
