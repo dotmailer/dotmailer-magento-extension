@@ -101,7 +101,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
         $this->id         = $orderData->getIncrementId();
         $this->quote_id   = $orderData->getQuoteId();
         $this->email      = $orderData->getCustomerEmail();
-        $this->store_name = $orderData->getStoreName();
+        $this->store_name = $orderData->getStoreName(2);
 
         $created_at = new Zend_Date(
             $orderData->getCreatedAt(), Zend_Date::ISO_8601
