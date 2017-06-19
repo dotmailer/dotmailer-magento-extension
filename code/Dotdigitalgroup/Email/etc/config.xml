@@ -336,6 +336,14 @@
                     </ddg_core_config_data_save_after>
                 </observers>
             </core_config_data_save_after>
+            <newsletter_subscriber_delete_after>
+                <observers>
+                    <ddg_newsletter_subscriber_save_before>
+                        <class>ddg_automation/newsletter_observer</class>
+                        <method>handleNewsletterSubscriberDelete</method>
+                    </ddg_newsletter_subscriber_save_before>
+                </observers>
+            </newsletter_subscriber_delete_after>
         </events>
     </global>
     <adminhtml>
