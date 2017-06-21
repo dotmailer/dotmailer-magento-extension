@@ -12,6 +12,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
      */
     public function handleNewsletterSubscriberSave(Varien_Event_Observer $observer)
     {
+        /** @var Mage_Newsletter_Model_Subscriber $subscriber */
         $subscriber = $observer->getEvent()->getSubscriber();
         $email = $subscriber->getEmail();
         $storeId = $subscriber->getStoreId();
@@ -24,7 +25,12 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
         }
 
         try {
-            $contactEmail = Mage::getModel('ddg_automation/contact')->loadByCustomerEmail($email, $websiteId);
+            $contactEmail = Mage::getModel('ddg_automation/contact')
+                ->loadContactByStoreId($email, $storeId);
+
+            if (! $contactEmail->getId()) {
+                $contactEmail->setEmail($email);
+            }
 
             // only for subscribers
             if ($subscriberStatus == Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED) {
@@ -92,6 +98,70 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
             $contactEmail->save();
         } catch (Exception $e) {
             Mage::logException($e);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove guest subscriber from contact table
+     *
+     * @param Varien_Event_Observer $observer
+     * @return $this
+     */
+    public function handleNewsletterSubscriberDelete(Varien_Event_Observer $observer)
+    {
+        /** @var Mage_Newsletter_Model_Subscriber $subscriber */
+        $subscriber = $observer->getEvent()->getSubscriber();
+        $email = $subscriber->getEmail();
+        $storeId = $subscriber->getStoreId();
+        $websiteId = Mage::app()->getStore($storeId)->getWebsiteId();
+        $helper    = Mage::helper('ddg');
+
+        //api enabled
+        $enabled = $helper->getWebsiteConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED,
+            $websiteId
+        );
+
+        /**
+         * Remove contact.
+         */
+        if ($enabled) {
+            try {
+                $contactModel = Mage::getModel('ddg_automation/contact')
+                    ->loadContactByStoreId($email, $storeId);
+
+                if ($contactModel->getId()) {
+                    //If contact is a customer or guest order contact
+                    if ($contactModel->getCustomerId() || $contactModel->getIsGuest()) {
+                        //Add subscriber update to importer queue
+                        Mage::getModel('ddg_automation/importer')->registerQueue(
+                            Dotdigitalgroup_Email_Model_Importer::IMPORT_TYPE_SUBSCRIBER_UPDATE,
+                            array('email' => $email, 'id' => $contactModel->getId()),
+                            Dotdigitalgroup_Email_Model_Importer::MODE_SUBSCRIBER_UPDATE,
+                            $websiteId
+                        );
+
+                        //Remove subscriber from contact
+                        $contactModel->getResource()->updateSubscriberFromContact($email);
+                    } else {
+                        //Add to importer queue
+                        Mage::getModel('ddg_automation/importer')
+                            ->registerQueue(
+                                Dotdigitalgroup_Email_Model_Importer::IMPORT_TYPE_CONTACT,
+                                $email,
+                                Dotdigitalgroup_Email_Model_Importer::MODE_CONTACT_DELETE,
+                                $websiteId
+                            );
+
+                        //Remove contact
+                        $contactModel->delete();
+                    }
+                }
+            } catch (Exception $e) {
+                Mage::logException($e);
+            }
         }
 
         return $this;

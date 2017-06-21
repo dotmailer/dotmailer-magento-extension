@@ -15,12 +15,16 @@ class Dotdigitalgroup_Email_Model_Sync_Td_Bulk extends Dotdigitalgroup_Email_Mod
             //@codingStandardsIgnoreEnd
             if ($this->client) {
                 if (strpos($item->getImportType(), 'Catalog_') !== false) {
-                    $result = $this->client->postAccountTransactionalDataImport($importData, $item->getImportType());
+
+                    $collectionName = $item->getImportType();
+                    $transactionalData = $this->getTransDataForCatalog($importData);
+                    $result = $this->client->postAccountTransactionalDataImport($transactionalData, $collectionName);
+
                     $this->_handleItemAfterSync($item, $result);
                 } else {
                     if ($item->getImportType() == Dotdigitalgroup_Email_Model_Importer::IMPORT_TYPE_ORDERS) {
                         //Skip if one hour has not passed from created
-                        if ($this->getDateDifference($item->getCreatedAt()) < 3600) {
+                        if (Mage::helper('ddg')->getDateDifference($item->getCreatedAt()) < 3600) {
                             continue;
                         }
                     }
@@ -33,14 +37,25 @@ class Dotdigitalgroup_Email_Model_Sync_Td_Bulk extends Dotdigitalgroup_Email_Mod
     }
 
     /**
-     * Get difference between dates
-     *
-     * @param $created
-     * @return false|int
+     * @param $importData
+     * @return array
      */
-    public function getDateDifference($created)
+    private function getTransDataForCatalog($importData)
     {
-        $now = Mage::getSingleton('core/date')->gmtDate();
-        return strtotime($now) - strtotime($created);
+        $data = array();
+        foreach ($importData as $catalog) {
+            if (isset($catalog->id)) {
+                $data[] = array(
+                    'Key'               => $catalog->id,
+                    'ContactIdentifier' => 'account',
+                    'Json'              => json_encode($catalog->expose())
+                );
+            } else {
+                $this->helper->log('Catalog trans data with missing id ')
+                    ->log($catalog);
+            }
+        }
+
+        return $data;
     }
 }

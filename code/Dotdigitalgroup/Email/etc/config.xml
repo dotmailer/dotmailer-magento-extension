@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Dotdigitalgroup_Email>
-            <version>6.3.2</version>
+            <version>6.3.3</version>
         </Dotdigitalgroup_Email>
     </modules>
     <frontend>
@@ -336,6 +336,14 @@
                     </ddg_core_config_data_save_after>
                 </observers>
             </core_config_data_save_after>
+            <newsletter_subscriber_delete_after>
+                <observers>
+                    <ddg_newsletter_subscriber_save_before>
+                        <class>ddg_automation/newsletter_observer</class>
+                        <method>handleNewsletterSubscriberDelete</method>
+                    </ddg_newsletter_subscriber_save_before>
+                </observers>
+            </newsletter_subscriber_delete_after>
         </events>
     </global>
     <adminhtml>
@@ -745,6 +753,7 @@
                 <batch_size>500</batch_size>
                 <orders>50</orders>
                 <importer_bulk_limit>1</importer_bulk_limit>
+                <subscriber_sales_data_enabled>0</subscriber_sales_data_enabled>
             </import_settings>
             <sync_settings>
                 <setup_data_fields></setup_data_fields>
@@ -759,7 +768,7 @@
             </sync_settings>
             <debug>
                 <debug_enabled>1</debug_enabled>
-                <api_request_time_limit>10</api_request_time_limit>
+                <api_request_time_limit>60</api_request_time_limit>
             </debug>
             <feed_configuration>
                 <feed_enabled>1</feed_enabled>
@@ -774,7 +783,7 @@
                 <test_connect></test_connect>
             </oauth>
             <ip_restriction>
-                <ip_addresses>94.143.111.1, 94.143.111.2, 94.143.111.3, 104.208.235.109, 52.174.92.164, 104.210.118.87</ip_addresses>
+                <ip_addresses>94.143.111.1, 94.143.111.2, 94.143.111.3, 104.208.235.109, 52.174.92.164, 104.210.118.87, 89.197.25.45</ip_addresses>
             </ip_restriction>
             <cron_schedules>
                 <importer>*/5 * * * *</importer>

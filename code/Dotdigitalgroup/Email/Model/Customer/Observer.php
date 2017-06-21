@@ -19,6 +19,11 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
         $customerId   = $customer->getEntityId();
         $isSubscribed = $customer->getIsSubscribed();
 
+        //check if enabled
+        if (! Mage::helper('ddg')->isEnabled($websiteId)) {
+            return $this;
+        }
+
         try {
             // fix for a multiple hit of the observer
             $emailReg = Mage::registry($email . '_customer_save');

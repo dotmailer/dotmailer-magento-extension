@@ -33,20 +33,23 @@ Compatibility
 
 You are welcome to contribute to dotmailer for Magento! You can either:
 - Report a bug: create a [GitHub issue](https://github.com/dotmailer/dotmailer-magento-extension/issues/new) including description, repro steps, Magento and extension version numbers
-- Fix a bug: please clone and use our [Testing branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/testing) to submit your Pull Request
+- Fix a bug: please fork it and submit the Pull Request to our Testing branch [Testing branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/testing)
 - Request a feature on our [community forum](https://support.dotmailer.com/hc/en-gb/community/topics/200432508-Feedback-and-feature-requests)
 
 # V6.3.2 Release Notes
-    - We’ve fixed a problem in which store views didn’t exist.
-    - Bulk order sync now has a delay (of 60 mins) before being imported.
-    - Trial account enhancements that we’ve already implemented in our Magento 2 connector are now also implemented for Magento 1.
-    - We’ve fixed the collection filter for flat products.
-    - External dynamic content wasn’t aligning centrally on mobile devices; it does now.
-    - Changes in 'Subscriber' status weren't being sent back to Magento from dotmailer; this has been fixed.
-    - We’ve implemented an IP address change.
-    - Before creating a contact, an automatic check is made to ensure the API is enabled.
-    - The class Zend_DB_Expr is now used for columns with expressions.
-    - We’ve fixed a problem relating to the website ID that’s used when getting a store’s configuration in the helper.
+ 
+
+# V6.3.2 Release Notes
+ - We’ve fixed a problem in which store views didn’t exist.
+ - Bulk order sync now has a delay (of 60 mins) before being imported.
+ - Trial account enhancements that we’ve already implemented in our Magento 2 connector are now also implemented for Magento 1.
+ - We’ve fixed the collection filter for flat products.
+ - External dynamic content wasn’t aligning centrally on mobile devices; it does now.
+ - Changes in 'Subscriber' status weren't being sent back to Magento from dotmailer; this has been fixed.
+ - We’ve implemented an IP address change.
+ - Before creating a contact, an automatic check is made to ensure the API is enabled.
+ - The class Zend_DB_Expr is now used for columns with expressions.
+ - We’ve fixed a problem relating to the website ID that’s used when getting a store’s configuration in the helper.
 
 # V6.3.1
 ###### Bug fixes

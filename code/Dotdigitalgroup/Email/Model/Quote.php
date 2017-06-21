@@ -93,7 +93,8 @@ class Dotdigitalgroup_Email_Model_Quote extends Mage_Core_Model_Abstract
 
                 if ($this->countQuotes) {
                     //@codingStandardsIgnoreStart
-                    $message = 'Total time for Quotes bulk sync : ' . gmdate("H:i:s", microtime(true) - $this->start);
+                    $message = '----------- Quotes bulk sync ----------- : ' .
+                        gmdate("H:i:s", microtime(true) - $this->start);
                     //@codingStandardsIgnoreEnd
                     $helper->log($message);
                 }

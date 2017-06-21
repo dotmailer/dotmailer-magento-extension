@@ -111,20 +111,22 @@ class Dotdigitalgroup_Email_Model_Wishlist extends Mage_Core_Model_Abstract
                     }
                 }
 
-                if ($this->countWishlists) {
-                    //@codingStandardsIgnoreStart
-                    $message = 'Total time for Wishlist bulk sync : ' . gmdate("H:i:s", microtime(true) - $this->start);
-                    //@codingStandardsIgnoreEnd
-                    $helper->log($message);
-                }
-
-
                 //using single api
                 $this->_exportWishlistForWebsiteInSingle($website);
             }
         }
 
-        $response['message'] = "Wishlists updated: " . $this->countWishlists;
+        if ($this->countWishlists) {
+            //@codingStandardsIgnoreStart
+            $message = '----------- Wishlist bulk sync ----------- : ' .
+                gmdate("H:i:s", microtime(true) - $this->start) .
+                ' = ' . $this->countWishlists;
+            //@codingStandardsIgnoreEnd
+            $helper->log($message);
+            $response['message'] = "Wishlists updated: " . $this->countWishlists;
+        } else {
+            $response['message'] = "Done.";
+        }
 
         return $response;
     }
