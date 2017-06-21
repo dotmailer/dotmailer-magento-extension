@@ -36,8 +36,13 @@ You are welcome to contribute to dotmailer for Magento! You can either:
 - Fix a bug: please fork it and submit the Pull Request to our Testing branch [Testing branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/testing)
 - Request a feature on our [community forum](https://support.dotmailer.com/hc/en-gb/community/topics/200432508-Feedback-and-feature-requests)
 
-# V6.3.2 Release Notes
- 
+# V6.3.3 Release Notes
+- Ability to enable and disable sales data for guest subscribers.
+- Order synchronisation has been improved and skips failed or corrupt orders.
+- Removed subscribers now also removed from the contact table and subscriber address book.
+- Duplicate contacts were getting created for guest subscribers; this no longer happens.
+- The additional attribute data has been removed that was getting included for transactional data related to orders and quotes.
+- SMTP logging and configuration path has been fixed.
 
 # V6.3.2 Release Notes
  - We’ve fixed a problem in which store views didn’t exist.
