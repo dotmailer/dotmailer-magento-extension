@@ -18,6 +18,7 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
         $websiteId    = $customer->getWebsiteId();
         $customerId   = $customer->getEntityId();
         $isSubscribed = $customer->getIsSubscribed();
+        $storeId      = $customer->getStoreId();
 
         try {
             // fix for a multiple hit of the observer
@@ -64,6 +65,7 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
 
             $contactModel->setEmailImported(Dotdigitalgroup_Email_Model_Contact::EMAIL_CONTACT_NOT_IMPORTED)
                 ->setCustomerId($customerId)
+                ->setStoreId($storeId)
                 ->save();
         } catch (Exception $e) {
             Mage::logException($e);
