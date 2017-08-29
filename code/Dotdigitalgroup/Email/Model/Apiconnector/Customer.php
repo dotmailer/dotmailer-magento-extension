@@ -982,9 +982,13 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
             );
 
             if ($attribute instanceof Mage_Eav_Model_Entity_Attribute_Abstract) {
-                return $attribute->setStoreId($this->customer->getStoreId())
+                $value = $attribute->setStoreId($this->customer->getStoreId())
                     ->getSource()
                     ->getOptionText($optionId);
+
+                if ($value) {
+                    return $value;
+                }
             }
         }
 
