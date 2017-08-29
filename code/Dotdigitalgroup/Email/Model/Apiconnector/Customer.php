@@ -976,16 +976,19 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         );
 
         if ($optionId && $brandAttribute) {
-            $attribute = Mage::getModel('eav/config')->getAttribute(
+            $attribute = Mage::getSingleton('eav/config')->getAttribute(
                 Mage_Catalog_Model_Product::ENTITY,
                 $brandAttribute
             );
-            $value = $attribute->setStoreId($this->customer->getStoreId())
-                ->getSource()
-                ->getOptionText($optionId);
 
-            if ($value) {
-                return $value;
+            if ($attribute instanceof Mage_Eav_Model_Entity_Attribute_Abstract) {
+                $value = $attribute->setStoreId($this->customer->getStoreId())
+                    ->getSource()
+                    ->getOptionText($optionId);
+
+                if ($value) {
+                    return $value;
+                }
             }
         }
 
