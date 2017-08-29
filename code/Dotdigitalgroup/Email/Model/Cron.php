@@ -124,6 +124,9 @@ class Dotdigitalgroup_Email_Model_Cron
         );
         $result          = $subscriberModel->sync();
 
+        //un-subscribe suppressed contacts
+        $subscriberModel->unsubscribe();
+
         //sync guests
         Mage::getModel('ddg_automation/customer_guest')->sync();
 

@@ -42,30 +42,39 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
             if ($isEnabled && $isMapped && $isSyncEnabled) {
                 $emailContactModel = Mage::getModel('ddg_automation/contact');
                 $limit = $website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_LIMIT);
+                $subscriberGuestWithSalesEmails = array();
+                $isSubscriberSalesDataEnabled = $helper->getWebsiteConfig(
+                    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_ENABLE_SUBSCRIBER_SALES_DATA,
+                    $website
+                );
 
                 //guest subscribers emails
                 $subscribersWithGuestEmails = $emailContactModel->getGuestSubscribersToImport($website, $limit)
                     ->getColumnValues('email');
-                //sales order emails for guest customer
-                $subscriberGuestWithSalesEmails = $emailContactModel
-                    ->getSalesOrderWithCutomerEmails($subscribersWithGuestEmails);
 
-                /**
-                 * Export subscriber guests with sales data.
-                 */
-                if (! empty($subscriberGuestWithSalesEmails)) {
+                //Only sync subscriber with sales data if enabled
+                if ($isSubscriberSalesDataEnabled) {
+                    //sales order emails for guest customer
+                    $subscriberGuestWithSalesEmails = $emailContactModel
+                        ->getSalesOrderWithCutomerEmails($subscribersWithGuestEmails);
 
                     /**
-                     * Register subscribers into importer.
-                     * Subscriber that are guest and also exist in sales order table.
+                     * Export subscriber guests with sales data.
                      */
-                    $countSubscribers += $this->exportSubscribersWithSales(
-                        $website,
-                        $emailContactModel->getContactWithEmails($subscriberGuestWithSalesEmails)
-                    );
+                    if (! empty($subscriberGuestWithSalesEmails)) {
 
-                    //add updated number for the website
-                    $this->countGlobalSubscribers += $countSubscribers;
+                        /**
+                         * Register subscribers into importer.
+                         * Subscriber that are guest and also exist in sales order table.
+                         */
+                        $countSubscribers += $this->exportSubscribersWithSales(
+                            $website,
+                            $emailContactModel->getContactWithEmails($subscriberGuestWithSalesEmails)
+                        );
+
+                        //add updated number for the website
+                        $this->countGlobalSubscribers += $countSubscribers;
+                    }
                 }
 
                 /**
@@ -324,7 +333,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
             );
         //only when subscriber emails are set
         if (! empty($emails)) {
-            $collection->addFieldToFilter('subscriber_email', $emails);
+            $collection->addFieldToFilter('subscriber_email', array('in' => $emails));
         }
 
         $alias = 'subselect';
@@ -470,5 +479,60 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
             );
 
         return $collection;
+    }
+
+    /**
+     * Un-subscribe suppressed contacts.
+     * @return mixed
+     */
+    public function unsubscribe()
+    {
+        $limit = 5;
+        $maxToSelect = 1000;
+        $result['customers'] = 0;
+        $date = Mage::app()->getLocale()->date()->subHour(24);
+        $suppressedEmails = array();
+
+        // Datetime format string
+        $dateString = $date->toString(Zend_Date::W3C);
+
+        /**
+         * Sync all suppressed for each store
+         */
+        foreach (Mage::app()->getWebsites(true) as $website) {
+            $client = Mage::helper('ddg')->getWebsiteApiClient($website);
+            $skip = $i = 0;
+            $contacts = array();
+
+            // Not enabled and valid credentials
+            if (! $client) {
+                continue;
+            }
+
+            //there is a maximum of request we need to loop to get more suppressed contacts
+            for ($i=0; $i<= $limit;$i++) {
+                $apiContacts = $client->getContactsSuppressedSinceDate($dateString, $maxToSelect , $skip);
+
+                // skip no more contacts or the api request failed
+                if(empty($apiContacts) || isset($apiContacts->message)) {
+                    break;
+                }
+                $contacts = array_merge($contacts, $apiContacts);
+                $skip += 1000;
+            }
+
+            // Contacts to un-subscribe
+            foreach ($contacts as $apiContact) {
+                if (isset($apiContact->suppressedContact)) {
+                    $suppressedContact = $apiContact->suppressedContact;
+                    $suppressedEmails[] = $suppressedContact->email;
+                }
+            }
+        }
+        //Mark suppressed contacts
+        if (! empty($suppressedEmails)) {
+            Mage::getResourceModel('ddg_automation/contact')->unsubscribe($suppressedEmails);
+        }
+        return $result;
     }
 }

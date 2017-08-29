@@ -312,6 +312,7 @@ class Dotdigitalgroup_Email_Model_Resource_Contact extends Mage_Core_Model_Resou
             $write->update(
                 $this->getMainTable(),
                 array(
+                    'is_subscriber' => new Zend_Db_Expr('null'),
                     'subscriber_status' => Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED,
                     'suppressed' => 1
                 ),
@@ -376,6 +377,33 @@ class Dotdigitalgroup_Email_Model_Resource_Contact extends Mage_Core_Model_Resou
                 $this->getMainTable(),
                 array('subscriber_imported' => Dotdigitalgroup_Email_Model_Contact::EMAIL_SUBSCRIBER_IMPORTED),
                 "email_contact_id IN ($ids)"
+            );
+        } catch (Exception $e) {
+            Mage::throwException($e->getMessage());
+        }
+    }
+
+    /**
+     *
+     *
+     * @param $email
+     */
+    public function updateSubscriberFromContact($email)
+    {
+        $conn = $this->getReadConnection();
+        $write  = $this->_getWriteAdapter();
+        try {
+            $write->update(
+                $this->getMainTable(),
+                array(
+                    'is_subscriber' => new Zend_Db_Expr('null'),
+                    'subscriber_status' => new Zend_Db_Expr('null'),
+                    'subscriber_imported' => new Zend_Db_Expr('null'),
+                    'email_imported' => new Zend_Db_Expr('null'),
+                ),
+                $conn->quoteInto(
+                    'email = ?', $email
+                )
             );
         } catch (Exception $e) {
             Mage::throwException($e->getMessage());
