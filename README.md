@@ -37,8 +37,8 @@ You are welcome to contribute to dotmailer for Magento! You can either:
 - Request a feature on our [community forum](https://support.dotmailer.com/hc/en-gb/community/topics/200432508-Feedback-and-feature-requests)
 
 # V6.3.4 Release Notes
-- Duplicate contacts when subsribe as new customer was fixed.
-- Add support of multistore values for most purchased custom brand attribute.
+- Customers who registered and then went on to subscribe were getting created twice; this no longer happens.
+- For the most purchased custom brand attribute, we've added support for multistore values.
 
 # V6.3.3 Release Notes
 - Ability to enable and disable sales data for guest subscribers.
