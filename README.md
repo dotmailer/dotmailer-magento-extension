@@ -36,6 +36,10 @@ You are welcome to contribute to dotmailer for Magento! You can either:
 - Fix a bug: please fork it and submit the Pull Request to our Testing branch [Testing branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/testing)
 - Request a feature on our [community forum](https://support.dotmailer.com/hc/en-gb/community/topics/200432508-Feedback-and-feature-requests)
 
+# V6.3.4 Release Notes
+- Duplicate contacts when subsribe as new customer was fixed.
+- Add support of multistore values for most purchased custom brand attribute.
+
 # V6.3.3 Release Notes
 - Ability to enable and disable sales data for guest subscribers.
 - Order synchronisation has been improved and skips failed or corrupt orders.
