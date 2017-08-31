@@ -69,6 +69,11 @@
                             <sort_order>90</sort_order>
                             <action>adminhtml/email_automation</action>
                         </email_connector_automation>
+                        <email_connector_abandoned translate="title">
+                            <title>Abandoned Carts</title>
+                            <sort_order>100</sort_order>
+                            <action>adminhtml/email_abandoned</action>
+                        </email_connector_abandoned>
                     </children>
                 </reports>
                 <email_configuration translate="title">
