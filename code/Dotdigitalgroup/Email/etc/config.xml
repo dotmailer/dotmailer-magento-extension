@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Dotdigitalgroup_Email>
-            <version>6.3.4</version>
+            <version>6.3.5</version>
         </Dotdigitalgroup_Email>
     </modules>
     <frontend>
@@ -99,6 +99,9 @@
                     <importer>
                         <table>email_importer</table>
                     </importer>
+                    <abandoned>
+                        <table>email_abandoned_cart</table>
+                    </abandoned>
                 </entities>
             </email_connector_resource>
             <newsletter>
