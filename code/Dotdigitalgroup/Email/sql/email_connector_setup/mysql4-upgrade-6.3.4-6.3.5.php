@@ -42,7 +42,7 @@ $table->addColumn(
         'is_active', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => false,
-        'default' => '0'
+        'default' => '1'
     ), 'Is Active'
     )
     ->addColumn(
@@ -68,10 +68,9 @@ $table->addColumn(
     ), 'Items count'
     )
     ->addColumn(
-        'items_ids', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
+        'items_ids', Varien_Db_Ddl_Table::TYPE_VARCHAR, 50, array(
         'unsigned' => true,
         'nullable' => false,
-        'default' => '0'
     ), 'Items Id'
     )
     ->addColumn(
@@ -84,7 +83,8 @@ $table->addColumn(
     )
     ->addIndex(
         $installer->getIdxName($contactTable, array('quote_id')),
-        array('quote_id')
+        array('quote_id'),
+        array('type' => 'unique')
     )
     ->addIndex(
         $installer->getIdxName($contactTable, array('store_id')),

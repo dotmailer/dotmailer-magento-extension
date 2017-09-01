@@ -143,19 +143,12 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Abandoned_Grid
     protected function _prepareMassaction()
     {
         $this->setMassactionIdField('email_contact_id');
-        $this->getMassactionBlock()->setFormFieldName('contact');
+        $this->getMassactionBlock()->setFormFieldName('abandoned');
         $this->getMassactionBlock()->addItem(
             'delete', array(
                 'label' => Mage::helper('ddg')->__('Delete'),
                 'url' => $this->getUrl('*/*/massDelete'),
                 'confirm' => Mage::helper('ddg')->__('Are you sure?'))
-        );
-        $this->getMassactionBlock()->addItem(
-            'resend', array(
-                'label' => Mage::helper('ddg')->__('Resend'),
-                'url' => $this->getUrl('*/*/massResend'),
-
-            )
         );
 
         return $this;
