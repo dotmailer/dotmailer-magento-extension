@@ -368,12 +368,12 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
             $storeId
         );
 
-        if ($quoteCollection->getSize()) {
+        //if ($quoteCollection->getSize()) {
             Mage::helper('ddg')->log(
-                'Guest AC 1 from : ' . $from->toString('yyyy-MM-dd HH:mm') . ':'
+                'Guest AC 1 from : ' . $from->toString('yyyy-MM-dd HH:mm') . '    '
                 . $to->toString('yyyy-MM-dd HH:mm')
             );
-        }
+        //}
 
         $guestCampaignId = $this->getLostBasketGuestCampaignId(self::GUEST_LOST_BASKET_ONE, $storeId);
         foreach ($quoteCollection as $quote) {
@@ -456,13 +456,13 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
         $quoteCollection = $this->getProccessedQuoteByIds($quoteIds, $storeId);
 
         //found abandoned carts
-        if ($quoteCollection->getSize()) {
+//        if ($quoteCollection->getSize()) {
             $message = ($guest)? 'Guest' : 'Customer';
             Mage::helper('ddg')->log(
                 $message . ' Abandoned Cart ' . $number . ', from : ' . $from->toString('yyyy-MM-dd HH:mm') .
                 '  :  ' . $to->toString('yyyy-MM-dd HH:mm') . ', store id : ' . $storeId
             );
-        }
+//        }
 
         foreach ($quoteCollection as $quote) {
             $quoteId = $quote->getId();
@@ -501,18 +501,20 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
      */
     private function isItemsChanged($quote, $abandonedModel)
     {
-        //same item number - check for product ids
-        if ($quote->getItemsCount() == $abandonedModel->getItemsCount()) {
+        if ($quote->getItemsCount() != $abandonedModel->getItemsCount()) {
+            return true;
+        } else {
+            //number of items matches
             $quoteItemIds = $this->getQuoteItemIds($quote->getAllItems());
             $abandonedItemIds = explode(',', $abandonedModel->getItemsIds());
 
-            //quote items are the same
+            //quote items not same
             if (! $this->isItemsIdsSame($quoteItemIds, $abandonedItemIds)) {
                 return true;
             }
-        }
 
-        return false;
+            return false;
+        }
     }
 
     /**

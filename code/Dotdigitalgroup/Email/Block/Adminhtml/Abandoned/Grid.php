@@ -10,8 +10,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Abandoned_Grid
         $this->setId('id');
         $this->setDefaultSort('id');
         $this->setDefaultDir('DESC');
-        $this->setSaveParametersInSession(true);
-        $this->setUseAjax(true);
     }
 
     protected function _prepareCollection()
@@ -85,7 +83,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Abandoned_Grid
                 'header' => Mage::helper('ddg')->__('Item ids'),
                 'align' => 'left',
                 'index' => 'items_ids',
-                'type' => 'number',
+                'type' => 'text',
                 'escape' => true
             )
         )->addColumn(
@@ -152,49 +150,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Abandoned_Grid
         );
 
         return $this;
-    }
-
-    /**
-     * Custom callback action for the subscribers/contacts.
-     *
-     * @param $collection
-     * @param $column
-     */
-    public function filterCallbackContact($collection, $column)
-    {
-        $field = $column->getFilterIndex() ? $column->getFilterIndex()
-            : $column->getIndex();
-        $value = $column->getFilter()->getValue();
-
-        if ($value == 'null') {
-            $collection->addFieldToFilter($field, array('null' => true));
-        } else {
-            $collection->addFieldToFilter($field, array('notnull' => true));
-        }
-    }
-
-    /**
-     * Edit the row.
-     *
-     * @param $row
-     *
-     * @return string
-     */
-    public function getRowUrl($row)
-    {
-        return $this->getUrl(
-            '*/*/edit', array('id' => $row->getEmailContactId())
-        );
-    }
-
-    /**
-     * Grid url.
-     *
-     * @return string
-     */
-    public function getGridUrl()
-    {
-        return $this->getUrl('*/*/grid', array('_current' => true));
     }
 
 }
