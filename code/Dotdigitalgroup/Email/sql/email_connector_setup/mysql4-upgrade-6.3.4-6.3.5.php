@@ -35,7 +35,7 @@ $table->addColumn(
     ->addColumn(
         'customer_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
-        'nullable' => false,
+        'nullable' => true,
     ), 'Customer ID'
     )
     ->addColumn(
