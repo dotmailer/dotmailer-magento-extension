@@ -56,10 +56,6 @@ $table->addColumn(
         'Quote updated at'
     )
     ->addColumn(
-        'sent_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(),
-        'Sent At'
-    )
-    ->addColumn(
         'abandoned_cart_number', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => false,
