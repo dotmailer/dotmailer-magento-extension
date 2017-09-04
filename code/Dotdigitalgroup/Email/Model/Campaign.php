@@ -97,12 +97,14 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
         $campaigns = $this->_getEmailCampaigns($website->getStoreIds(), self::PROCESSING, true);
         foreach ($campaigns as $campaign) {
             $client = Mage::helper('ddg')->getWebsiteApiClient($website);
-            $response = $client->getSendStatus($campaign->getSendId());
-            if (isset($response->message)) {
-                //update  the failed to send email message
-                $this->getResource()->setMessageWithSendId($campaign->getSendId(), $response->message);
-            } elseif ($response->status == 'Sent') {
-                $this->getResource()->setSent($campaign->getSendId());
+            if ($client) {
+                $response = $client->getSendStatus($campaign->getSendId());
+                if (isset($response->message)) {
+                    //update  the failed to send email message
+                    $this->getResource()->setMessageWithSendId($campaign->getSendId(), $response->message);
+                } elseif ($response->status == 'Sent') {
+                    $this->getResource()->setSent($campaign->getSendId());
+                }
             }
         }
     }
