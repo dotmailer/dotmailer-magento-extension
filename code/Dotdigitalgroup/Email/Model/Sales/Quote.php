@@ -37,7 +37,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
     const GUEST_LOST_BASKET_THREE = 3;
 
     /**
-     * @var
+     * @var Zend_Locale
      */
     private $locale;
 
@@ -52,14 +52,13 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
             $websiteId = $store->getWebsiteId();
 
             /**
-             * Customers
+             * Customer.
              */
             if ($this->getLostBasketCustomerEnabled(self::CUSTOMER_LOST_BASKET_ONE, $storeId)) {
-                $this->proccessFirtstCustomerAC($storeId, $websiteId);
+                $this->proccessFirstCustomerAC($storeId, $websiteId);
             }
 
             if ($this->getLostBasketCustomerEnabled(self::CUSTOMER_LOST_BASKET_TWO, $storeId)){
-
                 $this->processExistingAC(
                     $this->getLostBasketCustomerCampaignId(self::CUSTOMER_LOST_BASKET_TWO, $storeId),
                     $storeId,
@@ -68,7 +67,6 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
                 );
             }
             if ($this->getLostBasketCustomerEnabled(self::CUSTOMER_LOST_BASKET_THREE, $storeId)){
-
                 $this->processExistingAC(
                     $this->getLostBasketCustomerCampaignId(self::CUSTOMER_LOST_BASKET_THREE, $storeId),
                     $storeId,
@@ -77,13 +75,11 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
                 );
             }
 
-
             /**
              * Guest.
              */
             if ($this->getLostBasketGuestEnabled(self::GUEST_LOST_BASKET_ONE, $storeId)) {
-
-                $this->proccessFirtstGuestAC($storeId, $websiteId);
+                $this->proccessFirstGuestAC($storeId, $websiteId);
             }
 
             if ($this->getLostBasketGuestEnabled(self::GUEST_LOST_BASKET_TWO, $storeId)){
@@ -141,7 +137,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
      * @param $storeId
      * @return null|string
      */
-    protected function _getLostBasketCustomerInterval($num, $storeId)
+    protected function getLostBasketCustomerInterval($num, $storeId)
     {
         $store = Mage::app()->getstore($storeId);
 
@@ -155,7 +151,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
      * @param $storeId
      * @return null|string
      */
-    protected function _getLostBasketGuestIterval($num, $storeId)
+    protected function getLostBasketGuestIterval($num, $storeId)
     {
         $store = Mage::app()->getStore($storeId);
 
@@ -292,15 +288,15 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
      * @param $storeId
      * @param $websiteId
      */
-    private function proccessFirtstCustomerAC($storeId, $websiteId)
+    private function proccessFirstCustomerAC($storeId, $websiteId)
     {
         //campaign id for customers
         $campaignId = $this->getLostBasketCustomerCampaignId(self::CUSTOMER_LOST_BASKET_ONE, $storeId);
+
         $from = Zend_Date::now($this->locale)->subMinute(
-            $this->_getLostBasketCustomerInterval(self::CUSTOMER_LOST_BASKET_ONE, $storeId)
+            $this->getLostBasketCustomerInterval(self::CUSTOMER_LOST_BASKET_ONE, $storeId)
         );
         $to = clone($from);
-        //@cdiacon todo get the last run time from the cronjob table for abanadoned carts
         $from->sub('5', Zend_Date::MINUTE);
 
         //active quotes
@@ -310,10 +306,10 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
             $guest = false, $storeId
         );
         //found abandoned carts
-        if (! $quoteCollection->getSize()) {
+        if ( $quoteCollection->getSize()) {
             Mage::helper('ddg')->log(
-                'Customer AC 1, from : ' . $from->toString('yyyy-MM-dd HH:mm') .
-                '  :  ' . $to->toString('yyyy-MM-dd HH:mm')
+                'Customer Abandoned Cart 1, from : ' . $from->toString('yyyy-MM-dd HH:mm') .
+                '  :  ' . $to->toString('yyyy-MM-dd HH:mm') . ', storeId ' . $storeId
             );
         }
 
@@ -353,13 +349,12 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
      * @param $storeId
      * @param $websiteId
      */
-    private function proccessFirtstGuestAC($storeId, $websiteId)
+    private function proccessFirstGuestAC($storeId, $websiteId)
     {
         $from = Zend_Date::now($this->locale)->subMinute(
-            $this->_getLostBasketGuestIterval(self::GUEST_LOST_BASKET_ONE, $storeId)
+            $this->getLostBasketGuestIterval(self::GUEST_LOST_BASKET_ONE, $storeId)
         );
         $to = clone($from);
-        //@todo get the last cron run from the cron_schedule table
         $from->sub('5', Zend_Date::MINUTE);
 
         $quoteCollection = $this->getStoreQuotes(
@@ -368,12 +363,12 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
             $storeId
         );
 
-        //if ($quoteCollection->getSize()) {
+        if ($quoteCollection->getSize()) {
             Mage::helper('ddg')->log(
-                'Guest AC 1 from : ' . $from->toString('yyyy-MM-dd HH:mm') . '    '
-                . $to->toString('yyyy-MM-dd HH:mm')
+                'Guest Abandoned Cart 1, from : ' . $from->toString('yyyy-MM-dd HH:mm') . '    '
+                . $to->toString('yyyy-MM-dd HH:mm') . ', storeId ' . $storeId
             );
-        //}
+        }
 
         $guestCampaignId = $this->getLostBasketGuestCampaignId(self::GUEST_LOST_BASKET_ONE, $storeId);
         foreach ($quoteCollection as $quote) {
@@ -437,9 +432,15 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
      */
     private function processExistingAC($campaignId, $storeId, $websiteId, $number, $guest = false)
     {
-        $from = Zend_Date::now($this->locale)->subHour($this->_getLostBasketGuestIterval($number, $storeId));
+        if ($guest) {
+            $from = Zend_Date::now($this->locale)->subHour($this->getLostBasketGuestIterval($number, $storeId));
+            $message = 'Guest';
+        } else {
+            $from = Zend_Date::now($this->locale)->subHour($this->getLostBasketCustomerInterval($number, $storeId));
+            $message = 'Customer';
+        }
+
         $to = clone($from);
-        //@cdiacon todo get the last run time from the cronjob table for abanadoned carts
         $from->sub('5', Zend_Date::MINUTE);
 
         //get abandoned carts already sent
@@ -456,13 +457,12 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
         $quoteCollection = $this->getProccessedQuoteByIds($quoteIds, $storeId);
 
         //found abandoned carts
-//        if ($quoteCollection->getSize()) {
-            $message = ($guest)? 'Guest' : 'Customer';
+        if ($quoteCollection->getSize()) {
             Mage::helper('ddg')->log(
                 $message . ' Abandoned Cart ' . $number . ', from : ' . $from->toString('yyyy-MM-dd HH:mm') .
-                '  :  ' . $to->toString('yyyy-MM-dd HH:mm') . ', store id : ' . $storeId
+                '  :  ' . $to->toString('yyyy-MM-dd HH:mm') . ', storeId ' . $storeId
             );
-//        }
+        }
 
         foreach ($quoteCollection as $quote) {
             $quoteId = $quote->getId();
@@ -560,7 +560,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
         //no campign found for interval pass
         if (! $campignFound) {
             $customerId = $quote->getCustomerId();
-            $message = ($customerId)? 'Abandoned Cart Customer ' . $number : 'Guest Abandoned Cart ' . $number;
+            $message = ($customerId)? 'Abandoned Cart ' . $number : 'Guest Abandoned Cart ' . $number;
             Mage::getModel('ddg_automation/campaign')
                 ->setEmail($email)
                 ->setCustomerId($customerId)
@@ -575,7 +575,6 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
         }
     }
 
-
     /**
      * @param $abandonedModel Dotdigitalgroup_Email_Model_Abandoned
      * @param $quote Mage_Sales_Model_Quote
@@ -585,6 +584,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
     {
         $abandonedModel->setStoreId($quote->getStoreId())
             ->setCustomerId($quote->getCustomerId())
+            ->setEmail($quote->getCustomerEmail())
             ->setQuoteId($quote->getId())
             ->setQuoteUpdatedAt($quote->getUpdatedAt())
             ->setAbandonedCartNumber(1)
@@ -592,32 +592,6 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
             ->setItemsIds(implode(',', $itemIds))
             ->save();
     }
-
-    /**
-     *
-     * @param $number int
-     * @param $from string
-     * @param $to string
-     * @param $storeId int
-     */
-    private function getCustomerAbandonedCartsForStore($number, $from, $to, $storeId)
-    {
-        $updated = array(
-            'from' => $from,
-            'to'   => $to,
-            'date' => true);
-
-        $abandoneCollection = Mage::getModel('ddg_automation/abandoned')
-            ->getCollection()
-            ->addFieldToFilter('is_active', 1)
-            ->addFieldToFilter('abandoned_cart_number', --$number)
-            ->addFieldToFilter('customer_id', array('notnull' => true))
-            ->addFieldToFilter('store_id', $storeId)
-            ->addFieldToFilter('quote_updated_at', $updated);
-
-        return $abandoneCollection;
-    }
-
 
     /**
      * @param $number
@@ -673,4 +647,5 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
 
         return $quoteCollection;
     }
+
 }

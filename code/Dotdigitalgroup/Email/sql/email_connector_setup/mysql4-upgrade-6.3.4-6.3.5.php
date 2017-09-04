@@ -39,6 +39,12 @@ $table->addColumn(
     ), 'Customer ID'
     )
     ->addColumn(
+        'email', Varien_Db_Ddl_Table::TYPE_VARCHAR, 150, array(
+        'unsigned' => true,
+        'nullable' => true,
+    ), 'Customer email'
+    )
+    ->addColumn(
         'is_active', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
         'nullable' => false,
@@ -93,6 +99,10 @@ $table->addColumn(
     ->addIndex(
         $installer->getIdxName($contactTable, array('customer_id')),
         array('customer_id')
+    )
+    ->addIndex(
+        $installer->getIdxName($contactTable, array('email')),
+        array('email')
     )
     ->addForeignKey(
         $installer->getFkName(

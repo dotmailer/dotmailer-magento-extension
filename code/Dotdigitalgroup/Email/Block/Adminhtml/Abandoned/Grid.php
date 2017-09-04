@@ -47,6 +47,15 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Abandoned_Grid
                 'escape' => true
             )
         )->addColumn(
+            'email', array(
+                'header' => Mage::helper('ddg')->__('Email'),
+                'align' => 'left',
+                'width' => '50px',
+                'index' => 'email',
+                'type' => 'text',
+                'escape' => true
+            )
+        )->addColumn(
             'is_active', array(
                 'header' => Mage::helper('ddg')->__('Is Active'),
                 'align' => 'left',
@@ -58,7 +67,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Abandoned_Grid
             'quote_updated_at', array(
                 'header' => Mage::helper('ddg')->__('Quote updated at'),
                 'align' => 'right',
-                'width' => '50px',
                 'index' => 'quote_updated_at',
                 'type' => 'datetime'
             )
@@ -90,7 +98,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Abandoned_Grid
             'created_at', array(
                 'header' => Mage::helper('ddg')->__('Created At'),
                 'align' => 'right',
-                'width' => '50px',
                 'index' => 'created_at',
                 'type' => 'datetime'
             )
@@ -99,7 +106,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Abandoned_Grid
             'updated_at', array(
                 'header' => Mage::helper('ddg')->__('Updated at'),
                 'align' => 'right',
-                'width' => '50px',
                 'index' => 'updated_at',
                 'type' => 'datetime'
             )
