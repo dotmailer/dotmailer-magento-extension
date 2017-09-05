@@ -699,8 +699,9 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
         );
         if (!$valid) {
             $object = new stdClass();
+            $object->message = 'Invalid email :' . $email;
 
-            return $object->message = 'Not valid email :' . $email;
+            return $object;
         }
 
         $url = $this->getApiEndpoint() . self::REST_CONTACTS;
