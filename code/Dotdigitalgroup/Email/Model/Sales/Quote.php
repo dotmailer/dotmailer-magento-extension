@@ -308,7 +308,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
         //found abandoned carts
         if ( $quoteCollection->getSize()) {
             Mage::helper('ddg')->log(
-                'Customer Abandoned Cart 1, from : ' . $from->toString('yyyy-MM-dd HH:mm') .
+                'Customer Abandoned Cart 1, from ' . $from->toString('yyyy-MM-dd HH:mm') .
                 '  :  ' . $to->toString('yyyy-MM-dd HH:mm') . ', storeId ' . $storeId
             );
         }
@@ -365,7 +365,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
 
         if ($quoteCollection->getSize()) {
             Mage::helper('ddg')->log(
-                'Guest Abandoned Cart 1, from : ' . $from->toString('yyyy-MM-dd HH:mm') . '    '
+                'Guest Abandoned Cart 1, from ' . $from->toString('yyyy-MM-dd HH:mm') . '    '
                 . $to->toString('yyyy-MM-dd HH:mm') . ', storeId ' . $storeId
             );
         }
@@ -459,7 +459,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
         //found abandoned carts
         if ($quoteCollection->getSize()) {
             Mage::helper('ddg')->log(
-                $message . ' Abandoned Cart ' . $number . ', from : ' . $from->toString('yyyy-MM-dd HH:mm') .
+                $message . ' Abandoned Cart ' . $number . ', from ' . $from->toString('yyyy-MM-dd HH:mm') .
                 '  :  ' . $to->toString('yyyy-MM-dd HH:mm') . ', storeId ' . $storeId
             );
         }
