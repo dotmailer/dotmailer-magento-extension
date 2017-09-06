@@ -238,8 +238,8 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Subscriber
         $categoryId = $this->subscriber->getMostCategoryId();
         if ($categoryId) {
             return Mage::getModel('catalog/category')
-                ->load($categoryId)
                 ->setStoreId($this->subscriber->getStoreId())
+                ->load($categoryId)
                 ->getName();
         }
 
@@ -253,9 +253,27 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Subscriber
      */
     public function getMostPurBrand()
     {
-        $brand = $this->subscriber->getMostBrand();
-        if ($brand) {
-            return $brand;
+        $optionId = $this->subscriber->getMostBrand();
+        $brandAttribute = Mage::helper('ddg')->getWebsiteConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_DATA_FIELDS_BRAND_ATTRIBUTE,
+            Mage::app()->getStore($this->subscriber->getStoreId())->getWebsiteId()
+        );
+
+        if ($optionId && $brandAttribute) {
+            $attribute = Mage::getSingleton('eav/config')->getAttribute(
+                Mage_Catalog_Model_Product::ENTITY,
+                $brandAttribute
+            );
+
+            if ($attribute instanceof Mage_Eav_Model_Entity_Attribute_Abstract) {
+                $value = $attribute->setStoreId($this->subscriber->getStoreId())
+                    ->getSource()
+                    ->getOptionText($optionId);
+
+                if ($value) {
+                    return $value;
+                }
+            }
         }
 
         return "";
@@ -301,8 +319,8 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Subscriber
         $categoryId = $this->subscriber->getFirstCategoryId();
         if ($categoryId) {
             return Mage::getModel('catalog/category')
-                ->load($categoryId)
                 ->setStoreId($this->subscriber->getStoreId())
+                ->load($categoryId)
                 ->getName();
         }
 
@@ -357,17 +375,26 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Subscriber
      */
     protected function _getBrandValue($id)
     {
-        $attribute = Mage::helper('ddg')->getWebsiteConfig(
+        $attributeCode = Mage::helper('ddg')->getWebsiteConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_DATA_FIELDS_BRAND_ATTRIBUTE,
             Mage::app()->getStore($this->subscriber->getStoreId())->getWebsiteId()
         );
-        if ($id && $attribute) {
-            $brand = Mage::getModel('catalog/product')
-                ->setStoreId($this->subscriber->getStoreId())
-                ->load($id)
-                ->getAttributeText($attribute);
-            if ($brand) {
-                return $brand;
+        $storeId = $this->subscriber->getStoreId();
+
+        if ($id && $attributeCode) {
+            /** @var Mage_Catalog_Model_Product $product */
+            $product = Mage::getModel('catalog/product')
+                ->setStoreId($storeId)
+                ->load($id);
+
+            $value = $product->getResource()
+                ->getAttribute($attributeCode)
+                ->setStoreId($storeId)
+                ->getSource()
+                ->getOptionText($product->getData($attributeCode));
+
+            if ($value) {
+                return $value;
             }
         }
 
