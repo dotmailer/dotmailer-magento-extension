@@ -424,11 +424,11 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
 
 
     /**
-     * @param $campaignId int
-     * @param $storeId int
-     * @param $websiteId int
-     * @param $number int
-     * @param $guest bool
+     * @param $campaignId
+     * @param $storeId
+     * @param $websiteId
+     * @param $number
+     * @param bool $guest
      */
     private function processExistingAC($campaignId, $storeId, $websiteId, $number, $guest = false)
     {
@@ -454,6 +454,9 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
 
         //quote collection based on the updated date from abandoned cart table
         $quoteIds = $abandonedCollection->getColumnValues('quote_id');
+        if (empty($quoteIds)){
+            return;
+        }
         $quoteCollection = $this->getProccessedQuoteByIds($quoteIds, $storeId);
 
         //found abandoned carts
