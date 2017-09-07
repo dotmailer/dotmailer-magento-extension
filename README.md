@@ -9,7 +9,7 @@ This module uses modman
 
 First ensure you have modman installed (see here: https://github.com/colinmollenhour/modman#installation)
 
-...and run the following in your magento root:
+and run the following in your magento root:
 
 ```
 modman init
