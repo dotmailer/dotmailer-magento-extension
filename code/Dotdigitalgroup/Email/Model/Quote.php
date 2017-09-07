@@ -215,7 +215,7 @@ class Dotdigitalgroup_Email_Model_Quote extends Mage_Core_Model_Abstract
                         $website->getId()
                     );
                 if ($check) {
-                    $message = 'Quote updated : ' . $quoteId;
+                    $message = 'QuoteId was updated : ' . $quoteId;
                     Mage::helper('ddg')->log($message);
                     //reset the modify for the email quote
                     $emailQuoteIds[] = $quoteId;
