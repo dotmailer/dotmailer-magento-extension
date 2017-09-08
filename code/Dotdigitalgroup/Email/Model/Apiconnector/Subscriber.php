@@ -30,6 +30,8 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Subscriber extends Dotdigitalgrou
     public function setSubscriberData(Mage_Newsletter_Model_Subscriber $subscriber)
     {
         $this->object = $subscriber;
+        $this->store = Mage::app()->getStore($this->object->getStoreId());
+        $this->website = $this->store->getWebsite();
         foreach ($this->getMappingHash() as $key => $field) {
             //Call user function based on the attribute mapped.
             $function = 'get';
@@ -47,19 +49,5 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Subscriber extends Dotdigitalgrou
                 Mage::logException($e);
             }
         }
-    }
-
-    /**
-     * @return string
-     */
-    protected function _getWebsiteName()
-    {
-        $storeId = $this->object->getStoreId();
-        $website = Mage::app()->getStore($storeId)->getWebsite();
-        if ($website) {
-            return $website->getName();
-        }
-
-        return '';
     }
 }
