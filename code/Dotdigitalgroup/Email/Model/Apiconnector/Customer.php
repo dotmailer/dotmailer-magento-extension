@@ -483,7 +483,10 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getAverageOrderValue()
     {
-        return $this->object->getAverageOrderValue();
+        return (float)number_format(
+            $this->object->getAverageOrderValue(), 2, '.', ''
+        );
+
     }
 
     /**
@@ -493,7 +496,9 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getTotalSpend()
     {
-        return $this->object->getTotalSpend();
+        return (float)number_format(
+            $this->object->getTotalSpend(), 2, '.', ''
+        );
     }
 
     /**
@@ -561,7 +566,9 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
             $totalRefunded += $refunded;
         }
 
-        return $totalRefunded;
+        return (float)number_format(
+            $totalRefunded, 2, '.', ''
+        );
     }
 
     /**

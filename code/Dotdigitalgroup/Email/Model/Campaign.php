@@ -33,6 +33,9 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
     const PENDING = 0;
     const PROCESSING = 1;
 
+    const CAMPAIGN_EVENT_ORDER_REVIEW = 'Order Review';
+    const CAMPAIGN_EVENT_LOST_BASKET = 'Lost Basket';
+
     //error messages
     const SEND_EMAIL_CONTACT_ID_MISSING = 'Error : missing contact id - will try later to send ';
 
@@ -97,12 +100,14 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
         $campaigns = $this->_getEmailCampaigns($website->getStoreIds(), self::PROCESSING, true);
         foreach ($campaigns as $campaign) {
             $client = Mage::helper('ddg')->getWebsiteApiClient($website);
-            $response = $client->getSendStatus($campaign->getSendId());
-            if (isset($response->message)) {
-                //update  the failed to send email message
-                $this->getResource()->setMessageWithSendId($campaign->getSendId(), $response->message);
-            } elseif ($response->status == 'Sent') {
-                $this->getResource()->setSent($campaign->getSendId());
+            if ($client) {
+                $response = $client->getSendStatus($campaign->getSendId());
+                if (isset($response->message)) {
+                    //update  the failed to send email message
+                    $this->getResource()->setMessageWithSendId($campaign->getSendId(), $response->message);
+                } elseif ($response->status == 'Sent') {
+                    $this->getResource()->setSent($campaign->getSendId());
+                }
             }
         }
     }
