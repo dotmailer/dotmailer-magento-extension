@@ -84,25 +84,25 @@ $table->addColumn(
         'Update At'
     )
     ->addIndex(
-        $installer->getIdxName($contactTable, array('quote_id')),
+        $installer->getIdxName($abandonedTable, array('quote_id')),
         array('quote_id'),
         array('type' => 'unique')
     )
     ->addIndex(
-        $installer->getIdxName($contactTable, array('store_id')),
+        $installer->getIdxName($abandonedTable, array('store_id')),
         array('store_id')
     )
     ->addIndex(
-        $installer->getIdxName($contactTable, array('customer_id')),
+        $installer->getIdxName($abandonedTable, array('customer_id')),
         array('customer_id')
     )
     ->addIndex(
-        $installer->getIdxName($contactTable, array('email')),
+        $installer->getIdxName($abandonedTable, array('email')),
         array('email')
     )
     ->addForeignKey(
         $installer->getFkName(
-            $contactTable, 'quote_id', 'sales/quote', 'entity_id'
+            $abandonedTable, 'quote_id', 'sales/quote', 'entity_id'
         ),
         'quote_id', $installer->getTable('sales/quote'), 'entity_id',
         Varien_Db_Ddl_Table::ACTION_CASCADE, Varien_Db_Ddl_Table::ACTION_CASCADE
