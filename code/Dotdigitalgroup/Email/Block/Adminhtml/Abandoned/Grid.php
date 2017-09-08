@@ -4,6 +4,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Abandoned_Grid
     extends Mage_Adminhtml_Block_Widget_Grid
 {
 
+    /**
+     * Dotdigitalgroup_Email_Block_Adminhtml_Abandoned_Grid constructor.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -14,7 +17,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Abandoned_Grid
 
     protected function _prepareCollection()
     {
-        $collection = Mage::getModel('ddg_automation/abandoned')->getCollection();
+        $collection = Mage::getModel('ddg_automation/abandoned')
+            ->getCollection();
         $this->setCollection($collection);
 
         return parent::_prepareCollection();
@@ -146,7 +150,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Abandoned_Grid
      */
     protected function _prepareMassaction()
     {
-        $this->setMassactionIdField('email_contact_id');
+        $this->setMassactionIdField('id');
         $this->getMassactionBlock()->setFormFieldName('abandoned');
         $this->getMassactionBlock()->addItem(
             'delete', array(
@@ -156,6 +160,16 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Abandoned_Grid
         );
 
         return $this;
+    }
+
+    /**
+     * Grid url.
+     *
+     * @return string
+     */
+    public function getGridUrl()
+    {
+        return $this->getUrl('*/*/grid', array('_current' => true));
     }
 
 }
