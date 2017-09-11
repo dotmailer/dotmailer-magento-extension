@@ -30,8 +30,9 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Subscriber extends Dotdigitalgrou
     public function setSubscriberData(Mage_Newsletter_Model_Subscriber $subscriber)
     {
         $this->object = $subscriber;
-        $this->store = Mage::app()->getStore($this->object->getStoreId());
-        $this->website = $this->store->getWebsite();
+        $this->storeId = $this->object->getStoreId();
+        $store = Mage::app()->getStore($this->storeId);
+        $this->websiteId = $store->getWebsite();
         foreach ($this->getMappingHash() as $key => $field) {
             //Call user function based on the attribute mapped.
             $function = 'get';
