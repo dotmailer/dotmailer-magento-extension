@@ -13,6 +13,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Abandoned_Grid
         $this->setId('id');
         $this->setDefaultSort('id');
         $this->setDefaultDir('DESC');
+        $this->setSaveParametersInSession(true);
+        $this->setUseAjax(true);
     }
 
     protected function _prepareCollection()
