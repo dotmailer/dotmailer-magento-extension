@@ -46,6 +46,16 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     public $mappingHash;
 
     /**
+     * @var int
+     */
+    public $storeId;
+
+    /**
+     * @var int
+     */
+    public $websiteId;
+
+    /**
      * @var array
      */
     public $subscriberStatus = array(
@@ -85,9 +95,10 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     {
         $this->object = $customer;
         $this->setReviewCollection();
-        $website = $customer->getStore()->getWebsite();
+        $this->websiteId = $customer->getStore()->getWebsiteId();
+        $this->storeId = $customer->getStore()->getId();
 
-        if ($website && Mage::helper('ddg')->isSweetToothToGo($website)) {
+        if ($this->websiteId && Mage::helper('ddg')->isSweetToothToGo($this->websiteId)) {
             $this->setRewardCustomer($customer);
         }
 
@@ -624,9 +635,8 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     protected function _getWebsiteName()
     {
-        $websiteId = $this->object->getWebsiteId();
-        $website   = Mage::app()->getWebsite($websiteId);
-        if ($website) {
+        if ($this->websiteId) {
+            $website = Mage::app()->getWebsite($this->websiteId);
             return $website->getName();
         }
 
@@ -638,9 +648,8 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     protected function _getStoreName()
     {
-        $storeId = $this->object->getStoreId();
-        $store   = Mage::app()->getStore($storeId);
-        if ($store) {
+        if ($this->storeId) {
+            $store = Mage::app()->getStore($this->storeId);
             return $store->getName();
         }
 
@@ -698,7 +707,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getRewardReferralUrl()
     {
-        if (Mage::helper('ddg')->isSweetToothToGo($this->object->getStore()->getWebsite())
+        if (Mage::helper('ddg')->isSweetToothToGo($this->websiteId)
         ) {
             return (string)Mage::helper('rewardsref/url')->getUrl(
                 $this->object
@@ -879,9 +888,9 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
             $collection = Mage::getModel('enterprise_reward/reward_history')
                 ->getCollection()
                 ->addCustomerFilter($this->object->getId())
-                ->addWebsiteFilter($this->object->getWebsiteId())
+                ->addWebsiteFilter($this->websiteId)
                 ->setExpiryConfig(Mage::helper('enterprise_reward')->getExpiryConfig())
-                ->addExpirationDate($this->object->getWebsiteId())
+                ->addExpirationDate($this->websiteId)
                 ->skipExpiredDuplicates()
                 ->setDefaultOrder();
 
@@ -904,7 +913,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     {
         $collection = Mage::getModel('ddg_automation/contact')->getCollection()
             ->addFieldToFilter('customer_id', $this->getCustomerId())
-            ->addFieldToFilter('website_id', $this->object->getWebsiteId());
+            ->addFieldToFilter('website_id', $this->websiteId);
 
         //@codingStandardsIgnoreStart
         $item = $collection->setPageSize(1)->setCurPage(1)->getFirstItem();
@@ -930,7 +939,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
             $collection = Mage::getModel('enterprise_reward/reward_history')
                 ->getCollection()
                 ->addCustomerFilter($this->object->getId())
-                ->addWebsiteFilter($this->object->getWebsiteId())
+                ->addWebsiteFilter($this->websiteId)
                 ->addFieldToFilter('points_delta', array('lt' => 0))
                 ->setDefaultOrder();
 
@@ -961,7 +970,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         $categoryId = $this->object->getMostCategoryId();
         if ($categoryId) {
             return Mage::getModel('catalog/category')
-                ->setStoreId($this->object->getStoreId())
+                ->setStoreId($this->storeId)
                 ->load($categoryId)
                 ->getName();
         }
@@ -979,7 +988,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         $optionId = $this->object->getMostBrand();
         $brandAttribute = Mage::helper('ddg')->getWebsiteConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_DATA_FIELDS_BRAND_ATTRIBUTE,
-            $this->object->getWebsiteId()
+            $this->websiteId
         );
 
         if ($optionId && $brandAttribute) {
@@ -989,7 +998,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
             );
 
             if ($attribute instanceof Mage_Eav_Model_Entity_Attribute_Abstract) {
-                $value = $attribute->setStoreId($this->object->getStoreId())
+                $value = $attribute->setStoreId($this->storeId)
                     ->getSource()
                     ->getOptionText($optionId);
 
@@ -1042,7 +1051,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         $categoryId = $this->object->getFirstCategoryId();
         if ($categoryId) {
             return Mage::getModel('catalog/category')
-                ->setStoreId($this->object->getStoreId())
+                ->setStoreId($this->storeId)
                 ->load($categoryId)
                 ->getName();
         }
@@ -1060,7 +1069,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         $categoryId = $this->object->getLastCategoryId();
         if ($categoryId) {
             return Mage::getModel('catalog/category')
-                ->setStoreId($this->object->getStoreId())
+                ->setStoreId($this->storeId)
                 ->load($categoryId)
                 ->getName();
         }
@@ -1100,19 +1109,18 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     {
         $attributeCode = Mage::helper('ddg')->getWebsiteConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_DATA_FIELDS_BRAND_ATTRIBUTE,
-            $this->object->getWebsiteId()
+            $this->websiteId
         );
-        $storeId = $this->object->getStoreId();
 
         if ($id && $attributeCode) {
             /** @var Mage_Catalog_Model_Product $product */
             $product = Mage::getModel('catalog/product')
-                ->setStoreId($storeId)
+                ->setStoreId($this->storeId)
                 ->load($id);
 
             $value = $product->getResource()
                 ->getAttribute($attributeCode)
-                ->setStoreId($storeId)
+                ->setStoreId($this->storeId)
                 ->getSource()
                 ->getOptionText($product->getData($attributeCode));
 
