@@ -31,8 +31,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Subscriber extends Dotdigitalgrou
     {
         $this->object = $subscriber;
         $this->storeId = $this->object->getStoreId();
-        $store = Mage::app()->getStore($this->storeId);
-        $this->websiteId = $store->getWebsite();
+        $this->websiteId = Mage::app()->getStore($this->storeId)->getWebsite()->getId();
         foreach ($this->getMappingHash() as $key => $field) {
             //Call user function based on the attribute mapped.
             $function = 'get';
