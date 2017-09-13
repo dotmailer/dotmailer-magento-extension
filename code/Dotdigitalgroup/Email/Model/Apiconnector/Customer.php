@@ -6,11 +6,11 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     /**
      * @var
      */
-    public $customer;
+    public $object;
     /**
      * @var
      */
-    public $customerData;
+    public $objectData;
     /**
      * @var
      */
@@ -46,6 +46,16 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     public $mappingHash;
 
     /**
+     * @var int
+     */
+    public $storeId;
+
+    /**
+     * @var int
+     */
+    public $websiteId;
+
+    /**
      * @var array
      */
     public $subscriberStatus = array(
@@ -73,7 +83,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function setData($data)
     {
-        $this->customerData[] = $data;
+        $this->objectData[] = $data;
     }
 
     /**
@@ -83,11 +93,12 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function setCustomerData(Mage_Customer_Model_Customer $customer)
     {
-        $this->customer = $customer;
+        $this->object = $customer;
         $this->setReviewCollection();
-        $website = $customer->getStore()->getWebsite();
+        $this->websiteId = $customer->getStore()->getWebsiteId();
+        $this->storeId = $customer->getStore()->getId();
 
-        if ($website && Mage::helper('ddg')->isSweetToothToGo($website)) {
+        if ($this->websiteId && Mage::helper('ddg')->isSweetToothToGo($this->websiteId)) {
             $this->setRewardCustomer($customer);
         }
 
@@ -106,7 +117,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
                 //@codingStandardsIgnoreStart
                 $value = call_user_func(array('self', $function));
                 //@codingStandardsIgnoreEnd
-                $this->customerData[$key] = $value;
+                $this->objectData[$key] = $value;
             } catch (Exception $e) {
                 Mage::logException($e);
             }
@@ -118,7 +129,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function setReviewCollection()
     {
-        $customerId = $this->customer->getId();
+        $customerId = $this->object->getId();
         $collection  = Mage::getModel('review/review')->getCollection()
             ->addCustomerFilter($customerId)
             ->setOrder('review_id', 'DESC');
@@ -213,7 +224,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getCustomerId()
     {
-        return $this->customer->getId();
+        return $this->object->getId();
     }
 
     /**
@@ -223,7 +234,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getFirstname()
     {
-        return $this->customer->getFirstname();
+        return $this->object->getFirstname();
     }
 
     /**
@@ -233,7 +244,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getLastname()
     {
-        return $this->customer->getLastname();
+        return $this->object->getLastname();
     }
 
     /**
@@ -243,7 +254,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getDob()
     {
-        return $this->customer->getDob();
+        return $this->object->getDob();
     }
 
     /**
@@ -263,7 +274,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getPrefix()
     {
-        return $this->customer->getPrefix();
+        return $this->object->getPrefix();
     }
 
     /**
@@ -273,7 +284,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getSuffix()
     {
-        return $this->customer->getSuffix();
+        return $this->object->getSuffix();
     }
 
     /**
@@ -303,7 +314,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getCreatedAt()
     {
-        return $this->customer->getCreatedAt();
+        return $this->object->getCreatedAt();
     }
 
     /**
@@ -313,7 +324,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getLastLoggedDate()
     {
-        return $this->customer->getLastLoggedDate();
+        return $this->object->getLastLoggedDate();
     }
 
     /**
@@ -333,7 +344,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getBillingAddress1()
     {
-        return $this->_getStreet($this->customer->getBillingStreet(), 1);
+        return $this->_getStreet($this->object->getBillingStreet(), 1);
     }
 
     /**
@@ -343,7 +354,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getBillingAddress2()
     {
-        return $this->_getStreet($this->customer->getBillingStreet(), 2);
+        return $this->_getStreet($this->object->getBillingStreet(), 2);
     }
 
     /**
@@ -353,7 +364,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getBillingCity()
     {
-        return $this->customer->getBillingCity();
+        return $this->object->getBillingCity();
     }
 
     /**
@@ -363,7 +374,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getBillingCountry()
     {
-        return $this->customer->getBillingCountryCode();
+        return $this->object->getBillingCountryCode();
     }
 
     /**
@@ -373,7 +384,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getBillingState()
     {
-        return $this->customer->getBillingRegion();
+        return $this->object->getBillingRegion();
     }
 
     /**
@@ -383,7 +394,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getBillingPostcode()
     {
-        return $this->customer->getBillingPostcode();
+        return $this->object->getBillingPostcode();
     }
 
     /**
@@ -393,7 +404,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getBillingTelephone()
     {
-        return $this->customer->getBillingTelephone();
+        return $this->object->getBillingTelephone();
     }
 
     /**
@@ -403,7 +414,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getDeliveryAddress1()
     {
-        return $this->_getStreet($this->customer->getShippingStreet(), 1);
+        return $this->_getStreet($this->object->getShippingStreet(), 1);
     }
 
     /**
@@ -413,7 +424,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getDeliveryAddress2()
     {
-        return $this->_getStreet($this->customer->getShippingStreet(), 2);
+        return $this->_getStreet($this->object->getShippingStreet(), 2);
     }
 
     /**
@@ -423,7 +434,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getDeliveryCity()
     {
-        return $this->customer->getShippingCity();
+        return $this->object->getShippingCity();
     }
 
     /**
@@ -433,7 +444,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getDeliveryCountry()
     {
-        return $this->customer->getShippingCountryCode();
+        return $this->object->getShippingCountryCode();
     }
 
     /**
@@ -443,7 +454,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getDeliveryState()
     {
-        return $this->customer->getShippingRegion();
+        return $this->object->getShippingRegion();
     }
 
     /**
@@ -453,7 +464,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getDeliveryPostcode()
     {
-        return $this->customer->getShippingPostcode();
+        return $this->object->getShippingPostcode();
     }
 
     /**
@@ -463,7 +474,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getDeliveryTelephone()
     {
-        return $this->customer->getShippingTelephone();
+        return $this->object->getShippingTelephone();
     }
 
     /**
@@ -473,7 +484,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getNumberOfOrders()
     {
-        return $this->customer->getNumberOfOrders();
+        return $this->object->getNumberOfOrders();
     }
 
     /**
@@ -483,7 +494,10 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getAverageOrderValue()
     {
-        return $this->customer->getAverageOrderValue();
+        return (float)number_format(
+            $this->object->getAverageOrderValue(), 2, '.', ''
+        );
+
     }
 
     /**
@@ -493,7 +507,9 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getTotalSpend()
     {
-        return $this->customer->getTotalSpend();
+        return (float)number_format(
+            $this->object->getTotalSpend(), 2, '.', ''
+        );
     }
 
     /**
@@ -503,7 +519,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getLastOrderDate()
     {
-        return $this->customer->getLastOrderDate();
+        return $this->object->getLastOrderDate();
     }
 
     /**
@@ -513,7 +529,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getLastOrderId()
     {
-        return $this->customer->getLastOrderId();
+        return $this->object->getLastOrderId();
     }
 
     /**
@@ -523,7 +539,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getLastQuoteId()
     {
-        return $this->customer->getLastQuoteId();
+        return $this->object->getLastQuoteId();
     }
 
     /**
@@ -533,7 +549,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getId()
     {
-        return $this->customer->getId();
+        return $this->object->getId();
     }
 
     /**
@@ -543,7 +559,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getTitle()
     {
-        return $this->customer->getPrefix();
+        return $this->object->getPrefix();
     }
 
     /**
@@ -554,14 +570,16 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     public function getTotalRefund()
     {
         $orders        = Mage::getResourceModel('sales/order_collection')
-            ->addAttributeToFilter('customer_id', $this->customer->getId());
+            ->addAttributeToFilter('customer_id', $this->object->getId());
         $totalRefunded = 0;
         foreach ($orders as $order) {
             $refunded = $order->getTotalRefunded();
             $totalRefunded += $refunded;
         }
 
-        return $totalRefunded;
+        return (float)number_format(
+            $totalRefunded, 2, '.', ''
+        );
     }
 
     /**
@@ -571,7 +589,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function toCSVArray()
     {
-        $result = $this->customerData;
+        $result = $this->objectData;
 
         return $result;
     }
@@ -584,7 +602,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     protected function _getCustomerGender()
     {
-        $genderId = $this->customer->getGender();
+        $genderId = $this->object->getGender();
         if (is_numeric($genderId)) {
             $gender = Mage::getResourceModel('customer/customer')
                 ->getAttribute('gender')
@@ -617,9 +635,8 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     protected function _getWebsiteName()
     {
-        $websiteId = $this->customer->getWebsiteId();
-        $website   = Mage::app()->getWebsite($websiteId);
-        if ($website) {
+        if ($this->websiteId) {
+            $website = Mage::app()->getWebsite($this->websiteId);
             return $website->getName();
         }
 
@@ -631,9 +648,8 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     protected function _getStoreName()
     {
-        $storeId = $this->customer->getStoreId();
-        $store   = Mage::app()->getStore($storeId);
-        if ($store) {
+        if ($this->storeId) {
+            $store = Mage::app()->getStore($this->storeId);
             return $store->getName();
         }
 
@@ -662,7 +678,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     protected function _getCustomerGroup()
     {
 
-        $groupId = $this->customer->getGroupId();
+        $groupId = $this->object->getGroupId();
         $group   = Mage::getModel('customer/group')->load($groupId);
 
         if ($group->getId()) {
@@ -691,10 +707,10 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getRewardReferralUrl()
     {
-        if (Mage::helper('ddg')->isSweetToothToGo($this->customer->getStore()->getWebsite())
+        if (Mage::helper('ddg')->isSweetToothToGo($this->websiteId)
         ) {
             return (string)Mage::helper('rewardsref/url')->getUrl(
-                $this->customer
+                $this->object
             );
         }
 
@@ -791,7 +807,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     public function getSubscriberStatus()
     {
         $subscriber = Mage::getModel('newsletter/subscriber')->loadByCustomer(
-            $this->customer
+            $this->object
         );
         if ($subscriber->getCustomerId()) {
             return $this->subscriberStatus[$subscriber->getSubscriberStatus()];
@@ -871,10 +887,10 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         if (Mage::getModel('enterprise_reward/reward_history')) {
             $collection = Mage::getModel('enterprise_reward/reward_history')
                 ->getCollection()
-                ->addCustomerFilter($this->customer->getId())
-                ->addWebsiteFilter($this->customer->getWebsiteId())
+                ->addCustomerFilter($this->object->getId())
+                ->addWebsiteFilter($this->websiteId)
                 ->setExpiryConfig(Mage::helper('enterprise_reward')->getExpiryConfig())
-                ->addExpirationDate($this->customer->getWebsiteId())
+                ->addExpirationDate($this->websiteId)
                 ->skipExpiredDuplicates()
                 ->setDefaultOrder();
 
@@ -897,7 +913,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     {
         $collection = Mage::getModel('ddg_automation/contact')->getCollection()
             ->addFieldToFilter('customer_id', $this->getCustomerId())
-            ->addFieldToFilter('website_id', $this->customer->getWebsiteId());
+            ->addFieldToFilter('website_id', $this->websiteId);
 
         //@codingStandardsIgnoreStart
         $item = $collection->setPageSize(1)->setCurPage(1)->getFirstItem();
@@ -922,8 +938,8 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
             //last used from the reward history based on the points delta used
             $collection = Mage::getModel('enterprise_reward/reward_history')
                 ->getCollection()
-                ->addCustomerFilter($this->customer->getId())
-                ->addWebsiteFilter($this->customer->getWebsiteId())
+                ->addCustomerFilter($this->object->getId())
+                ->addWebsiteFilter($this->websiteId)
                 ->addFieldToFilter('points_delta', array('lt' => 0))
                 ->setDefaultOrder();
 
@@ -951,10 +967,10 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getMostPurCategory()
     {
-        $categoryId = $this->customer->getMostCategoryId();
+        $categoryId = $this->object->getMostCategoryId();
         if ($categoryId) {
             return Mage::getModel('catalog/category')
-                ->setStoreId($this->customer->getStoreId())
+                ->setStoreId($this->storeId)
                 ->load($categoryId)
                 ->getName();
         }
@@ -969,10 +985,10 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getMostPurBrand()
     {
-        $optionId = $this->customer->getMostBrand();
+        $optionId = $this->object->getMostBrand();
         $brandAttribute = Mage::helper('ddg')->getWebsiteConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_DATA_FIELDS_BRAND_ATTRIBUTE,
-            $this->customer->getWebsiteId()
+            $this->websiteId
         );
 
         if ($optionId && $brandAttribute) {
@@ -982,7 +998,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
             );
 
             if ($attribute instanceof Mage_Eav_Model_Entity_Attribute_Abstract) {
-                $value = $attribute->setStoreId($this->customer->getStoreId())
+                $value = $attribute->setStoreId($this->storeId)
                     ->getSource()
                     ->getOptionText($optionId);
 
@@ -1002,7 +1018,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getMostFreqPurDay()
     {
-        $weekDay = $this->customer->getWeekDay();
+        $weekDay = $this->object->getWeekDay();
         if ($weekDay) {
             return $weekDay;
         }
@@ -1017,7 +1033,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getMostFreqPurMon()
     {
-        $monthDay = $this->customer->getMonthDay();
+        $monthDay = $this->object->getMonthDay();
         if ($monthDay) {
             return $monthDay;
         }
@@ -1032,10 +1048,10 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getFirstCategoryPur()
     {
-        $categoryId = $this->customer->getFirstCategoryId();
+        $categoryId = $this->object->getFirstCategoryId();
         if ($categoryId) {
             return Mage::getModel('catalog/category')
-                ->setStoreId($this->customer->getStoreId())
+                ->setStoreId($this->storeId)
                 ->load($categoryId)
                 ->getName();
         }
@@ -1050,10 +1066,10 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getLastCategoryPur()
     {
-        $categoryId = $this->customer->getLastCategoryId();
+        $categoryId = $this->object->getLastCategoryId();
         if ($categoryId) {
             return Mage::getModel('catalog/category')
-                ->setStoreId($this->customer->getStoreId())
+                ->setStoreId($this->storeId)
                 ->load($categoryId)
                 ->getName();
         }
@@ -1068,7 +1084,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getFirstBrandPur()
     {
-        $id = $this->customer->getProductIdForFirstBrand();
+        $id = $this->object->getProductIdForFirstBrand();
 
         return $this->_getBrandValue($id);
     }
@@ -1080,7 +1096,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getLastBrandPur()
     {
-        $id = $this->customer->getProductIdForLastBrand();
+        $id = $this->object->getProductIdForLastBrand();
 
         return $this->_getBrandValue($id);
     }
@@ -1093,19 +1109,18 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     {
         $attributeCode = Mage::helper('ddg')->getWebsiteConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_DATA_FIELDS_BRAND_ATTRIBUTE,
-            $this->customer->getWebsiteId()
+            $this->websiteId
         );
-        $storeId = $this->customer->getStoreId();
 
         if ($id && $attributeCode) {
             /** @var Mage_Catalog_Model_Product $product */
             $product = Mage::getModel('catalog/product')
-                ->setStoreId($storeId)
+                ->setStoreId($this->storeId)
                 ->load($id);
 
             $value = $product->getResource()
                 ->getAttribute($attributeCode)
-                ->setStoreId($storeId)
+                ->setStoreId($this->storeId)
                 ->getSource()
                 ->getOptionText($product->getData($attributeCode));
 
@@ -1124,7 +1139,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getLastIncrementId()
     {
-        return $this->customer->getLastIncrementId();
+        return $this->object->getLastIncrementId();
     }
 
     /**
@@ -1134,7 +1149,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getBillingCompany()
     {
-        return $this->customer->getBillingCompany();
+        return $this->object->getBillingCompany();
     }
 
     /**
@@ -1144,6 +1159,6 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getDeliveryCompany()
     {
-        return $this->customer->getShippingCompany();
+        return $this->object->getShippingCompany();
     }
 }

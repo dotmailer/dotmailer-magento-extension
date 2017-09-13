@@ -130,6 +130,32 @@
             </block>
         </reference>
     </adminhtml_email_automation_edit>
+    <adminhtml_email_abandoned_index>
+        <reference name="menu">
+            <action method="setActive">
+                <menupath>email_contact/email_connector_abandoned</menupath>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="ddg_automation/adminhtml_abandoned" name="ddg_automation">
+                <block type="adminhtml/store_switcher" name="store_switcher" as="store_switcher">
+                    <action method="setUseConfirm">
+                        <params>0</params>
+                    </action>
+                </block>
+            </block>
+        </reference>
+    </adminhtml_email_abandoned_index>
+    <adminhtml_email_abandoned_grid>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="ddg_automation/adminhtml_abandoned_grid" name="abandoned_grid"/>
+        </block>
+    </adminhtml_email_abandoned_grid>
+    <adminhtml_email_automation_grid>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="ddg_automation/adminhtml_contact_grid" name="contact_grid"/>
+        </block>
+    </adminhtml_email_automation_grid>
     <adminhtml_email_catalog_index>
         <reference name="content">
             <block type="ddg_automation/adminhtml_catalog" name="catalog_grid"/>
