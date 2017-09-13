@@ -36,6 +36,11 @@ You are welcome to contribute to dotmailer for Magento! You can either:
 - Fix a bug: please fork this repo and submit the Pull Request to our [Testing branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/testing)
 - Request a feature on our [community forum](https://support.dotmailer.com/hc/en-gb/community/topics/200432508-Feedback-and-feature-requests)
 
+# V6.3.5 Release Notes
+- Customer sales data fields could get mixed up when multiple store views existed under a single website; this has been fixed.
+- An error would occur due to the attempted retrieval of a non-object in the newsletter subscription section; this no longer happens
+- New way to proccess and send abandoned carts.
+
 # V6.3.4 Release Notes
 - Customers who registered and then went on to subscribe were getting created twice; this no longer happens.
 - For the most purchased custom brand attribute, we've added support for multistore values.
