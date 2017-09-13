@@ -40,6 +40,8 @@ You are welcome to contribute to dotmailer for Magento! You can either:
 - Customer sales data fields could get mixed up when multiple store views existed under a single website; this has been fixed.
 - An error would occur due to the attempted retrieval of a non-object in the newsletter subscription section; this no longer happens
 - New way to proccess and send abandoned carts.
+- Fixed email activity for new customers in admin panel.
+- Fixed error for sending campaigns if the api is disabled.
 
 # V6.3.4 Release Notes
 - Customers who registered and then went on to subscribe were getting created twice; this no longer happens.
