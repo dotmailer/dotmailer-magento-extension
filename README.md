@@ -37,11 +37,15 @@ You are welcome to contribute to dotmailer for Magento! You can either:
 - Request a feature on our [community forum](https://support.dotmailer.com/hc/en-gb/community/topics/200432508-Feedback-and-feature-requests)
 
 # V6.3.5 Release Notes
+
+######Improvements
+- We've introduced a new Abandoned cart report table and improved the way we process and send abandoned cart campaigns.
+
+######Bug fixes
 - Customer sales data fields could get mixed up when multiple store views existed under a single website; this has been fixed.
-- An error would occur due to the attempted retrieval of a non-object in the newsletter subscription section; this no longer happens
-- New way to proccess and send abandoned carts.
-- Fixed email activity for new customers in admin panel.
-- Fixed error for sending campaigns if the api is disabled.
+- An error would occur due to the attempted retrieval of a non-object in the newsletter subscription section; this no longer happens.
+- Email activity for new customers in the admin panel has now been fixed.
+- We fixed an error that would occur when trying to send campaigns with a disabled API connection.
 
 # V6.3.4 Release Notes
 - Customers who registered and then went on to subscribe were getting created twice; this no longer happens.
