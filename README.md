@@ -38,10 +38,10 @@ You are welcome to contribute to dotmailer for Magento! You can either:
 
 # V6.3.5 Release Notes
 
-######Improvements
+###### Improvements
 - We've introduced a new Abandoned cart report table and improved the way we process and send abandoned cart campaigns.
 
-######Bug fixes
+###### Bug fixes
 - Customer sales data fields could get mixed up when multiple store views existed under a single website; this has been fixed.
 - An error would occur due to the attempted retrieval of a non-object in the newsletter subscription section; this no longer happens.
 - Email activity for new customers in the admin panel has now been fixed.
