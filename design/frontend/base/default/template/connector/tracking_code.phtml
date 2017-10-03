@@ -5,7 +5,7 @@ if(Mage::helper('ddg')->getPageTrackingEnabled()) :?>
             var regionPrefix = "<?php echo Mage::helper('ddg')->getRegionPrefix(); ?>";
             var connector = document.createElement('script');
             connector.type = 'text/javascript';
-            connector.src = '//' + regionPrefix + '-t.trackedlink.net/_dmpt.js';
+            connector.src = '//' + regionPrefix + 't.trackedlink.net/_dmpt.js';
             var s = document.getElementsByTagName('script')[0];
             s.parentNode.insertBefore(connector, s);
         })();
