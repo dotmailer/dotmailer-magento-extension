@@ -461,6 +461,12 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         return $apiEndpoint;
     }
 
+    public function getRegionPrefix($websiteId, $client)
+    {
+        $apiEndpoint = $this->getApiEndpoint($websiteId, $client);
+        preg_match("/https:\/\/(.*)-api.dotmailer.com/", $apiEndpoint, $matches);
+        return $matches[1];
+    }
     /**
      * Get api end point from api
      *

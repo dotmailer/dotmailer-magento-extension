@@ -2,12 +2,12 @@
 if(Mage::helper('ddg')->getPageTrackingEnabled()) :?>
     <script type="text/javascript">
         (function(){
+            var regionPrefix = "<?php echo Mage::helper('ddg')->getRegionPrefix(); ?>";
             var connector = document.createElement('script');
             connector.type = 'text/javascript';
-            connector.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 't.trackedlink.net/_dmpt.js';
+            connector.src = '//' + regionPrefix + '-t.trackedlink.net/_dmpt.js';
             var s = document.getElementsByTagName('script')[0];
             s.parentNode.insertBefore(connector, s);
         })();
     </script>
 <?php endif;
-
