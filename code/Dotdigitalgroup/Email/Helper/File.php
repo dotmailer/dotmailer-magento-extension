@@ -193,14 +193,14 @@ class Dotdigitalgroup_Email_Helper_File
     /**
      * Delete file or directory.
      *
-     * @param $path
+     * @param $path Path to delete. Must contain var.
      *
      * @return bool
      */
     public function deleteDir($path)
     {
-        if (empty($path) || strpos($path, 'var') === false) {
-            return sprintf('Failed to delete directory - \'%s\'', $path);
+        if (strpos($path, 'var') === false) {
+            return sprintf("Failed to delete directory - '%s'", $path);
         }
 
         $classFunc = array(__CLASS__, __FUNCTION__);
