@@ -180,8 +180,8 @@ class Dotdigitalgroup_Email_Helper_File
                 || preg_match("/(?:${delimiterEsc}|${enclosureEsc}|\s)/", $field)
             ) {
                 $output[] = $enclosure . str_replace(
-                    $enclosure, $enclosure . $enclosure, $field
-                ) . $enclosure;
+                        $enclosure, $enclosure . $enclosure, $field
+                    ) . $enclosure;
             } else {
                 $output[] = $field;
             }
@@ -199,6 +199,10 @@ class Dotdigitalgroup_Email_Helper_File
      */
     public function deleteDir($path)
     {
+        if (empty($path) || strpos($path, 'var') === false) {
+            return 'Failed to delete directory - \''.$path.'\'';
+        }
+
         $classFunc = array(__CLASS__, __FUNCTION__);
 
         //@codingStandardsIgnoreStart
