@@ -193,7 +193,7 @@ class Dotdigitalgroup_Email_Helper_File
     /**
      * Delete file or directory.
      *
-     * @param $path Path to delete. Must contain var.
+     * @param $path string Path to delete. Must contain var.
      *
      * @return bool
      */
