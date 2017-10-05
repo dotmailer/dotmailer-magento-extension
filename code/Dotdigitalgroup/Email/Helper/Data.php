@@ -414,8 +414,8 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
             return false;
         }
 
-        if (!$apiUsername = $this->getApiUsername($website)
-            || !$apiPassword = $this->getApiPassword($website)
+        if (!$this->getApiUsername($website)
+            || !$this->getApiPassword($website)
         ) {
             return false;
         }
@@ -461,6 +461,18 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         return $apiEndpoint;
     }
 
+    public function getRegionPrefix()
+    {
+        $websiteId = Mage::app()->getStore()->getWebsiteId();
+        $client = $this->getWebsiteApiClient($websiteId);
+        if (!$client) {
+            return '';
+        }
+
+        $apiEndpoint = $this->getApiEndpoint($websiteId, $client);
+        preg_match("/https:\/\/(.*)api.dotmailer.com/", $apiEndpoint, $matches);
+        return $matches[1];
+    }
     /**
      * Get api end point from api
      *
