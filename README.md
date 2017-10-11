@@ -36,6 +36,14 @@ You are welcome to contribute to dotmailer for Magento! You can either:
 - Fix a bug: please fork this repo and submit the Pull Request to our [Testing branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/testing)
 - Request a feature on our [community forum](https://support.dotmailer.com/hc/en-gb/community/topics/200432508-Feedback-and-feature-requests)
 
+# V6.3.6
+
+###### Bug fixes
+- Subscriber sales data fields no longer get incorrectly synced when multiple store views exist under a single website.
+- We’ve introduced new validation when deleting cron job CSV files.
+- Page tracking data wasn’t getting sent for North America (region 2) or Asia Pacific (region 3) accounts using the connector; this has been resolved.
+- An expiry days value of ‘0’ in the external dynamic content coupon code URL would set the coupon code’s expiration date and time to the coupon code’s creation date and time; this has been fixed.
+
 # V6.3.5 Release Notes
 
 ###### Improvements
