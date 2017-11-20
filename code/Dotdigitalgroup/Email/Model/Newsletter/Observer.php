@@ -3,6 +3,11 @@
 class Dotdigitalgroup_Email_Model_Newsletter_Observer
 {
     /**
+     * @var bool
+     */
+    private $isSubscriberNew;
+
+    /**
      * Change the subscribsion for an contact.
      * Add new subscribers to an automation.
      *
@@ -14,6 +19,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
     {
         /** @var Mage_Newsletter_Model_Subscriber $subscriber */
         $subscriber = $observer->getEvent()->getSubscriber();
+        $this->isSubscriberNew = $subscriber->isObjectNew();
         $email = $subscriber->getEmail();
         $storeId = $subscriber->getStoreId();
         $subscriberStatus = $subscriber->getSubscriberStatus();
@@ -179,27 +185,13 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
         $programId = Mage::helper('ddg')
             ->getAutomationIdByType('XML_PATH_CONNECTOR_AUTOMATION_STUDIO_SUBSCRIBER', $websiteId);
         //not mapped ignore
-        if (!$programId) {
+        if (! $programId) {
             return;
         }
 
         try {
             //check the subscriber alredy exists
-            $enrolmentCollection = Mage::getModel('ddg_automation/automation')->getCollection()
-                ->addFieldToFilter('email', $email)
-                ->addFieldToFilter(
-                    'automation_type',
-                    Dotdigitalgroup_Email_Model_Automation::AUTOMATION_TYPE_NEW_SUBSCRIBER
-                )
-                ->addFieldToFilter('website_id', $websiteId);
-
-            //@codingStandardsIgnoreStart
-            $enrolmentCollection->getSelect()->limit(1);
-            $enrolment = $enrolmentCollection->getFirstItem();
-            //@codingStandardsIgnoreEnd
-
-            //add new subscriber to automation
-            if (!$enrolment->getId()) {
+            if ($this->isSubscriberNew) {
                 //save subscriber to the queue
                 $automation = Mage::getModel('ddg_automation/automation');
                 $automation->setEmail($email)
