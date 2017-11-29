@@ -85,10 +85,10 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
             /**
              * Guest.
              */
-            if ($this->getLostBasketGuestEnabled(self::GUEST_LOST_BASKET_ONE, $storeId ||
+            if ($this->getLostBasketGuestEnabled(self::GUEST_LOST_BASKET_ONE, $storeId) ||
                 $secondGuestEnabled ||
                 $thirdGuestEnabled
-            )) {
+            ) {
                 $this->proccessFirstGuestAC($storeId, $websiteId);
             }
             //second guest
