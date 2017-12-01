@@ -14,76 +14,82 @@ class Dotdigitalgroup_Email_Helper_Transactional
 
     /**
      * Transactional Email enabled.
+     *
+     * @param null $storeId
+     * @return mixed
+     */
+    public function isEnabled($storeId = null)
+    {
+        return Mage::getStoreConfigFlag(self::XML_PATH_DDG_TRANSACTIONAL_ENABLED, $storeId);
+    }
+
+    /**
+     * @param null $storeId
+     * @return mixed
+     */
+    public function getSmtpHost($storeId = null)
+    {
+        return Mage::getStoreConfig(self::XML_PATH_DDG_TRANSACTIONAL_HOST, $storeId);
+    }
+
+    /**
+     * @param null $storeId
+     * @return mixed
+     */
+    public function getSmtpUsername($storeId = null)
+    {
+        return Mage::getStoreConfig(self::XML_PATH_DDG_TRANSACTIONAL_USERNAME, $storeId);
+    }
+
+    /**
+     * @param null $storeId
+     * @return mixed
+     */
+    public function getSmtpPassword($storeId = null)
+    {
+        return Mage::getStoreConfig(self::XML_PATH_DDG_TRANSACTIONAL_PASSWORD, $storeId);
+    }
+
+    /**
+     * @param null $storeId
+     * @return mixed
+     */
+    public function getSmtpPort($storeId = null)
+    {
+        return Mage::getStoreConfig(self::XML_PATH_DDG_TRANSACTIONAL_PORT, $storeId);
+    }
+
+    /**
      * @return bool
      */
-    public function isEnabled()
+    public function isDebugEnabled($storeId = null)
     {
-        return Mage::getStoreConfigFlag(
-            self::XML_PATH_DDG_TRANSACTIONAL_ENABLED
-        );
+        return Mage::getStoreConfigFlag(self::XML_PATH_DDG_TRANSACTIONAL_DEBUG, $storeId);
     }
 
     /**
-     * @return mixed
-     */
-    public function getSmtpHost()
-    {
-        return Mage::getStoreConfig(self::XML_PATH_DDG_TRANSACTIONAL_HOST);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSmtpUsername()
-    {
-        return Mage::getStoreConfig(self::XML_PATH_DDG_TRANSACTIONAL_USERNAME);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSmtpPassword()
-    {
-        return Mage::getStoreConfig(self::XML_PATH_DDG_TRANSACTIONAL_PASSWORD);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSmtpPort()
-    {
-        return Mage::getStoreConfig(self::XML_PATH_DDG_TRANSACTIONAL_PORT);
-    }
-
-    /**
-     * @return bool
-     */
-    public function isDebugEnabled()
-    {
-        return Mage::getStoreConfigFlag(self::XML_PATH_DDG_TRANSACTIONAL_DEBUG);
-    }
-
-    /**
+     * @param null $storeId
      * @return Zend_Mail_Transport_Smtp
      */
-    public function getTransport()
+    public function getTransport($storeId = null)
     {
         $config = array(
-            'port' => $this->getSmtpPort(),
+            'port' => $this->getSmtpPort($storeId),
             'auth' => 'login',
-            'username' => $this->getSmtpUsername(),
-            'password' => $this->getSmtpPassword(),
+            'username' => $this->getSmtpUsername($storeId),
+            'password' => $this->getSmtpPassword($storeId),
             'ssl' => 'tls'
         );
 
-        if ($this->isDebugEnabled()) {
+        if ($this->isDebugEnabled($storeId)) {
             $configToLog = $config;
             unset($configToLog['password']);
             Mage::log('Mail transport config : ' . implode(',', $configToLog));
         }
 
         $transport = new Zend_Mail_Transport_Smtp(
-            $this->getSmtpHost(), $config
+            $this->getSmtpHost($storeId),
+            $config
         );
 
         return $transport;
