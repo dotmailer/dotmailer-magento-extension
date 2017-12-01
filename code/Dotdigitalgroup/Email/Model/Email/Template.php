@@ -41,6 +41,13 @@ class Dotdigitalgroup_Email_Model_Email_Template
         $variables['email'] = reset($emails);
         $variables['name']  = reset($names);
 
+        // Get the current store Id
+        if (isset($variables['store'])) {
+            $storeId = $variables['store']->getStoreId();
+        } else {
+            $storeId = null;
+        }
+
         ini_set('SMTP', Mage::getStoreConfig('system/smtp/host'));
         ini_set('smtp_port', Mage::getStoreConfig('system/smtp/port'));
 
@@ -93,7 +100,7 @@ class Dotdigitalgroup_Email_Model_Email_Template
         $mail->setFrom($this->getSenderEmail(), $this->getSenderName());
 
         try {
-            $transport = $helper->getTransport();
+            $transport = $helper->getTransport($storeId);
 
             $mail->send($transport);
 

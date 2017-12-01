@@ -16,63 +16,63 @@ class Dotdigitalgroup_Email_Helper_Transactional
      * Transactional Email enabled.
      * @return bool
      */
-    public function isEnabled()
+    public function isEnabled($storeId = null)
     {
-        return Mage::getStoreConfigFlag(
-            self::XML_PATH_DDG_TRANSACTIONAL_ENABLED
-        );
+        return Mage::getStoreConfigFlag(self::XML_PATH_DDG_TRANSACTIONAL_ENABLED, $storeId);
     }
 
     /**
      * @return mixed
      */
-    public function getSmtpHost()
+    public function getSmtpHost($storeId = null)
     {
-        return Mage::getStoreConfig(self::XML_PATH_DDG_TRANSACTIONAL_HOST);
+        return Mage::getStoreConfig(self::XML_PATH_DDG_TRANSACTIONAL_HOST, $storeId);
     }
 
     /**
      * @return mixed
      */
-    public function getSmtpUsername()
+    public function getSmtpUsername($storeId = null)
     {
-        return Mage::getStoreConfig(self::XML_PATH_DDG_TRANSACTIONAL_USERNAME);
+        return Mage::getStoreConfig(self::XML_PATH_DDG_TRANSACTIONAL_USERNAME, $storeId);
     }
 
     /**
      * @return mixed
      */
-    public function getSmtpPassword()
+    public function getSmtpPassword($storeId = null)
     {
-        return Mage::getStoreConfig(self::XML_PATH_DDG_TRANSACTIONAL_PASSWORD);
+        return Mage::getStoreConfig(self::XML_PATH_DDG_TRANSACTIONAL_PASSWORD, $storeId);
     }
 
     /**
      * @return mixed
      */
-    public function getSmtpPort()
+    public function getSmtpPort($storeId = null)
     {
-        return Mage::getStoreConfig(self::XML_PATH_DDG_TRANSACTIONAL_PORT);
+        return Mage::getStoreConfig(self::XML_PATH_DDG_TRANSACTIONAL_PORT, $storeId);
     }
 
     /**
+     *
      * @return bool
      */
-    public function isDebugEnabled()
+    public function isDebugEnabled($storeId = null)
     {
-        return Mage::getStoreConfigFlag(self::XML_PATH_DDG_TRANSACTIONAL_DEBUG);
+        return Mage::getStoreConfigFlag(self::XML_PATH_DDG_TRANSACTIONAL_DEBUG, $storeId);
     }
 
     /**
+     * @param $storeId int
      * @return Zend_Mail_Transport_Smtp
      */
-    public function getTransport()
+    public function getTransport($storeId = null)
     {
         $config = array(
-            'port' => $this->getSmtpPort(),
+            'port' => $this->getSmtpPort($storeId),
             'auth' => 'login',
-            'username' => $this->getSmtpUsername(),
-            'password' => $this->getSmtpPassword(),
+            'username' => $this->getSmtpUsername($storeId),
+            'password' => $this->getSmtpPassword($storeId),
             'ssl' => 'tls'
         );
 
@@ -83,7 +83,7 @@ class Dotdigitalgroup_Email_Helper_Transactional
         }
 
         $transport = new Zend_Mail_Transport_Smtp(
-            $this->getSmtpHost(), $config
+            $this->getSmtpHost($storeId), $config
         );
 
         return $transport;
