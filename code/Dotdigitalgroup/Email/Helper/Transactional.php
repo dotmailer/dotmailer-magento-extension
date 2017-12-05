@@ -16,7 +16,7 @@ class Dotdigitalgroup_Email_Helper_Transactional
      * Transactional Email enabled.
      *
      * @param null $storeId
-     * @return mixed
+     * @return bool
      */
     public function isEnabled($storeId = null)
     {
