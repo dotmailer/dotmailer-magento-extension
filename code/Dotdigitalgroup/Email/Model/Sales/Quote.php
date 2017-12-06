@@ -348,8 +348,10 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
             //create abandoned cart
             $this->createAbandonedCart($abandonedModel, $quote, $itemIds);
 
-            //send campaign
-            $this->sendEmailCampaign($email, $quote, $campaignId, self::CUSTOMER_LOST_BASKET_ONE,  $websiteId);
+            //send campaign; check if is valid to be sent
+            if ($this->getLostBasketCustomerEnabled(self::CUSTOMER_LOST_BASKET_ONE, $storeId)) {
+                $this->sendEmailCampaign($email, $quote, $campaignId, self::CUSTOMER_LOST_BASKET_ONE, $websiteId);
+            }
         }
     }
 
@@ -406,8 +408,10 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
             //create abandoned cart
             $this->createAbandonedCart($abandonedModel, $quote, $itemIds);
 
-            //send campaign
-            $this->sendEmailCampaign($email, $quote, $guestCampaignId, self::GUEST_LOST_BASKET_ONE, $websiteId);
+            //send campaign; check if is enabled and valid to be sent
+            if ($this->getLostBasketGuestEnabled(self::GUEST_LOST_BASKET_ONE, $storeId)) {
+                $this->sendEmailCampaign($email, $quote, $guestCampaignId, self::GUEST_LOST_BASKET_ONE, $websiteId);
+            }
         }
     }
 
