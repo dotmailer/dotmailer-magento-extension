@@ -50,15 +50,21 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
         foreach (Mage::app()->getStores() as $store) {
             $storeId = $store->getStoreId();
             $websiteId = $store->getWebsiteId();
-
+            $secondCustomerEnabled = $this->getLostBasketCustomerEnabled(self::CUSTOMER_LOST_BASKET_TWO, $storeId);
+            $thirdCustomerEnabled = $this->getLostBasketCustomerEnabled(self::CUSTOMER_LOST_BASKET_THREE, $storeId);
+            $secondGuestEnabled = $this->getLostBasketGuestEnabled(self::GUEST_LOST_BASKET_TWO, $storeId);
+            $thirdGuestEnabled = $this->getLostBasketGuestEnabled(self::GUEST_LOST_BASKET_THREE, $storeId);
             /**
              * Customer.
              */
-            if ($this->getLostBasketCustomerEnabled(self::CUSTOMER_LOST_BASKET_ONE, $storeId)) {
+            if ($this->getLostBasketCustomerEnabled(self::CUSTOMER_LOST_BASKET_ONE, $storeId) ||
+                $secondCustomerEnabled ||
+                $thirdCustomerEnabled
+            ) {
                 $this->proccessFirstCustomerAC($storeId, $websiteId);
             }
-
-            if ($this->getLostBasketCustomerEnabled(self::CUSTOMER_LOST_BASKET_TWO, $storeId)){
+            //second csutomer
+            if ($secondCustomerEnabled){
                 $this->processExistingAC(
                     $this->getLostBasketCustomerCampaignId(self::CUSTOMER_LOST_BASKET_TWO, $storeId),
                     $storeId,
@@ -66,7 +72,8 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
                     self::CUSTOMER_LOST_BASKET_TWO
                 );
             }
-            if ($this->getLostBasketCustomerEnabled(self::CUSTOMER_LOST_BASKET_THREE, $storeId)){
+            //third customer
+            if ($thirdCustomerEnabled){
                 $this->processExistingAC(
                     $this->getLostBasketCustomerCampaignId(self::CUSTOMER_LOST_BASKET_THREE, $storeId),
                     $storeId,
@@ -78,11 +85,14 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
             /**
              * Guest.
              */
-            if ($this->getLostBasketGuestEnabled(self::GUEST_LOST_BASKET_ONE, $storeId)) {
+            if ($this->getLostBasketGuestEnabled(self::GUEST_LOST_BASKET_ONE, $storeId) ||
+                $secondGuestEnabled ||
+                $thirdGuestEnabled
+            ) {
                 $this->proccessFirstGuestAC($storeId, $websiteId);
             }
-
-            if ($this->getLostBasketGuestEnabled(self::GUEST_LOST_BASKET_TWO, $storeId)){
+            //second guest
+            if ($secondGuestEnabled){
                 $this->processExistingAC(
                     $this->getLostBasketGuestCampaignId(self::GUEST_LOST_BASKET_TWO, $storeId),
                     $storeId,
@@ -91,8 +101,8 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
                     true
                 );
             }
-
-            if ($this->getLostBasketGuestEnabled(self::GUEST_LOST_BASKET_THREE, $storeId)) {
+            //third guest
+            if ($thirdGuestEnabled) {
                 $this->processExistingAC(
                     $this->getLostBasketGuestCampaignId(self::GUEST_LOST_BASKET_THREE, $storeId),
                     $storeId,
@@ -338,8 +348,10 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
             //create abandoned cart
             $this->createAbandonedCart($abandonedModel, $quote, $itemIds);
 
-            //send campaign
-            $this->sendEmailCampaign($email, $quote, $campaignId, self::CUSTOMER_LOST_BASKET_ONE,  $websiteId);
+            //send campaign; check if is valid to be sent
+            if ($this->getLostBasketCustomerEnabled(self::CUSTOMER_LOST_BASKET_ONE, $storeId)) {
+                $this->sendEmailCampaign($email, $quote, $campaignId, self::CUSTOMER_LOST_BASKET_ONE, $websiteId);
+            }
         }
     }
 
@@ -396,8 +408,10 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
             //create abandoned cart
             $this->createAbandonedCart($abandonedModel, $quote, $itemIds);
 
-            //send campaign
-            $this->sendEmailCampaign($email, $quote, $guestCampaignId, self::GUEST_LOST_BASKET_ONE, $websiteId);
+            //send campaign; check if is enabled and valid to be sent
+            if ($this->getLostBasketGuestEnabled(self::GUEST_LOST_BASKET_ONE, $storeId)) {
+                $this->sendEmailCampaign($email, $quote, $guestCampaignId, self::GUEST_LOST_BASKET_ONE, $websiteId);
+            }
         }
     }
 
@@ -561,7 +575,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
         $storeId = $quote->getStoreId();
         $campignFound = $this->checkCustomerCartLimit($email, $storeId);
         //no campign found for interval pass
-        if (! $campignFound) {
+        if (! $campignFound && $campaignId) {
             $customerId = $quote->getCustomerId();
             $message = ($customerId)? 'Abandoned Cart ' . $number : 'Guest Abandoned Cart ' . $number;
             Mage::getModel('ddg_automation/campaign')
