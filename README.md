@@ -36,6 +36,12 @@ You are welcome to contribute to dotmailer for Magento! You can either:
 - Fix a bug: please fork this repo and submit the Pull Request to our [Testing branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/testing)
 - Request a feature on our [community forum](https://support.dotmailer.com/hc/en-gb/community/topics/200432508-Feedback-and-feature-requests)
 
+# V6.3.7
+
+###### Bug fixes
+- We’ve fixed duplicates for new subscriber automation.
+- We’ve fixed the process for abandoned carts when the first one is disabled.
+
 # V6.3.6
 
 ###### Bug fixes
