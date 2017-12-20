@@ -23,6 +23,12 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
         $email = $subscriber->getEmail();
         $storeId = $subscriber->getStoreId();
         $subscriberStatus = $subscriber->getSubscriberStatus();
+
+        if ($subscriberStatus == Mage_Newsletter_Model_Subscriber::STATUS_NOT_ACTIVE or
+            $subscriberStatus == Mage_Newsletter_Model_Subscriber::STATUS_UNCONFIRMED) {
+            return $this;
+        }
+
         $websiteId = Mage::app()->getStore($subscriber->getStoreId())->getWebsiteId();
 
         //check if enabled
