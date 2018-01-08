@@ -34,11 +34,11 @@ class Dotdigitalgroup_Email_Model_Connector_Order
     /**
      * @var array
      */
-    public $delivery_address = array();
+    public $delivery_address;
     /**
      * @var array
      */
-    public $billing_address = array();
+    public $billing_address;
     /**
      * @var array
      */
@@ -258,12 +258,14 @@ class Dotdigitalgroup_Email_Model_Connector_Order
      */
     public function expose()
     {
-        return array_diff_key(
+        $propreties = array_diff_key(
             get_object_vars($this),
             array_flip([
                 '_attributeSet'
             ])
         );
+
+        return array_filter($propreties);
     }
 
     protected function _getCustomAttributeValue($field, $orderData)
