@@ -252,7 +252,7 @@ class Dotdigitalgroup_Email_Model_Resource_Contact extends Mage_Core_Model_Resou
             ->reset(Zend_Db_Select::ORDER)
             ->columns(
                 array(
-                    'customer_average_order_value' => "SUM({$expr})/count(*)",
+                    'customer_average_order_value' => new Zend_Db_Expr("SUM({$expr})/count(*)"),
                 )
             )->order('customer_average_order_value');
 

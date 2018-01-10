@@ -79,7 +79,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Tabs_Analysis_Rfm
             ->columns(
                 array(
                     'customer_total_orders'        => "count(*)",
-                    'customer_average_order_value' => "SUM({$expr})/count(*)",
+                    'customer_average_order_value' => new Zend_Db_Expr("SUM({$expr})/count(*)"),
                     'last_order_days_ago'          => "DATEDIFF(date(NOW()) , date(MAX(created_at)))"
                 )
             )

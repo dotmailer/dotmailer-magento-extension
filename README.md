@@ -9,7 +9,7 @@ This module uses modman
 
 First ensure you have modman installed (see here: https://github.com/colinmollenhour/modman#installation)
 
-...and run the following in your magento root:
+and run the following in your magento root:
 
 ```
 modman init
@@ -33,7 +33,7 @@ Compatibility
 
 You are welcome to contribute to dotmailer for Magento! You can either:
 - Report a bug: create a [GitHub issue](https://github.com/dotmailer/dotmailer-magento-extension/issues/new) including description, repro steps, Magento and extension version numbers
-- Fix a bug: please fork it and submit the Pull Request to our Testing branch [Testing branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/testing)
+- Fix a bug: please fork this repo and submit the Pull Request to our [Testing branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/testing)
 - Request a feature on our [community forum](https://support.dotmailer.com/hc/en-gb/community/topics/200432508-Feedback-and-feature-requests)
 
 
@@ -76,11 +76,13 @@ You are welcome to contribute to dotmailer for Magento! You can either:
 - For the most purchased custom brand attribute, we've added support for multistore values.
 
 # V6.3.3 Release Notes
-- Ability to enable and disable sales data for guest subscribers.
-- Order synchronisation has been improved and skips failed or corrupt orders.
-- Removed subscribers now also removed from the contact table and subscriber address book.
-- Duplicate contacts were getting created for guest subscribers; this no longer happens.
-- The additional attribute data has been removed that was getting included for transactional data related to orders and quotes.
+###### Improvements
+- Syncing sales data for guest subscribers is now optional and is managed with a new setting in 'DOTMAILER' > 'Developer' > 'Import settings'.
+- Corrupted and missing payment methods no longer stop the importer from running.
+###### Bug fixes
+- Removing subscribers now correctly removes them from both the contact table and subscriber address book.
+- The duplication of a created contact for a unique guest subscriber is now fixed and no longer happens.
+- We've fixed a problem with additional attribute data being included for transactional data related to orders and quotes.
 - SMTP logging and configuration path has been fixed.
 
 # V6.3.2 Release Notes
