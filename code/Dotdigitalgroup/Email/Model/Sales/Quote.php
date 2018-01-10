@@ -327,8 +327,6 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
             $quoteId    = $quote->getId();
             $items      = $quote->getAllItems();
             $email      = $quote->getCustomerEmail();
-            // update last quote id for the contact
-            Mage::helper('ddg')->updateLastQuoteId($quoteId, $email, $websiteId);
 
             $itemIds = $this->getQuoteItemIds($items);
             if ($mostExpensiveItem = $this->getMostExpensiveItems($items)) {
@@ -387,8 +385,6 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
             $quoteId = $quote->getId();
             $items = $quote->getAllItems();
             $email = $quote->getCustomerEmail();
-            // update last quote id for the contact
-            Mage::helper('ddg')->updateLastQuoteId($quoteId, $email, $websiteId);
 
             $itemIds = $this->getQuoteItemIds($items);
             if ($mostExpensiveItem  = $this->getMostExpensiveItems($items)) {
@@ -484,8 +480,6 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
         foreach ($quoteCollection as $quote) {
             $quoteId = $quote->getId();
             $email = $quote->getCustomerEmail();
-            // update last quote id for the contact
-            Mage::helper('ddg')->updateLastQuoteId($quoteId, $email, $websiteId);
 
             if ($mostExpensiveItem = $this->getMostExpensiveItems($quote->getAllItems())) {
                 Mage::helper('ddg')->updateAbandonedProductName(
