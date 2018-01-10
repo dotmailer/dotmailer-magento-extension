@@ -176,7 +176,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         $lastTransfers = $tbtReward->getTransfers()
             ->selectOnlyActive()
             ->addOrder(
-                'last_update_ts', Varien_Data_Collection::SORT_ORDER_DESC
+                'updated_at', Varien_Data_Collection::SORT_ORDER_DESC
             );
 
         $spent = $earn = null;
