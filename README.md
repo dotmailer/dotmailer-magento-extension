@@ -36,6 +36,16 @@ You are welcome to contribute to dotmailer for Magento! You can either:
 - Fix a bug: please fork it and submit the Pull Request to our Testing branch [Testing branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/testing)
 - Request a feature on our [community forum](https://support.dotmailer.com/hc/en-gb/community/topics/200432508-Feedback-and-feature-requests)
 
+
+# V6.3.8
+
+###### Bug fixes
+- We've changed the validation of new subscribers for automation so that they no longer get enrolled multiple times into the new subscriber program.
+- Transactional emails can now be set up at website level.
+- We've fixed an order Insight data issue related to the data type for the following fields - "delivery_address" and "billing_address".
+- In the case where Magento's double opt-in setting ("Need to confirm") was enabled, we used to import subscribers before they confirmed; this is now fixed.
+- We've added a check to ensure that the first abandoned cart email is mapped before doing the send.
+
 # V6.3.7
 
 ###### Bug fixes
