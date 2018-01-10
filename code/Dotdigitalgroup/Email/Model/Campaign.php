@@ -155,7 +155,7 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
                             $campaign->getEmail(), $websiteId
                         );
                         if (is_numeric($contactId)) {
-                            //update data fields for order review camapigns
+                            //update data fields
                             if ($campaign->getEventName() == 'Order Review') {
                                 $order = Mage::getModel('sales/order')
                                     ->loadByIncrementId($campaign->getOrderIncrementId());
@@ -187,6 +187,17 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
                                         $email, $data
                                     );
                                 }
+                            } elseif (
+                                $campaign->getEventName() == self::CAMPAIGN_EVENT_LOST_BASKET
+                            ) {
+                                $campaignCollection = $this->getCollection();
+                                // Skip if AC campaigns found with status processing for email in current cron run
+                                if ($campaignCollection->getNumberOfProcessingAcCampaignsForContact($email)) {
+                                    continue;
+                                }
+                                Mage::helper('ddg')->updateLastQuoteId(
+                                    $campaign->getQuoteId(), $email, $websiteId
+                                );
                             }
 
                             $campaignsToSend[$campaignId]['contacts'][] = $contactId;
