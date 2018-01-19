@@ -39,6 +39,9 @@ You are welcome to contribute to dotmailer for Magento! You can either:
 
 # V6.3.8
 
+###### Improvements
+- We've improved the way we update contacts before sending abandoned cart emails in a multi website context so that they no longer risk to recieve a wrong cart content from a different website.
+
 ###### Bug fixes
 - We've changed the validation of new subscribers for automation so that they no longer get enrolled multiple times into the new subscriber program.
 - Transactional emails can now be set up at website level.
