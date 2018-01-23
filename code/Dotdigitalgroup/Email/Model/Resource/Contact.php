@@ -339,19 +339,11 @@ class Dotdigitalgroup_Email_Model_Resource_Contact extends Mage_Core_Model_Resou
     /**
      * Insert multiple contacts to table.
      *
-     * @param $data
+     * @param $guests
      */
-    public function insertGuest($data)
+    public function insertGuest($guests)
     {
         try {
-            $contacts = array_keys($data);
-            $emailsExistInTable = Mage::getModel('ddg_automation/contact')
-                ->getCollection()
-                ->addFieldToFilter('email', array('in' => $contacts))
-                ->getColumnValues('email');
-
-            $guests = array_diff_key($data, array_flip($emailsExistInTable));
-
             if (! empty($guests)) {
                 $write = $this->_getWriteAdapter();
                 $write->insertMultiple($this->getMainTable(), $guests);
@@ -407,6 +399,20 @@ class Dotdigitalgroup_Email_Model_Resource_Contact extends Mage_Core_Model_Resou
             );
         } catch (Exception $e) {
             Mage::throwException($e->getMessage());
+        }
+    }
+
+    /**
+     * @param $guests
+     */
+    public function updateContactsAsGuests($guests)
+    {
+        $write  = $this->_getWriteAdapter();
+        if (! empty($guests)) {
+            //make sure the contact are marked as guests if already exists
+            $where = array('email IN (?)' => $guests, 'is_guest IS NULL');
+            $data = array('is_guest' => 1);
+            $write->update($this->getMainTable(), $data, $where);
         }
     }
 }
