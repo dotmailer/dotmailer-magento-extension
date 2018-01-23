@@ -2089,7 +2089,7 @@
             <sort_order>7000</sort_order>
             <show_in_default>1</show_in_default>
             <show_in_website>1</show_in_website>
-            <show_in_store>0</show_in_store>
+            <show_in_store>1</show_in_store>
             <groups>
                 <ddg_transactional translate="label" module="ddg">
                     <label>DDG Transactional</label>
@@ -2097,7 +2097,7 @@
                     <sort_order>9000</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
-                    <show_in_store>0</show_in_store>
+                    <show_in_store>1</show_in_store>
                     <fields>
                         <enabled translate="label" module="ddg">
                             <label>Enabled</label>
@@ -2106,7 +2106,7 @@
                             <sort_order>10</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
+                            <show_in_store>1</show_in_store>
                         </enabled>
                         <send_mode translate="label" module="ddg">
                             <label>Send Mode</label>
@@ -2115,14 +2115,14 @@
                             <sort_order>15</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
+                            <show_in_store>1</show_in_store>
                         </send_mode>
                         <host translate="label" module="ddg">
                             <label>Host</label>
                             <sort_order>20</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
+                            <show_in_store>1</show_in_store>
                             <backend_model>ddg_automation/adminhtml_model_transactional_host</backend_model>
                             <depends><send_mode>smtp</send_mode></depends>
                         </host>
@@ -2131,7 +2131,7 @@
                             <sort_order>30</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
+                            <show_in_store>1</show_in_store>
                             <backend_model>ddg_automation/adminhtml_model_transactional_username</backend_model>
                         </username>
                         <password translate="label" module="ddg">
@@ -2141,7 +2141,7 @@
                             <sort_order>40</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
+                            <show_in_store>1</show_in_store>
                         </password>
                         <port translate="label" module="ddg">
                             <label>Port</label>
@@ -2150,7 +2150,7 @@
                             <source_model>ddg_automation/adminhtml_source_transactional_port</source_model>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
+                            <show_in_store>1</show_in_store>
                             <depends><send_mode>smtp</send_mode></depends>
                         </port>
                         <debug_mode translate="label comment" module="ddg">
@@ -2160,7 +2160,7 @@
                             <sort_order>60</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
+                            <show_in_store>1</show_in_store>
                             <comment>Debug information in system.log file.</comment>
                         </debug_mode>
                     </fields>
