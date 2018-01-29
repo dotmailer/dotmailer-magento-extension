@@ -36,6 +36,18 @@ You are welcome to contribute to dotmailer for Magento! You can either:
 - Fix a bug: please fork this repo and submit the Pull Request to our [Develop branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/develop)
 - Request a feature on our [community forum](https://support.dotmailer.com/hc/en-gb/community/topics/200432508-Feedback-and-feature-requests)
 
+# V6.3.9
+
+###### Improvements:
+- We've improved the password encryption using Magento's encryption framework.
+- Transactional email settings can now be set at the store level.
+
+###### Bug fixes:
+- We've fixed the process for abandoned carts when the first one is disabled.
+- We used to create duplicated contacts when email addresses did not match with the same case; this no longer happens.
+- We've fixed an error related to importing orders having both virtual and physical products.
+- In the case where Magento's double opt-in setting ('Need to confirm') was enabled, we used to import subscribers before they confirmed; this is now fixed.
+- We've fixed a typo regarding the number of days in the trial sign up banner.
 
 # V6.3.8
 
