@@ -1,16 +1,13 @@
 <?php
 
-class Dotdigitalgroup_Email_Helper_Transactional
-    extends Mage_Core_Helper_Abstract
+class Dotdigitalgroup_Email_Helper_Transactional extends Mage_Core_Helper_Abstract
 {
-
-    const XML_PATH_DDG_TRANSACTIONAL_ENABLED = 'connector_transactional_emails/ddg_transactional/enabled';
-    const XML_PATH_DDG_TRANSACTIONAL_HOST = 'connector_transactional_emails/ddg_transactional/host';
-    const XML_PATH_DDG_TRANSACTIONAL_USERNAME = 'connector_transactional_emails/ddg_transactional/username';
-    const XML_PATH_DDG_TRANSACTIONAL_PASSWORD = 'connector_transactional_emails/ddg_transactional/password';
-    const XML_PATH_DDG_TRANSACTIONAL_PORT = 'connector_transactional_emails/ddg_transactional/port';
-    const XML_PATH_DDG_TRANSACTIONAL_DEBUG = 'connector_transactional_emails/ddg_transactional/debug_mode';
-
+    const XML_PATH_DDG_TRANSACTIONAL_ENABLED    = 'connector_transactional_emails/ddg_transactional/enabled';
+    const XML_PATH_DDG_TRANSACTIONAL_HOST       = 'connector_transactional_emails/ddg_transactional/host';
+    const XML_PATH_DDG_TRANSACTIONAL_USERNAME   = 'connector_transactional_emails/ddg_transactional/username';
+    const XML_PATH_DDG_TRANSACTIONAL_PASSWORD   = 'connector_transactional_emails/ddg_transactional/password';
+    const XML_PATH_DDG_TRANSACTIONAL_PORT       = 'connector_transactional_emails/ddg_transactional/port';
+    const XML_PATH_DDG_TRANSACTIONAL_DEBUG      = 'connector_transactional_emails/ddg_transactional/debug_mode';
 
     /**
      * Transactional Email enabled.
@@ -47,7 +44,9 @@ class Dotdigitalgroup_Email_Helper_Transactional
      */
     public function getSmtpPassword($storeId = null)
     {
-        return Mage::getStoreConfig(self::XML_PATH_DDG_TRANSACTIONAL_PASSWORD, $storeId);
+        $pass = Mage::getStoreConfig(self::XML_PATH_DDG_TRANSACTIONAL_PASSWORD, $storeId);
+
+        return Mage::helper('core')->decrypt($pass);
     }
 
     /**

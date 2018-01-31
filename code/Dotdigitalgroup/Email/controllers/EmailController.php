@@ -156,14 +156,15 @@ class Dotdigitalgroup_Email_EmailController
                 array('Content-Type: application/x-www-form-urlencoded')
             );
 
-
             $response = json_decode(curl_exec($ch));
             if ($response === false) {
                 Mage::helper('ddg')->log("Error Number: " . curl_errno($ch));
             }
 
             //save the refresh token to the admin user
-            $adminUser->setRefreshToken($response->refresh_token)->save();
+            $token = Mage::helper('core')->encrypt($response->refresh_token);
+            $adminUser->setRefreshToken($token)
+                ->save();
             //@codingStandardsIgnoreEnd
         }
 
