@@ -535,6 +535,17 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * Retrieve authorisation code.
+     */
+    public function getCode()
+    {
+        $adminUser = Mage::getSingleton('admin/session')->getUser();
+        $code = $adminUser->getEmailCode();
+
+        return $code;
+    }
+
+    /**
      * Autorisation url for OAUTH.
      *
      * @return string

@@ -112,30 +112,7 @@ class Dotdigitalgroup_Email_Model_Sales_Order
          * Add guest to contacts table.
          */
         if (! empty($this->_guests)) {
-            $contactResource = Mage::getResourceModel('ddg_automation/contact');
-
-            //Get all keys
-            $orderEmails = array_keys($this->_guests);
-
-            //Find contacts that already exist
-            $contactsFoundFromGuestOrderEmails = Mage::getResourceModel('ddg_automation/contact_collection')
-                ->addFieldToFilter('email', array('in' => $orderEmails))
-                ->getColumnValues('email');
-
-            //Flip array to get email as key for array
-            $emailAsKeys = array_flip($contactsFoundFromGuestOrderEmails);
-
-            //Convert array keys to lowercase
-            $convertedArray = array_change_key_case($emailAsKeys,CASE_LOWER);
-
-            //Get all the entries from _guests not present in $convertedArray
-            $this->_guests = array_diff_key($this->_guests, $convertedArray);
-
-            //Insert new guests contacts
-            $contactResource->insertGuest($this->_guests);
-
-            //Mark the existing contacts with is guest in bulk
-            $contactResource->updateContactsAsGuests($contactsFoundFromGuestOrderEmails);
+            Mage::getResourceModel('ddg_automation/contact')->insertGuest($this->_guests);
         }
 
         if ($this->countOrders) {
@@ -264,10 +241,9 @@ class Dotdigitalgroup_Email_Model_Sales_Order
                     && $order->getCustomerEmail()
                 ) {
                     //add guest to the list
-                    $email = strtolower($order->getCustomerEmail());
-                    if (! isset($this->_guests[$email])) {
-                        $this->_guests[$email] = array(
-                            'email' => $email,
+                    if (! isset($this->_guests[$order->getCustomerEmail()])) {
+                        $this->_guests[$order->getCustomerEmail()] = array(
+                            'email' => $order->getCustomerEmail(),
                             'website_id' => $websiteId,
                             'store_id' => $storeId,
                             'is_guest' => 1

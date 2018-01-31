@@ -45,11 +45,14 @@ class Dotdigitalgroup_Email_Adminhtml_Email_StudioController
      */
     public function generatetokenAction()
     {
-        $userId = Mage::getSingleton('admin/session')->getUser()->getId();
-        $adminUser = Mage::getSingleton('admin/user')->load($userId);
-        $refreshToken = Mage::helper('core')->decrypt($adminUser->getRefreshToken());
+        //check for secure url
+        $adminUser    = Mage::getSingleton('admin/session')->getUser();
+        $refreshToken = Mage::getSingleton('admin/user')->load(
+            $adminUser->getId()
+        )->getRefreshToken();
 
         if ($refreshToken) {
+            $code   = Mage::helper('ddg')->getCode();
             $params = 'client_id=' . Mage::getStoreConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CLIENT_ID
             ) .
@@ -61,6 +64,9 @@ class Dotdigitalgroup_Email_Adminhtml_Email_StudioController
 
             $url = Mage::helper('ddg/config')->getTokenUrl();
 
+            Mage::helper('ddg')->log(
+                'token code : ' . $code . ', params : ' . $params
+            );
             //@codingStandardsIgnoreStart
             /**
              * Refresh Token request.
@@ -82,7 +88,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_StudioController
 
             if (isset($response->error)) {
                 Mage::helper('ddg')->log(
-                    "Token Error Number:" . curl_errno($ch) . "Error String:"
+                    "Token Error Num`ber:" . curl_errno($ch) . "Error String:"
                     . curl_error($ch)
                 );
             }
