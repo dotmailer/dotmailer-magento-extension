@@ -151,11 +151,6 @@
             <block type="ddg_automation/adminhtml_abandoned_grid" name="abandoned_grid"/>
         </block>
     </adminhtml_email_abandoned_grid>
-    <adminhtml_email_automation_grid>
-        <block type="core/text_list" name="root" output="toHtml">
-            <block type="ddg_automation/adminhtml_contact_grid" name="contact_grid"/>
-        </block>
-    </adminhtml_email_automation_grid>
     <adminhtml_email_catalog_index>
         <reference name="content">
             <block type="ddg_automation/adminhtml_catalog" name="catalog_grid"/>
