@@ -52,7 +52,7 @@ class Dotdigitalgroup_Email_TrialController
         );
         $this->getResponse()->setBody(
             $this->getRequest()->getParam('callback') . "(" . Mage::helper('core')->jsonEncode($message) . ")"
-        )->sendResponse();
+        );
     }
 
     /**
