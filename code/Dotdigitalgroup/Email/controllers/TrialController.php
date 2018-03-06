@@ -14,6 +14,11 @@ class Dotdigitalgroup_Email_TrialController
         } else {
             $helper = Mage::helper('ddg');
 
+            //if apiEndpoint then save it
+            if (isset($params['apiEndpoint'])) {
+                $helper->saveApiEndPoint($params['apiEndpoint']);
+            }
+
             //Save api details
             $apiConfigStatus = $helper->saveApiCreds($params['apiUser'], $params['pass']);
 
@@ -25,11 +30,6 @@ class Dotdigitalgroup_Email_TrialController
 
             //enable syncs
             $syncStatus = $helper->enableSyncForTrial();
-
-            //if apiEndpoint then save it
-            if (isset($params['apiEndpoint'])) {
-                $helper->saveApiEndPoint($params['apiEndpoint']);
-            }
 
             //if all true send success response
             if ($apiConfigStatus && $dataFieldsStatus && $addressBookStatus && $syncStatus) {

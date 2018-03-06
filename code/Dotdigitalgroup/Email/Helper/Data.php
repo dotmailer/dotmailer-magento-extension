@@ -1342,7 +1342,8 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
             'company' => $company,
             'culture' => $culture,
             'timezone' => $timezone,
-            'ip' => $ipAddress
+            'ip' => $ipAddress,
+            'createOnRegion' => true
         );
         $url = $formUrl . '?' . http_build_query($params);
 
