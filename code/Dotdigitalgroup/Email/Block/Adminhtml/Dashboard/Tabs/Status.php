@@ -33,8 +33,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
             'quote_enabled'                      => 'Quote Sync Enabled',
             'last_abandoned_cart_sent_day'       => 'Last Abandoned Cart Sent Day',
             'disable_newsletter_success_enabled' => 'Disable Newsletter Success Enabled',
-            'system_information'                 => 'System Information'
-
+            'system_information'                 => 'System Information',
+            'roi_tracking_enabled'               => 'ROI Enabled'
         );
 
     /**
