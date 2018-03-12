@@ -1,9 +1,7 @@
 <?php
 
-class Dotdigitalgroup_Email_Model_Email_Template
-    extends Mage_Core_Model_Email_Template
+class Dotdigitalgroup_Email_Model_Email_Template extends Mage_Core_Model_Email_Template
 {
-
     /**
      * @codingStandardsIgnoreStart
      * @param array|string $email
@@ -15,7 +13,7 @@ class Dotdigitalgroup_Email_Model_Email_Template
     {
         $helper = Mage::helper('ddg/transactional');
         // If it's not enabled, just return the parent result.
-        if (!$helper->isEnabled()) {
+        if (! $helper->isEnabled()) {
             return parent::send($email, $name, $variables);
         }
 
@@ -96,7 +94,13 @@ class Dotdigitalgroup_Email_Model_Email_Template
                 $this->getProcessedTemplateSubject($variables)
             ) . '?='
         );
-        $mail->setFrom($this->getSenderEmail(), $this->getSenderName());
+
+        //sender name and sender email if the template is from dotmailer
+        if ($helper->isDotmailerTemplate($this->getTemplateCode())) {
+            $mail->setFrom($this->getTemplateSenderEmail(), $this->getTemplateSenderName());
+        } else {
+            $mail->setFrom($this->getSenderEmail(), $this->getSenderName());
+        }
 
         try {
             $transport = $helper->getTransport($storeId);
@@ -116,4 +120,37 @@ class Dotdigitalgroup_Email_Model_Email_Template
         return true;
     }
 
+    /**
+     * Compress the template body.
+     *
+     * @return Mage_Core_Model_Email_Template
+     */
+    protected function _beforeSave()
+    {
+        $transactionalHelper = Mage::helper('ddg/transactional');
+        if (! $transactionalHelper->isStringCompressed($this->getTemplateText()) &&
+            $transactionalHelper->isDotmailerTemplate($this->getTemplateCode())
+        ) {
+            $this->setTemplateText($transactionalHelper->compresString($this->getTemplateText()));
+        }
+
+        return parent::_beforeSave();
+    }
+
+    /**
+     * @return Mage_Core_Model_Abstract
+     */
+    protected function _afterLoad()
+    {
+        //decompress the subject
+        $this->setTemplateSubject(utf8_decode($this->getTemplateSubject()));
+        $templateText = $this->getTemplateText();
+        $transactionalHelper = Mage::helper('ddg/transactional');
+        //decompress the content body
+        if ($transactionalHelper->isStringCompressed($templateText)) {
+            $this->setTemplateText($transactionalHelper->decompresString($this->getTemplateText()));
+        }
+
+        return parent::_afterLoad();
+    }
 }
