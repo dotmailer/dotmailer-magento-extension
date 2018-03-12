@@ -93,4 +93,53 @@ class Dotdigitalgroup_Email_Helper_Transactional extends Mage_Core_Helper_Abstra
 
         return $transport;
     }
+
+    /**
+     * @param $templateText
+     * @return string
+     */
+    public function decompresString($templateText)
+    {
+        return gzuncompress(base64_decode($templateText));
+    }
+
+    /**
+     * @param $templateText
+     * @return string
+     */
+    public function compresString($templateText)
+    {
+        return base64_encode(gzcompress($templateText, 9));
+    }
+
+    /**
+     * @param $string
+     * @return bool
+     */
+    public function isStringCompressed($string)
+    {
+        //check if the data is compressed
+        if (substr($string, 0, 1) == 'e' && substr_count($string, ' ') == 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if the template code is containing dotmailer.
+     *
+     * @param $templateCode
+     * @return bool
+     */
+    public function isDotmailerTemplate($templateCode)
+    {
+        preg_match("/\_\d{1,10}$/", $templateCode, $matches);
+
+        if (count($matches)) {
+            return true;
+        }
+
+        return false;
+    }
 }

@@ -1,9 +1,7 @@
 <?php
 
-class Dotdigitalgroup_Email_Model_Apiconnector_Client
-    extends Dotdigitalgroup_Email_Model_Abstract_Rest
+class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Email_Model_Abstract_Rest
 {
-
     const APICONNECTOR_VERSION = 'V2';
     const REST_WAIT_UPLOAD_TIME = 5;
     //rest api data
@@ -23,6 +21,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
     const REST_PROGRAM = '/v2/programs/';
     const REST_PROGRAM_ENROLMENTS = '/v2/programs/enrolments';
     const REST_TEMPLATES = '/v2/templates';
+    const REST_CAMPAIGNS_WITH_PREPARED_CONTENT = 'prepared-for-transactional-email';
     //rest error responces
     const API_ERROR_API_EXCEEDED = 'Your account has generated excess API activity and is being temporarily capped.
      Please contact support. ERROR_APIUSAGE_EXCEEDED';
@@ -1495,4 +1494,50 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client
 
         return $response;
     }
+
+    /**
+     * Gets a campaign by ID.
+     *
+     * @param $campaignId
+     * @return mixed
+     */
+    public function getCampaignById($campaignId)
+    {
+        $url = $this->getApiEndpoint() . self::REST_DATA_FIELDS_CAMPAIGNS . '/' . $campaignId;
+        $this->setUrl($url)
+            ->setVerb('GET');
+
+        $response = $this->execute();
+
+        if (isset($response->message)) {
+            $message = 'GET CAMPAIGN BY ID ' . $response->message;
+            Mage::helper('ddg')->log($message);
+        }
+
+        return $response;
+    }
+
+    /**
+     * @param $campaignId
+     * @return mixed
+     */
+    public function getCampaignByIdWithPreparedContent($campaignId)
+    {
+        $url = $this->getApiEndpoint() . self::REST_DATA_FIELDS_CAMPAIGNS
+            . '/' . $campaignId
+            . '/' . self::REST_CAMPAIGNS_WITH_PREPARED_CONTENT
+            . '/' . 'anonymouscontact@emailsim.io';
+        $this->setUrl($url)
+            ->setVerb('GET');
+
+        $response = $this->execute();
+
+        if (isset($response->message)) {
+            $message = 'GET CAMPAIGN BY ID WITH PREPARED CONTENT' . $response->message;
+            Mage::helper('ddg')->log($message);
+        }
+
+        return $response;
+    }
+    
 }

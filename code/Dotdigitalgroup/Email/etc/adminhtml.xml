@@ -192,6 +192,9 @@
                                     <connector_transactional_emails translate="title">
                                         <title><![CDATA[Email Transactional Email]]></title>
                                     </connector_transactional_emails>
+                                    <dotmailer_email_templates translate="title">
+                                        <title><![CDATA[Email Templates]]></title>
+                                    </dotmailer_email_templates>
                                     <connector_automation_studio translate="title">
                                         <title><![CDATA[Email Automation Studio]]></title>
                                     </connector_automation_studio>

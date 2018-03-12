@@ -19,6 +19,19 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * @param $storeId
+     * @return bool
+     */
+    public function isStoreEnabled($storeId)
+    {
+        $store = Mage::app()->getStore($storeId);
+
+        return (bool)$store->getConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED
+        );
+    }
+
+    /**
      * @param int /object $website
      *
      * @return mixed
@@ -1867,20 +1880,19 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
     {
         $error = false;
         $apiModel = false;
-        $helper = Mage::helper('ddg');
 
-        if ($helper->isEnabled()) {
-            $apiModel = $helper->getWebsiteApiClient();
+        if ($this->isEnabled()) {
+            $apiModel = $this->getWebsiteApiClient();
         }
 
         if (!$apiModel) {
             $error = true;
-            $helper->log('setupDataFields client is not enabled');
+            $this->log('setupDataFields client is not enabled');
         } else {
             //validate account
             $accountInfo = $apiModel->getAccountInfo();
             if (isset($accountInfo->message)) {
-                $helper->log('setupDataFields ' . $accountInfo->message);
+                $this->log('setupDataFields ' . $accountInfo->message);
                 $error = true;
             } else {
                 $dataFields = Mage::getModel('ddg_automation/connector_datafield')->getContactDatafields();
@@ -1919,20 +1931,19 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         );
         $error = false;
         $client = false;
-        $helper = Mage::helper('ddg');
 
-        if ($helper->isEnabled()) {
-            $client = $helper->getWebsiteApiClient();
+        if ($this->isEnabled()) {
+            $client = $this->getWebsiteApiClient();
         }
 
         if (!$client) {
             $error = true;
-            $helper->log('createAddressBooks client is not enabled');
+            $this->log('createAddressBooks client is not enabled');
         } else {
             //validate account
             $accountInfo = $client->getAccountInfo();
             if (isset($accountInfo->message)) {
-                $helper->log('createAddressBooks ' . $accountInfo->message);
+                $this->log('createAddressBooks ' . $accountInfo->message);
                 $error = true;
             } else {
                 foreach ($addressBooks as $addressBook) {
