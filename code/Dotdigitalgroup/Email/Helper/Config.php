@@ -449,4 +449,19 @@ class Dotdigitalgroup_Email_Helper_Config
 
         return $logUserUrl;
     }
+
+    /**
+     * @param $store Mage_Core_Model_Store
+     * @return string
+     */
+    public function getOptInType($store)
+    {
+        $needToConfirm = $store->getConfig(
+            Mage_Newsletter_Model_Subscriber::XML_PATH_CONFIRMATION_FLAG
+        );
+        $optInType = ($needToConfirm)? 'Double' : 'Single';
+
+        return $optInType;
+    }
+
 }
