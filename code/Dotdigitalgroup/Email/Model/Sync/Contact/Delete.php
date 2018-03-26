@@ -13,19 +13,14 @@ class Dotdigitalgroup_Email_Model_Sync_Contact_Delete extends Dotdigitalgroup_Em
             $email = unserialize($item->getImportData());
             //@codingStandardsIgnoreEnd
             $this->client = $this->helper->getWebsiteApiClient($websiteId);
-            $result = null;
 
             if ($this->client) {
                 $apiContact = $this->client->postContacts($email);
-                if (!isset($apiContact->message) && isset($apiContact->id)) {
-                    $result = $this->client->deleteContact($apiContact->id);
-                } elseif (isset($apiContact->message) && !isset($apiContact->id)) {
-                    $result = $apiContact;
+                if (! isset($apiContact->message) && isset($apiContact->id)) {
+                    $this->client->deleteContact($apiContact->id);
                 }
 
-                if ($result) {
-                    $this->_handleSingleItemAfterSync($item, $result);
-                }
+                $this->_handleSingleItemAfterSync($item, $apiContact);
             }
         }
     }

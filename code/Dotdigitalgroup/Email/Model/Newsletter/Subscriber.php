@@ -153,8 +153,9 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
         $fileHelper = Mage::helper('ddg/file');
         //nothing to export
         $emails = $subscribers->getColumnValues('email');
-        if (empty($emails))
+        if (empty($emails)) {
             return 0;
+        }
         $subscribersData = Mage::getModel('newsletter/subscriber')->getCollection()
             ->addFieldToFilter(
                 'subscriber_email',
@@ -173,11 +174,9 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
 
         //get mapped storename
         $subscriberStorename = Mage::helper('ddg')->getMappedStoreName($website);
+        $headers = array('Email', 'EmailType', $subscriberStorename, 'OptInType');
         //file headers
-        $fileHelper->outputCSV(
-            $fileHelper->getFilePath($subscribersFilename),
-            array('Email', 'emailType', $subscriberStorename)
-        );
+        $fileHelper->outputCSV($fileHelper->getFilePath($subscribersFilename), $headers);
 
         foreach ($subscribers as $subscriber) {
             try {
@@ -185,12 +184,12 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
                 $storeId = $this->getStoreIdForSubscriber(
                     $email, $subscribersData['items']
                 );
-                $storeName = Mage::app()->getStore($storeId)->getName();
+                $store = Mage::app()->getStore($storeId);
+                $storeName = $store->getName();
+                $optInType = Mage::helper('ddg/config')->getOptInType($store);
+                $outputData = array($email, 'Html', $storeName, $optInType);
                 // save data for subscribers
-                $fileHelper->outputCSV(
-                    $fileHelper->getFilePath($subscribersFilename),
-                    array($email, 'Html', $storeName)
-                );
+                $fileHelper->outputCSV($fileHelper->getFilePath($subscribersFilename), $outputData);
                 //@codingStandardsIgnoreStart
                 $subscriber->setSubscriberImported(1)
                     ->save();
@@ -221,8 +220,9 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
      */
     public function exportSubscribersWithSales(Mage_Core_Model_Website $website, $subscribers)
     {
-        if (empty($subscribers))
+        if (empty($subscribers)) {
             return 0;
+        }
         $countSubscribers = 0;
         $subscriberIds = $headers = $emailContactIdEmail =array();
         $helper = Mage::helper('ddg');
@@ -249,10 +249,12 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
         $headers = $mappedHash;
         $headers[] = 'Email';
         $headers[] = 'EmailType';
+        $headers[] = 'OptInType';
         $fileHelper->outputCSV($fileHelper->getFilePath($subscribersFile), $headers);
 
         //subscriber data
         foreach ($collection as $subscriber) {
+            $store = Mage::app()->getStore($subscriber->getStoreId());
             $connectorSubscriber = Mage::getModel(
                 'ddg_automation/apiconnector_subscriber', $mappedHash
             );
@@ -262,6 +264,8 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
                 $subscriber->getSubscriberEmail(),
                 $emailContactIdEmail
             );
+
+            $optInType = Mage::helper('ddg/config')->getOptInType($store);
             if ($index) {
                 $subscriberIds[] = $index;
             }
@@ -270,7 +274,10 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
             $connectorSubscriber->setData($subscriber->getSubscriberEmail());
             $connectorSubscriber->setData('Html');
             // save csv file data
-            $fileHelper->outputCSV($fileHelper->getFilePath($subscribersFile), $connectorSubscriber->toCSVArray());
+            $outputData = $connectorSubscriber->toCSVArray();
+            $outputData[] = $optInType;
+            $fileHelper->outputCSV($fileHelper->getFilePath($subscribersFile), $outputData);
+
             //clear collection and free memory
             $subscriber->clearInstance();
             $countSubscribers++;
