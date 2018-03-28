@@ -36,6 +36,21 @@ You are welcome to contribute to dotmailer for Magento! You can either:
 - Fix a bug: please fork this repo and submit the Pull Request to our [Develop branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/develop)
 - Request a feature on our [community forum](https://support.dotmailer.com/hc/en-gb/community/topics/200432508-Feedback-and-feature-requests)
 
+
+# V6.4.0
+
+###### New Features
+- Transactional email templates: You're now able to create, edit, translate and test Magento transactional emails in dotmailer and map them at default, website or store level.
+
+###### Improvements:
+- We now import new subscribers with the correct opt-in type (single or double) depending upon Magento's "Need to confirm" setting
+
+###### Bug fixes
+- Deleted contacts in Magento weren't being correctly marked as imported when removed from dotmailer;they are now
+- An error could occur while creating a trial account in the US and APAC regions; this is now fixed
+- We've fixed an issue which caused an error when displaying the wishlist dynamics content on PHP 5.4
+- Some products with individual visibilities were getting ignored by the importer; this has been fixed.
+
 # V6.3.9
 
 ###### Improvements:
