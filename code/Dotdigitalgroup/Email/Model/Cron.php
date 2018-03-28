@@ -12,6 +12,16 @@ class Dotdigitalgroup_Email_Model_Cron
     }
 
     /**
+     * CRON FOR TEMPLATE SYNC
+     *
+     * @return mixed
+     */
+    public function templateSync()
+    {
+        return Mage::getModel('ddg_automation/template')->sync();
+    }
+
+    /**
      * CRON FOR CATALOG SYNC
      */
     public function catalogSync()

@@ -182,14 +182,16 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
      */
     protected function _exportCatalog($store)
     {
-        $products = $this->_getProductsToExport($store);
-        if ($products) {
-            $this->productIds = $products->getColumnValues('entity_id');
+        $productCollection = $this->_getProductsToExport($store);
+
+        if ($productCollection) {
             $connectorProducts = array();
-            foreach ($products as $product) {
-                $connectorProduct    = Mage::getModel(
-                    'ddg_automation/connector_product', $product
-                );
+            //clear the collection before getting the Limit may not be set.
+            $productCollection->clear();
+            $this->productIds = $productCollection->getColumnValues('entity_id');
+
+            foreach ($productCollection as $product) {
+                $connectorProduct    = Mage::getModel('ddg_automation/connector_product', $product);
                 $connectorProducts[] = $connectorProduct;
             }
 
@@ -263,20 +265,15 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
             );
         }
 
-        $connectorCollection->setPageSize($limit);
-
         if ($connectorCollection->getSize()) {
-            $productIds       = $connectorCollection->getColumnValues(
-                'product_id'
-            );
-            $productCollection = Mage::getModel('catalog/product')
-                ->getCollection();
-            $productCollection
-                ->addAttributeToSelect('*')
+            $productIds       = $connectorCollection->getColumnValues('product_id');
+            $productCollection = Mage::getResourceModel('catalog/product_collection');
+            $productCollection->addAttributeToSelect('*')
                 ->addStoreFilter($store)
-                ->addAttributeToFilter(
-                    'entity_id', array('in' => $productIds)
-                );
+                ->addAttributeToFilter('entity_id', array('in' => $productIds))
+                ->addCategoryIds()
+                ->addOptionsToResult()
+            ;
 
             //visibility filter
             if ($visibility = Mage::getStoreConfig(
@@ -284,9 +281,9 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
             )
             ) {
                 $visibility = explode(',', $visibility);
-                $productCollection->addAttributeToFilter(
-                    'visibility', array('in' => $visibility)
-                );
+                //filter the default option
+                $visibility = array_filter($visibility);
+                $productCollection->addAttributeToFilter('visibility', array('in' => $visibility));
             }
 
             //type filter
@@ -295,16 +292,12 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
             )
             ) {
                 $type = explode(',', $type);
-                $productCollection->addAttributeToFilter(
-                    'type_id', array('in' => $type)
-                );
+                $productCollection->addAttributeToFilter('type_id', array('in' => $type));
             }
 
-            $productCollection
-                ->addWebsiteNamesToResult()
-                ->addFinalPrice()
-                ->addCategoryIds()
-                ->addOptionsToResult();
+            $productCollection->addWebsiteNamesToResult();
+            //limit the collection
+            $productCollection->getSelect()->limit($limit);
 
             return $productCollection;
         }

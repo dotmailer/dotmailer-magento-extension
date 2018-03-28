@@ -16,7 +16,7 @@ class Dotdigitalgroup_Email_Block_Wishlist
     {
         $wishlist = $this->_getWishlist();
 
-        if ($wishlist && !empty($wishlist->getItemCollection())) {
+        if ($wishlist && $wishlist->getItemCollection()->getSize()) {
             return $wishlist->getItemCollection();
         } else {
             return false;

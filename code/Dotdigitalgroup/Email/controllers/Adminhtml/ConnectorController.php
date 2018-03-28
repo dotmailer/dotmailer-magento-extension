@@ -510,6 +510,18 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
     }
 
     /**
+     * Run Template sync.
+     */
+    public function runtemplatesyncAction()
+    {
+        $result = Mage::getModel('ddg_automation/cron')->templateSync();
+        if ($result['message'])
+            Mage::getSingleton('adminhtml/session')->addSuccess($result['message']);
+
+        $this->_redirectReferer();
+    }
+
+    /**
      * @return bool
      */
     protected function _isAllowed()

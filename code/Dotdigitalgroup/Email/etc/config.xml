@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Dotdigitalgroup_Email>
-            <version>6.3.9</version>
+            <version>6.4.0</version>
         </Dotdigitalgroup_Email>
     </modules>
     <frontend>
@@ -125,6 +125,11 @@
                     <email>Dotdigitalgroup_Email_Model_Email</email>
                 </rewrite>
             </core>
+            <adminhtml>
+                <rewrite>
+                    <email_template>Dotdigitalgroup_Email_Model_Adminhtml_Email_Template</email_template>
+                </rewrite>
+            </adminhtml>
             <salesrule_resource>
                 <rewrite>
                     <rule_collection>Dotdigitalgroup_Email_Model_Resource_Rule_Collection</rule_collection>
@@ -141,6 +146,11 @@
             <ddg_automation>
                 <class>Dotdigitalgroup_Email_Block</class>
             </ddg_automation>
+            <adminhtml>
+                <rewrite>
+                    <system_email_template_grid>Dotdigitalgroup_Email_Block_Adminhtml_System_Email_Grid</system_email_template_grid>
+                </rewrite>
+            </adminhtml>
         </blocks>
         <events>
             <admin_system_config_changed_section_connector_api_credentials>
@@ -151,6 +161,14 @@
                     </ddg_api_save>
                 </observers>
             </admin_system_config_changed_section_connector_api_credentials>
+            <admin_system_config_changed_section_dotmailer_email_templates>
+                <observers>
+                    <dotmailer_adminhtml_templates_changed>
+                        <class>ddg_automation/adminhtml_observer</class>
+                        <method>actionConfigTemplatesChanged</method>
+                    </dotmailer_adminhtml_templates_changed>
+                </observers>
+            </admin_system_config_changed_section_dotmailer_email_templates>
             <admin_system_config_changed_section_connector_data_mapping>
                 <observers>
                     <ddg_data_mapping_reset>
@@ -347,6 +365,14 @@
                     </ddg_newsletter_subscriber_save_before>
                 </observers>
             </newsletter_subscriber_delete_after>
+            <email_template_load_before>
+                <observers>
+                    <ddg_newsletter_subscriber_save_before>
+                        <class>ddg_automation/observer</class>
+                        <method>handleEmailTemplateLoad</method>
+                    </ddg_newsletter_subscriber_save_before>
+                </observers>
+            </email_template_load_before>
         </events>
     </global>
     <adminhtml>
@@ -460,6 +486,12 @@
                     <config_path>connector_developer_settings/cron_schedules/importer</config_path>
                 </schedule>
             </ddg_automation_importer>
+            <ddg_automation_email_templates>
+                <run><model>ddg_automation/cron::templateSync</model></run>
+                <schedule>
+                    <cron_expr>0 */6 * * * </cron_expr>
+                </schedule>
+            </ddg_automation_email_templates>
         </jobs>
     </crontab>
     <default>
