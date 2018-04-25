@@ -44,16 +44,23 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
      *
      * @param     $websiteId
      * @param int $pageSize
+     * @param boolean $onlySubscriber
      *
      * @return Dotdigitalgroup_Email_Model_Resource_Contact_Collection
      */
-    public function getContactsToImportForWebsite($websiteId, $pageSize = 100)
+    public function getContactsToImportForWebsite($websiteId, $pageSize = 100, $onlySubscriber = false)
     {
         $collection = $this->getCollection()
             ->addFieldToFilter('website_id', $websiteId)
             ->addFieldToFilter('email_imported', array('null' => true))
             ->addFieldToFilter('customer_id', array('neq' => '0'));
 
+        if ($onlySubscriber) {
+            $collection->addFieldToFilter('is_subscriber', 1)
+                ->addFieldToFilter(
+                    'subscriber_status', Dotdigitalgroup_Email_Model_Newsletter_Subscriber::STATUS_SUBSCRIBED
+                );
+        }
 
         //@codingStandardsIgnoreStart
         $collection->getSelect()->limit($pageSize);
@@ -212,15 +219,23 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
      * Get all not imported guests for a website.
      *
      * @param $website
+     * @param $onlySubscriber
      *
      * @return Dotdigitalgroup_Email_Model_Resource_Contact_Collection
      */
-    public function getGuests($website)
+    public function getGuests($website, $onlySubscriber = false)
     {
         $guestCollection = $this->getCollection()
             ->addFieldToFilter('is_guest', array('notnull' => true))
             ->addFieldToFilter('email_imported', array('null' => true))
             ->addFieldToFilter('website_id', $website->getId());
+
+        if ($onlySubscriber) {
+            $guestCollection->addFieldToFilter('is_subscriber', 1)
+                ->addFieldToFilter(
+                    'subscriber_status', Dotdigitalgroup_Email_Model_Newsletter_Subscriber::STATUS_SUBSCRIBED
+                );
+        }
 
         return $guestCollection;
     }

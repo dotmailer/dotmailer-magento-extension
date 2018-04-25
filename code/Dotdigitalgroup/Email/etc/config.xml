@@ -502,6 +502,7 @@
         </connector_api_credentials>
         <connector_sync_settings>
             <address_book>
+                <allow_non_subscribers>0</allow_non_subscribers>
                 <customers>0</customers>
                 <subscribers>0</subscribers>
                 <guests>0</guests>

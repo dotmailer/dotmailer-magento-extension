@@ -84,8 +84,10 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
 
         $fileHelper   = Mage::helper('ddg/file');
         $contactModel = Mage::getModel('ddg_automation/contact');
-        $contacts     = $contactModel->getContactsToImportForWebsite(
-            $website->getId(), $pageSize
+
+        $contacts = $contactModel->getContactsToImportForWebsite($website->getId(),
+            $pageSize,
+            Mage::helper('ddg/config')->isOnlySubscribersForContactSync($website)
         );
 
         // no contacts for this website
@@ -231,6 +233,12 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
         $helper->log('---------- Start single customer sync ----------');
         //skip if the mapping field is missing
         if (! $helper->getCustomerAddressBook($website)) {
+            return false;
+        }
+
+        $onlySubscribers = Mage::helper('ddg/config')->isOnlySubscribersForContactSync($website);
+        //skip if only subscriber are allowed to sync and contact is not a subscriber
+        if ($onlySubscribers && $contact->getSubscriberStatus() != 1) {
             return false;
         }
 

@@ -17,6 +17,11 @@ $configModel->saveConfig(
     Dotdigitalgroup_Email_Helper_Config::XML_PATH_REVIEW_ALLOW_NON_SUBSCRIBERS,
     1
 );
+//For Sync
+$configModel->saveConfig(
+    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_ALLOW_NON_SUBSCRIBERS,
+    1
+);
 
 //clean the cache for config
 Mage::getModel('core/config')->cleanCache();
