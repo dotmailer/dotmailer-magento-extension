@@ -62,4 +62,25 @@ class Dotdigitalgroup_Email_Model_Resource_Order
             return 0;
         }
     }
+
+    /**
+     * Join subscriber on collection
+     *
+     * @param Mage_Core_Model_Resource_Db_Collection_Abstract $collection
+     * @param string $emailColumn
+     *
+     * @return Mage_Core_Model_Resource_Db_Collection_Abstract
+     */
+    public function joinSubscribersOnCollection($collection, $emailColumn = "main_table.customer_email")
+    {
+        $subscriberTable = Mage::getSingleton('core/resource')
+            ->getTableName('newsletter_subscriber');
+        $collection->getSelect()
+            ->joinInner(
+                array("st" => $subscriberTable),
+                "st.subscriber_email = {$emailColumn}",
+                array()
+            )->where("st.subscriber_status = ?", Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED);
+        return $collection;
+    }
 }

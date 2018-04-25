@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Dotdigitalgroup_Email>
-            <version>6.4.0</version>
+            <version>6.4.1</version>
         </Dotdigitalgroup_Email>
     </modules>
     <frontend>
@@ -565,6 +565,7 @@
                 <new_product></new_product>
                 <campaign></campaign>
                 <anchor></anchor>
+                <allow_non_subscribers>0</allow_non_subscribers>
             </review_settings>
             <feefo_feedback_engine>
                 <logon></logon>
@@ -662,6 +663,7 @@
                 <link_text></link_text>
                 <cart_url></cart_url>
                 <login_url></login_url>
+                <allow_non_subscribers>0</allow_non_subscribers>
             </abandoned_carts>
             <tracking>
                 <roi_enabled>0</roi_enabled>
