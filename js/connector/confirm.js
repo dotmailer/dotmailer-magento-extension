@@ -7,9 +7,8 @@ $j(document).ready(function () {
      * @param {Object} element
      */
     function showConfirmation(element) {
-        var msg = 'You are about to enable this for non-subscriber contacts that haven\'t explicitly opted into ' +
-            'your emails. This means you might not be able to reach out to non-subscribed contacts, depending on ' +
-            'the applicable regulations. Do you wish to continue?';
+        var msg = 'You are about to enable this feature for customers that haven\'t explicitly opted into your ' +
+            'emails. Do you wish to continue?';
 
         if (confirm(msg)) {
             element.val(1);
