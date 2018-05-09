@@ -53,7 +53,12 @@ class Dotdigitalgroup_Email_Model_Customer_Guest
     {
         $helper = Mage::helper('ddg');
         $fileHelper = Mage::helper('ddg/file');
-        $guests = Mage::getModel('ddg_automation/contact')->getGuests($website);
+        $contactModel = Mage::getModel('ddg_automation/contact');
+        
+        $guests = $contactModel->getGuests(
+            $website,
+            Mage::helper('ddg/config')->isOnlySubscribersForContactSync($website)
+        );
 
         if ($guests->getSize()) {
             //@codingStandardsIgnoreStart

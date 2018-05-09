@@ -36,6 +36,14 @@ You are welcome to contribute to dotmailer for Magento! You can either:
 - Fix a bug: please fork this repo and submit the Pull Request to our [Develop branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/develop)
 - Request a feature on our [community forum](https://support.dotmailer.com/hc/en-gb/community/topics/200432508-Feedback-and-feature-requests)
 
+# V6.4.1
+
+###### New Features
+- Users can now import only those Magento contacts who've opted-in (customer subscribers, guest subscribers, and other subscribers).
+- Users now get warned when they're about to sync non-subscribers into their dotmailer account. 
+
+###### Bug fixes
+- We've fixed the catalog sync so it now syncs all products across all created collections when it's configured to sync on store level. 
 
 # V6.4.0
 

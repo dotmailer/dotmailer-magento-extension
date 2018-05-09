@@ -25,6 +25,7 @@ class Dotdigitalgroup_Email_Helper_Config
     const XML_PATH_CONNECTOR_CUSTOMERS_ADDRESS_BOOK_ID = 'connector_sync_settings/address_book/customers';
     const XML_PATH_CONNECTOR_SUBSCRIBERS_ADDRESS_BOOK_ID = 'connector_sync_settings/address_book/subscribers';
     const XML_PATH_CONNECTOR_GUEST_ADDRESS_BOOK_ID = 'connector_sync_settings/address_book/guests';
+    const XML_PATH_CONNECTOR_SYNC_ALLOW_NON_SUBSCRIBERS = 'connector_sync_settings/address_book/allow_non_subscribers';
     // Mapping
     const XML_PATH_CONNECTOR_MAPPING_LAST_ORDER_ID = 'connector_data_mapping/customer_data/last_order_id';
     const XML_PATH_CONNECTOR_MAPPING_LAST_QUOTE_ID = 'connector_data_mapping/customer_data/last_quote_id';
@@ -228,6 +229,8 @@ class Dotdigitalgroup_Email_Helper_Config
         = 'connector_configuration/abandoned_carts/cart_url';
     const XML_PATH_CONNECTOR_CONTENT_LOGIN_URL
         = 'connector_configuration/abandoned_carts/login_url';
+    const XML_PATH_CONNECTOR_CONTENT_ALLOW_NON_SUBSCRIBERS
+        = 'connector_configuration/abandoned_carts/allow_non_subscribers';
     // Address Book Pref
     const XML_PATH_CONNECTOR_ADDRESSBOOK_PREF_CAN_CHANGE_BOOKS
         = 'connector_configuration/address_book_pref/can_change';
@@ -267,6 +270,7 @@ class Dotdigitalgroup_Email_Helper_Config
     const XML_PATH_AUTOMATION_REVIEW_DELAY = 'connector_automation_studio/review_settings/delay';
     const XML_PATH_AUTOMATION_REVIEW_CAMPAIGN = 'connector_automation_studio/review_settings/campaign';
     const XML_PATH_AUTOMATION_REVIEW_ANCHOR = 'connector_automation_studio/review_settings/anchor';
+    const XML_PATH_REVIEW_ALLOW_NON_SUBSCRIBERS = 'connector_automation_studio/review_settings/allow_non_subscribers';
 
     /**
      * ROI SECTION.
@@ -464,4 +468,43 @@ class Dotdigitalgroup_Email_Helper_Config
         return $optInType;
     }
 
+    /**
+     * @param int|Mage_Core_Model_Store $store
+     * @return bool
+     */
+    public function isOnlySubscribersForAC($store)
+    {
+        $value = Mage::getStoreConfigFlag(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CONTENT_ALLOW_NON_SUBSCRIBERS,
+            $store
+        );
+        return ($value) ? false : true;
+    }
+
+    /**
+     * @param int|Mage_Core_Model_Website $website
+     * @return bool
+     */
+    public function isOnlySubscribersForReview($website)
+    {
+        $website = Mage::app()->getWebsite($website);
+        $value = (bool)$website->getConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_REVIEW_ALLOW_NON_SUBSCRIBERS
+        );
+        return ($value) ? false : true;
+    }
+
+    /**
+     * @param $website
+     *
+     * @return bool
+     */
+    public function isOnlySubscribersForContactSync($website)
+    {
+        $website = Mage::app()->getWebsite($website);
+        $value = (bool)$website->getConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_ALLOW_NON_SUBSCRIBERS
+        );
+        return ($value) ? false : true;
+    }
 }

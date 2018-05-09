@@ -423,6 +423,11 @@ class Dotdigitalgroup_Email_Model_Sales_Order
                     );
                 }
 
+                if (Mage::helper('ddg/config')->isOnlySubscribersForReview($website)) {
+                    $orderCollection = Mage::getResourceModel('ddg_automation/order')
+                        ->joinSubscribersOnCollection($orderCollection);
+                }
+
                 //process rules on collection
                 $ruleModel = Mage::getModel('ddg_automation/rules');
                 $collection = $ruleModel->process(

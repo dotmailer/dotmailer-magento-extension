@@ -18,7 +18,7 @@
                             <input type="checkbox" name="additional_subscriptions[]" id ="<?php echo $books["name"] ?>"
 								value="<?php echo $books["value"] ?>" title="<?php echo $books["name"] ?>"
 	                            <?php if($books["subscribed"]): ?> checked="checked"<?php endif; ?> class="checkbox" />
-                            <label for="additional_subscription"><?php echo $books["name"] ?></label>
+                            <label for="<?php echo $this->escapeHtml($books["name"]); ?>"><?php echo $books["name"] ?></label>
                         </li>
                     <?php endforeach; ?>
                 <?php endif; ?>

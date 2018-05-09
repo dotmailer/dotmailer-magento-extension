@@ -219,7 +219,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
             ->addFieldToFilter('is_active', 1)
             ->addFieldToFilter('items_count', array('gt' => 0))
             ->addFieldToFilter('customer_email', array('neq' => ''))
-            ->addFieldToFilter('store_id', $storeId);
+            ->addFieldToFilter('main_table.store_id', $storeId);
 
         //guests
         if ($guest) {
@@ -234,6 +234,11 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
         }
 
         $salesCollection->addFieldToFilter('main_table.updated_at', $updated);
+
+        if (Mage::helper('ddg/config')->isOnlySubscribersForAC($storeId)) {
+            $salesCollection = Mage::getResourceModel('ddg_automation/order')
+                ->joinSubscribersOnCollection($salesCollection);
+        }
 
         //process rules on collection
         $ruleModel       = Mage::getModel('ddg_automation/rules');
@@ -623,13 +628,18 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
             ->getCollection()
             ->addFieldToFilter('is_active', 1)
             ->addFieldToFilter('abandoned_cart_number', --$number)
-            ->addFieldToFilter('store_id', $storeId)
+            ->addFieldToFilter('main_table.store_id', $storeId)
             ->addFieldToFilter('quote_updated_at', $updated);
 
         if ($guest) {
-            $abandoneCollection->addFieldToFilter('customer_id', array('null' => true));
+            $abandoneCollection->addFieldToFilter('main_table.customer_id', array('null' => true));
         } else {
-            $abandoneCollection->addFieldToFilter('customer_id', array('notnull' => true));
+            $abandoneCollection->addFieldToFilter('main_table.customer_id', array('notnull' => true));
+        }
+
+        if (Mage::helper('ddg/config')->isOnlySubscribersForAC($storeId)) {
+            $abandoneCollection = Mage::getResourceModel('ddg_automation/order')
+                ->joinSubscribersOnCollection($abandoneCollection, "main_table.email");
         }
 
         return $abandoneCollection;

@@ -14,7 +14,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
     /**
      * @var array
      */
-    public $productIds;
+    public $productIds = array();
 
     /**
      * Constructor.
@@ -58,6 +58,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
         $enabled = Mage::getStoreConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED
         );
+
         $sync    = Mage::getStoreConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_CATALOG_ENABLED
         );
@@ -133,30 +134,33 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
                     if ($products) {
                         $importer = Mage::getModel('ddg_automation/importer');
                         //register in queue with importer
-                        $check = $importer->registerQueue(
+                        $importer->registerQueue(
                             'Catalog_' . $websiteCode . '_' . $storeCode,
                             $products,
                             Dotdigitalgroup_Email_Model_Importer::MODE_BULK,
-                            $store->getWebsite()->getId()
+                            $store->getWebsiteId()
                         );
-                        //set imported
-                        if ($check) {
-                            $this->getResource()->setImported(
-                                $this->productIds
-                            );
-                        }
-
-                        //@codingStandardsIgnoreStart
-                        //set number of product imported
-                        $this->countProducts += count($products);
-                        //@codingStandardsIgnoreEnd
                     }
 
                     //using single api
                     $this->_exportInSingle(
-                        $store, 'Catalog_' . $websiteCode . '_' . $storeCode,
-                        $store->getWebsite()->getId()
+                        $store,
+                        'Catalog_' . $websiteCode . '_' . $storeCode,
+                        $store->getWebsiteId()
                     );
+                }
+
+                //set imported
+                if (! empty($this->productIds)) {
+                    $this->productIds = array_unique($this->productIds);
+                    $this->getResource()->setImported(
+                        $this->productIds
+                    );
+
+                    //@codingStandardsIgnoreStart
+                    //set number of product imported
+                    $this->countProducts += count($this->productIds);
+                    //@codingStandardsIgnoreEnd
                 }
             }
         }
@@ -188,7 +192,11 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
             $connectorProducts = array();
             //clear the collection before getting the Limit may not be set.
             $productCollection->clear();
-            $this->productIds = $productCollection->getColumnValues('entity_id');
+
+            $this->productIds = array_merge(
+                $this->productIds,
+                $productCollection->getColumnValues('entity_id')
+            );
 
             foreach ($productCollection as $product) {
                 $connectorProduct    = Mage::getModel('ddg_automation/connector_product', $product);
@@ -210,7 +218,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
      */
     protected function _exportInSingle($store, $collectionName, $websiteId)
     {
-        $this->productIds = array();
+        $productIds = array();
 
         $products = $this->_getProductsToExport($store, true);
         if ($products) {
@@ -229,13 +237,13 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
                     );
 
                 if ($check) {
-                    $this->productIds[] = $product->getId();
+                    $productIds[] = $product->getId();
                 }
             }
 
-            if (! empty($this->productIds)) {
-                $this->getResource()->setImported($this->productIds, true);
-                $this->countProducts += count($this->productIds);
+            if (! empty($productIds)) {
+                $this->getResource()->setImported($productIds, true);
+                $this->countProducts += count($productIds);
             }
         }
     }
@@ -389,7 +397,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
                         'Catalog_' . $websiteCode . '_' . $storeCode,
                         array($key),
                         Dotdigitalgroup_Email_Model_Importer::MODE_SINGLE_DELETE,
-                        $store->getWebsite()->getId()
+                        $store->getWebsiteId()
                     );
                 }
             }
