@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Dotdigitalgroup_Email>
-            <version>6.4.1</version>
+            <version>6.4.2</version>
         </Dotdigitalgroup_Email>
     </modules>
     <frontend>
@@ -34,6 +34,14 @@
                     </ddg_switcher>
                 </observers>
             </controller_action_postdispatch>
+            <newsletter_subscriber_save_after>
+                <observers>
+                    <dotmailer_newsletter_subscriber_save_before>
+                        <class>ddg_automation/newsletter_observer</class>
+                        <method>frontendNewsletterSubscriberSave</method>
+                    </dotmailer_newsletter_subscriber_save_before>
+                </observers>
+            </newsletter_subscriber_save_after>
         </events>
     </frontend>
     <global>
@@ -102,6 +110,9 @@
                     <abandoned>
                         <table>email_abandoned_cart</table>
                     </abandoned>
+                    <consent>
+                        <table>email_contact_consent</table>
+                    </consent>
                 </entities>
             </email_connector_resource>
             <newsletter>
@@ -786,6 +797,12 @@
                 <enabled>0</enabled>
             </roi_tracking>
         </connector_roi_tracking>
+        <consent>
+            <dotmailer_consent_customer_enabled>0</dotmailer_consent_customer_enabled>
+            <dotmailer_consent_customer_text>Default text</dotmailer_consent_customer_text>
+            <dotmailer_consent_subscriber_enabled>0</dotmailer_consent_subscriber_enabled>
+            <dotmailer_consent_subscriber_text>Default subscriber text</dotmailer_consent_subscriber_text>
+        </consent>
         <connector_developer_settings>
             <import_settings>
                 <memory_limit>0</memory_limit>

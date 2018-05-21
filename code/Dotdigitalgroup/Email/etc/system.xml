@@ -2721,6 +2721,55 @@
                         </page_enabled>
                     </fields>
                 </tracking>
+                <consent translate="label" module="ddg">
+                    <label>Consent</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>25</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <expanded>1</expanded>
+                    <fields>
+                        <dotmailer_consent_customer_enabled translate="comment label" module="ddg">
+                            <label>Import customers with their consent information</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment>Enable this is you want to store and import consent insight data when your guests and customers subscribe during registration or checkout.</comment>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </dotmailer_consent_customer_enabled>
+                        <dotmailer_consent_customer_text translate="comment label" module="ddg">
+                            <label>Consent text provided to your customers on registration and checkout</label>
+                            <frontend_type>textarea</frontend_type>
+                            <comment>Please provide the text that is currently displayed on your registration and checkout form to get the consent from your customers/guests to receive marketing messages.</comment>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </dotmailer_consent_customer_text>
+                        <dotmailer_consent_subscriber_enabled translate="comment label" module="ddg">
+                            <label>Import subscribers with their consent information</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment>Enable this is you want to store and import consent insight data when your customers subscribe via the newsletter signup form.</comment>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </dotmailer_consent_subscriber_enabled>
+                        <dotmailer_consent_subscriber_text translate="comment label" module="ddg">
+                            <label>Consent text provided to your subscribers above the newsletter signup</label>
+                            <frontend_type>textarea</frontend_type>
+                            <comment>Please provide the text that is currently displayed above your newsletter signup form</comment>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </dotmailer_consent_subscriber_text>
+                    </fields>
+                </consent>
                 <dynamic_content_style translate="label comment" module="ddg">
                     <label>Dynamic Content Styling</label>
                     <sort_order>2500</sort_order>

@@ -279,6 +279,18 @@ class Dotdigitalgroup_Email_Helper_Config
     const XML_PATH_CONNECTOR_PAGE_TRACKING_ENABLED = 'connector_configuration/tracking/page_enabled';
 
     /**
+     * CONSENT SECTION.
+     */
+    const XML_PATH_DOTMAILER_CONSENT_CUSTOMER_ENABLED =
+        'connector_configuration/consent/dotmailer_consent_customer_enabled';
+    const XML_PATH_DOTMAILER_CONSENT_CUSTOMER_TEXT =
+        'connector_configuration/consent/dotmailer_consent_customer_text';
+    const XML_PATH_DOTMAILER_CONSENT_SUBSCRIBER_ENABLED =
+        'connector_configuration/consent/dotmailer_consent_subscriber_enabled';
+    const XML_PATH_DOTMAILER_CONSENT_SUBSCRIBER_TEXT =
+        'connector_configuration/consent/dotmailer_consent_subscriber_text';
+
+    /**
      * OAUTH
      */
     const API_CONNECTOR_OAUTH_URL_AUTHORISE = 'OAuth2/authorise.aspx?';
@@ -506,5 +518,71 @@ class Dotdigitalgroup_Email_Helper_Config
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_ALLOW_NON_SUBSCRIBERS
         );
         return ($value) ? false : true;
+    }
+
+    /**
+     * @param $path
+     * @param null|string|bool|int|Mage_Core_Model_Website $websiteId
+     *
+     * @return mixed
+     */
+    public function getWebsiteConfig($path, $websiteId = 0)
+    {
+        $website = Mage::app()->getWebsite($websiteId);
+
+        return $website->getConfig($path);
+    }
+
+    /**
+     * @param int $websiteId
+     * @return mixed
+     */
+    public function isConsentCustomerEnabled($websiteId = 0)
+    {
+        return $this->getWebsiteConfig(self::XML_PATH_DOTMAILER_CONSENT_CUSTOMER_ENABLED, $websiteId);
+    }
+
+    /**
+     * @param $websiteId
+     */
+    public function getConsentCustomerText($websiteId)
+    {
+        return $this->limitLength(
+            $this->getWebsiteConfig(self::XML_PATH_DOTMAILER_CONSENT_CUSTOMER_TEXT, $websiteId)
+        );
+    }
+
+    /**
+     * @param $websiteId
+     * @return mixed
+     */
+    public function isConsentSubscriberEnabled($websiteId)
+    {
+        return $this->getWebsiteConfig(self::XML_PATH_DOTMAILER_CONSENT_SUBSCRIBER_ENABLED, $websiteId);
+    }
+
+    /**
+     * @param $websiteId
+     * @return mixed
+     */
+    public function getConsentSubscriberText($websiteId)
+    {
+        return $this->limitLength(
+            $this->getWebsiteConfig(self::XML_PATH_DOTMAILER_CONSENT_SUBSCRIBER_TEXT, $websiteId)
+        );
+    }
+
+    /**
+     * @param $value
+     * @return string
+     */
+    private function limitLength($value)
+    {
+        $stringHelper = Mage::helper('core/string');
+        if ($stringHelper->strlen($value) > Dotdigitalgroup_Email_Model_Consent::CONSENT_TEXT_LIMIT) {
+            $value = $stringHelper->substr($value, 0, Dotdigitalgroup_Email_Model_Consent::CONSENT_TEXT_LIMIT);
+        }
+
+        return $value;
     }
 }

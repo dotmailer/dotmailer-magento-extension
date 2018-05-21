@@ -23,12 +23,6 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
         $email = $subscriber->getEmail();
         $storeId = $subscriber->getStoreId();
         $subscriberStatus = $subscriber->getSubscriberStatus();
-
-        if ($subscriberStatus == Mage_Newsletter_Model_Subscriber::STATUS_NOT_ACTIVE or
-            $subscriberStatus == Mage_Newsletter_Model_Subscriber::STATUS_UNCONFIRMED) {
-            return $this;
-        }
-
         $websiteId = Mage::app()->getStore($subscriber->getStoreId())->getWebsiteId();
 
         //check if enabled
@@ -41,9 +35,10 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
                 ->loadContactByStoreId($email, $storeId);
 
             if (! $contactEmail->getId()) {
-                $contactEmail->setEmail($email);
+                $contactEmail->setStoreId($storeId)
+                    ->setWebsiteId($websiteId)
+                    ->setEmail($email);
             }
-
             // only for subscribers
             if ($subscriberStatus == Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED) {
                 //update subscriber status and reset the import
@@ -64,6 +59,9 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
                         ->setSuppressed(null);
                 }
 
+                //save contact
+                $contactEmail->save();
+
                 //not subscribed
             } else {
                 $unsubscribeEmail = Mage::registry('unsubscribeEmail');
@@ -80,6 +78,16 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
                     return $this;
                 }
 
+                $contactEmail->setIsSubscriber(null)
+                    ->setSubscriberStatus(Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED);
+                //save contact
+                $contactEmail->save();
+
+                if ($subscriberStatus == Mage_Newsletter_Model_Subscriber::STATUS_NOT_ACTIVE or
+                    $subscriberStatus == Mage_Newsletter_Model_Subscriber::STATUS_UNCONFIRMED) {
+                    return $this;
+                }
+
                 //Add subscriber update to importer queue
                 Mage::getModel('ddg_automation/importer')->registerQueue(
                     Dotdigitalgroup_Email_Model_Importer::IMPORT_TYPE_SUBSCRIBER_UPDATE,
@@ -87,9 +95,6 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
                     Dotdigitalgroup_Email_Model_Importer::MODE_SUBSCRIBER_UPDATE,
                     $websiteId
                 );
-
-                $contactEmail->setIsSubscriber(null)
-                    ->setSubscriberStatus(Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED);
             }
 
             // fix for a multiple hit of the observer
@@ -103,11 +108,6 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
             //add subscriber to automation
             $this->_addSubscriberToAutomation($email, $subscriber, $websiteId);
 
-            //update the contact
-            $contactEmail->setStoreId($storeId);
-
-            //update contact
-            $contactEmail->save();
         } catch (Exception $e) {
             Mage::logException($e);
         }
@@ -211,6 +211,62 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
             }
         } catch (Exception $e) {
             Mage::logException($e);
+        }
+    }
+
+    /**
+     * @param Varien_Event_Observer $observer
+     * @return $this
+     */
+    public function frontendNewsletterSubscriberSave(Varien_Event_Observer $observer)
+    {
+        /** @var Mage_Newsletter_Model_Subscriber $subscriber */
+        $subscriber = $observer->getEvent()->getSubscriber();
+        $email = $subscriber->getEmail();
+        $configHelper = Mage::helper('ddg/config');
+        $subscriberStatus = $subscriber->getSubscriberStatus();
+        $websiteId = Mage::app()->getStore($subscriber->getStoreId())->getWebsiteId();
+
+        //If not confirmed or not enabled.
+        if ($subscriberStatus == Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED ||
+            ! Mage::helper('ddg')->isEnabled($websiteId)
+        ) {
+            return $this;
+            //none of the consent is enabled in configuration
+        } elseif (! $configHelper->isConsentSubscriberEnabled($websiteId) &&
+            ! $configHelper->isConsentCustomerEnabled($websiteId)) {
+            return $this;
+        }
+
+         try {
+            $emailContactId = Mage::getModel('ddg_automation/contact')
+                ->loadByCustomerEmail($email, $websiteId)
+                ->getId();
+            $consentModel = Mage::getModel('ddg_automation/consent');
+            $consentResource = Mage::getResourceModel('ddg_automation/consent');
+            $consentResource->load($consentModel,$emailContactId, 'email_contact_id');
+
+            //don't update the consent data for guest subscribers or not confrimed
+            if (! $consentModel->isObjectNew() ) {
+                return $this;
+            }
+
+            $http = Mage::helper('core/http');
+            $consentUrl = $http->getHttpReferer() ? $http->getHttpReferer()  : Mage::getUrl();
+            $consentIp = $http->getRemoteAddr();
+            $consentUserAgent = $http->getHttpUserAgent();
+            //save the consent data against the contact
+            $consentModel->setEmailContactId($emailContactId)
+                ->setConsentUrl($consentUrl)
+                ->setConsentDatetime(time())
+                ->setConsentIp($consentIp)
+                ->setConsentUserAgent($consentUserAgent);
+
+            //save contact
+            $consentResource->save($consentModel);
+
+        } catch (\Exception $e) {
+            Mage::helper('ddg')->log($e);
         }
     }
 
