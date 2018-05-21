@@ -1121,36 +1121,91 @@ $table->addColumn(
     ->setComment('Abandoned Carts');
 $installer->getConnection()->createTable($table);
 
+// Batch size for sql queries
+$batchSize = 25000;
 
 /**
  * Populate email_contact table
  */
-$select = $installer->getConnection()->select()
-    ->from(
-        array('customer' => $this->getTable('customer_entity')),
-        array('customer_id' => 'entity_id', 'email', 'website_id', 'store_id')
-    );
+$customerCollection = Mage::getResourceModel('customer/customer_collection')
+    ->addAttributeToSelect('entity_id')
+    ->setPageSize(1);
+$customerCollection->getSelect()->order('entity_id ASC');
+$minId = $customerCollection->getSize() ? $customerCollection->getFirstItem()->getId() : 0;
 
-$insertArray = array('customer_id', 'email', 'website_id', 'store_id');
-$sqlQuery = $select->insertFromSelect($contactTable, $insertArray, false);
-$installer->getConnection()->query($sqlQuery);
+if ($minId) {
+    $customerCollection = Mage::getResourceModel('customer/customer_collection')
+        ->addAttributeToSelect('entity_id')
+        ->setPageSize(1);
+    $customerCollection->getSelect()->order('entity_id DESC');
+    $maxId = $customerCollection->getFirstItem()->getId();
 
-// subscribers that are not customers
-$select = $installer->getConnection()->select()
-    ->from(
-        array('subscriber' => $installer->getTable('newsletter/subscriber')),
-        array(
-            'email' => 'subscriber_email',
-            'col2' => new Zend_Db_Expr('1'),
-            'col3' => new Zend_Db_Expr('1'),
-            'store_id'
-        )
-    )
-    ->where('customer_id =?', 0)
-    ->where('subscriber_status =?', 1);
-$insertArray = array('email', 'is_subscriber', 'subscriber_status', 'store_id');
-$sqlQuery = $select->insertFromSelect($contactTable, $insertArray, false);
-$installer->getConnection()->query($sqlQuery);
+    $batchMinId = $minId;
+    $batchMaxId = $minId + $batchSize;
+    $moreRecords = true;
+
+    while ($moreRecords) {
+        $select = $installer->getConnection()->select()
+            ->from(
+                array('customer' => $this->getTable('customer_entity')),
+                array('customer_id' => 'entity_id', 'email', 'website_id', 'store_id')
+            )
+            ->where('customer.entity_id >= ?', $batchMinId)
+            ->where('customer.entity_id < ?', $batchMaxId);
+
+        $insertArray = array('customer_id', 'email', 'website_id', 'store_id');
+        $sqlQuery = $select->insertFromSelect($contactTable, $insertArray, false);
+        $installer->getConnection()->query($sqlQuery);
+
+        $moreRecords = $maxId >= $batchMaxId;
+        $batchMinId = $batchMinId + $batchSize;
+        $batchMaxId = $batchMaxId + $batchSize;
+    }
+}
+
+// Subscribers that are not customers
+$subscriberCollection = Mage::getResourceModel('newsletter/subscriber_collection')
+    ->addFieldToSelect('subscriber_id')
+    ->setPageSize(1);
+$subscriberCollection->getSelect()->order('subscriber_id ASC');
+$minId = $subscriberCollection->getSize() ? $subscriberCollection->getFirstItem()->getId() : 0;
+
+if ($minId) {
+    $subscriberCollection = Mage::getResourceModel('newsletter/subscriber_collection')
+        ->addFieldToSelect('subscriber_id')
+        ->setPageSize(1);
+    $subscriberCollection->getSelect()->order('subscriber_id DESC');
+    $maxId = $subscriberCollection->getFirstItem()->getId();
+
+    $batchMinId = $minId;
+    $batchMaxId = $minId + $batchSize;
+    $moreRecords = true;
+
+    while ($moreRecords) {
+        $select = $installer->getConnection()->select()
+            ->from(
+                array('subscriber' => $installer->getTable('newsletter/subscriber')),
+                array(
+                    'email' => 'subscriber_email',
+                    'col2' => new Zend_Db_Expr('1'),
+                    'col3' => new Zend_Db_Expr('1'),
+                    'store_id'
+                )
+            )
+            ->where('customer_id =?', 0)
+            ->where('subscriber_status =?', 1)
+            ->where('subscriber.subscriber_id >= ?', $batchMinId)
+            ->where('subscriber.subscriber_id < ?', $batchMaxId);
+
+        $insertArray = array('email', 'is_subscriber', 'subscriber_status', 'store_id');
+        $sqlQuery = $select->insertFromSelect($contactTable, $insertArray, false);
+        $installer->getConnection()->query($sqlQuery);
+
+        $moreRecords = $maxId >= $batchMaxId;
+        $batchMinId = $batchMinId + $batchSize;
+        $batchMaxId = $batchMaxId + $batchSize;
+    }
+}
 
 //Update contacts with customers that are subscribers
 $customerIds = Mage::getResourceModel('newsletter/subscriber_collection')
@@ -1192,120 +1247,252 @@ if (Mage::helper('ddg')->isEnterprise()) {
 /**
  * Populate email_order table
  */
-$select = $installer->getConnection()->select()
-    ->from(
-        $installer->getTable('sales/order'),
-        array(
-            'order_id' => 'entity_id',
+$orderCollection = Mage::getResourceModel('sales/order_collection')
+    ->addAttributeToSelect('entity_id')
+    ->setPageSize(1);
+$orderCollection->getSelect()->order('entity_id ASC');
+$minId = $orderCollection->getSize() ? $orderCollection->getFirstItem()->getId() : 0;
+
+if ($minId) {
+    $orderCollection = Mage::getResourceModel('sales/order_collection')
+        ->addAttributeToSelect('entity_id')
+        ->setPageSize(1);
+    $orderCollection->getSelect()->order('entity_id DESC');
+    $maxId = $orderCollection->getFirstItem()->getId();
+
+    $batchMinId = $minId;
+    $batchMaxId = $minId + $batchSize;
+    $moreRecords = true;
+
+    while ($moreRecords) {
+        $select = $installer->getConnection()->select()
+            ->from(
+                array('order' => $installer->getTable('sales/order')),
+                array(
+                    'order_id' => 'entity_id',
+                    'quote_id',
+                    'store_id',
+                    'created_at',
+                    'updated_at',
+                    'order_status' => 'status'
+                )
+            )
+            ->where('order.entity_id >= ?', $batchMinId)
+            ->where('order.entity_id < ?', $batchMaxId);
+        $insertArray = array(
+            'order_id',
             'quote_id',
             'store_id',
             'created_at',
             'updated_at',
-            'order_status' => 'status'
-        )
-    );
-$insertArray = array(
-    'order_id',
-    'quote_id',
-    'store_id',
-    'created_at',
-    'updated_at',
-    'order_status'
-);
+            'order_status'
+        );
 
-$sqlQuery = $select->insertFromSelect($orderTable, $insertArray, false);
-$installer->getConnection()->query($sqlQuery);
+        $sqlQuery = $select->insertFromSelect($orderTable, $insertArray, false);
+        $installer->getConnection()->query($sqlQuery);
+
+        $moreRecords = $maxId >= $batchMaxId;
+        $batchMinId = $batchMinId + $batchSize;
+        $batchMaxId = $batchMaxId + $batchSize;
+    }
+}
 
 /**
  * Populate email_review table
  */
-$inCond = $installer->getConnection()->prepareSqlCondition(
-    'review_detail.customer_id', array('notnull' => true)
-);
-$select = $installer->getConnection()->select()
-    ->from(
-        array('review' => $installer->getTable('review/review')),
-        array(
-            'review_id' => 'review.review_id',
-            'created_at' => 'review.created_at'
-        )
-    )
-    ->joinLeft(
-        array('review_detail' => $installer->getTable('review/review_detail')),
-        "review_detail.review_id = review.review_id",
-        array(
-            'store_id' => 'review_detail.store_id',
-            'customer_id' => 'review_detail.customer_id'
-        )
-    )
-    ->where($inCond);
+$reviewCollection = Mage::getResourceModel('review/review_collection')
+    ->addFieldToSelect('review_id')
+    ->setPageSize(1);
+$reviewCollection->getSelect()->order('review_id ASC');
+$minId = $reviewCollection->getSize() ? $reviewCollection->getFirstItem()->getId() : 0;
 
-$insertArray = array('review_id', 'created_at', 'store_id', 'customer_id');
-$sqlQuery = $select->insertFromSelect($reviewTable, $insertArray, false);
-$installer->getConnection()->query($sqlQuery);
+if ($minId) {
+    $reviewCollection = Mage::getResourceModel('review/review_collection')
+        ->addFieldToSelect('review_id')
+        ->setPageSize(1);
+    $reviewCollection->getSelect()->order('review_id DESC');
+    $maxId = $reviewCollection->getFirstItem()->getId();
+
+    $batchMinId = $minId;
+    $batchMaxId = $minId + $batchSize;
+    $moreRecords = true;
+
+    while ($moreRecords) {
+        $inCond = $installer->getConnection()->prepareSqlCondition(
+            'review_detail.customer_id', array('notnull' => true)
+        );
+        $select = $installer->getConnection()->select()
+            ->from(
+                array('review' => $installer->getTable('review/review')),
+                array(
+                    'review_id' => 'review.review_id',
+                    'created_at' => 'review.created_at'
+                )
+            )
+            ->joinLeft(
+                array('review_detail' => $installer->getTable('review/review_detail')),
+                "review_detail.review_id = review.review_id",
+                array(
+                    'store_id' => 'review_detail.store_id',
+                    'customer_id' => 'review_detail.customer_id'
+                )
+            )
+            ->where($inCond)
+            ->where('review.review_id >= ?', $batchMinId)
+            ->where('review.review_id < ?', $batchMaxId);
+
+        $insertArray = array('review_id', 'created_at', 'store_id', 'customer_id');
+        $sqlQuery = $select->insertFromSelect($reviewTable, $insertArray, false);
+        $installer->getConnection()->query($sqlQuery);
+
+        $moreRecords = $maxId >= $batchMaxId;
+        $batchMinId = $batchMinId + $batchSize;
+        $batchMaxId = $batchMaxId + $batchSize;
+    }
+}
 
 /**
  * Populate email_wishlist table
  */
-$select = $installer->getConnection()->select()
-    ->from(
-        array('wishlist' => $installer->getTable('wishlist/wishlist')),
-        array('wishlist_id', 'customer_id', 'created_at' => 'updated_at')
-    )->joinLeft(
-        array('ce' => $installer->getTable('customer_entity')),
-        "wishlist.customer_id = ce.entity_id",
-        array('store_id')
-    )->joinInner(
-        array('wi' => $installer->getTable('wishlist/item')),
-        "wishlist.wishlist_id = wi.wishlist_id",
-        array('item_count' => 'count(wi.wishlist_id)')
-    )->group('wi.wishlist_id');
+$wishlistCollection = Mage::getResourceModel('wishlist/wishlist_collection')
+    ->addFieldToSelect('wishlist_id')
+    ->setPageSize(1);
+$wishlistCollection->getSelect()->order('wishlist_id ASC');
+$minId = $wishlistCollection->getSize() ? $wishlistCollection->getFirstItem()->getId() : 0;
 
-$insertArray = array(
-    'wishlist_id',
-    'customer_id',
-    'created_at',
-    'store_id',
-    'item_count'
-);
-$sqlQuery = $select->insertFromSelect($wishlistTable, $insertArray, false);
-$installer->getConnection()->query($sqlQuery);
+if ($minId) {
+    $wishlistCollection = Mage::getResourceModel('wishlist/wishlist_collection')
+        ->addFieldToSelect('wishlist_id')
+        ->setPageSize(1);
+    $wishlistCollection->getSelect()->order('wishlist_id DESC');
+    $maxId = $wishlistCollection->getFirstItem()->getId();
+
+    $batchMinId = $minId;
+    $batchMaxId = $minId + $batchSize;
+    $moreRecords = true;
+
+    while ($moreRecords) {
+        $select = $installer->getConnection()->select()
+            ->from(
+                array('wishlist' => $installer->getTable('wishlist/wishlist')),
+                array('wishlist_id', 'customer_id', 'created_at' => 'updated_at')
+            )->joinLeft(
+                array('ce' => $installer->getTable('customer_entity')),
+                "wishlist.customer_id = ce.entity_id",
+                array('store_id')
+            )->joinInner(
+                array('wi' => $installer->getTable('wishlist/item')),
+                "wishlist.wishlist_id = wi.wishlist_id",
+                array('item_count' => 'count(wi.wishlist_id)')
+            )
+            ->where('wishlist.wishlist_id >= ?', $batchMinId)
+            ->where('wishlist.wishlist_id < ?', $batchMaxId)
+            ->group('wi.wishlist_id');
+
+        $insertArray = array(
+            'wishlist_id',
+            'customer_id',
+            'created_at',
+            'store_id',
+            'item_count'
+        );
+        $sqlQuery = $select->insertFromSelect($wishlistTable, $insertArray, false);
+        $installer->getConnection()->query($sqlQuery);
+
+        $moreRecords = $maxId >= $batchMaxId;
+        $batchMinId = $batchMinId + $batchSize;
+        $batchMaxId = $batchMaxId + $batchSize;
+    }
+}
 
 /**
  * Populate email_quote table
  */
-$select = $installer->getConnection()->select()
-    ->from(
-        $installer->getTable('sales/quote'),
-        array(
-            'quote_id' => 'entity_id',
-            'store_id',
-            'customer_id',
-            'created_at'
-        )
-    )
-    ->where('customer_id !=?', null)
-    ->where('is_active =?', 1)
-    ->where('items_count >?', 0);
+$quoteCollection = Mage::getResourceModel('sales/quote_collection')
+    ->addFieldToSelect('entity_id')
+    ->setPageSize(1);
+$quoteCollection->getSelect()->order('entity_id ASC');
+$minId = $quoteCollection->getSize() ? $quoteCollection->getFirstItem()->getId() : 0;
 
-$insertArray = array('quote_id', 'store_id', 'customer_id', 'created_at');
-$sqlQuery = $select->insertFromSelect($quoteTable, $insertArray, false);
-$installer->getConnection()->query($sqlQuery);
+if ($minId) {
+    $quoteCollection = Mage::getResourceModel('sales/quote_collection')
+        ->addFieldToSelect('entity_id')
+        ->setPageSize(1);
+    $quoteCollection->getSelect()->order('entity_id DESC');
+    $maxId = $quoteCollection->getFirstItem()->getId();
+
+    $batchMinId = $minId;
+    $batchMaxId = $minId + $batchSize;
+    $moreRecords = true;
+
+    while ($moreRecords) {
+        $select = $installer->getConnection()->select()
+            ->from(
+                array('quote' => $installer->getTable('sales/quote')),
+                array(
+                    'quote_id' => 'entity_id',
+                    'store_id',
+                    'customer_id',
+                    'created_at'
+                )
+            )
+            ->where('customer_id !=?', null)
+            ->where('is_active =?', 1)
+            ->where('items_count >?', 0)
+            ->where('quote.entity_id >= ?', $batchMinId)
+            ->where('quote.entity_id < ?', $batchMaxId);
+
+        $insertArray = array('quote_id', 'store_id', 'customer_id', 'created_at');
+        $sqlQuery = $select->insertFromSelect($quoteTable, $insertArray, false);
+        $installer->getConnection()->query($sqlQuery);
+
+        $moreRecords = $maxId >= $batchMaxId;
+        $batchMinId = $batchMinId + $batchSize;
+        $batchMaxId = $batchMaxId + $batchSize;
+    }
+}
 
 /**
  * Populate email_catalog table
  */
-$select = $installer->getConnection()->select()
-    ->from(
-        array('catalog' => $installer->getTable('catalog/product')),
-        array(
-            'product_id' => 'catalog.entity_id',
-            'created_at' => 'catalog.created_at'
-        )
-    );
-$insertArray = array('product_id', 'created_at');
-$sqlQuery = $select->insertFromSelect($catalogTable, $insertArray, false);
-$installer->getConnection()->query($sqlQuery);
+$catalogCollection = Mage::getResourceModel('catalog/product_collection')
+    ->addAttributeToSelect('entity_id')
+    ->setPageSize(1);
+$catalogCollection->getSelect()->order('entity_id ASC');
+$minId = $catalogCollection->getSize() ? $catalogCollection->getFirstItem()->getId() : 0;
+
+if ($minId) {
+    $catalogCollection = Mage::getResourceModel('catalog/product_collection')
+        ->addAttributeToSelect('entity_id')
+        ->setPageSize(1);
+    $catalogCollection->getSelect()->order('entity_id DESC');
+    $maxId = $catalogCollection->getFirstItem()->getId();
+
+    $batchMinId = $minId;
+    $batchMaxId = $minId + $batchSize;
+    $moreRecords = true;
+
+    while ($moreRecords) {
+        $select = $installer->getConnection()->select()
+            ->from(
+                array('catalog' => $installer->getTable('catalog/product')),
+                array(
+                    'product_id' => 'catalog.entity_id',
+                    'created_at' => 'catalog.created_at'
+                )
+            )
+            ->where('catalog.entity_id >= ?', $batchMinId)
+            ->where('catalog.entity_id < ?', $batchMaxId);
+
+        $insertArray = array('product_id', 'created_at');
+        $sqlQuery = $select->insertFromSelect($catalogTable, $insertArray, false);
+        $installer->getConnection()->query($sqlQuery);
+
+        $moreRecords = $maxId >= $batchMaxId;
+        $batchMinId = $batchMinId + $batchSize;
+        $batchMaxId = $batchMaxId + $batchSize;
+    }
+}
 
 /**
  * Save values to config
