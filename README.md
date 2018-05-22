@@ -36,6 +36,16 @@ You are welcome to contribute to dotmailer for Magento! You can either:
 - Fix a bug: please fork this repo and submit the Pull Request to our [Develop branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/develop)
 - Request a feature on our [community forum](https://support.dotmailer.com/hc/en-gb/community/topics/200432508-Feedback-and-feature-requests)
 
+
+# V6.4.2 
+
+###### Features : 
+- You’re now able to record your customers and guests’ consent and store it using dotmailer’s new ConsentInsight.
+
+###### Imrovements :
+- We've optimised the way our install script imports data into the extension tables, so it now imports small batches rather than all in one go.
+
+
 # V6.4.1
 
 ###### New Features
