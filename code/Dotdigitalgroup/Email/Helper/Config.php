@@ -534,15 +534,6 @@ class Dotdigitalgroup_Email_Helper_Config
     }
 
     /**
-     * @param int $websiteId
-     * @return mixed
-     */
-    public function isConsentCustomerEnabled($websiteId = 0)
-    {
-        return $this->getWebsiteConfig(self::XML_PATH_DOTMAILER_CONSENT_CUSTOMER_ENABLED, $websiteId);
-    }
-
-    /**
      * @param $websiteId
      */
     public function getConsentCustomerText($websiteId)

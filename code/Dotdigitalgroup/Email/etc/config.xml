@@ -798,10 +798,9 @@
             </roi_tracking>
         </connector_roi_tracking>
         <consent>
-            <dotmailer_consent_customer_enabled>0</dotmailer_consent_customer_enabled>
-            <dotmailer_consent_customer_text>Default text</dotmailer_consent_customer_text>
             <dotmailer_consent_subscriber_enabled>0</dotmailer_consent_subscriber_enabled>
             <dotmailer_consent_subscriber_text>Default subscriber text</dotmailer_consent_subscriber_text>
+            <dotmailer_consent_customer_text>Default text</dotmailer_consent_customer_text>
         </consent>
         <connector_developer_settings>
             <import_settings>

@@ -56,23 +56,18 @@ class Dotdigitalgroup_Email_Model_Consent extends Mage_Core_Model_Abstract
                 $consentResource->load($this, $contactModel->getEmailContactId(), 'email_contact_id');
             }
         }
-        //consent from the customer registration page or checkout
-        if ($this->isLinkMatchCustomerRegistrationOrCheckout($this->getConsentUrl())) {
-            if (! $configHelper->isConsentCustomerEnabled($websiteId)) {
-                return [];
-            }
-            $consentText = $configHelper->getConsentCustomerText($websiteId);
-        } else {
-
-            if (! $configHelper->isConsentSubscriberEnabled($websiteId)) {
-                return [];
-            }
-            $consentText = $configHelper->getConsentSubscriberText($websiteId);
+        if (! $configHelper->isConsentSubscriberEnabled($websiteId)) {
+            return [];
+        }
+        $consentText = $configHelper->getConsentSubscriberText($websiteId);
+        $customerConentText = $configHelper->getConsentCustomerText($websiteId);
+        //customer checkout and registration if consent text not empty
+        if ($this->isLinkMatchCustomerRegistrationOrCheckout($this->getConsentUrl()) && strlen($customerConentText)) {
+            $consentText = $customerConentText;
         }
 
-        $dateTimeConsent = Mage::getModel('core/date')->date(
-            Zend_Date::ISO_8601, $this->getConsentDatetime()
-        );
+        $dateTimeConsent =  $this->getConsentDatetime();
+
         return $consentData = [
             $consentText,
             $this->getConsentUrl(),

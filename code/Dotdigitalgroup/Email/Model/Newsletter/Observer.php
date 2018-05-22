@@ -223,22 +223,19 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
         /** @var Mage_Newsletter_Model_Subscriber $subscriber */
         $subscriber = $observer->getEvent()->getSubscriber();
         $email = $subscriber->getEmail();
-        $configHelper = Mage::helper('ddg/config');
+
         $subscriberStatus = $subscriber->getSubscriberStatus();
         $websiteId = Mage::app()->getStore($subscriber->getStoreId())->getWebsiteId();
 
         //If not confirmed or not enabled.
         if ($subscriberStatus == Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED ||
-            ! Mage::helper('ddg')->isEnabled($websiteId)
+            ! Mage::helper('ddg')->isEnabled($websiteId) ||
+            ! Mage::helper('ddg/config')->isConsentSubscriberEnabled($websiteId)
         ) {
-            return $this;
-            //none of the consent is enabled in configuration
-        } elseif (! $configHelper->isConsentSubscriberEnabled($websiteId) &&
-            ! $configHelper->isConsentCustomerEnabled($websiteId)) {
             return $this;
         }
 
-         try {
+        try {
             $emailContactId = Mage::getModel('ddg_automation/contact')
                 ->loadByCustomerEmail($email, $websiteId)
                 ->getId();
@@ -255,10 +252,11 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
             $consentUrl = $http->getHttpReferer() ? $http->getHttpReferer()  : Mage::getUrl();
             $consentIp = $http->getRemoteAddr();
             $consentUserAgent = $http->getHttpUserAgent();
+            $consentDatetime = Mage::getModel('core/date')->gmtDate();
             //save the consent data against the contact
             $consentModel->setEmailContactId($emailContactId)
                 ->setConsentUrl($consentUrl)
-                ->setConsentDatetime(time())
+                ->setConsentDatetime($consentDatetime)
                 ->setConsentIp($consentIp)
                 ->setConsentUserAgent($consentUserAgent);
 
