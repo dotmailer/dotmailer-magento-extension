@@ -164,6 +164,8 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
                                 ) {
                                     if ($file = $item->getImportFile()) {
                                         $fileHelper = Mage::helper('ddg/file');
+                                        //remove consent data once imported
+                                        $this->cleanProcessedConsent($fileHelper->getFilePath($file));
                                         $fileHelper->archiveCSV($file);
                                     }
                                     
@@ -499,10 +501,37 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
         return $contacts;
     }
 
+    /**
+     * @param $text
+     * @return null|string|string[]
+     */
     protected function _removeUtf8Bom($text)
     {
         $bom = pack('H*', 'EFBBBF');
         $text = preg_replace("/^$bom/", '', $text);
         return $text;
+    }
+
+    /**
+     * @param $file string full path to the csv file.
+     */
+    private function cleanProcessedConsent($file)
+    {
+        try {
+            $consentResource = Mage::getResourceModel('ddg_automation/consent');
+            $csv = new Varien_File_Csv();
+            //read file and get the email addresses
+            $index = $csv->getDataPairs($file, 0, 0);
+            //remove header data for Email
+            unset($index['Email']);
+            $emails = array_values($index);
+            $result = $consentResource->deleteConsentByEmails($emails);
+
+            if ($count = count($result)) {
+                Mage::helper('ddg')->log('Consent data removed : ' . $count);
+            }
+        }catch(\Exception $e) {
+            Mage::logException($e);
+        }
     }
 }

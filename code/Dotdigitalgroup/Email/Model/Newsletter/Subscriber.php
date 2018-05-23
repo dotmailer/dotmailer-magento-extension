@@ -144,15 +144,16 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
      * Export subscribers
      *
      * @param Mage_Core_Model_Website $website
-     * @param $subscribers
+     * @param $emailContacts
      * @return int
      */
-    protected function exportSubscribers(Mage_Core_Model_Website $website, $subscribers)
+    protected function exportSubscribers(Mage_Core_Model_Website $website, $emailContacts)
     {
         $countSubscribers = 0;
+        $websiteId = $website->getId();
         $fileHelper = Mage::helper('ddg/file');
         //nothing to export
-        $emails = $subscribers->getColumnValues('email');
+        $emails = $emailContacts->getColumnValues('email');
         if (empty($emails)) {
             return 0;
         }
@@ -175,23 +176,36 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
         //get mapped storename
         $subscriberStorename = Mage::helper('ddg')->getMappedStoreName($website);
         $headers = array('Email', 'EmailType', $subscriberStorename, 'OptInType');
+        //contentinsight is enabled include additional headers
+        $isConsentSubscriberEnabled = Mage::helper('ddg/config')
+            ->isConsentSubscriberEnabled($websiteId);
+        if ($isConsentSubscriberEnabled) {
+            $headers = array_merge($headers, Dotdigitalgroup_Email_Model_Consent::$bulkFields);
+        }
+        $consentResource = Mage::getResourceModel('ddg_automation/consent');
+
         //file headers
         $fileHelper->outputCSV($fileHelper->getFilePath($subscribersFilename), $headers);
 
-        foreach ($subscribers as $subscriber) {
+        foreach ($emailContacts as $contact) {
             try {
-                $email = $subscriber->getEmail();
-                $storeId = $this->getStoreIdForSubscriber(
-                    $email, $subscribersData['items']
-                );
+                $email = $contact->getEmail();
+                $storeId = $this->getStoreIdForSubscriber($email, $subscribersData['items']);
                 $store = Mage::app()->getStore($storeId);
                 $storeName = $store->getName();
                 $optInType = Mage::helper('ddg/config')->getOptInType($store);
                 $outputData = array($email, 'Html', $storeName, $optInType);
+                if ($isConsentSubscriberEnabled) {
+                    $consentModel = Mage::getModel('ddg_automation/consent');
+                    $consentResource->load($consentModel, $contact->getId(), 'email_contact_id');
+                    $consentData = $consentModel->getConsentDataByContact($websiteId, $email);
+                    $outputData = array_merge($outputData, $consentData);
+                }
+
                 // save data for subscribers
                 $fileHelper->outputCSV($fileHelper->getFilePath($subscribersFilename), $outputData);
                 //@codingStandardsIgnoreStart
-                $subscriber->setSubscriberImported(1)
+                $contact->setSubscriberImported(1)
                     ->save();
                 //@codingStandardsIgnoreEnd
                 $countSubscribers++;
@@ -206,7 +220,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
             Dotdigitalgroup_Email_Model_Importer::IMPORT_TYPE_SUBSCRIBERS,
             '',
             Dotdigitalgroup_Email_Model_Importer::MODE_BULK,
-            $website->getId(),
+            $websiteId,
             $subscribersFilename
         );
 
@@ -220,6 +234,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
      */
     public function exportSubscribersWithSales(Mage_Core_Model_Website $website, $subscribers)
     {
+        $websiteId = $website->getId();
         if (empty($subscribers)) {
             return 0;
         }
@@ -241,27 +256,33 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
         $emails = $subscribers->getColumnValues('email');
 
         //subscriber collection
-        $collection = $this->getCollection($emails, $website->getId());
+        $collection = $this->getCollection($emails, $websiteId);
         //no subscribers found
-        if ($collection->getSize() == 0)
+        if ($collection->getSize() == 0) {
             return 0;
+        }
         $mappedHash = $fileHelper->getWebsiteSalesDataFields($website);
-        $headers = $mappedHash;
-        $headers[] = 'Email';
-        $headers[] = 'EmailType';
-        $headers[] = 'OptInType';
+        $headers = array('Email', 'EmailType', 'OptInType');
+        $headers = array_merge($headers, $mappedHash);
+        //contentinsight is enabled include additional headers
+        $isConsentSubscriberEnabled = Mage::helper('ddg/config')
+            ->isConsentSubscriberEnabled($websiteId);
+        if ($isConsentSubscriberEnabled) {
+            $headers = array_merge($headers, Dotdigitalgroup_Email_Model_Consent::$bulkFields);
+        }
+        $consentResource = Mage::getResourceModel('ddg_automation/consent');
+
         $fileHelper->outputCSV($fileHelper->getFilePath($subscribersFile), $headers);
 
         //subscriber data
-        foreach ($collection as $subscriber) {
-            $store = Mage::app()->getStore($subscriber->getStoreId());
-            $connectorSubscriber = Mage::getModel(
-                'ddg_automation/apiconnector_subscriber', $mappedHash
-            );
-            $connectorSubscriber->setSubscriberData($subscriber);
+        foreach ($collection as $contact) {
+            $store = Mage::app()->getStore($contact->getStoreId());
+            $email = $contact->getEmail();
+            $connectorSubscriber = Mage::getModel('ddg_automation/apiconnector_subscriber', $mappedHash);
+            $connectorSubscriber->setSubscriberData($contact);
             //count number of customers
             $index = array_search(
-                $subscriber->getSubscriberEmail(),
+                $contact->getSubscriberEmail(),
                 $emailContactIdEmail
             );
 
@@ -271,15 +292,23 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
             }
 
             //contact email and email type
-            $connectorSubscriber->setData($subscriber->getSubscriberEmail());
+            $connectorSubscriber->setData($contact->getSubscriberEmail());
             $connectorSubscriber->setData('Html');
             // save csv file data
             $outputData = $connectorSubscriber->toCSVArray();
             $outputData[] = $optInType;
+
+            if ($isConsentSubscriberEnabled) {
+                $consentModel = Mage::getModel('ddg_automation/consent');
+                $consentResource->load($consentModel, $contact->getId(), 'email_contact_id');
+                $consentData = $consentModel->getConsentDataByContact($websiteId, $email);
+                $outputData = array_merge($outputData, $consentData);
+            }
+
             $fileHelper->outputCSV($fileHelper->getFilePath($subscribersFile), $outputData);
 
             //clear collection and free memory
-            $subscriber->clearInstance();
+            $contact->clearInstance();
             $countSubscribers++;
         }
 
@@ -294,7 +323,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
                         Dotdigitalgroup_Email_Model_Importer::IMPORT_TYPE_SUBSCRIBERS,
                         '',
                         Dotdigitalgroup_Email_Model_Importer::MODE_BULK,
-                        $website->getId(),
+                        $websiteId,
                         $subscribersFile
                     );
 
