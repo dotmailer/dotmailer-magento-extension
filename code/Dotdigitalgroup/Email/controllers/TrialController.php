@@ -8,12 +8,15 @@ class Dotdigitalgroup_Email_TrialController
      */
     public function accountcallbackAction()
     {
+        $helper = Mage::helper('ddg');
         $params = $this->getRequest()->getParams();
-        if (empty($params['apiUser']) or empty($params['pass'])) {
+        if (empty($params['apiUser']) ||
+            empty($params['pass']) ||
+            empty($params['code']) ||
+            ! $helper->auth($params['code'])
+        ) {
             $this->sendAjaxResponse(true, $this->_getErrorHtml());
         } else {
-            $helper = Mage::helper('ddg');
-
             //if apiEndpoint then save it
             if (isset($params['apiEndpoint'])) {
                 $helper->saveApiEndPoint($params['apiEndpoint']);

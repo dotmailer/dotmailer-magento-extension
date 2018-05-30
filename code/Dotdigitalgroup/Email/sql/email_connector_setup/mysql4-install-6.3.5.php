@@ -1592,6 +1592,15 @@ $adminData[] = array(
 
 Mage::getModel('adminnotification/inbox')->parse($adminData);
 
+/**
+ * Generate and save code
+ */
+$code = Mage::helper('core')->getRandomString(32);
+$configModel->saveConfig(
+    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_CONTENT_PASSCODE,
+    $code
+);
+
 //clear cache
 Mage::app()->cleanCache();
 
