@@ -39,7 +39,7 @@ You are welcome to contribute to dotmailer for Magento! You can either:
 # V6.4.3
  
 ###### Security
-- On installation, we now auto generate a unique secret key used to access signup extension dynamic content and trial signup callback
+- On installation, we now auto-generate a unique secret key that is used to access external dynamic content and trial signup callbacks.
 
 # V6.4.2 
 
