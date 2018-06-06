@@ -36,31 +36,39 @@ You are welcome to contribute to dotmailer for Magento! You can either:
 - Fix a bug: please fork this repo and submit the Pull Request to our [Develop branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/develop)
 - Request a feature on our [community forum](https://support.dotmailer.com/hc/en-gb/community/topics/200432508-Feedback-and-feature-requests)
 
+# V6.4.3
+ 
+###### Security
+- On installation, we now auto generate a unique secret key used to access signup extension dynamic content and trial signup callback
 
 # V6.4.2 
 
-###### Features : 
+###### Features
 - You’re now able to record your customers and guests’ consent and store it using dotmailer’s new ConsentInsight.
 
-###### Imrovements :
+###### Imrovements
 - We've optimised the way our install script imports data into the extension tables, so it now imports small batches rather than all in one go.
 
 
 # V6.4.1
 
-###### New Features
+###### Features
 - Users can now import only those Magento contacts who've opted-in (customer subscribers, guest subscribers, and other subscribers).
 - Users now get warned when they're about to sync non-subscribers into their dotmailer account. 
+
+###### Improvements
+- We've added a new option in 'Configuration' > 'Abandoned Carts' that allows to send abandoned cart emails to subscribed contacts only. On fresh installation contacts who haven't opted in will no longer be included.
+- We've added a new option in 'Automation' > 'Review Settings' that allows to send review reminder emails to subscribed contacts only. On fresh installation contacts who haven't opted in will no longer be included.
 
 ###### Bug fixes
 - We've fixed the catalog sync so it now syncs all products across all created collections when it's configured to sync on store level. 
 
 # V6.4.0
 
-###### New Features
+###### Features
 - Transactional email templates: You're now able to create, edit, translate and test Magento transactional emails in dotmailer and map them at default, website or store level.
 
-###### Improvements:
+###### Improvements
 - We now import new subscribers with the correct opt-in type (single or double) depending upon Magento's "Need to confirm" setting
 
 ###### Bug fixes
