@@ -13,10 +13,14 @@ class Dotdigitalgroup_Email_TrialController
         if (empty($params['apiUser']) ||
             empty($params['pass']) ||
             empty($params['code']) ||
-            ! $helper->auth($params['code'])
+            ! $this->auth($params['code'])
         ) {
-            $this->sendAjaxResponse(true, $this->_getErrorHtml());
+            $this->sendAjaxResponse(true);
         } else {
+            Mage::getModel('core/config')->deleteConfig(
+                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_TRIAL_TEMPORARY_PASSCODE
+            );
+
             //if apiEndpoint then save it
             if (isset($params['apiEndpoint'])) {
                 $helper->saveApiEndPoint($params['apiEndpoint']);
@@ -36,9 +40,9 @@ class Dotdigitalgroup_Email_TrialController
 
             //if all true send success response
             if ($apiConfigStatus && $dataFieldsStatus && $addressBookStatus && $syncStatus) {
-                $this->sendAjaxResponse(false, $this->_getSuccessHtml());
+                $this->sendAjaxResponse(false);
             } else {
-                $this->sendAjaxResponse(true, $this->_getErrorHtml());
+                $this->sendAjaxResponse(true);
             }
         }
     }
@@ -47,50 +51,28 @@ class Dotdigitalgroup_Email_TrialController
      * @param $error
      * @param $msg
      */
-    public function sendAjaxResponse($error, $msg)
+    public function sendAjaxResponse($error)
     {
         $message = array(
-            'err' => $error,
-            'message' => $msg
+            'err' => $error
         );
         $this->getResponse()->setBody(
-            $this->getRequest()->getParam('callback') . "(" . Mage::helper('core')->jsonEncode($message) . ")"
+            "signupCallback(" . Mage::helper('core')->jsonEncode($message) . ")"
         );
     }
 
     /**
-     * Success html for response.
-     *
-     * @return string
+     * @param $authRequest
+     * @return bool
      */
-    protected function _getSuccessHtml()
+    private function auth($authRequest)
     {
-        return
-            "<div class='modal-page'>
-                <div class='success'></div>
-                <h2 class='center'>Congratulations your dotmailer account is now ready, 
-                time to make your marketing awesome</h2>
-                <div class='center'>
-                    <input type='submit' class='center' value='Start making money' />
-                </div>
-            </div>";
-    }
+        if ($authRequest != Mage::getStoreConfig(
+                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_TRIAL_TEMPORARY_PASSCODE
+            )) {
+            return false;
+        }
 
-    /**
-     * Error html for response.
-     *
-     * @return string
-     */
-    protected function _getErrorHtml()
-    {
-        return
-            "<div class='modal-page'>
-                <div class='fail'></div>
-                <h2 class='center'>Sorry, something went wrong whilst trying to create your new dotmailer account</h2>
-                <div class='center'>
-                    <a class='submit secondary center' 
-                    href='mailto:support@dotmailer.com'>Contact support@dotmailer.com</a>
-                </div>
-            </div>";
+        return true;
     }
 }

@@ -18,8 +18,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Config_Trial extends Mage_Adm
                 Mage::getDesign()->getSkinUrl('connector/banner.png') .
                 ' alt="Open Trial Account"></a>';
         } else {
+            $internalUrl = $this->getUrl('adminhtml/trial/index');
             $html = '<a class="various fancybox.iframe" data-fancybox-type="iframe" href=' .
-                $helper->getIframeFormUrl() . '><img style="margin-bottom:15px;" src=' .
+                $internalUrl . '><img style="margin-bottom:15px;" src=' .
                 Mage::getDesign()->getSkinUrl('connector/banner.png') .
                 ' alt="Open Trial Account"></a>';
             $html .=

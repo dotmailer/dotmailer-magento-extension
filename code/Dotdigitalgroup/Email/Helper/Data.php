@@ -1349,9 +1349,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         $culture = $this->getCultureId();
         $company = Mage::app()->getWebsite()->getConfig('general/store_information/name');
         $callback = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB, true) . 'connector/trial/accountcallback';
-        $secret = Mage::getStoreConfig(
-            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_CONTENT_PASSCODE
-        );
+
         //query params
         $params = array(
             'callback' => $callback,
@@ -1360,11 +1358,26 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
             'timezone' => $timezone,
             'ip' => $ipAddress,
             'createOnRegion' => true,
-            'code' => $secret
+            'code' => $this->generateTemporaryPasscode()
         );
         $url = $formUrl . '?' . http_build_query($params);
 
         return $url;
+    }
+
+    /**
+     * @return string
+     */
+    private function generateTemporaryPasscode()
+    {
+        $code = Mage::helper('core')->getRandomString(32);
+        Mage::getModel('core/config')->saveConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_TRIAL_TEMPORARY_PASSCODE,
+            $code
+        );
+        Mage::app()->cleanCache();
+
+        return $code;
     }
 
     /**
