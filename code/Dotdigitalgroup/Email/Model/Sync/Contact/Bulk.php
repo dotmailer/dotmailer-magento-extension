@@ -41,8 +41,14 @@ class Dotdigitalgroup_Email_Model_Sync_Contact_Bulk
 
                 $file = $item->getImportFile();
                 if (!empty($file) && !empty($addressBook) && $this->client) {
-                    $result = $this->client->postAddressBookContactsImport($file, $addressBook);
-                    $this->_handleItemAfterSync($item, $result);
+                    if (Mage::helper('ddg/file')->isFilePathExistWithFallback($file)) {
+                        $result = $this->client->postAddressBookContactsImport($file, $addressBook);
+                        $this->_handleItemAfterSync($item, $result);
+                    } else {
+                        $item->setImportStatus(Dotdigitalgroup_Email_Model_Importer::FAILED)
+                            ->setMessage($this->helper->__('CSV file does not exist in email or archive folder.'))
+                            ->save();
+                    }
                 }
             }
         }

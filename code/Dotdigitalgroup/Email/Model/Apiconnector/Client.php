@@ -191,7 +191,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
         if (function_exists('curl_file_create')) {
             curl_setopt($ch, CURLOPT_SAFE_UPLOAD, false);
             $args['file'] = curl_file_create(
-                Mage::helper('ddg/file')->getFilePath($filename), 'text/csv'
+                Mage::helper('ddg/file')->getFilePathWithFallback($filename), 'text/csv'
             );
             curl_setopt($ch, CURLOPT_POSTFIELDS, $args);
 
@@ -199,7 +199,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
             //standart use of curl file
             curl_setopt(
                 $ch, CURLOPT_POSTFIELDS, array(
-                    'file' => '@' . Mage::helper('ddg/file')->getFilePath(
+                    'file' => '@' . Mage::helper('ddg/file')->getFilePathWithFallback(
                             $filename
                         )
                 )
