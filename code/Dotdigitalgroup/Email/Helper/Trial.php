@@ -2,16 +2,13 @@
 
 class Dotdigitalgroup_Email_Helper_Trial extends Mage_Core_Helper_Abstract {
 
-	private const XML_PATH_CONNECTOR_API_TRIAL_TEMPORARY_PASSCODE
+	const XML_PATH_CONNECTOR_API_TRIAL_TEMPORARY_PASSCODE
 		= 'connector_api_credentials/api/trial_temporary_passcode';
-	private const XML_PATH_CONNECTOR_API_TRIAL_TEMPORARY_PASSCODE_EXPIRY
+	const XML_PATH_CONNECTOR_API_TRIAL_TEMPORARY_PASSCODE_EXPIRY
 		= 'connector_api_credentials/api/trial_temporary_passcode_expiry';
 
-	/**
-	 * Default trial account url
-	 */
-	private const API_CONNECTOR_TRIAL_FORM_URL = 'https://magentosignup.dotmailer.com/';
-	private const XML_PATH_CONNECTOR_API_TRIAL_URL = 'connector_api_credentials/api/trial_url';
+	const API_CONNECTOR_TRIAL_FORM_URL = 'https://magentosignup.dotmailer.com/';
+	const XML_PATH_CONNECTOR_API_TRIAL_URL = 'connector_api_credentials/api/trial_url';
 
 	/**
 	 * Generate url for iframe for trial account popup.
