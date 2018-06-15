@@ -199,29 +199,31 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
     /**
      * @param $id
      * @param $websiteId
+     * @throws Exception
      */
     protected function _processContactImportReportFaults($id, $websiteId)
     {
         $helper = Mage::helper('ddg');
         $client = $helper->getWebsiteApiClient($websiteId);
         if ($client instanceof Dotdigitalgroup_Email_Model_Apiconnector_Client) {
-            $data = $client->getContactImportReportFaults($id);
-            if ($data) {
-                $data = $this->_removeUtf8Bom($data);
-                $fileName = Mage::getBaseDir('var') . DS . 'DmTempCsvFromApi.csv';
-                $io = new Varien_Io_File();
-                $io->open();
-                $check = $io->write($fileName, $data);
-                if ($check) {
-                    try {
-                        $csvArray = $this->_csvToArray($fileName);
-                        $io->rm($fileName);
-                        Mage::getResourceModel('ddg_automation/contact')->unsubscribe($csvArray);
-                    } catch (Exception $e) {
-                        Mage::logException($e);
+            $report = $client->getContactImportReportFaults($id);
+
+            if ($report) {
+                $reportData = explode(PHP_EOL, $this->_removeUtf8Bom($report));
+                //unset header
+                unset($reportData[0]);
+                //no data in report
+                if (! empty($reportData)) {
+                    foreach ($reportData as $row) {
+                        $row = explode(',', $row);
+                        //reason
+                        if (in_array($row[0], $this->_reasons))
+                            //email
+                            $contacts[] = $row[1];
                     }
-                } else {
-                    $helper->log('_processContactImportReportFaults: cannot save data to CSV file.');
+
+                    //unsubscribe from email contact and newsletter subscriber tables
+                    Mage::getResourceModel('ddg_automation/contact')->unsubscribe($contacts);
                 }
             }
         }
@@ -465,40 +467,6 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
             return $collection;
 
         return false;
-    }
-
-    /**
-     * @param $filename
-     * @return array|bool
-     */
-    protected function _csvToArray($filename)
-    {
-        //@codingStandardsIgnoreStart
-        if (!file_exists($filename) || !is_readable($filename))
-            return FALSE;
-
-        $header = NULL;
-        $data = array();
-        if (($handle = fopen($filename, 'r')) !== FALSE) {
-
-            while (($row = fgetcsv($handle)) !== FALSE) {
-
-	            if (!$header)
-                    $header = $row;
-                else
-                    $data[] = array_combine($header, $row);
-            }
-            fclose($handle);
-        }
-        //@codingStandardsIgnoreEnd
-
-        $contacts = array();
-        foreach ($data as $item) {
-            if (in_array($item['Reason'], $this->_reasons))
-                $contacts[] = $item['email'];
-        }
-
-        return $contacts;
     }
 
     /**
