@@ -10,7 +10,6 @@ class Dotdigitalgroup_Email_Helper_Config
     const XML_PATH_CONNECTOR_API_ENABLED = 'connector_api_credentials/api/enabled';
     const XML_PATH_CONNECTOR_API_USERNAME = 'connector_api_credentials/api/username';
     const XML_PATH_CONNECTOR_API_PASSWORD = 'connector_api_credentials/api/password';
-    const XML_PATH_CONNECTOR_API_TRIAL_TEMPORARY_PASSCODE = 'connector_api_credentials/api/trial_temporary_passcode';
 
     /**
      * SYNC SECTION.
@@ -357,11 +356,6 @@ class Dotdigitalgroup_Email_Helper_Config
      * API endpoint
      */
     const PATH_FOR_API_ENDPOINT = 'connector/api/endpoint';
-
-    /**
-     * Trial Account
-     */
-    const API_CONNECTOR_TRIAL_FORM_URL = 'https://magentosignup.dotmailer.com/';
 
     /**
      * @param int $website

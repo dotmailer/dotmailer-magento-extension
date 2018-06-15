@@ -13,13 +13,11 @@ class Dotdigitalgroup_Email_TrialController
         if (empty($params['apiUser']) ||
             empty($params['pass']) ||
             empty($params['code']) ||
-            ! $this->auth($params['code'])
+            ! Mage::helper('ddg/trial')->authenticateTrialPasscode($params['code'])
         ) {
             $this->sendAjaxResponse(true);
         } else {
-            Mage::getModel('core/config')->deleteConfig(
-                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_TRIAL_TEMPORARY_PASSCODE
-            );
+	        Mage::helper('ddg/trial')->clearTrialPasscode();
 
             //if apiEndpoint then save it
             if (isset($params['apiEndpoint'])) {
@@ -59,20 +57,5 @@ class Dotdigitalgroup_Email_TrialController
         $this->getResponse()->setBody(
             "signupCallback(" . Mage::helper('core')->jsonEncode($message) . ")"
         );
-    }
-
-    /**
-     * @param $authRequest
-     * @return bool
-     */
-    private function auth($authRequest)
-    {
-        if ($authRequest != Mage::getStoreConfig(
-                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_TRIAL_TEMPORARY_PASSCODE
-            )) {
-            return false;
-        }
-
-        return true;
     }
 }

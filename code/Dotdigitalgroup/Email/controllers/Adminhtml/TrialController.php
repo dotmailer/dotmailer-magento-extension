@@ -5,7 +5,7 @@ class Dotdigitalgroup_Email_Adminhtml_TrialController
 {
     public function indexAction()
     {
-        Mage::app()->getResponse()->setRedirect(Mage::helper('ddg')->getIframeFormUrl());
+        Mage::app()->getResponse()->setRedirect(Mage::helper('ddg/trial')->getIframeFormUrl());
     }
 
     /**
