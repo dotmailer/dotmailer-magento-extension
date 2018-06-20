@@ -554,13 +554,4 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
         return false;
     }
 
-    /**
-     * @return $this
-     */
-    public function setIsNotJsonTrue()
-    {
-        $this->isNotJson = true;
-
-        return $this;
-    }
 }

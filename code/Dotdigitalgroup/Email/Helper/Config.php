@@ -358,11 +358,6 @@ class Dotdigitalgroup_Email_Helper_Config
     const PATH_FOR_API_ENDPOINT = 'connector/api/endpoint';
 
     /**
-     * Trial Account
-     */
-    const API_CONNECTOR_TRIAL_FORM_URL = 'https://magentosignup.dotmailer.com/';
-
-    /**
      * @param int $website
      *
      * @return bool

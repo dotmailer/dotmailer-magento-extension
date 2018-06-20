@@ -66,6 +66,19 @@ class Dotdigitalgroup_Email_Helper_File
     }
 
     /**
+     * Return the full file path with checking in archive as fallback.
+     *
+     * @param $filename
+     * @return string
+     */
+    public function getFilePathWithFallback($filename)
+    {
+        $emailPath = $this->getOutputFolder() . DS . $filename;
+        $archivePath = $this->getArchiveFolder() . DS . $filename;
+        return is_file($emailPath) ? $emailPath : $archivePath;
+    }
+
+    /**
      * @param $filename
      */
     public function archiveCSV($filename)
@@ -322,5 +335,18 @@ class Dotdigitalgroup_Email_Helper_File
 
         //the file is not created and return the passing value
         return 755;
+    }
+
+    /**
+     * Check if file exist in email or archive folder
+     *
+     * @param $filename
+     * @return boolean
+     */
+    public function isFilePathExistWithFallback($filename)
+    {
+        $emailPath = $this->getOutputFolder() . DS . $filename;
+        $archivePath = $this->getArchiveFolder() . DS . $filename;
+        return is_file($emailPath) ? true : (is_file($archivePath) ? true : false);
     }
 }

@@ -191,7 +191,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
         if (function_exists('curl_file_create')) {
             curl_setopt($ch, CURLOPT_SAFE_UPLOAD, false);
             $args['file'] = curl_file_create(
-                Mage::helper('ddg/file')->getFilePath($filename), 'text/csv'
+                Mage::helper('ddg/file')->getFilePathWithFallback($filename), 'text/csv'
             );
             curl_setopt($ch, CURLOPT_POSTFIELDS, $args);
 
@@ -199,7 +199,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
             //standart use of curl file
             curl_setopt(
                 $ch, CURLOPT_POSTFIELDS, array(
-                    'file' => '@' . Mage::helper('ddg/file')->getFilePath(
+                    'file' => '@' . Mage::helper('ddg/file')->getFilePathWithFallback(
                             $filename
                         )
                 )
@@ -1441,25 +1441,17 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
      */
     public function getContactImportReportFaults($id)
     {
-        $url = $this->getApiEndpoint() . self::REST_CONTACTS_IMPORT . $id
-            . '/report-faults';
+        $this->isNotJson = true;
+        $url = $this->getApiEndpoint() . self::REST_CONTACTS_IMPORT . $id . '/report-faults';
         $this->setUrl($url)
             ->setVerb('GET');
 
-        $this->setIsNotJsonTrue();
         $response = $this->execute();
 
         //if string is JSON than there is a error message
         if (json_decode($response)) {
-            //log error
-            if (isset($response->message)
-                && ! in_array(
-                    $response->message, $this->excludeMessages
-                )
-            ) {
-                $message = 'GET CONTACT IMPORT REPORT FAULTS: '
-                    . $response->message;
-                Mage::helper('ddg')->log($message);
+            if (isset($response->message) && ! in_array($response->message, $this->excludeMessages)) {
+                Mage::helper('ddg')->log('GET CONTACT IMPORT REPORT FAULTS: ' . $response->message);
             }
 
             return false;
