@@ -57,7 +57,7 @@ class Dotdigitalgroup_Email_Model_Consent extends Mage_Core_Model_Abstract
             }
         }
         if (! $configHelper->isConsentSubscriberEnabled($websiteId)) {
-            return [];
+            return array();
         }
         $consentText = $configHelper->getConsentSubscriberText($websiteId);
         $customerConentText = $configHelper->getConsentCustomerText($websiteId);
@@ -68,13 +68,13 @@ class Dotdigitalgroup_Email_Model_Consent extends Mage_Core_Model_Abstract
 
         $dateTimeConsent =  $this->getConsentDatetime();
 
-        return $consentData = [
+        return $consentData = array(
             $consentText,
             $this->getConsentUrl(),
             $dateTimeConsent,
             $this->getConsentIp(),
             $this->getConsentUserAgent()
-        ];
+        );
     }
 
     /**

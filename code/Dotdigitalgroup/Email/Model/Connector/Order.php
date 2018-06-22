@@ -260,9 +260,9 @@ class Dotdigitalgroup_Email_Model_Connector_Order
     {
         $propreties = array_diff_key(
             get_object_vars($this),
-            array_flip([
+            array_flip(array(
                 '_attributeSet'
-            ])
+            ))
         );
 
         return array_filter($propreties);
