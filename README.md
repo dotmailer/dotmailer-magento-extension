@@ -38,10 +38,13 @@ You are welcome to contribute to dotmailer for Magento! You can either:
 
 # V6.4.4
 
+###### Security
+- We now use a unique time-limited randomly-generated passcode to secure the trial callback URL.
+- We've implemented prevention against cross-site scripting in the TrialController.php.
+
 ###### Bug fixes
 - The importer no longer fails to reset/resend contact import (includes archived folder).
 - We've fixed an error that was being caused by the importer.
-- We've implemented prevention against cross-site scripting in the TrialController.php.
 
 # V6.4.3
  
