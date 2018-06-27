@@ -413,6 +413,30 @@
                     </ddg_feed>
                 </observers>
             </controller_action_predispatch>
+            <catalog_product_attribute_update_after>
+                <observers>
+                    <ddg_catalog_product_save_after>
+                        <class>ddg_automation/catalog_observer</class>
+                        <method>afterUpdateAttributes</method>
+                    </ddg_catalog_product_save_after>
+                </observers>
+            </catalog_product_attribute_update_after>
+            <catalog_product_stock_item_mass_change>
+                <observers>
+                    <ddg_catalog_product_save_after>
+                        <class>ddg_automation/catalog_observer</class>
+                        <method>afterUpdateAttributes</method>
+                    </ddg_catalog_product_save_after>
+                </observers>
+            </catalog_product_stock_item_mass_change>
+            <catalog_product_to_website_change>
+                <observers>
+                    <ddg_catalog_product_save_after>
+                        <class>ddg_automation/catalog_observer</class>
+                        <method>afterUpdateAttributes</method>
+                    </ddg_catalog_product_save_after>
+                </observers>
+            </catalog_product_to_website_change>
         </events>
         <translate>
             <modules>
