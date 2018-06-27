@@ -490,6 +490,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
         );
 
         if ($brand) {
+            $brand = Mage::getSingleton('core/resource')->getConnection('core_read')->quote($brand);
             $columns['most_brand'] = new Zend_Db_Expr(
                 "(
                     SELECT eaov.option_id from $salesFlatOrder sfo
@@ -497,7 +498,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
                     LEFT JOIN $catalogProductEntityInt pei on pei.entity_id = sfoi.product_id
                     LEFT JOIN $eavAttribute ea ON pei.attribute_id = ea.attribute_id
                     LEFT JOIN $eavAttributeOptionValue as eaov on pei.value = eaov.option_id
-                    WHERE sfo.customer_email = main_table.subscriber_email AND ea.attribute_code = '$brand' AND eaov.value is not null
+                    WHERE sfo.customer_email = main_table.subscriber_email AND ea.attribute_code = $brand AND eaov.value is not null
                     GROUP BY eaov.option_id
                     HAVING count(*) > 0
                     ORDER BY count(*) DESC
