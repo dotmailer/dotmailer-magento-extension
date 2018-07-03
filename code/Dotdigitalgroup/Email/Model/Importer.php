@@ -214,6 +214,7 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
                 unset($reportData[0]);
                 //no data in report
                 if (! empty($reportData)) {
+                    $contacts = array();
                     foreach ($reportData as $row) {
                         $row = explode(',', $row);
                         //reason
