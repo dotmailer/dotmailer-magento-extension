@@ -80,4 +80,27 @@ class Dotdigitalgroup_Email_Model_Resource_Catalog
             Mage::logException($e);
         }
     }
+
+    /**
+     * Set modified if already imported
+     *
+     * @param $ids
+     */
+    public function setModified($ids)
+    {
+        try {
+            $write     = $this->_getWriteAdapter();
+            $tableName = $this->getMainTable();
+            $write->update(
+                $tableName,
+                array('modified' => 1),
+                array(
+                    $write->quoteInto("product_id IN (?)", $ids),
+                    $write->quoteInto("imported = ?", 1)
+                )
+            );
+        } catch (Exception $e) {
+            Mage::logException($e);
+        }
+    }
 }

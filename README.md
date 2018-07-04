@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/dotmailer/dotmailer-magento-extension.svg?branch=master)](dotmailer/dotmailer-magento-extension)
-
 dotmailer for Magento
 ==========================================
 
@@ -35,6 +33,14 @@ You are welcome to contribute to dotmailer for Magento! You can either:
 - Report a bug: create a [GitHub issue](https://github.com/dotmailer/dotmailer-magento-extension/issues/new) including description, repro steps, Magento and extension version numbers
 - Fix a bug: please fork this repo and submit the Pull Request to our [Develop branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/develop)
 - Request a feature on our [community forum](https://support.dotmailer.com/hc/en-gb/community/topics/200432508-Feedback-and-feature-requests)
+
+# V6.4.5
+
+##### Bug fixes
+- We now re-import product catalogs when products have been bulk updated using the 'update attribute' button
+- We've fixed a bug introduced in 6.4.4 that generated an importer error in the occurrence of an empty import fault report
+- We've refactored code that declared arrays with the short form, instead of the long form
+- We've fixed a bug that resulted in malformed data that was not sanitized correctly in all cases
 
 # V6.4.4
 
