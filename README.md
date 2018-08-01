@@ -34,6 +34,11 @@ You are welcome to contribute to dotmailer for Magento! You can either:
 - Fix a bug: please fork this repo and submit the Pull Request to our [Develop branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/develop)
 - Request a feature on our [community forum](https://support.dotmailer.com/hc/en-gb/community/topics/200432508-Feedback-and-feature-requests)
 
+# V6.4.6
+
+###### Imrovements
+- We now surface all the first and last purchase categories in customer's sales data fields
+
 # V6.4.5
 
 ##### Bug fixes

@@ -1048,15 +1048,70 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getFirstCategoryPur()
     {
-        $categoryId = $this->object->getFirstCategoryId();
-        if ($categoryId) {
-            return Mage::getModel('catalog/category')
-                ->setStoreId($this->storeId)
-                ->load($categoryId)
-                ->getName();
+        $orderId = $this->object->getFirstOrderId();
+        if ($orderId) {
+            /** @var Mage_Sales_Model_Order $order */
+            $order = Mage::getModel('sales/order')->load($orderId);
+            $categoryIds = $this->getCategoriesFromOrderItems($order->getAllItems());
+            return $this->getCategoryNames($categoryIds);
         }
 
         return "";
+    }
+
+    /**
+     * @param $orderItems
+     * @return array
+     */
+    public function getCategoriesFromOrderItems($orderItems)
+    {
+        $catIds = array();
+        //categories from all products
+        /** @var Mage_Sales_Model_Order_Item $item */
+        foreach ($orderItems as $item) {
+            $product = $item->getProduct();
+            $categoryIds = $product->getCategoryIds();
+            if (count($categoryIds)) {
+                $catIds = array_unique(array_merge($catIds, $categoryIds));
+            }
+        }
+
+        return $catIds;
+    }
+
+    /**
+     * @param $categoryId
+     * @return string
+     */
+    private function getCategoryValue($categoryId)
+    {
+        if ($categoryId) {
+            $category = Mage::getModel('catalog/category')
+                ->setStoreId($this->storeId)
+                ->load($categoryId);
+            return $category->getName();
+        }
+
+        return '';
+    }
+
+    /**
+     * @param $categoryIds
+     * @return string
+     */
+    public function getCategoryNames($categoryIds)
+    {
+        $names = array();
+        foreach ($categoryIds as $id) {
+            $categoryValue = $this->getCategoryValue($id);
+            $names[$categoryValue] = $categoryValue;
+        }
+        //comma separated category names
+        if (count($names)) {
+            return implode(',', $names);
+        }
+
+        return '';
     }
 
     /**
@@ -1066,12 +1121,12 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getLastCategoryPur()
     {
-        $categoryId = $this->object->getLastCategoryId();
-        if ($categoryId) {
-            return Mage::getModel('catalog/category')
-                ->setStoreId($this->storeId)
-                ->load($categoryId)
-                ->getName();
+        $orderId = $this->object->getLastOrderId();
+        if ($orderId) {
+            /** @var Mage_Sales_Model_Order $order */
+            $order = Mage::getModel('sales/order')->load($orderId);
+            $categoryIds = $this->getCategoriesFromOrderItems($order->getAllItems());
+            return $this->getCategoryNames($categoryIds);
         }
 
         return "";
