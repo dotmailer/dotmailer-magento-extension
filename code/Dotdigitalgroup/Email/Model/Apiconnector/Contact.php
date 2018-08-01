@@ -476,26 +476,6 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
             'last_quote_id'              => new Zend_Db_Expr(
                 "(SELECT entity_id FROM $salesFlatQuote WHERE customer_id = e.entity_id ORDER BY created_at DESC LIMIT 1)"
             ),
-            'first_category_id'          => new Zend_Db_Expr(
-                "(
-                        SELECT ccpi.category_id FROM $salesFlatOrder as sfo
-                        left join $salesFlatOrderItem as sfoi on sfoi.order_id = sfo.entity_id
-                        left join $catalogCategoryProductIndex as ccpi on ccpi.product_id = sfoi.product_id
-                        WHERE sfo.customer_id = e.entity_id
-                        ORDER BY sfo.created_at ASC, sfoi.price DESC
-                        LIMIT 1
-                    )"
-            ),
-            'last_category_id'           => new Zend_Db_Expr(
-                "(
-                        SELECT ccpi.category_id FROM $salesFlatOrder as sfo
-                        left join $salesFlatOrderItem as sfoi on sfoi.order_id = sfo.entity_id
-                        left join $catalogCategoryProductIndex as ccpi on ccpi.product_id = sfoi.product_id
-                        WHERE sfo.customer_id = e.entity_id
-                        ORDER BY sfo.created_at DESC, sfoi.price DESC
-                        LIMIT 1
-                    )"
-            ),
             'product_id_for_first_brand' => new Zend_Db_Expr(
                 "(
                         SELECT sfoi.product_id FROM $salesFlatOrder as sfo
@@ -548,8 +528,12 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
                         LIMIT 1
                     )"
             ),
-
-            'most_brand' => new Zend_Db_Expr('NULL')
+            'most_brand' => new Zend_Db_Expr('NULL'),
+            'first_order_id' => new Zend_Db_Expr(
+                "(SELECT entity_id FROM $salesFlatOrderGrid 
+                WHERE customer_id = e.entity_id 
+                ORDER BY created_at ASC LIMIT 1)"
+            ),
         );
 
         $brand = Mage::helper('ddg')->getWebsiteConfig(
