@@ -884,7 +884,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     protected function _setReward()
     {
-        if (Mage::getModel('enterprise_reward/reward_history')) {
+        if (Mage::getModel('enterprise_reward/reward_history') && $this->websiteId > 0) {
             $collection = Mage::getModel('enterprise_reward/reward_history')
                 ->getCollection()
                 ->addCustomerFilter($this->object->getId())
