@@ -208,6 +208,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
             );
         }
 
+        curl_setopt($ch, CURLOPT_TIMEOUT, 600);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt(
