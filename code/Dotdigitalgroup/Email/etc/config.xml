@@ -601,6 +601,7 @@
                 <new_product></new_product>
                 <campaign></campaign>
                 <anchor></anchor>
+                <use_product_page>0</use_product_page>
                 <allow_non_subscribers>0</allow_non_subscribers>
             </review_settings>
             <feefo_feedback_engine>

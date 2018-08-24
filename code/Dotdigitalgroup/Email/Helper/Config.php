@@ -270,6 +270,7 @@ class Dotdigitalgroup_Email_Helper_Config
     const XML_PATH_AUTOMATION_REVIEW_DELAY = 'connector_automation_studio/review_settings/delay';
     const XML_PATH_AUTOMATION_REVIEW_CAMPAIGN = 'connector_automation_studio/review_settings/campaign';
     const XML_PATH_AUTOMATION_REVIEW_ANCHOR = 'connector_automation_studio/review_settings/anchor';
+    const XML_PATH_AUTOMATION_USE_PRODUCT_PAGE = 'connector_automation_studio/review_settings/use_product_page';
     const XML_PATH_REVIEW_ALLOW_NON_SUBSCRIBERS = 'connector_automation_studio/review_settings/allow_non_subscribers';
 
     /**
