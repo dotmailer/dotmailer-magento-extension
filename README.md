@@ -34,6 +34,14 @@ You are welcome to contribute to dotmailer for Magento! You can either:
 - Fix a bug: please fork this repo and submit the Pull Request to our [Develop branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/develop)
 - Request a feature on our [community forum](https://support.dotmailer.com/hc/en-gb/community/topics/200432508-Feedback-and-feature-requests)
 
+# V6.4.7
+
+##### Bug fixes
+- Import contacts api call now times out after 600 seconds
+- We only add items to the importer queue for enabled websites
+- Customers that were created by an admin user in a Magento Enterprise Edition account can now be synchronised to dotmailer
+- In email campaigns, you can now link to either the standard review page or the product page with an anchor of your choice
+
 # V6.4.6
 
 ###### Imrovements

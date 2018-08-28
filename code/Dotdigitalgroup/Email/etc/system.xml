@@ -1473,6 +1473,16 @@
                             <show_in_store>0</show_in_store>
                             <comment><![CDATA[Please provide the anchor used on product pages for reviews e.g. #reviews]]></comment>
                         </anchor>
+                        <use_product_page>
+                            <label>Link to product page</label>
+                            <sort_order>70</sort_order>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[Enable this if you are showing the reviews on your product pages]]></comment>
+                        </use_product_page>
                     </fields>
                 </review_settings>
                 <feefo_feedback_engine translate="label" module="ddg">
