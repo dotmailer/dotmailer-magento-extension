@@ -247,13 +247,16 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
         //Check previous import status
         $this->_checkImportStatus();
 
+        $enabledWebsiteIds = $this->getEnabledWebsiteIds();
+
         //Bulk priority. Process group 1 first
         foreach ($this->bulkPriority as $bulk) {
             if ($this->totalItems < $bulk['limit']) {
                 $collection = $this->_getQueue(
                     $bulk['type'],
                     $bulk['mode'],
-                    $bulk['limit'] - $this->totalItems
+                    $bulk['limit'] - $this->totalItems,
+                    $enabledWebsiteIds
                 );
                 if ($collection->getSize()) {
                     $this->totalItems += $collection->getSize();
@@ -272,7 +275,8 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
                 $collection = $this->_getQueue(
                     $single['type'],
                     $single['mode'],
-                    $single['limit'] - $this->totalItems
+                    $single['limit'] - $this->totalItems,
+                    $enabledWebsiteIds
                 );
                 if ($collection->getSize()) {
                     $this->totalItems += $collection->getSize();
@@ -424,9 +428,11 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
      * @param $importType
      * @param $importMode
      * @param $limit
+     * @param $enabledWebsiteIds
+     *
      * @return Dotdigitalgroup_Email_Model_Resource_Importer_Collection|object
      */
-    protected function _getQueue($importType, $importMode, $limit)
+    protected function _getQueue($importType, $importMode, $limit, $enabledWebsiteIds)
     {
         $collection = $this->getCollection();
 
@@ -446,6 +452,7 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
 
         $collection->addFieldToFilter('import_mode', array('eq' => $importMode))
             ->addFieldToFilter('import_status', array('eq' => self::NOT_IMPORTED))
+            ->addFieldToFilter('website_id', array('in' => $enabledWebsiteIds))
             ->setPageSize($limit)
             ->setCurPage(1);
 
@@ -502,5 +509,22 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
         }catch(\Exception $e) {
             Mage::logException($e);
         }
+    }
+
+    /**
+     * @return array
+     */
+    private function getEnabledWebsiteIds() {
+        $enabledWebsiteIds = array();
+        $websites        = Mage::app()->getWebsites( true );
+        foreach ( $websites as $website ) {
+            if ( Mage::helper( 'ddg' )->getWebsiteConfig(
+                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED,
+                $website ) ) {
+                $enabledWebsiteIds[] = $website->getId();
+            }
+        }
+
+        return $enabledWebsiteIds;
     }
 }

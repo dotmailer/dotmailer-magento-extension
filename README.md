@@ -34,9 +34,19 @@ You are welcome to contribute to dotmailer for Magento! You can either:
 - Fix a bug: please fork this repo and submit the Pull Request to our [Develop branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/develop)
 - Request a feature on our [community forum](https://support.dotmailer.com/hc/en-gb/community/topics/200432508-Feedback-and-feature-requests)
 
+# V6.4.7
+
+##### Bug fixes
+- Import contacts api call now times out after 600 seconds
+- We only add items to the importer queue for enabled websites
+- Customers that were created by an admin user in a Magento Enterprise Edition account can now be synchronised to dotmailer
+
+###### Improvements
+- In email campaigns, you can now link to either the standard review page or the product page with an anchor of your choice
+
 # V6.4.6
 
-###### Imrovements
+###### Improvements
 - We now surface all the first and last purchase categories in customer's sales data fields
 
 # V6.4.5
@@ -67,7 +77,7 @@ You are welcome to contribute to dotmailer for Magento! You can either:
 ###### Features
 - You’re now able to record your customers and guests’ consent and store it using dotmailer’s new ConsentInsight.
 
-###### Imrovements
+###### Improvements
 - We've optimised the way our install script imports data into the extension tables, so it now imports small batches rather than all in one go.
 
 

@@ -1280,6 +1280,35 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         );
     }
 
+    /**
+     * @param $website
+     * @param $item
+     *
+     * @return string
+     */
+    public function getReviewProductUrl($website, $item)
+    {
+        if ($this->useProductPage($website)) {
+            $url = $item->getProductUrl();
+        } else {
+            $url = Mage::getUrl('review/product/list', array('id'=> $item->getId()));
+        }
+
+        return $url.$this->getReviewReminderAnchor($website);
+    }
+
+    /**
+     * @param $website
+     *
+     * @return boolean
+     */
+    private function useProductPage($website)
+    {
+        return $this->getWebsiteConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_AUTOMATION_USE_PRODUCT_PAGE,
+            $website
+        );
+    }
 
     /**
      * @return array
