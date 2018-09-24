@@ -172,14 +172,6 @@
                     </ddg_api_save>
                 </observers>
             </admin_system_config_changed_section_connector_api_credentials>
-            <admin_system_config_changed_section_dotmailer_email_templates>
-                <observers>
-                    <dotmailer_adminhtml_templates_changed>
-                        <class>ddg_automation/adminhtml_observer</class>
-                        <method>actionConfigTemplatesChanged</method>
-                    </dotmailer_adminhtml_templates_changed>
-                </observers>
-            </admin_system_config_changed_section_dotmailer_email_templates>
             <admin_system_config_changed_section_connector_data_mapping>
                 <observers>
                     <ddg_data_mapping_reset>
