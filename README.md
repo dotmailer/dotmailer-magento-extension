@@ -34,6 +34,15 @@ You are welcome to contribute to dotmailer for Magento! You can either:
 - Fix a bug: please fork this repo and submit the Pull Request to our [Develop branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/develop)
 - Request a feature on our [community forum](https://support.dotmailer.com/hc/en-gb/community/topics/200432508-Feedback-and-feature-requests)
 
+# V6.4.8
+
+##### Bug fixes
+- Transactional emails weren't being sent using Magento's queuing system (and Cronjob) introduced in Magento EE 1.14.1 and Magento CE 1.9.1; they are now.
+- Saving dotmailer email template settings with no changes would reset any previously configured email to the default templates; this has now been fixed.
+- We've fixed an issue which caused products to have incorrect URLs when the catalog was synced at store level
+- We've fixed an issue which stopped the product image ALT tag from being properly set in the abandoned cart's external dynamics content.
+- We are now properly disabling the deprecated CURLOPT_SAFE_UPLOAD method in PHP 7
+
 # V6.4.7
 
 ##### Bug fixes
