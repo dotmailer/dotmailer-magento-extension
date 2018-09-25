@@ -159,4 +159,20 @@ class Dotdigitalgroup_Email_Block_Basket extends Mage_Core_Block_Template
         return $this->helper('catalog/image')->init($product, 'small_image')->resize(85);
     }
 
+    /**
+     * @param $product
+     * @param string $code
+     * @return mixed
+     */
+    public function getProductLabel($product, $code = 'small_image')
+    {
+        $label = $product->getData( $code . '_label');
+
+        if (empty($label)) {
+            $label = $product->getName();
+        }
+
+        return $label;
+    }
+
 }

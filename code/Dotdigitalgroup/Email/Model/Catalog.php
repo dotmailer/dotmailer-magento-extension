@@ -130,7 +130,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
                 foreach ($stores as $store) {
                     $websiteCode = $store->getWebsite()->getCode();
                     $storeCode   = $store->getCode();
-                    $products    = $this->_exportCatalog($store);
+                    $products    = $this->_exportCatalog($store->getId());
                     if ($products) {
                         $importer = Mage::getModel('ddg_automation/importer');
                         //register in queue with importer
@@ -144,7 +144,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
 
                     //using single api
                     $this->_exportInSingle(
-                        $store,
+                        $store->getId(),
                         'Catalog_' . $websiteCode . '_' . $storeCode,
                         $store->getWebsiteId()
                     );
@@ -180,13 +180,13 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
     /**
      * Export catalog.
      *
-     * @param $store
+     * @param $storeId
      *
      * @return array|bool
      */
-    protected function _exportCatalog($store)
+    protected function _exportCatalog($storeId)
     {
-        $productCollection = $this->_getProductsToExport($store);
+        $productCollection = $this->_getProductsToExport($storeId);
 
         if ($productCollection) {
             $connectorProducts = array();
@@ -199,6 +199,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
             );
 
             foreach ($productCollection as $product) {
+                $product->setStoreId($storeId);
                 $connectorProduct    = Mage::getModel('ddg_automation/connector_product', $product);
                 $connectorProducts[] = $connectorProduct;
             }
@@ -212,17 +213,18 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
     /**
      * export in single
      *
-     * @param $store
+     * @param $storeId
      * @param $collectionName
      * @param $websiteId
      */
-    protected function _exportInSingle($store, $collectionName, $websiteId)
+    protected function _exportInSingle($storeId, $collectionName, $websiteId)
     {
         $productIds = array();
 
-        $products = $this->_getProductsToExport($store, true);
+        $products = $this->_getProductsToExport($storeId, true);
         if ($products) {
             foreach ($products as $product) {
+                $product->setStoreId($storeId);
                 $connectorProduct = Mage::getModel(
                     'ddg_automation/connector_product', $product
                 );
@@ -275,6 +277,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
 
         if ($connectorCollection->getSize()) {
             $productIds       = $connectorCollection->getColumnValues('product_id');
+            /** @var Mage_Catalog_Model_Resource_Product_Collection $productCollection */
             $productCollection = Mage::getResourceModel('catalog/product_collection');
             $productCollection->addAttributeToSelect('*')
                 ->addStoreFilter($store)

@@ -189,7 +189,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
 
         //case the deprication of @filename for uploading
         if (function_exists('curl_file_create')) {
-            if (defined('CURLOPT_SAVE_UPLOAD')){
+            if (defined('CURLOPT_SAFE_UPLOAD')){
                 curl_setopt($ch, CURLOPT_SAFE_UPLOAD, false);
             }
             $args['file'] = curl_file_create(

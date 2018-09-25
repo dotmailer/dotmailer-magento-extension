@@ -28,8 +28,8 @@ class Dotdigitalgroup_Email_Model_Email_Template extends Mage_Core_Model_Email_T
         }
 
         $emails = array_values((array)$email);
-        $names  = is_array($name) ? $name : (array)$name;
-        $names  = array_values($names);
+        $names = is_array($name) ? $name : (array)$name;
+        $names = array_values($names);
         foreach ($emails as $key => $email) {
             if (!isset($names[$key])) {
                 $names[$key] = substr($email, 0, strpos($email, '@'));
@@ -37,7 +37,12 @@ class Dotdigitalgroup_Email_Model_Email_Template extends Mage_Core_Model_Email_T
         }
 
         $variables['email'] = reset($emails);
-        $variables['name']  = reset($names);
+        $variables['name'] = reset($names);
+
+        $this->setUseAbsoluteLinks(true);
+        $text = $this->getProcessedTemplate($variables, true);
+        $subject = $this->getProcessedTemplateSubject($variables);
+
         $storeId = null;
 
         // Get the current store Id
@@ -58,30 +63,41 @@ class Dotdigitalgroup_Email_Model_Email_Template extends Mage_Core_Model_Email_T
                 $returnPathEmail = $this->getSenderEmail();
                 break;
             case 2:
-                $returnPathEmail = Mage::getStoreConfig(
-                    self::XML_PATH_SENDING_RETURN_PATH_EMAIL
-                );
+                $returnPathEmail = Mage::getStoreConfig(self::XML_PATH_SENDING_RETURN_PATH_EMAIL);
                 break;
             default:
                 $returnPathEmail = null;
                 break;
         }
 
+        if ($this->hasQueue() && $this->getQueue() instanceof Mage_Core_Model_Email_Queue) {
+            /** @var $emailQueue Mage_Core_Model_Email_Queue */
+            $emailQueue = $this->getQueue();
+            $emailQueue->setMessageBody($text);
+            $emailQueue->setMessageParameters(array(
+                    'subject'           => $subject,
+                    'return_path_email' => $returnPathEmail,
+                    'is_plain'          => $this->isPlain(),
+                    'from_email'        => $this->getSenderEmail(),
+                    'from_name'         => $this->getSenderName(),
+                    'reply_to'          => $this->getMail()->getReplyTo(),
+                    'return_to'         => $this->getMail()->getReturnPath(),
+                ))
+                ->addRecipients($emails, $names, Mage_Core_Model_Email_Queue::EMAIL_TYPE_TO)
+                ->addRecipients($this->_bccEmails, array(), Mage_Core_Model_Email_Queue::EMAIL_TYPE_BCC);
+            $emailQueue->addMessageToQueue();
+
+            return true;
+        }
+
         if ($returnPathEmail !== null) {
-            $mailTransport = new Zend_Mail_Transport_Sendmail(
-                "-f" . $returnPathEmail
-            );
+            $mailTransport = new Zend_Mail_Transport_Sendmail("-f" . $returnPathEmail);
             Zend_Mail::setDefaultTransport($mailTransport);
         }
 
         foreach ($emails as $key => $email) {
-            $mail->addTo(
-                $email, '=?utf-8?B?' . base64_encode($names[$key]) . '?='
-            );
+            $mail->addTo($email, '=?utf-8?B?' . base64_encode($names[$key]) . '?=');
         }
-
-        $this->setUseAbsoluteLinks(true);
-        $text = $this->getProcessedTemplate($variables, true);
 
         if ($this->isPlain()) {
             $mail->setBodyText($text);
@@ -89,11 +105,7 @@ class Dotdigitalgroup_Email_Model_Email_Template extends Mage_Core_Model_Email_T
             $mail->setBodyHTML($text);
         }
 
-        $mail->setSubject(
-            '=?utf-8?B?' . base64_encode(
-                $this->getProcessedTemplateSubject($variables)
-            ) . '?='
-        );
+        $mail->setSubject('=?utf-8?B?' . base64_encode($this->getProcessedTemplateSubject($variables)) . '?=');
 
         //sender name and sender email if the template is from dotmailer
         if ($helper->isDotmailerTemplate($this->getTemplateCode())) {
