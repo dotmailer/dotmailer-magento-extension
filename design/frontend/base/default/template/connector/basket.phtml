@@ -135,7 +135,7 @@
         <?php foreach($items as $item):?>
             <tr>
                 <td style="padding: 5px; border-bottom: 1px solid #cbd3d4; border-right: 1px solid #cbd3d4;">
-                    <img alt="<?php echo $this->stripTags($this->getImageLabel($item['product'], 'small_image'), null, true) ?>"
+                    <img alt="<?php echo $this->stripTags($this->getProductLabel($item['product'], 'small_image'), null, true);?>"
                          src="<?php echo $this->getProductImage($item['product']); ?>" width="85" height="85"
                          align="middle"
                          border="0">

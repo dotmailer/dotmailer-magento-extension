@@ -36,54 +36,6 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Observer
     }
 
     /**
-     * @param $observer
-     * @throws Mage_Core_Exception
-     * @throws Mage_Core_Model_Store_Exception
-     */
-    public function actionConfigTemplatesChanged($observer)
-    {
-        $storeCode = $observer->getStore();
-        $websiteCode = $observer->getWebsite();
-        $groups = Mage::app()->getRequest()->getPost('groups');
-        $dotTemplate = Mage::getModel('ddg_automation/template');
-        $this->storeId = ($storeCode)? Mage::app()->getStore($storeCode)->getId() : '0';
-        $this->websiteId = ($websiteCode)? Mage::app()->getWebsite($websiteCode)->getId() : '0';
-
-        foreach ($groups['email_templates']['fields'] as $templateConfigId => $campaignId) {
-            if (isset($groups['email_templates']['fields'][$templateConfigId]['inherit'])) {
-                //remove the config value when the parent inherit was selected
-                $this->removeConfigPathValue($dotTemplate->templateConfigMapping[$templateConfigId]);
-                continue;
-            }
-            if (isset($campaignId['value'])) {
-                //email template is mapped
-                if ($campaignId = $campaignId['value']) {
-                    $templateConfigPath = $dotTemplate->templateConfigMapping[$templateConfigId];
-
-                    $template = $dotTemplate->saveTemplateWithConfigPath(
-                        $templateConfigId,
-                        $campaignId,
-                        $this->websiteId,
-                        $this->storeId
-                    );
-                    //save created new email template with the default config value for template
-                    if ($template->getId()) {
-                        $this->saveConfigPath($templateConfigPath, $template->getId());
-                    }
-
-                } else {
-                    //reset core to default email template
-                    $this->removeConfigPathValue($dotTemplate->templateConfigMapping[$templateConfigId]);
-                    //remove the config for dotmailer template
-                    $this->removeConfigPathValue(
-                        $dotTemplate->templateConfigIdToDotmailerConfigPath[$templateConfigId]
-                    );
-                }
-            }
-        }
-    }
-
-    /**
      * * Check for mapping configuration, and disable subscriber/contact sync if not mapped.
      *
      * @param $website
@@ -249,7 +201,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Observer
      */
     protected function addContactsFromWebsiteSegments($customerId, $segmentIds, $websiteId)
     {
-        if (empty($segmentIds) || ! $customerId) {
+        if (empty($segmentIds) || !$customerId) {
             return $this;
         }
 
@@ -272,64 +224,6 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Observer
         }
 
         return $this;
-    }
-
-
-    /**
-     * Save config value base on the current scope. Default will be use if there is no store or website id set.
-     *
-     * @param $configPath
-     * @param $configValue
-     */
-    private function saveConfigPath($configPath, $configValue)
-    {
-        if ($this->storeId) {
-            $scope = Mage_Adminhtml_Block_System_Config_Form::SCOPE_STORES;
-            $scopeId = $this->storeId;
-        } elseif ($this->websiteId) {
-            $scope = Mage_Adminhtml_Block_System_Config_Form::SCOPE_WEBSITES;
-            $scopeId = $this->websiteId;
-        } else {
-            $scope = Mage_Adminhtml_Block_System_Config_Form::SCOPE_DEFAULT;
-            $scopeId = '0';
-        }
-
-        //save the config for new created template
-        Mage::getConfig()->saveConfig(
-            $configPath,
-            $configValue,
-            $scope,
-            $scopeId
-        );
-
-        //clean the config cache
-        Mage::getConfig()->reinit();
-    }
-
-    /**
-     * Remove config path for current scope.
-     *
-     * @param $configPath
-     */
-    private function removeConfigPathValue($configPath)
-    {
-        if ($this->storeId) {
-            $scope = Mage_Adminhtml_Block_System_Config_Form::SCOPE_STORES;
-            $scopeId = $this->storeId;
-        } elseif ($this->websiteId) {
-            $scope = Mage_Adminhtml_Block_System_Config_Form::SCOPE_WEBSITES;
-            $scopeId = $this->websiteId;
-        } else {
-            $scope = Mage_Adminhtml_Block_System_Config_Form::SCOPE_DEFAULT;
-            $scopeId = '0';
-        }
-
-        //remove the mapped config for the template;
-        Mage::getConfig()->deleteConfig(
-            $configPath,
-            $scope,
-            $scopeId
-        );
     }
 
 }

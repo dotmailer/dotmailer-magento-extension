@@ -327,17 +327,17 @@ class Dotdigitalgroup_Email_Model_Template extends Mage_Core_Model_Abstract
     /**
      * @param $templateConfigPath
      * @param $campaignId
-     * @param $storeId
-     * @param $websiteId
+     * @param $scope
+     * @param $scopeId
      * @return bool|mixed
      */
-    public function saveTemplateWithConfigPath($templateConfigPath, $campaignId, $storeId, $websiteId)
+    public function saveTemplateWithConfigPath($templateConfigPath, $campaignId, $scope, $scopeId)
     {
         $helper = Mage::helper('ddg');
-        if ($storeId) {
-            $websiteId = Mage::app()->getStore($storeId)->getWebsiteId();
-        } elseif ($websiteId) {
-            $websiteId = Mage::app()->getWebsite($websiteId)->getId();
+        if ($scope == Mage_Adminhtml_Block_System_Config_Form::SCOPE_WEBSITES) {
+            $websiteId = $scopeId;
+        } elseif ($scope == Mage_Adminhtml_Block_System_Config_Form::SCOPE_STORES) {
+            $websiteId = Mage::app()->getWebsite($scopeId)->getId();
         } else {
             $websiteId = '0';
         }
