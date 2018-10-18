@@ -132,8 +132,9 @@
             </enterprise_customersegment_resource>
             <core>
                 <rewrite>
-                    <email_template>Dotdigitalgroup_Email_Model_Email_Template</email_template>
                     <email>Dotdigitalgroup_Email_Model_Email</email>
+                    <email_template>Dotdigitalgroup_Email_Model_Email_Template</email_template>
+                    <email_queue>Dotdigitalgroup_Email_Model_Email_Queue</email_queue>
                 </rewrite>
             </core>
             <adminhtml>
