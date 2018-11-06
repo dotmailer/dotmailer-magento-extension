@@ -1147,15 +1147,24 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         ) {
             //string to array
             $ipArray = explode(',', $ipString);
-            //remove white spaces
+
+            //remove whitespaces from dotmailer IP array
             foreach ($ipArray as $key => $ip) {
                 $ipArray[$key] = preg_replace('/\s+/', '', $ip);
             }
 
-            //ip address
+            //ip address from server
             $ipAddress = Mage::helper('core/http')->getRemoteAddr();
 
-            if (in_array($ipAddress, $ipArray)) {
+            //string to array
+            $ipAddressArr = explode(',', $ipAddress);
+
+            //remove whitespaces from server IPs
+            foreach ($ipAddressArr as $key => $ip) {
+                $ipAddressArr[$key] = preg_replace('/\s+/', '', $ip);
+            }
+
+            if (array_intersect($ipAddressArr, $ipArray)) {
                 return true;
             }
 
