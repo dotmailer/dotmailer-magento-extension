@@ -54,7 +54,7 @@ class Dotdigitalgroup_Email_Model_Customer_Guest
         $helper = Mage::helper('ddg');
         $fileHelper = Mage::helper('ddg/file');
         $contactModel = Mage::getModel('ddg_automation/contact');
-        
+
         $guests = $contactModel->getGuests(
             $website,
             Mage::helper('ddg/config')->isOnlySubscribersForContactSync($website)
@@ -72,14 +72,18 @@ class Dotdigitalgroup_Email_Model_Customer_Guest
                 $fileHelper->getFilePath($guestFilename),
                 array('Email', 'emailType', $storeName)
             );
+
             foreach ($guests as $guest) {
+                $storeId = $guest->store_id;
+                $store = Mage::app()->getStore($storeId);
+                $storeName = $store->getName();
+
                 $email = $guest->getEmail();
                 try {
                     //@codingStandardsIgnoreStart
                     $guest->setEmailImported(Dotdigitalgroup_Email_Model_Contact::EMAIL_CONTACT_IMPORTED)
                         ->save();
                     //@codingStandardsIgnoreEnd
-                    $storeName = $website->getName();
                     // save data for guests
                     $fileHelper->outputCSV(
                         $fileHelper->getFilePath($guestFilename),
