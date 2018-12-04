@@ -26,10 +26,6 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
      */
     public $typeId;
     /**
-     * @var int
-     */
-    public $websiteId;
-    /**
      * @var string
      */
     public $storeName;
@@ -152,7 +148,7 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
                 //customerid, subscriberid, wishlistid..
                 $email           = $automation->getEmail();
                 $this->typeId    = $automation->getTypeId();
-                $this->websiteId = $automation->getWebsiteId();
+                $websiteId       = $automation->getWebsiteId();
                 $this->storeName = $automation->getStoreName();
                 $typeDouble = $type;
                 //Set type to generic automation status if type contains constant value
@@ -161,15 +157,15 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
                 }
 
                 //Only if api is enabled and credentials are filled
-                if ($helper->getWebsiteApiClient($this->websiteId)) {
+                if ($helper->getWebsiteApiClient($websiteId)) {
                     $contactId = Mage::helper('ddg')->getContactId(
-                        $email, $this->websiteId
+                        $email, $websiteId
                     );
                     //contact id is valid, can update datafields
                     if ($contactId) {
                         //need to update datafields
                         $this->updateDatafieldsByType(
-                            $typeDouble, $email
+                            $typeDouble, $email, $websiteId
                         );
                         $contacts[$automation->getWebsiteId()]['contacts'][$automation->getId()] = $contactId;
                     } else {
@@ -177,7 +173,7 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
                         $automation->setEnrolmentStatus('Suppressed')->save();
                     }
                 } else {
-                    unset($contacts[$this->websiteId]);
+                    unset($contacts[$websiteId]);
                 }
             }
 
@@ -187,7 +183,7 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
                     $contactsArray = $websiteContacts['contacts'];
                     //only for subscribed contacts
                     if (!empty($contactsArray)
-                        && $this->_checkCampignEnrolmentActive($this->programId)
+                        && $this->_checkCampignEnrolmentActive($this->programId, $websiteId)
                     ) {
                         $result = $this->sendContactsToAutomation(
                             array_values($contactsArray),
@@ -226,34 +222,36 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
      *
      * @param $type
      * @param $email
+     * @param $websiteId
      */
-    public function updateDatafieldsByType($type, $email)
+    public function updateDatafieldsByType($type, $email, $websiteId)
     {
         switch ($type) {
             case self::AUTOMATION_TYPE_NEW_CUSTOMER :
             case self::AUTOMATION_TYPE_NEW_SUBSCRIBER :
             case self::AUTOMATION_TYPE_NEW_WISHLIST :
-                $this->_updateDefaultDatafields($email);
+                $this->_updateDefaultDatafields($email, $websiteId);
                 break;
             case self::AUTOMATION_TYPE_NEW_ORDER :
             case self::AUTOMATION_TYPE_NEW_GUEST_ORDER :
             case self::AUTOMATION_TYPE_NEW_REVIEW :
             case self::AUTOMATION_TYPE_CUSTOMER_FIRST_ORDER :
             case self::ORDER_STATUS_AUTOMATION :
-                $this->_updateNewOrderDatafields();
+                $this->_updateNewOrderDatafields($websiteId);
                 break;
             default:
-                $this->_updateDefaultDatafields($email);
+                $this->_updateDefaultDatafields($email, $websiteId);
                 break;
         }
     }
 
     /**
      * @param $email
+     * @param $websiteId
      */
-    protected function _updateDefaultDatafields($email)
+    protected function _updateDefaultDatafields($email, $websiteId)
     {
-        $website = Mage::app()->getWebsite($this->websiteId);
+        $website = Mage::app()->getWebsite($websiteId);
         Mage::helper('ddg')->updateDataFields(
             $email, $website, $this->storeName
         );
@@ -261,10 +259,12 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
 
     /**
      * Order datafields.
+     *
+     * @param $websiteId
      */
-    protected function _updateNewOrderDatafields()
+    protected function _updateNewOrderDatafields($websiteId)
     {
-        $website = Mage::app()->getWebsite($this->websiteId);
+        $website = Mage::app()->getWebsite($websiteId);
         $order   = Mage::getModel('sales/order')->load($this->typeId);
         //data fields
         if ($lastOrderId = $website->getConfig(
@@ -343,17 +343,18 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
      * Program check if is valid and active.
      *
      * @param $programId
+     * @param $websiteId
      *
      * @return bool
      */
-    protected function _checkCampignEnrolmentActive($programId)
+    protected function _checkCampignEnrolmentActive($programId, $websiteId)
     {
         //program is not set
         if (!$programId) {
             return false;
         }
 
-        $client  = Mage::helper('ddg')->getWebsiteApiClient($this->websiteId);
+        $client  = Mage::helper('ddg')->getWebsiteApiClient($websiteId);
         if ($client === false) {
             return false;
         }
