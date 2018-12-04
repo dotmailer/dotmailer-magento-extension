@@ -74,7 +74,7 @@ class Dotdigitalgroup_Email_Model_Customer_Guest
             );
 
             foreach ($guests as $guest) {
-                $storeId = $guest->store_id;
+                $storeId = $guest->getStoreId();
                 $store = Mage::app()->getStore($storeId);
                 $storeName = $store->getName();
 
