@@ -305,7 +305,6 @@ class Dotdigitalgroup_Email_Model_Resource_Contact extends Mage_Core_Model_Resou
         }
 
         $write  = $this->_getWriteAdapter();
-        $emails = '"' . implode('","', $data) . '"';
 
         try {
             //un-subscribe from the email contact table.
@@ -316,7 +315,7 @@ class Dotdigitalgroup_Email_Model_Resource_Contact extends Mage_Core_Model_Resou
                     'subscriber_status' => Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED,
                     'suppressed' => 1
                 ),
-                "email IN($emails)"
+                $write->prepareSqlCondition('email', array('in' => $data))
             );
 
             // un-subscribe newsletter subscribers
