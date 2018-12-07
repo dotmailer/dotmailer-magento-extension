@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Dotdigitalgroup_Email>
-            <version>6.4.8</version>
+            <version>6.4.9</version>
         </Dotdigitalgroup_Email>
     </modules>
     <frontend>
@@ -132,8 +132,9 @@
             </enterprise_customersegment_resource>
             <core>
                 <rewrite>
-                    <email_template>Dotdigitalgroup_Email_Model_Email_Template</email_template>
                     <email>Dotdigitalgroup_Email_Model_Email</email>
+                    <email_template>Dotdigitalgroup_Email_Model_Email_Template</email_template>
+                    <email_queue>Dotdigitalgroup_Email_Model_Email_Queue</email_queue>
                 </rewrite>
             </core>
             <adminhtml>

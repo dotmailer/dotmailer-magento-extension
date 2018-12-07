@@ -162,7 +162,7 @@ class Dotdigitalgroup_Email_Model_Review extends Mage_Core_Model_Abstract
                             ->getResourceCollection()
                             ->setReviewFilter($mageReview->getReviewId());
                         $votesCollection->getSelect()->join(
-                            array('rating' => 'rating'),
+                            array('rating' => $this->getResource()->getTable('rating')),
                             'rating.rating_id = main_table.rating_id',
                             array('rating_code' => 'rating.rating_code')
                         );
