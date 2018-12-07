@@ -34,6 +34,12 @@ You are welcome to contribute to dotmailer for Magento! You can either:
 - Fix a bug: please fork this repo and submit the Pull Request to our [Develop branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/develop)
 - Request a feature on our [community forum](https://support.dotmailer.com/hc/en-gb/community/topics/200432508-Feedback-and-feature-requests)
 
+# V6.4.9
+##### Bug fixes
+- Guest subscribers were being synced with Website_Name instead of Store_view name ; this has now been corrected.
+- We've fixed an issue whereby the automation cron would attempt to enrol on the wrong dotmailer account in a multi-website context
+- We've fixed an issue related to accessing the email_review table when the instance database is using a prefix
+
 # V6.4.8
 
 ##### Bug fixes
