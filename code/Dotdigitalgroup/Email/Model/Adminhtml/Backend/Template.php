@@ -55,7 +55,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Backend_Template extends Mage_Core_M
                 $this->getScope(),
                 $this->getScopeId()
             );
-            //remove the config for dotmailer template
+            //remove the config for Engagement Cloud template
             Mage::getConfig()->deleteConfig(
                 $dotTemplate->templateConfigMapping[$this->getField()],
                 $this->getScope(),

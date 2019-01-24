@@ -118,7 +118,7 @@ class Dotdigitalgroup_Email_Model_Resource_Contact extends Mage_Core_Model_Resou
     {
         $conn = $this->_getWriteAdapter();
         try {
-            //remove dotmailer code from core_resource table
+            //remove Engagement Cloud code from core_resource table
             $cond = $conn->quoteInto('code = ?', 'email_connector_setup');
             $conn->delete(
                 Mage::getSingleton('core/resource')->getTableName('core_resource'), $cond

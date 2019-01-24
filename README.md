@@ -1,4 +1,4 @@
-dotmailer for Magento
+Engagement Cloud for Magento
 ==========================================
 
 Full support documentation and setup guides available here - https://support.dotmailer.com/hc/en-gb/categories/202610368-Magento
@@ -29,22 +29,22 @@ Compatibility
 
 # Contribution
 
-You are welcome to contribute to dotmailer for Magento! You can either:
+You are welcome to contribute to Engagement Cloud for Magento! You can either:
 - Report a bug: create a [GitHub issue](https://github.com/dotmailer/dotmailer-magento-extension/issues/new) including description, repro steps, Magento and extension version numbers
 - Fix a bug: please fork this repo and submit the Pull Request to our [Develop branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/develop)
-- Request a feature on our [community forum](https://support.dotmailer.com/hc/en-gb/community/topics/200432508-Feedback-and-feature-requests)
+Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 
 # V6.4.9
 ##### Bug fixes
 - Guest subscribers were being synced with Website_Name instead of Store_view name ; this has now been corrected.
-- We've fixed an issue whereby the automation cron would attempt to enrol on the wrong dotmailer account in a multi-website context
+- We've fixed an issue whereby the automation cron would attempt to enrol on the wrong Engagement Cloud account in a multi-website context
 - We've fixed an issue related to accessing the email_review table when the instance database is using a prefix
 
 # V6.4.8
 
 ##### Bug fixes
 - Transactional emails weren't being sent using Magento's queuing system (and Cronjob) introduced in Magento EE 1.14.1 and Magento CE 1.9.1; they are now.
-- Saving dotmailer email template settings with no changes would reset any previously configured email to the default templates; this has now been fixed.
+- Saving Engagement Cloud email template settings with no changes would reset any previously configured email to the default templates; this has now been fixed.
 - We've fixed an issue which caused products to have incorrect URLs when the catalog was synced at store level
 - We've fixed an issue which stopped the product image ALT tag from being properly set in the abandoned cart's external dynamics content.
 - We are now properly disabling the deprecated CURLOPT_SAFE_UPLOAD method in PHP 7
@@ -54,7 +54,7 @@ You are welcome to contribute to dotmailer for Magento! You can either:
 ##### Bug fixes
 - Import contacts api call now times out after 600 seconds
 - We only add items to the importer queue for enabled websites
-- Customers that were created by an admin user in a Magento Enterprise Edition account can now be synchronised to dotmailer
+- Customers that were created by an admin user in a Magento Enterprise Edition account can now be synchronised to Engagement Cloud
 
 ###### Improvements
 - In email campaigns, you can now link to either the standard review page or the product page with an anchor of your choice
@@ -90,7 +90,7 @@ You are welcome to contribute to dotmailer for Magento! You can either:
 # V6.4.2 
 
 ###### Features
-- You’re now able to record your customers and guests’ consent and store it using dotmailer’s new ConsentInsight.
+- You’re now able to record your customers and guests’ consent and store it using Engagement Cloud’s new ConsentInsight.
 
 ###### Improvements
 - We've optimised the way our install script imports data into the extension tables, so it now imports small batches rather than all in one go.
@@ -100,7 +100,7 @@ You are welcome to contribute to dotmailer for Magento! You can either:
 
 ###### Features
 - Users can now import only those Magento contacts who've opted-in (customer subscribers, guest subscribers, and other subscribers).
-- Users now get warned when they're about to sync non-subscribers into their dotmailer account. 
+- Users now get warned when they're about to sync non-subscribers into their Engagement Cloud account. 
 
 ###### Improvements
 - We've added a new option in 'Configuration' > 'Abandoned Carts' that allows to send abandoned cart emails to subscribed contacts only. On fresh installation contacts who haven't opted in will no longer be included.
@@ -112,13 +112,13 @@ You are welcome to contribute to dotmailer for Magento! You can either:
 # V6.4.0
 
 ###### Features
-- Transactional email templates: You're now able to create, edit, translate and test Magento transactional emails in dotmailer and map them at default, website or store level.
+- Transactional email templates: You're now able to create, edit, translate and test Magento transactional emails in Engagement Cloud and map them at default, website or store level.
 
 ###### Improvements
 - We now import new subscribers with the correct opt-in type (single or double) depending upon Magento's "Need to confirm" setting
 
 ###### Bug fixes
-- Deleted contacts in Magento weren't being correctly marked as imported when removed from dotmailer;they are now
+- Deleted contacts in Magento weren't being correctly marked as imported when removed from Engagement Cloud;they are now
 - An error could occur while creating a trial account in the US and APAC regions; this is now fixed
 - We've fixed an issue which caused an error when displaying the wishlist dynamics content on PHP 5.4
 - Some products with individual visibilities were getting ignored by the importer; this has been fixed.
@@ -179,7 +179,7 @@ You are welcome to contribute to dotmailer for Magento! You can either:
 
 # V6.3.3 Release Notes
 ###### Improvements
-- Syncing sales data for guest subscribers is now optional and is managed with a new setting in 'DOTMAILER' > 'Developer' > 'Import settings'.
+- Syncing sales data for guest subscribers is now optional and is managed with a new setting in 'Engagement Cloud' > 'Developer' > 'Import settings'.
 - Corrupted and missing payment methods no longer stop the importer from running.
 ###### Bug fixes
 - Removing subscribers now correctly removes them from both the contact table and subscriber address book.
@@ -193,7 +193,7 @@ You are welcome to contribute to dotmailer for Magento! You can either:
  - Trial account enhancements that we’ve already implemented in our Magento 2 connector are now also implemented for Magento 1.
  - We’ve fixed the collection filter for flat products.
  - External dynamic content wasn’t aligning centrally on mobile devices; it does now.
- - Changes in 'Subscriber' status weren't being sent back to Magento from dotmailer; this has been fixed.
+ - Changes in 'Subscriber' status weren't being sent back to Magento from Engagement Cloud; this has been fixed.
  - We’ve implemented an IP address change.
  - Before creating a contact, an automatic check is made to ensure the API is enabled.
  - The class Zend_DB_Expr is now used for columns with expressions.
@@ -202,7 +202,7 @@ You are welcome to contribute to dotmailer for Magento! You can either:
 # V6.3.1
 ###### Bug fixes
  - Unsubscribers from Magento weren’t being removed successfully from the subscriber address book; they are again now(#233).
- - Contact datafields weren't getting updated in dotmailer for existing customers in Magento whose data changed; this has been fixed.(#244)
+ - Contact datafields weren't getting updated in Engagement Cloud for existing customers in Magento whose data changed; this has been fixed.(#244)
   
 # V6.3.0
 ###### Features
@@ -281,7 +281,7 @@ You are welcome to contribute to dotmailer for Magento! You can either:
  
 # V5.3.0
 ## Features
- - Support for dotmailer regions
+ - Support for Engagement Cloud regions
 ## Bug fixes
  - Bug fixed for fatal error on manual sync
 ## Improvments
@@ -403,7 +403,7 @@ You are welcome to contribute to dotmailer for Magento! You can either:
  - Raygun control to disable and enable.
  - Sweetooth refferal link.
  - Custom OAUTH domain/redirect link options.
- - Use dotmailer template for transactional emails.
+ - Use Engagement Cloud template for transactional emails.
  - Wishlist EDC with related, upsell and crosssell.
  - Customer trend data.
 
@@ -566,7 +566,7 @@ You are welcome to contribute to dotmailer for Magento! You can either:
 # V.2.0.4 
 * Reset subscriber_imported for reimport.
 * Suppressed contacts button in admin settings.
-* Cleaned the dotmailer_order_imported from db.
+* Cleaned the Engagement Cloud from db.
 * Fix for table prefix names.
 * Duplicate email address.
 * Website id table update for null values.

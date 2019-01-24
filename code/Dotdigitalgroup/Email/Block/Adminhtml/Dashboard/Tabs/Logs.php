@@ -27,11 +27,11 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Logs
 
     public function getTabLabel()
     {
-        return Mage::helper('ddg')->__('Marketing Automation Logs');
+        return Mage::helper('ddg')->__('Engagement Cloud Logs');
     }
 
     public function getTabTitle()
     {
-        return Mage::helper('ddg')->__('Marketing Automation Logs');
+        return Mage::helper('ddg')->__('Engagement Cloud Logs');
     }
 }

@@ -131,7 +131,7 @@ class Dotdigitalgroup_Email_Model_Template extends Mage_Core_Model_Abstract
     ];
 
     /**
-     * Mapping for template code = dotmailer path templates.
+     * Mapping for template code = Engagement Cloud path templates.
      *
      * @var array
      */
@@ -302,7 +302,7 @@ class Dotdigitalgroup_Email_Model_Template extends Mage_Core_Model_Abstract
      */
     private function updateTemplateById($dmCampaign, $campaignId, $templateId, $origTemplateCode = '')
     {
-        //dotmailer template name (campaign name _ campaign id)
+        //Engagement Cloud template name (campaign name _ campaign id)
         $templateName = $dmCampaign->name . '_' . $campaignId;
 
         try {

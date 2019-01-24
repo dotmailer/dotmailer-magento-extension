@@ -9,7 +9,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_StudioController
      */
     public function indexAction()
     {
-        $this->_title($this->__('Automation Studio'));
+        $this->_title($this->__('Engagement Cloud'));
         $this->loadLayout();
         $this->_setActiveMenu('email_connector');
 

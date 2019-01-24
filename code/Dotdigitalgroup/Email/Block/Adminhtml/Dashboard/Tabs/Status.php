@@ -68,7 +68,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
      */
     public function getTabLabel()
     {
-        return Mage::helper('ddg')->__('Marketing Automation System Status');
+        return Mage::helper('ddg')->__('Engagement Cloud System Status');
     }
 
     /**
@@ -76,7 +76,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
      */
     public function getTabTitle()
     {
-        return Mage::helper('ddg')->__('Marketing Automation System Status');
+        return Mage::helper('ddg')->__('Engagement Cloud System Status');
     }
 
     /**
