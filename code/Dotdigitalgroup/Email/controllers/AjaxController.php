@@ -16,10 +16,8 @@ class Dotdigitalgroup_Email_AjaxController
         ) {
             $email = $this->getRequest()->getParam('email');
             $email = filter_var($email, FILTER_SANITIZE_EMAIL);
-
-            //regular expressions from http://regexlib.com.
-            // Match formats joe@aol.com | joe@wrox.co.uk | joe@domain.info
-            if (!preg_match('/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/', $email)) {
+            
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 Mage::helper('ddg')->log(
                     'ajax emailCapture fail for given email. Failed by regex'
                 );
