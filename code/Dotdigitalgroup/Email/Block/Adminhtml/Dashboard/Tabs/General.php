@@ -107,7 +107,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_General
      */
     public function getTitle()
     {
-        return Mage::helper('ddg')->__("Connector Account Information");
+        return Mage::helper('ddg')->__("Engagement Cloud Account Information");
     }
 
     /**

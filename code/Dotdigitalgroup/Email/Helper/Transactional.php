@@ -127,7 +127,7 @@ class Dotdigitalgroup_Email_Helper_Transactional extends Mage_Core_Helper_Abstra
     }
 
     /**
-     * Check if the template code is containing dotmailer.
+     * Check if the template code is containing Engagement Cloud.
      *
      * @param $templateCode
      * @return bool
