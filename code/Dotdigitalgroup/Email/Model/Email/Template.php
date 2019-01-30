@@ -107,7 +107,7 @@ class Dotdigitalgroup_Email_Model_Email_Template extends Mage_Core_Model_Email_T
 
         $mail->setSubject('=?utf-8?B?' . base64_encode($this->getProcessedTemplateSubject($variables)) . '?=');
 
-        //sender name and sender email if the template is from dotmailer
+        //sender name and sender email if the template is from Engagement Cloud
         if ($helper->isDotmailerTemplate($this->getTemplateCode())) {
             $mail->setFrom($this->getTemplateSenderEmail(), $this->getTemplateSenderName());
         } else {

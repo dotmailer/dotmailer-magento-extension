@@ -63,7 +63,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Analysis
      */
     public function getTitle()
     {
-        return Mage::helper('ddg')->__("Marketing Automation Data Analysis");
+        return Mage::helper('ddg')->__("Engagement Cloud Data Analysis");
     }
 
     /**

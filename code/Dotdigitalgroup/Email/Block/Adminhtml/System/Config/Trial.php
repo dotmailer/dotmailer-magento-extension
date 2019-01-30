@@ -2,7 +2,7 @@
 
 class Dotdigitalgroup_Email_Block_Adminhtml_System_Config_Trial extends Mage_Adminhtml_Block_System_Config_Form_Fieldset
 {
-    const TRIAL_EXTERNAL_URL = 'https://www.dotmailer.com/trial/';
+    const TRIAL_EXTERNAL_URL = 'https://dotdigital.com/trial/';
 
     /**
      * @codingStandardsIgnoreStart

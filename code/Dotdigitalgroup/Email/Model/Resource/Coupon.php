@@ -42,7 +42,7 @@ class Dotdigitalgroup_Email_Model_Resource_Coupon extends Mage_SalesRule_Model_R
             );
         }
 
-        //update coupons added by dotmailer. not to change expiration date
+        //update coupons added by Engagement Cloud. not to change expiration date
         $dotmailerUpdateArray = $updateArray;
         unset($dotmailerUpdateArray['expiration_date']);
         if (!empty($dotmailerUpdateArray)) {

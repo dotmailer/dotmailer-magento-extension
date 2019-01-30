@@ -2,7 +2,7 @@
 <config>
     <menu>
         <email_connector translate="title">
-            <title>Marketing Automation</title>
+            <title>Customer Engagement</title>
             <sort_order>70</sort_order>
             <children>
                 <email_connector_dashboard translate="title">
@@ -11,7 +11,7 @@
                     <action>adminhtml/email_dashboard</action>
                 </email_connector_dashboard>
                 <automation_studio translate="title">
-                    <title>Automation Studio</title>
+                    <title>Engagement Cloud</title>
                     <sort_order>20</sort_order>
                     <action>adminhtml/email_studio</action>
                 </automation_studio>
@@ -81,7 +81,7 @@
                     <sort_order>40</sort_order>
                     <children>
                         <api_credentials translate="title">
-                            <title>Api Credentials</title>
+                            <title>Accounts</title>
                             <sort_order>20</sort_order>
                             <action>adminhtml/system_config/edit/section/connector_api_credentials</action>
                         </api_credentials>
@@ -111,7 +111,7 @@
                                 <title>Dashboard</title>
                             </email_connector_dashboard>
                             <automation_studio translate="title">
-                                <title>Automation Studio</title>
+                                <title>Customer Engagement</title>
                             </automation_studio>
                             <automation_rules translate="title">
                                 <title>Exclusion Rules</title>
@@ -149,7 +149,7 @@
                                 </children>
                             </reports>
                             <email_configuration translate="title">
-                                <title>Email Configuration</title>
+                                <title>Configuration</title>
                                 <children>
                                     <api_credentials translate="title">
                                         <title>Api Credentials</title>
@@ -169,7 +169,7 @@
                             <config>
                                 <children>
                                     <connector_api_credentials translate="title">
-                                        <title><![CDATA[Email API Credentials]]></title>
+                                        <title><![CDATA[Accounts]]></title>
                                     </connector_api_credentials>
                                     <connector_sync_settings translate="title">
                                         <title><![CDATA[Email Sync Settings]]></title>

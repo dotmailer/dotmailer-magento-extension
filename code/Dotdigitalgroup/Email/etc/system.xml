@@ -2,13 +2,13 @@
 <config>
     <tabs>
         <connector translate="label" module="ddg">
-            <label>DOTMAILER</label>
+            <label>Engagement Cloud</label>
             <sort_order>1000</sort_order>
         </connector>
     </tabs>
     <sections>
         <connector_api_credentials translate="label" module="ddg">
-            <label><![CDATA[API Credentials]]></label>
+            <label><![CDATA[Accounts]]></label>
             <tab>connector</tab>
             <frontend_type>text</frontend_type>
             <sort_order>1000</sort_order>
@@ -26,7 +26,7 @@
                     <expanded>1</expanded>
                 </trial>
                 <api translate="label" module="ddg">
-                    <label>Already a dotmailer customer?</label>
+                    <label>Already an Engagement Cloud customer?</label>
                     <frontend_type>text</frontend_type>
                     <sort_order>10</sort_order>
                     <show_in_default>1</show_in_default>
@@ -2121,7 +2121,7 @@
             <show_in_store>1</show_in_store>
             <groups>
                 <ddg_transactional translate="label" module="ddg">
-                    <label>DDG Transactional</label>
+                    <label>Settings</label>
                     <frontend_type>text</frontend_type>
                     <sort_order>9000</sort_order>
                     <show_in_default>1</show_in_default>
@@ -3280,7 +3280,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
-                            <comment><![CDATA[All dotmailer tables will be removed, re-created and all data will be re-filled. Just like doing a fresh install.]]></comment>
+                            <comment><![CDATA[All Engagement Cloud tables will be removed, re-created and all data will be re-filled. Just like doing a fresh install.]]></comment>
                         </reset_all>
                         <contact_title translate="label" module="ddg">
                             <label>Manually Run Sync</label>
@@ -3603,8 +3603,8 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
-                            <comment><![CDATA[Enter IP addresses separated by comma (,). An empty list will ignore any security check. Please ensure you keep the latest dotmailer IP ranges included
-                                <a href="https://support.dotmailer.com/hc/en-gb/articles/216282318-Security-settings#ip" target="_blank"> here</a>.]]></comment>
+                            <comment><![CDATA[Enter IP addresses separated by comma (,). An empty list will ignore any security check. Please ensure you keep the latest Engagement Cloud IP ranges included
+                                <a href="https://support.dotdigital.com/hc/en-gb/articles/216282318-Security-settings#ip" target="_blank"> here</a>.]]></comment>
                         </ip_addresses>
                     </fields>
                 </ip_restriction>
