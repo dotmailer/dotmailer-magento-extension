@@ -34,6 +34,12 @@ You are welcome to contribute to Engagement Cloud for Magento! You can either:
 - Fix a bug: please fork this repo and submit the Pull Request to our [Develop branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/develop)
 Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 
+# V6.4.10
+
+###### Improvements
+- 'dotmailer' has been renamed to 'dotdigital Engagement Cloud' (see why [here](https://blog.dotdigital.com/the-story-behind-dotdigital/))
+- Email addresses are now validated against the syntax of RFC 822 (FILTER_VALIDATE_EMAIL) by the guest abandoned cart process
+
 # V6.4.9
 ##### Bug fixes
 - Guest subscribers were being synced with Website_Name instead of Store_view name ; this has now been corrected.
