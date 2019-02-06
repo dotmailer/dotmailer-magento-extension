@@ -284,7 +284,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
                 ->addAttributeToFilter('entity_id', array('in' => $productIds))
                 ->addCategoryIds()
                 ->addOptionsToResult()
-            ;
+                ->addUrlRewrite();
 
             //visibility filter
             if ($visibility = Mage::getStoreConfig(
