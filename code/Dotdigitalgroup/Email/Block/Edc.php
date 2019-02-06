@@ -298,7 +298,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
         //fix for catalog flat tables
         $productCollection = Mage::getModel('catalog/product')->getCollection()
             ->addPriceData()
-            ->addAttributeToSelect('*')
+            ->addAttributeToSelect(array('product_url', 'name', 'store_id', 'small_image', 'price'))
             ->addAttributeToFilter('visibility', $this->_visibility)
             ->addIdFilter($productIds);
 
