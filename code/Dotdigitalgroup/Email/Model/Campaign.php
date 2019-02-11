@@ -102,9 +102,10 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
             $client = Mage::helper('ddg')->getWebsiteApiClient($website);
             if ($client) {
                 $response = $client->getSendStatus($campaign->getSendId());
-                if (isset($response->message)) {
+                if (isset($response->message) || $response->status == 'Cancelled') {
                     //update  the failed to send email message
-                    $this->getResource()->setMessageWithSendId($campaign->getSendId(), $response->message);
+                    $message = isset($response->message) ? $response->message : $response->status;
+                    $this->getResource()->setMessageWithSendId($campaign->getSendId(), $message);
                 } elseif ($response->status == 'Sent') {
                     $this->getResource()->setSent($campaign->getSendId());
                 }
