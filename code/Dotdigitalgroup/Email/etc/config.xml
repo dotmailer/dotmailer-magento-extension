@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Dotdigitalgroup_Email>
-            <version>6.4.10</version>
+            <version>6.4.11</version>
         </Dotdigitalgroup_Email>
     </modules>
     <frontend>
