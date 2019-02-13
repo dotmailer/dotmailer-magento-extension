@@ -34,6 +34,16 @@ You are welcome to contribute to Engagement Cloud for Magento! You can either:
 - Fix a bug: please fork this repo and submit the Pull Request to our [Develop branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/develop)
 Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 
+# V6.4.11
+
+##### Improvements
+- Users can now get SEO-friendly product URLs when syncing their catalog to Engagement Cloud
+
+##### Bug fixes
+- Cancelled email sends no longer prevent new sends from going out successfully
+- We've optimised database queries, meaning that users with massive databases no longer encounter slow best seller external dynamic content load times
+- An exception is no longer thrown when getting rating table name
+
 # V6.4.10
 
 ###### Improvements
