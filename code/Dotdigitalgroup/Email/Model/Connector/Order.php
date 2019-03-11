@@ -533,7 +533,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
                                 $attributes[][$attributeCode]
                                     = $this->_limitLength($value);
                             } elseif (is_array($value)) {
-                                $value = implode($value, ', ');
+                                $value = implode(', ', $value);
                                 $attributes[][$attributeCode]
                                     = $this->_limitLength($value);
                             }
