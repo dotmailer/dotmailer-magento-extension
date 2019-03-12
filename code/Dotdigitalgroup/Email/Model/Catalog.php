@@ -274,6 +274,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
                 'imported', array('null' => 'true')
             );
         }
+        $connectorCollection->getSelect()->limit($limit);
 
         if ($connectorCollection->getSize()) {
             $productIds       = $connectorCollection->getColumnValues('product_id');

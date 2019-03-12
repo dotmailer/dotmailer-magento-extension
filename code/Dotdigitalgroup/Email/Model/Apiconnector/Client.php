@@ -1534,5 +1534,31 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
 
         return $response;
     }
-    
+
+    /**
+     * Resubscribes a previously unsubscribed contact to a given address book
+     *
+     * @param int $addressBookId
+     * @param string $email
+     *
+     * @return mixed
+     */
+    public function postAddressBookContactResubscribe($addressBookId, $email)
+    {
+        $contact = array('unsubscribedContact' => array('email' => $email));
+        $url = $this->getApiEndpoint() . self::REST_ADDRESS_BOOKS . $addressBookId
+            . '/contacts/resubscribe';
+        $this->setUrl($url)
+            ->setVerb('POST')
+            ->buildPostBody($contact);
+
+        $response = $this->execute();
+
+        if (isset($response->message)) {
+            $message = 'POST ADDRESS BOOK CONTACT RESUBSCRIBE' . $response->message;
+            Mage::helper('ddg')->log($message);
+        }
+
+        return $response;
+    }
 }

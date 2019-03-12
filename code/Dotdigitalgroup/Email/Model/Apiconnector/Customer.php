@@ -170,6 +170,11 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         //get tbt reward customer
         $tbtReward           = Mage::getModel('rewards/customer')
             ->getRewardsCustomer($customer);
+
+        if (! is_object($tbtReward)) {
+            return;
+        }
+
         $this->rewardCustomer = $tbtReward;
 
         //get transfers collection from tbt reward. only active and order by last updated.
@@ -722,6 +727,9 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getRewardPointBalance()
     {
+        if (! isset($this->rewardCustomer)) {
+            return 0;
+        }
         return $this->cleanString($this->rewardCustomer->getPointsSummary());
     }
 
@@ -730,9 +738,10 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getRewardPointPending()
     {
-        return $this->cleanString(
-            $this->rewardCustomer->getPendingPointsSummary()
-        );
+        if (! isset($this->rewardCustomer)) {
+            return 0;
+        }
+        return $this->cleanString($this->rewardCustomer->getPendingPointsSummary());
     }
 
     /**
@@ -740,9 +749,10 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getRewardPointPendingTime()
     {
-        return $this->cleanString(
-            $this->rewardCustomer->getPendingTimePointsSummary()
-        );
+        if (! isset($this->rewardCustomer)) {
+            return 0;
+        }
+        return $this->cleanString($this->rewardCustomer->getPendingTimePointsSummary());
     }
 
     /**
@@ -750,9 +760,10 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getRewardPointOnHold()
     {
-        return $this->cleanString(
-            $this->rewardCustomer->getOnHoldPointsSummary()
-        );
+        if (! isset($this->rewardCustomer)) {
+            return 0;
+        }
+        return $this->cleanString($this->rewardCustomer->getOnHoldPointsSummary());
     }
 
     /**
