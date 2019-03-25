@@ -146,6 +146,9 @@ class Dotdigitalgroup_Email_Model_Connector_Product
             foreach ($options as $option) {
                 $count      = 0;
                 $title      = str_replace(' ', '', $option->getDefaultTitle());
+                if (!$this->textIsValidForInsightDataKey($title)) {
+                    continue;
+                }
                 $selections = $option->getSelections();
                 $sOptions   = array();
                 foreach ($selections as $selection) {
@@ -176,6 +179,9 @@ class Dotdigitalgroup_Email_Model_Connector_Product
                 $label   = strtolower(
                     str_replace(' ', '', $productAttribute['label'])
                 );
+                if (!$this->textIsValidForInsightDataKey($label)) {
+                    continue;
+                }
                 $options = array();
                 foreach ($productAttribute['values'] as $attribute) {
                     $options[$count]['option'] = $attribute['default_label'];
@@ -340,5 +346,18 @@ class Dotdigitalgroup_Email_Model_Connector_Product
             '.',
             ''
         );
+    }
+
+    /**
+     * Ensure text matches insight data key restrictions
+     * https://support.dotmailer.com/hc/en-gb/articles/212214538-Using-Insight-data-developers-guide-#restrictkeys
+     *
+     * @param string $text
+     *
+     * @return false|int
+     */
+    private function textIsValidForInsightDataKey($text)
+    {
+        return preg_match('/^[a-zA-Z_\\\\-][a-zA-Z0-9_\\\\-]*$/', $text);
     }
 }
