@@ -155,7 +155,7 @@ class Dotdigitalgroup_Email_Model_Email_Template extends Mage_Core_Model_Email_T
     protected function _afterLoad()
     {
         //decompress the subject
-        $this->setTemplateSubject(utf8_decode($this->getTemplateSubject()));
+        $this->setTemplateSubject($this->getTemplateSubject());
         $templateText = $this->getTemplateText();
         $transactionalHelper = Mage::helper('ddg/transactional');
         //decompress the content body

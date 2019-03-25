@@ -279,7 +279,7 @@ class Dotdigitalgroup_Email_Model_Template extends Mage_Core_Model_Abstract
         try {
             $template->setTemplateCode($templateName)
                 ->setOrigTemplateCode($origTemplateCode)
-                ->setTemplateSubject(utf8_encode($dmCampaign->subject))
+                ->setTemplateSubject($dmCampaign->subject)
                 ->setTemplateText($dmCampaign->processedHtmlContent)
                 ->setTemplateType(Mage_Core_Model_Template::TYPE_HTML)
                 ->setTemplateSenderName($dmCampaign->fromName)
@@ -313,7 +313,7 @@ class Dotdigitalgroup_Email_Model_Template extends Mage_Core_Model_Abstract
                 ->setTemplateSenderName($dmCampaign->fromName)
                 ->setTemplateText($dmCampaign->processedHtmlContent)
                 ->setTemplateType(Mage_Core_Model_Template::TYPE_HTML)
-                ->setTemplateSubject(utf8_encode($dmCampaign->subject))
+                ->setTemplateSubject($dmCampaign->subject)
                 ->setTemplateSenderEmail($dmCampaign->fromAddress->email);
 
             $template->save();
