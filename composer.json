@@ -4,12 +4,6 @@
     "license":"OSL-3.0",
     "homepage":"https://github.com/dotmailer/dotmailer-magento-extension",
     "description":"Marketing automation for magento.",
-    "authors":[
-        {
-            "name":"Calin Diacon",
-            "email":"calin.diacon@dotmailer.com"
-        }
-    ],
     "require":{
         "magento-hackathon/magento-composer-installer":"*"
     }

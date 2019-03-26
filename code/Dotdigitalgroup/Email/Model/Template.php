@@ -169,11 +169,6 @@ class Dotdigitalgroup_Email_Model_Template extends Mage_Core_Model_Abstract
     ];
 
     /**
-     * @var array
-     */
-    public $proccessedCampaings;
-
-    /**
      * Load email_template by code/name.
      *
      * @param $templateCode
@@ -212,30 +207,31 @@ class Dotdigitalgroup_Email_Model_Template extends Mage_Core_Model_Abstract
     public function sync()
     {
         $result = ['store' => 'Stores : ', 'message' => 'Done.'];
-        $lastWebsiteId = '0';
         $helper = Mage::helper('ddg');
+        $processedCampaigns = [];
+
         /** @var Mage_Core_Model_Store $store */
         foreach (Mage::app()->getStores(true) as $store) {
-            //store not enabled to sync
-            if (! $helper->isStoreEnabled($store)) {
+
+            if (!$helper->isStoreEnabled($store)) {
                 continue;
             }
-            //reset the campaign ids for each website
+
             $websiteId = $store->getWebsiteId();
-            if ($websiteId != $lastWebsiteId) {
-                $this->proccessedCampaings = [];
-                $lastWebsiteId = $websiteId;
+            if (empty($processedCampaigns[$websiteId])) {
+                $processedCampaigns[$websiteId] = [];
             }
+
             foreach($this->templateConfigIdToDotmailerConfigPath as $configTemplateId => $dotConfigPath) {
 
                 $campaignId = $store->getConfig($dotConfigPath);
                 $configPath = $this->templateConfigMapping[$configTemplateId];
                 $emailTemplateId = $store->getConfig($configPath);
 
-                if ($campaignId && $emailTemplateId && ! in_array($campaignId, $this->proccessedCampaings)) {
+                if ($campaignId && $emailTemplateId && !in_array($campaignId, $processedCampaigns[$websiteId])) {
                     $this->syncEmailTemplate($campaignId, $emailTemplateId, $store);
                     $result['store'] .= ', ' . $store->getCode();
-                    $this->proccessedCampaings[$campaignId] = $campaignId;
+                    $processedCampaigns[$websiteId][$campaignId] = $campaignId;
                 }
             }
         }
@@ -279,7 +275,7 @@ class Dotdigitalgroup_Email_Model_Template extends Mage_Core_Model_Abstract
         try {
             $template->setTemplateCode($templateName)
                 ->setOrigTemplateCode($origTemplateCode)
-                ->setTemplateSubject(utf8_encode($dmCampaign->subject))
+                ->setTemplateSubject($dmCampaign->subject)
                 ->setTemplateText($dmCampaign->processedHtmlContent)
                 ->setTemplateType(Mage_Core_Model_Template::TYPE_HTML)
                 ->setTemplateSenderName($dmCampaign->fromName)
@@ -313,7 +309,7 @@ class Dotdigitalgroup_Email_Model_Template extends Mage_Core_Model_Abstract
                 ->setTemplateSenderName($dmCampaign->fromName)
                 ->setTemplateText($dmCampaign->processedHtmlContent)
                 ->setTemplateType(Mage_Core_Model_Template::TYPE_HTML)
-                ->setTemplateSubject(utf8_encode($dmCampaign->subject))
+                ->setTemplateSubject($dmCampaign->subject)
                 ->setTemplateSenderEmail($dmCampaign->fromAddress->email);
 
             $template->save();
