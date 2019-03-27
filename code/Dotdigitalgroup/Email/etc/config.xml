@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Dotdigitalgroup_Email>
-            <version>6.4.12</version>
+            <version>6.4.13</version>
         </Dotdigitalgroup_Email>
     </modules>
     <frontend>
@@ -158,11 +158,6 @@
             <ddg_automation>
                 <class>Dotdigitalgroup_Email_Block</class>
             </ddg_automation>
-            <adminhtml>
-                <rewrite>
-                    <system_email_template_grid>Dotdigitalgroup_Email_Block_Adminhtml_System_Email_Grid</system_email_template_grid>
-                </rewrite>
-            </adminhtml>
         </blocks>
         <events>
             <admin_system_config_changed_section_connector_api_credentials>

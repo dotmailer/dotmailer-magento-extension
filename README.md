@@ -34,17 +34,23 @@ You are welcome to contribute to Engagement Cloud for Magento! You can either:
 - Fix a bug: please fork this repo and submit the Pull Request to our [Develop branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/develop)
 Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 
+# V6.4.13
+
+##### Bug Fixes
+- We've fixed a bug that caused the catalog sync to skip products if invalid data keys were supplied.
+- We've fixed a bug related to the use of `utf8_decode` in email templates (note this discontinues support for emojis in email subject lines).
+- We've fixed a minor error thrown during the Engagement Cloud template sync. 
+
 # V6.4.12
 
 ##### Improvements
-
-  * We've improved the performance of the product sync process by setting a limit when querying products before import
-  * Resubscribed contacts weren't added back to the "subscriber" address book; they are now
-  * Configurable, grouped, and bundled products are now correctly synced to Engagement Cloud with the lowest relevant price of their children
+- We've improved the performance of the product sync process by setting a limit when querying products before import
+- Resubscribed contacts weren't added back to the "subscriber" address book; they are now
+- Configurable, grouped, and bundled products are now correctly synced to Engagement Cloud with the lowest relevant price of their children
 
 ##### Bug Fixes
-  * We've fixed incorrect syntax in the Order model (#309)
-  * We've fixed an issue that caused errors within the Sweet Tooth (Smile.io) integration
+- We've fixed incorrect syntax in the Order model (#309)
+- We've fixed an issue that caused errors within the Sweet Tooth (Smile.io) integration
 
 # V6.4.11
 

@@ -10,7 +10,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Email_Template extends Mage_Adminhtm
     protected function _afterLoad()
     {
         //decompress the title
-        $this->setTemplateSubject(utf8_decode($this->getTemplateSubject()));
+        $this->setTemplateSubject($this->getTemplateSubject());
         $templateText = $this->getTemplateText();
         $transactionalHelper = Mage::helper('ddg/transactional');
         if ($transactionalHelper->isStringCompressed($templateText)) {
