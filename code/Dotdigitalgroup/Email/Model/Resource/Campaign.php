@@ -182,4 +182,23 @@ class Dotdigitalgroup_Email_Model_Resource_Campaign
             Mage::logException($e);
         }
     }
+
+    /**
+     * @param array $ids
+     */
+    public function expireCampaigns($ids)
+    {
+        $now = Mage::getSingleton('core/date')->gmtDate();
+        $bind = array(
+            'send_status' => Dotdigitalgroup_Email_Model_Campaign::SENT,
+            'message' => 'Check sending status in Engagement Cloud',
+            'updated_at' => $now
+        );
+        $this->_getWriteAdapter()
+            ->update(
+                $this->getMainTable(),
+                $bind,
+                array("id in (?)" => $ids)
+            );
+    }
 }
