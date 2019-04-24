@@ -97,6 +97,7 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
      */
     protected function _checkSendStatus($website)
     {
+        $this->expireExpiredCampaigns($website->getStoreIds());
         $campaigns = $this->_getEmailCampaigns($website->getStoreIds(), self::PROCESSING, true);
         foreach ($campaigns as $campaign) {
             $client = Mage::helper('ddg')->getWebsiteApiClient($website);
@@ -112,6 +113,19 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
             }
         }
     }
+
+    /**
+     * @param array $storeIds
+     */
+    private function expireExpiredCampaigns($storeIds)
+    {
+        $expiredCampaigns = $this->getExpiredEmailCampaignsByStoreIds($storeIds);
+        $ids = $expiredCampaigns->getColumnValues('id');
+        if (! empty($ids)) {
+            $this->getResource()->expireCampaigns($ids);
+        }
+    }
+
 
     /**
      * Sending the campaigns.
@@ -267,5 +281,22 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
         $emailCollection->getSelect()->limit(self::SEND_EMAIL_CONTACT_LIMIT);
         //@codingStandardsIgnoreEnd
         return $emailCollection;
+    }
+
+    /**
+     * @param array $storeIds
+     * @return Dotdigitalgroup_Email_Model_Resource_Campaign_Collection
+     */
+    private function getExpiredEmailCampaignsByStoreIds($storeIds)
+    {
+        $time = Zend_Date::now(Mage::app()->getLocale()->getLocale())->subHour(2);
+        $campaignCollection = $this->getCollection()
+            ->addFieldToFilter('campaign_id', array('notnull' => true))
+            ->addFieldToFilter('send_status', Dotdigitalgroup_Email_Model_Campaign::PROCESSING)
+            ->addFieldToFilter('store_id', array('in' => $storeIds))
+            ->addFieldToFilter('send_id', array('notnull' => true))
+            ->addFieldToFilter('updated_at', array('lt' => $time->toString('yyyy-MM-dd HH:mm')));
+
+        return $campaignCollection;
     }
 }

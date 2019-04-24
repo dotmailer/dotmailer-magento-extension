@@ -34,6 +34,11 @@ You are welcome to contribute to Engagement Cloud for Magento! You can either:
 - Fix a bug: please fork this repo and submit the Pull Request to our [Develop branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/develop)
 Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 
+# V6.4.14   
+
+##### Bug Fixes
+- We've fixed a problem with scheduled campaign sends, arising from campaigns stuck in a "Processing" state on Engagement Cloud. In such cases, we will expire campaigns that have been "Processing" for longer than two hours.
+
 # V6.4.13
 
 ##### Bug Fixes
