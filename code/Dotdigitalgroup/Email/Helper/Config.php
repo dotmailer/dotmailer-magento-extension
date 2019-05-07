@@ -466,14 +466,11 @@ class Dotdigitalgroup_Email_Helper_Config
      * @param $store Mage_Core_Model_Store
      * @return string
      */
-    public function getOptInType($store)
+    public function isOptInTypeDouble($store)
     {
-        $needToConfirm = $store->getConfig(
+        return (boolean) $store->getConfig(
             Mage_Newsletter_Model_Subscriber::XML_PATH_CONFIRMATION_FLAG
         );
-        $optInType = ($needToConfirm)? 'Double' : 'Single';
-
-        return $optInType;
     }
 
     /**
