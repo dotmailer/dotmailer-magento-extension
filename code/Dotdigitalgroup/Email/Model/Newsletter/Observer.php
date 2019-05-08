@@ -38,7 +38,8 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
                 //update subscriber status and reset the import
                 $contactEmail->setSubscriberStatus($subscriberStatus)
                     ->setSubscriberImported(null)
-                    ->setIsSubscriber('1');
+                    ->setIsSubscriber('1')
+                    ->setLastSubscribedAt(Mage::getModel('core/date')->gmtDate());
 
                 //Subscriber subscribed when it is suppressed in table then re-subscribe
                 if ($contactEmail->getSuppressed()) {
@@ -73,7 +74,8 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
                 }
 
                 $contactEmail->setIsSubscriber(null)
-                    ->setSubscriberStatus(Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED);
+                    ->setSubscriberStatus(Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED)
+                    ->setLastSubscribedAt(null);
                 //save contact
                 $contactEmail->save();
 

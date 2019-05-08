@@ -564,14 +564,22 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
             // Contacts to un-subscribe
             foreach ($contacts as $apiContact) {
                 if (isset($apiContact->suppressedContact)) {
-                    $suppressedContact = $apiContact->suppressedContact;
-                    $suppressedEmails[] = $suppressedContact->email;
+                    $suppressedContactEmail = $apiContact->suppressedContact->email;
+                    if (!array_key_exists($suppressedContactEmail, $suppressedEmails)) {
+                        $suppressedEmails[$suppressedContactEmail] = [
+                            'email' => $apiContact->suppressedContact->email,
+                            'removed_at' => $apiContact->dateRemoved,
+                            // users suppressed in EC can be re-added without confirmation
+                            'suppressed_in_ec' => $apiContact->reason == 'Suppressed',
+                        ];
+                    }
                 }
             }
         }
+
         //Mark suppressed contacts
         if (! empty($suppressedEmails)) {
-            Mage::getResourceModel('ddg_automation/contact')->unsubscribe($suppressedEmails);
+            Mage::getResourceModel('ddg_automation/contact')->unsubscribeWithResubscriptionCheck(array_values($suppressedEmails));
         }
         return $result;
     }

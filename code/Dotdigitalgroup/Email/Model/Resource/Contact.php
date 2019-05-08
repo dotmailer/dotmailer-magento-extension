@@ -337,6 +337,26 @@ class Dotdigitalgroup_Email_Model_Resource_Contact extends Mage_Core_Model_Resou
     }
 
     /**
+     * Process unsubscribes from EC, checking whether the user has resubscribed more recently in Magento
+     *
+     * @param array $unsubscribes
+     */
+    public function unsubscribeWithResubscriptionCheck(array $unsubscribes)
+    {
+        $contacts = Mage::getModel('ddg_automation/contact')
+            ->getCollection()
+            ->addFieldToSelect([
+                'email',
+                'last_subscribed_at',
+            ])
+            ->addFieldToFilter('email', ['in' => array_column($unsubscribes, 'email')])
+            ->getData();
+
+        // get emails which either have no last_subscribed_at date, or were more recently removed in EC
+        $this->unsubscribe($this->filterRecentlyResubscribedEmails($contacts, $unsubscribes));
+    }
+
+    /**
      * Insert multiple contacts to table.
      *
      * @param $guests
@@ -414,5 +434,36 @@ class Dotdigitalgroup_Email_Model_Resource_Contact extends Mage_Core_Model_Resou
             $data = array('is_guest' => 1);
             $write->update($this->getMainTable(), $data, $where);
         }
+    }
+
+    /**
+     * Process unsubscribes from EC, checking whether the user has resubscribed more recently in Magento
+     *
+     * @param array $localContacts
+     * @param array $unsubscribes
+     * @return array
+     */
+    private function filterRecentlyResubscribedEmails(array $localContacts, array $unsubscribes)
+    {
+        // get emails which either have no last_subscribed_at date, or were more recently removed in EC
+        return array_filter(array_map(function ($email) use ($localContacts) {
+            // get corresponding local contact
+            $contactKey = array_search($email['email'], array_column($localContacts, 'email'));
+
+            // if there is no local contact, or last subscribed value, continue with unsubscribe
+            if ($contactKey === false || is_null($localContacts[$contactKey]['last_subscribed_at'])) {
+                return $email['email'];
+            }
+
+            // convert both timestamps to DateTime
+            $lastSubscribedMagento = new \DateTime($localContacts[$contactKey]['last_subscribed_at'], new \DateTimeZone('UTC'));
+            $removedAtEc = new \DateTime($email['removed_at'], new \DateTimeZone('UTC'));
+
+            // user recently resubscribed in Magento, do not unsubscribe them
+            if ($lastSubscribedMagento > $removedAtEc) {
+                return null;
+            }
+            return $email['email'];
+        }, $unsubscribes));
     }
 }
