@@ -209,6 +209,10 @@ $table->addColumn(
         'Update Time'
     )
     ->addIndex(
+        $installer->getIdxName($orderTable, array('order_id')),
+        array('order_id')
+    )
+    ->addIndex(
         $installer->getIdxName($orderTable, array('store_id')),
         array('store_id')
     )
