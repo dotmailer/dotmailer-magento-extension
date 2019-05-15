@@ -69,6 +69,14 @@ class Dotdigitalgroup_Email_Model_Cron
     }
 
     /**
+     * Check the upgrade feed
+     */
+    public function checkForUpgrade()
+    {
+        Mage::getModel('ddg_automation/feed')->checkForUpgrade();
+    }
+
+    /**
      * Review sync and product reminder.
      */
     public function reviewAndProductReminderSync()

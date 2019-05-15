@@ -160,15 +160,6 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Observer
     }
 
     /**
-     * Update Feed for latest releases.
-     *
-     */
-    public function updateFeed()
-    {
-        Mage::getModel('ddg_automation/feed')->checkForUpgrade();
-    }
-
-    /**
      * Add modified segment for contact.
      *
      * @param $observer

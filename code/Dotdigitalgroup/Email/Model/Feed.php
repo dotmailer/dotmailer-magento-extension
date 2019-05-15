@@ -18,13 +18,6 @@ class Dotdigitalgroup_Email_Model_Feed extends Mage_AdminNotification_Model_Feed
             return $this;
         }
 
-        //@codingStandardsIgnoreStart
-        //time this was last checked
-        if (($this->getFrequency() + $this->getLastUpdate()) > time()) {
-            return $this;
-        }
-        //@codingStandardsIgnoreEnd
-
         //data feed
         $feedData = array();
 
@@ -57,26 +50,6 @@ class Dotdigitalgroup_Email_Model_Feed extends Mage_AdminNotification_Model_Feed
             }
         }
 
-        //set the last update check
-        $this->setLastUpdate();
-
-        return $this;
-    }
-
-    /**
-     * Set the last update time.
-     *
-     * @return $this|Mage_AdminNotification_Model_Feed
-     */
-    public function setLastUpdate()
-    {
-        //@codingStandardsIgnoreStart
-        Mage::app()->saveCache(
-            time(),
-            Dotdigitalgroup_Email_Helper_Config::CONNECTOR_FEED_LAST_CHECK_TIME
-        );
-        //@codingStandardsIgnoreEnd
-
         return $this;
     }
 
@@ -96,15 +69,4 @@ class Dotdigitalgroup_Email_Model_Feed extends Mage_AdminNotification_Model_Feed
 
         return $this->_feedUrl;
     }
-
-    /**
-     * @return int|mixed
-     */
-    public function getFrequency()
-    {
-        return Mage::getStoreConfig(
-            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_FEED_FREQUENCY
-        ) * 3600;
-    }
-
 }

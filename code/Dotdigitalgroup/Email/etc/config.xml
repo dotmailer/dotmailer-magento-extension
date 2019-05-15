@@ -392,15 +392,6 @@
                     </ddg_add_column_expiration_date>
                 </observers>
             </core_block_abstract_to_html_before>
-            <controller_action_predispatch>
-                <observers>
-                    <ddg_feed>
-                        <type>singleton</type>
-                        <class>ddg_automation/adminhtml_observer</class>
-                        <method>updateFeed</method>
-                    </ddg_feed>
-                </observers>
-            </controller_action_predispatch>
             <catalog_product_attribute_update_after>
                 <observers>
                     <ddg_catalog_product_save_after>
@@ -449,6 +440,12 @@
     </admin>
     <crontab>
         <jobs>
+            <ddg_automation_update_feed>
+                <run><model>ddg_automation/cron::checkForUpgrade</model></run>
+                <schedule>
+                    <cron_expr>* 2 * * *</cron_expr>
+                </schedule>
+            </ddg_automation_update_feed>
             <ddg_automation_customer_subscriber_guest_sync>
                 <run><model>ddg_automation/cron::contactSync</model></run>
                 <schedule>
