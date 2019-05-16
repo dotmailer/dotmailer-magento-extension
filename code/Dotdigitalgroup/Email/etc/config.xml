@@ -813,6 +813,10 @@
             <dotmailer_consent_customer_text>Default text</dotmailer_consent_customer_text>
         </consent>
         <connector_developer_settings>
+            <install_settings>
+                <skip_data_install>0</skip_data_install>
+                <batch_size>25000</batch_size>
+            </install_settings>
             <import_settings>
                 <memory_limit>0</memory_limit>
                 <batch_size>500</batch_size>

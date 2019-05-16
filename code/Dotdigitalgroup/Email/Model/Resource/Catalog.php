@@ -103,4 +103,49 @@ class Dotdigitalgroup_Email_Model_Resource_Catalog
             Mage::logException($e);
         }
     }
+
+    /**
+     * @param int $batchSize
+     */
+    public function populateEmailCatalogTable($batchSize)
+    {
+        $catalogCollection = Mage::getResourceModel('catalog/product_collection')
+            ->addAttributeToSelect('entity_id')
+            ->setPageSize(1);
+        $catalogCollection->getSelect()->order('entity_id ASC');
+        $minId = $catalogCollection->getSize() ? $catalogCollection->getFirstItem()->getId() : 0;
+
+        if ($minId) {
+            $catalogCollection = Mage::getResourceModel('catalog/product_collection')
+                ->addAttributeToSelect('entity_id')
+                ->setPageSize(1);
+            $catalogCollection->getSelect()->order('entity_id DESC');
+            $maxId = $catalogCollection->getFirstItem()->getId();
+
+            $batchMinId = $minId;
+            $batchMaxId = $minId + $batchSize;
+            $moreRecords = true;
+
+            while ($moreRecords) {
+                $select = $this->_getWriteAdapter()->select()
+                    ->from(
+                        array('catalog' => $this->getTable('catalog/product')),
+                        array(
+                            'product_id' => 'catalog.entity_id',
+                            'created_at' => 'catalog.created_at'
+                        )
+                    )
+                    ->where('catalog.entity_id >= ?', $batchMinId)
+                    ->where('catalog.entity_id < ?', $batchMaxId);
+
+                $insertArray = array('product_id', 'created_at');
+                $sqlQuery = $select->insertFromSelect($this->getMainTable(), $insertArray, false);
+                $this->_getWriteAdapter()->query($sqlQuery);
+
+                $moreRecords = $maxId >= $batchMaxId;
+                $batchMinId = $batchMinId + $batchSize;
+                $batchMaxId = $batchMaxId + $batchSize;
+            }
+        }
+    }
 }

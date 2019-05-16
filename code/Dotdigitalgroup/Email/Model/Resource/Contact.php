@@ -466,4 +466,149 @@ class Dotdigitalgroup_Email_Model_Resource_Contact extends Mage_Core_Model_Resou
             return $email['email'];
         }, $unsubscribes));
     }
+
+    /**
+     * @param int $batchSize
+     * @return $this
+     */
+    public function populateEmailContactTable($batchSize)
+    {
+        $customerCollection = Mage::getResourceModel('customer/customer_collection')
+            ->addAttributeToSelect('entity_id')
+            ->setPageSize(1);
+        $customerCollection->getSelect()->order('entity_id ASC');
+        $minId = $customerCollection->getSize() ? $customerCollection->getFirstItem()->getId() : 0;
+
+        if ($minId) {
+            $customerCollection = Mage::getResourceModel('customer/customer_collection')
+                ->addAttributeToSelect('entity_id')
+                ->setPageSize(1);
+            $customerCollection->getSelect()->order('entity_id DESC');
+            $maxId = $customerCollection->getFirstItem()->getId();
+
+            $batchMinId = $minId;
+            $batchMaxId = $minId + $batchSize;
+            $moreRecords = true;
+
+            while ($moreRecords) {
+                $select = $this->_getWriteAdapter()->select()
+                    ->from(
+                        array('customer' => Mage::getSingleton('core/resource')->getTableName('customer_entity')),
+                        array('customer_id' => 'entity_id', 'email', 'website_id', 'store_id')
+                    )
+                    ->where('customer.entity_id >= ?', $batchMinId)
+                    ->where('customer.entity_id < ?', $batchMaxId);
+
+                $insertArray = array('customer_id', 'email', 'website_id', 'store_id');
+                $sqlQuery = $select->insertFromSelect($this->getMainTable(), $insertArray, false);
+                $this->_getWriteAdapter()->query($sqlQuery);
+
+                $moreRecords = $maxId >= $batchMaxId;
+                $batchMinId = $batchMinId + $batchSize;
+                $batchMaxId = $batchMaxId + $batchSize;
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @param int $batchSize
+     * @return $this
+     */
+    public function populateSubscribersThatAreNotCustomers($batchSize)
+    {
+        $subscriberCollection = Mage::getResourceModel('newsletter/subscriber_collection')
+            ->addFieldToSelect('subscriber_id')
+            ->setPageSize(1);
+        $subscriberCollection->getSelect()->order('subscriber_id ASC');
+        $minId = $subscriberCollection->getSize() ? $subscriberCollection->getFirstItem()->getId() : 0;
+
+        if ($minId) {
+            $subscriberCollection = Mage::getResourceModel('newsletter/subscriber_collection')
+                ->addFieldToSelect('subscriber_id')
+                ->setPageSize(1);
+            $subscriberCollection->getSelect()->order('subscriber_id DESC');
+            $maxId = $subscriberCollection->getFirstItem()->getId();
+
+            $batchMinId = $minId;
+            $batchMaxId = $minId + $batchSize;
+            $moreRecords = true;
+
+            while ($moreRecords) {
+                $select = $this->_getWriteAdapter()->select()
+                    ->from(
+                        array('subscriber' => $this->getTable('newsletter/subscriber')),
+                        array(
+                            'email' => 'subscriber_email',
+                            'col2' => new Zend_Db_Expr('1'),
+                            'col3' => new Zend_Db_Expr('1'),
+                            'store_id'
+                        )
+                    )
+                    ->where('customer_id =?', 0)
+                    ->where('subscriber_status =?', 1)
+                    ->where('subscriber.subscriber_id >= ?', $batchMinId)
+                    ->where('subscriber.subscriber_id < ?', $batchMaxId);
+
+                $insertArray = array('email', 'is_subscriber', 'subscriber_status', 'store_id');
+                $sqlQuery = $select->insertFromSelect($this->getMainTable(), $insertArray, false);
+                $this->_getWriteAdapter()->query($sqlQuery);
+
+                $moreRecords = $maxId >= $batchMaxId;
+                $batchMinId = $batchMinId + $batchSize;
+                $batchMaxId = $batchMaxId + $batchSize;
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function updateCustomersThatAreSubscribers()
+    {
+        $customerIds = Mage::getResourceModel('newsletter/subscriber_collection')
+            ->addFieldToFilter('subscriber_status', 1)
+            ->addFieldToFilter('customer_id', array('gt' => 0))
+            ->getColumnValues('customer_id');
+
+        if (!empty($customerIds)) {
+            $customerIds = implode(', ', $customerIds);
+            $this->_getWriteAdapter()->update(
+                $this->getMainTable(),
+                array(
+                    'is_subscriber' => new Zend_Db_Expr('1'),
+                    'subscriber_status' => new Zend_Db_Expr('1')
+                ),
+                "customer_id in ($customerIds)"
+            );
+        }
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function updateContactsWithSegmentsIdsForEnterprise()
+    {
+        if (Mage::helper('ddg')->isEnterprise()) {
+            //customer segment table
+            $segmentTable = $this->getTable('enterprise_customersegment/customer');
+            //add additional column with segment ids
+            $this->_getWriteAdapter()->addColumn(
+                $this->getMainTable(),
+                'segment_ids',
+                'mediumtext'
+            );
+
+            //update contact table with customer segment ids
+            $this->_getWriteAdapter()->query(
+                "update`{$this->getMainTable()}` c,(select customer_id, website_id,
+                group_concat(`segment_id` separator ',') as segmentids from `{$segmentTable}` group by customer_id) 
+                as s set c.segment_ids = segmentids, c.email_imported = null WHERE s.customer_id= c.customer_id and 
+                s.website_id = c.website_id"
+            );
+        }
+        return $this;
+    }
 }

@@ -346,6 +346,10 @@ class Dotdigitalgroup_Email_Helper_Config
         = 'connector_developer_settings/ip_restriction/ip_addresses';
     const XML_PATH_CONNECTOR_ENABLE_SUBSCRIBER_SALES_DATA
         = 'connector_developer_settings/import_settings/subscriber_sales_data_enabled';
+    const XML_PATH_CONNECTOR_INSTALL_SKIP_DATA_MIGRATION
+        = 'connector_developer_settings/install_settings/skip_data_install';
+    const XML_PATH_CONNECTOR_DATA_MIGRATION_BATCH_SIZE
+        = 'connector_developer_settings/install_settings/batch_size';
 
     /**
      * Nosto
