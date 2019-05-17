@@ -87,7 +87,6 @@ class Dotdigitalgroup_Email_Model_Cron
 
         //sync reviews
         $result = Mage::getModel('ddg_automation/review')->sync();
-
         return $result;
     }
 

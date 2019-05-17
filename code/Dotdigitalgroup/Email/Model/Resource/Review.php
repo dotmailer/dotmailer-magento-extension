@@ -71,9 +71,13 @@ class Dotdigitalgroup_Email_Model_Resource_Review
 
     /**
      * @param int $batchSize
+     * @return void
      */
     public function populateEmailReviewTable($batchSize)
     {
+        if (!Mage::helper('ddg/modulechecker')->isReviewModuleAvailable()) {
+            return null;
+        }
         $reviewCollection = Mage::getResourceModel('review/review_collection')
             ->addFieldToSelect('review_id')
             ->setPageSize(1);
