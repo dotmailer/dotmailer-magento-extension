@@ -276,14 +276,14 @@
                     </ddg_review_save_after>
                 </observers>
             </review_save_after>
-            <model_save_after>
+            <wishlist_save_after>
                 <observers>
                     <ddg_wishlist_save_after>
                         <class>ddg_automation/customer_observer</class>
                         <method>wishlistSaveAfter</method>
                     </ddg_wishlist_save_after>
                 </observers>
-            </model_save_after>
+            </wishlist_save_after>
             <wishlist_item_save_after>
                 <observers>
                     <ddg_wishlist_item_save_after>
