@@ -168,7 +168,7 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
                                         $this->cleanProcessedConsent($fileHelper->getFilePath($file));
                                         $fileHelper->archiveCSV($file);
                                     }
-                                    
+
                                     if ($item->getImportId()) {
                                         $this->_processContactImportReportFaults($item->getImportId(), $websiteId);
                                     }
@@ -285,6 +285,8 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
                 }
             }
         }
+
+        return array('message' => 'Done.');
     }
 
     /**
