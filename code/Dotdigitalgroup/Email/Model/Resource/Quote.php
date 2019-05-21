@@ -84,4 +84,54 @@ class Dotdigitalgroup_Email_Model_Resource_Quote
             Mage::logException($e);
         }
     }
+
+    /**
+     * @param int $batchSize
+     */
+    public function populateEmailQuoteTable($batchSize)
+    {
+        $quoteCollection = Mage::getResourceModel('sales/quote_collection')
+            ->addFieldToSelect('entity_id')
+            ->setPageSize(1);
+        $quoteCollection->getSelect()->order('entity_id ASC');
+        $minId = $quoteCollection->getSize() ? $quoteCollection->getFirstItem()->getId() : 0;
+
+        if ($minId) {
+            $quoteCollection = Mage::getResourceModel('sales/quote_collection')
+                ->addFieldToSelect('entity_id')
+                ->setPageSize(1);
+            $quoteCollection->getSelect()->order('entity_id DESC');
+            $maxId = $quoteCollection->getFirstItem()->getId();
+
+            $batchMinId = $minId;
+            $batchMaxId = $minId + $batchSize;
+            $moreRecords = true;
+
+            while ($moreRecords) {
+                $select = $this->_getWriteAdapter()->select()
+                    ->from(
+                        array('quote' => $this->getTable('sales/quote')),
+                        array(
+                            'quote_id' => 'entity_id',
+                            'store_id',
+                            'customer_id',
+                            'created_at'
+                        )
+                    )
+                    ->where('customer_id !=?', null)
+                    ->where('is_active =?', 1)
+                    ->where('items_count >?', 0)
+                    ->where('quote.entity_id >= ?', $batchMinId)
+                    ->where('quote.entity_id < ?', $batchMaxId);
+
+                $insertArray = array('quote_id', 'store_id', 'customer_id', 'created_at');
+                $sqlQuery = $select->insertFromSelect($this->getMainTable(), $insertArray, false);
+                $this->_getWriteAdapter()->query($sqlQuery);
+
+                $moreRecords = $maxId >= $batchMaxId;
+                $batchMinId = $batchMinId + $batchSize;
+                $batchMaxId = $batchMaxId + $batchSize;
+            }
+        }
+    }
 }

@@ -81,4 +81,61 @@ class Dotdigitalgroup_Email_Model_Resource_Wishlist
             Mage::logException($e);
         }
     }
+
+    /**
+     * @param int $batchSize
+     */
+    public function populateEmailWishlistTable($batchSize)
+    {
+        $wishlistCollection = Mage::getResourceModel('wishlist/wishlist_collection')
+            ->addFieldToSelect('wishlist_id')
+            ->setPageSize(1);
+        $wishlistCollection->getSelect()->order('wishlist_id ASC');
+        $minId = $wishlistCollection->getSize() ? $wishlistCollection->getFirstItem()->getId() : 0;
+
+        if ($minId) {
+            $wishlistCollection = Mage::getResourceModel('wishlist/wishlist_collection')
+                ->addFieldToSelect('wishlist_id')
+                ->setPageSize(1);
+            $wishlistCollection->getSelect()->order('wishlist_id DESC');
+            $maxId = $wishlistCollection->getFirstItem()->getId();
+
+            $batchMinId = $minId;
+            $batchMaxId = $minId + $batchSize;
+            $moreRecords = true;
+
+            while ($moreRecords) {
+                $select = $this->_getWriteAdapter()->select()
+                    ->from(
+                        array('wishlist' => $this->getTable('wishlist/wishlist')),
+                        array('wishlist_id', 'customer_id', 'created_at' => 'updated_at')
+                    )->joinLeft(
+                        array('ce' => Mage::getSingleton('core/resource')->getTableName('customer_entity')),
+                        "wishlist.customer_id = ce.entity_id",
+                        array('store_id')
+                    )->joinInner(
+                        array('wi' => $this->getTable('wishlist/item')),
+                        "wishlist.wishlist_id = wi.wishlist_id",
+                        array('item_count' => 'count(wi.wishlist_id)')
+                    )
+                    ->where('wishlist.wishlist_id >= ?', $batchMinId)
+                    ->where('wishlist.wishlist_id < ?', $batchMaxId)
+                    ->group('wi.wishlist_id');
+
+                $insertArray = array(
+                    'wishlist_id',
+                    'customer_id',
+                    'created_at',
+                    'store_id',
+                    'item_count'
+                );
+                $sqlQuery = $select->insertFromSelect($this->getMainTable(), $insertArray, false);
+                $this->_getWriteAdapter()->query($sqlQuery);
+
+                $moreRecords = $maxId >= $batchMaxId;
+                $batchMinId = $batchMinId + $batchSize;
+                $batchMaxId = $batchMaxId + $batchSize;
+            }
+        }
+    }
 }

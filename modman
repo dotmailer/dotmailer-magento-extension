@@ -17,3 +17,4 @@ design/frontend/base/default/template/mailcheck/        app/design/frontend/base
 js/mailcheck/                                           js/mailcheck/
 modules/Dotdigitalgroup_Mailcheck.xml                   app/etc/modules/Dotdigitalgroup_Mailcheck.xml
 skin/frontend/base/default/js/mailcheck/                skin/frontend/base/default/js/mailcheck/
+shell/ddg.php                                           shell/ddg.php

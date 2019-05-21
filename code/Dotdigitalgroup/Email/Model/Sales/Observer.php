@@ -16,16 +16,20 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
         $order                  = $observer->getEvent()->getOrder();
         $status                 = $order->getStatus();
         $storeId                = $order->getStoreId();
-        $appEmulation           = Mage::getSingleton('core/app_emulation');
-        $initialEnvironmentInfo = $appEmulation->startEnvironmentEmulation(
-            $storeId
-        );
+
         try {
-            $store         = Mage::app()->getStore($storeId);
+            $saveRequired  = false;
+            $store         = $order->getStore();
+            if (!$store->getWebsite()->getConfig(
+                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED
+            )
+            ) {
+                return $this;
+            }
             $storeName     = $store->getName();
             $websiteId     = $store->getWebsiteId();
             $customerEmail = $order->getCustomerEmail();
-            // start app emulation
+
             $emailOrder = Mage::getModel('ddg_automation/order')->loadByOrderId(
                 $order->getEntityId(), $order->getQuoteId()
             );
@@ -36,19 +40,8 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
             if ($emailOrder->getEmailImported()
                 != Dotdigitalgroup_Email_Model_Contact::EMAIL_CONTACT_IMPORTED
             ) {
+                $saveRequired  = true;
                 $emailOrder->setEmailImported(null);
-            }
-
-            //if api is not enabled
-            if (!$store->getWebsite()->getConfig(
-                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED
-            )
-            ) {
-                $appEmulation->stopEnvironmentEmulation(
-                    $initialEnvironmentInfo
-                );
-
-                return $this;
             }
 
             // check for order status change
@@ -59,15 +52,16 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
                 if ($emailOrder->getEmailImported()
                     == Dotdigitalgroup_Email_Model_Contact::EMAIL_CONTACT_IMPORTED
                 ) {
+                    $saveRequired  = true;
                     $emailOrder->setModified(
                         Dotdigitalgroup_Email_Model_Contact::EMAIL_CONTACT_IMPORTED
                     );
                 }
             }
 
-            // set back the current store
-            $appEmulation->stopEnvironmentEmulation($initialEnvironmentInfo);
-            $emailOrder->save();
+            if ($saveRequired) {
+                $emailOrder->save();
+            }
             //@codingStandardsIgnoreStart
             //Status check automation enrolment
             $configStatusAutomationMap = unserialize(
@@ -101,12 +95,9 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
             //@codingStandardsIgnoreEnd
         } catch (Exception $e) {
             Mage::logException($e);
-            $appEmulation->stopEnvironmentEmulation($initialEnvironmentInfo);
         }
-
         return $this;
     }
-
 
     /**
      * Create new order event.

@@ -534,7 +534,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         if ($websiteId == 0) {
             $scope = 'default';
         } else {
-            $scope = 'website';
+            $scope = 'websites';
         }
 
         $config = Mage::getModel('core/config');

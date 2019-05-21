@@ -83,4 +83,60 @@ class Dotdigitalgroup_Email_Model_Resource_Order
             )->where("st.subscriber_status = ?", Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED);
         return $collection;
     }
+
+    /**
+     * @param int $batchSize
+     */
+    public function populateEmailOrderTable($batchSize)
+    {
+        $orderCollection = Mage::getResourceModel('sales/order_collection')
+            ->addAttributeToSelect('entity_id')
+            ->setPageSize(1);
+        $orderCollection->getSelect()->order('entity_id ASC');
+        $minId = $orderCollection->getSize() ? $orderCollection->getFirstItem()->getId() : 0;
+
+        if ($minId) {
+            $orderCollection = Mage::getResourceModel('sales/order_collection')
+                ->addAttributeToSelect('entity_id')
+                ->setPageSize(1);
+            $orderCollection->getSelect()->order('entity_id DESC');
+            $maxId = $orderCollection->getFirstItem()->getId();
+
+            $batchMinId = $minId;
+            $batchMaxId = $minId + $batchSize;
+            $moreRecords = true;
+
+            while ($moreRecords) {
+                $select = $this->_getWriteAdapter()->select()
+                    ->from(
+                        array('order' => $this->getTable('sales/order')),
+                        array(
+                            'order_id' => 'entity_id',
+                            'quote_id',
+                            'store_id',
+                            'created_at',
+                            'updated_at',
+                            'order_status' => 'status'
+                        )
+                    )
+                    ->where('order.entity_id >= ?', $batchMinId)
+                    ->where('order.entity_id < ?', $batchMaxId);
+                $insertArray = array(
+                    'order_id',
+                    'quote_id',
+                    'store_id',
+                    'created_at',
+                    'updated_at',
+                    'order_status'
+                );
+
+                $sqlQuery = $select->insertFromSelect($this->getMainTable(), $insertArray, false);
+                $this->_getWriteAdapter()->query($sqlQuery);
+
+                $moreRecords = $maxId >= $batchMaxId;
+                $batchMinId = $batchMinId + $batchSize;
+                $batchMaxId = $batchMaxId + $batchSize;
+            }
+        }
+    }
 }
