@@ -168,13 +168,12 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
      * @param int $limit
      * @return Mage_Eav_Model_Entity_Collection_Abstract
      */
-    public function getSubscribersWithCustomerIdToImport($website, $limit = 1000)
+    public function getSubscribersWithCustomerIdToImport($storeId, $limit = 1000)
     {
-        $storeIds = $website->getStoreIds();
         $collection = $this->getCollection()
             ->addFieldToFilter('is_subscriber', array('notnull' => true))
             ->addFieldToFilter('subscriber_imported', array('null' => true))
-            ->addFieldToFilter('store_id', array('in' => $storeIds))
+            ->addFieldToFilter('store_id', $storeId)
             ->addFieldToFilter('customer_id', array('neq' => 0));
 
         //@codingStandardsIgnoreStart
@@ -184,17 +183,16 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
     }
 
     /**
-     * @param $website
+     * @param int $storeId
      * @param int $limit
      * @return Mage_Eav_Model_Entity_Collection_Abstract
      */
-    public function getGuestSubscribersToImport($website, $limit = 1000)
+    public function getGuestSubscribersToImport($storeId, $limit = 1000)
     {
-        $storeIds = $website->getStoreIds();
         $collection = $this->getCollection()
             ->addFieldToFilter('is_subscriber', array('notnull' => true))
             ->addFieldToFilter('subscriber_imported', array('null' => true))
-            ->addFieldToFilter('store_id', array('in' => $storeIds))
+            ->addFieldToFilter('store_id', $storeId)
             ->addFieldToFilter('customer_id', array('eq' => 0));
 
         //@codingStandardsIgnoreStart

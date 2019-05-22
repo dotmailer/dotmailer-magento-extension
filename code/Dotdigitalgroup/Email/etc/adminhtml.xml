@@ -146,6 +146,9 @@
                                     <email_connector_automation translate="title">
                                         <title>Email Automation Status</title>
                                     </email_connector_automation>
+                                    <email_connector_abandoned translate="title">
+                                        <title>Email Automation Abandoned Carts</title>
+                                    </email_connector_abandoned>
                                 </children>
                             </reports>
                             <email_configuration translate="title">

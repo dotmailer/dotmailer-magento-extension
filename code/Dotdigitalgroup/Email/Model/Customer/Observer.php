@@ -258,14 +258,10 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
      */
     public function wishlistSaveAfter(Varien_Event_Observer $observer)
     {
-        if ($observer->getEvent()->getObject() instanceof
-            Mage_Wishlist_Model_Wishlist
-        ) {
-            $wishlist = $observer->getEvent()->getObject()->getData();
-            if (is_array($wishlist) && isset($wishlist['customer_id'])) {
-                //save wishlist info in the table
-                $this->_registerWishlist($wishlist);
-            }
+        $wishlist = $observer->getEvent()->getObject()->getData();
+        if (is_array($wishlist) && isset($wishlist['customer_id'])) {
+            //save wishlist info in the table
+            $this->_registerWishlist($wishlist);
         }
     }
 

@@ -3,11 +3,6 @@
 class Dotdigitalgroup_Email_Model_Newsletter_Observer
 {
     /**
-     * @var bool
-     */
-    private $isSubscriberNew;
-
-    /**
      * Change the subscribsion for an contact.
      * Add new subscribers to an automation.
      *
@@ -19,7 +14,6 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
     {
         /** @var Mage_Newsletter_Model_Subscriber $subscriber */
         $subscriber = $observer->getEvent()->getSubscriber();
-        $this->isSubscriberNew = $subscriber->isObjectNew();
         $email = $subscriber->getEmail();
         $storeId = $subscriber->getStoreId();
         $subscriberStatus = $subscriber->getSubscriberStatus();
@@ -44,7 +38,8 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
                 //update subscriber status and reset the import
                 $contactEmail->setSubscriberStatus($subscriberStatus)
                     ->setSubscriberImported(null)
-                    ->setIsSubscriber('1');
+                    ->setIsSubscriber('1')
+                    ->setLastSubscribedAt(Mage::getModel('core/date')->gmtDate());
 
                 //Subscriber subscribed when it is suppressed in table then re-subscribe
                 if ($contactEmail->getSuppressed()) {
@@ -79,7 +74,8 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
                 }
 
                 $contactEmail->setIsSubscriber(null)
-                    ->setSubscriberStatus(Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED);
+                    ->setSubscriberStatus(Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED)
+                    ->setLastSubscribedAt(null);
                 //save contact
                 $contactEmail->save();
 
@@ -106,7 +102,9 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
             Mage::register($email . '_subscriber_save', $email);
 
             //add subscriber to automation
-            $this->_addSubscriberToAutomation($email, $subscriber, $websiteId);
+            if ($subscriber->isObjectNew() || $this->hasStatusChangedToSubscribed($subscriber)) {
+                $this->_addSubscriberToAutomation($email, $subscriber, $websiteId);
+            }
 
         } catch (Exception $e) {
             Mage::logException($e);
@@ -196,24 +194,35 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
         }
 
         try {
-            //check the subscriber alredy exists
-            if ($this->isSubscriberNew) {
-                //save subscriber to the queue
-                $automation = Mage::getModel('ddg_automation/automation');
-                $automation->setEmail($email)
-                    ->setAutomationType(Dotdigitalgroup_Email_Model_Automation::AUTOMATION_TYPE_NEW_SUBSCRIBER)
-                    ->setEnrolmentStatus(Dotdigitalgroup_Email_Model_Automation::AUTOMATION_STATUS_PENDING)
-                    ->setTypeId($subscriber->getId())
-                    ->setWebsiteId($websiteId)
-                    ->setStoreName($store->getName())
-                    ->setProgramId($programId);
-                $automation->save();
-            }
+            //save subscriber to the queue
+            $automation = Mage::getModel('ddg_automation/automation');
+            $automation->setEmail($email)
+                ->setAutomationType(Dotdigitalgroup_Email_Model_Automation::AUTOMATION_TYPE_NEW_SUBSCRIBER)
+                ->setEnrolmentStatus(Dotdigitalgroup_Email_Model_Automation::AUTOMATION_STATUS_PENDING)
+                ->setTypeId($subscriber->getId())
+                ->setWebsiteId($websiteId)
+                ->setStoreName($store->getName())
+                ->setProgramId($programId);
+            $automation->save();
         } catch (Exception $e) {
             Mage::logException($e);
         }
     }
 
+    /**
+     * @param Mage_Newsletter_Model_Subscriber $unsavedSubscriber
+     * @return bool
+     */
+    private function hasStatusChangedToSubscribed($unsavedSubscriber)
+    {
+        $savedSubscriber = Mage::getModel('newsletter/subscriber')->load($unsavedSubscriber->getId());
+        $originalStatus = $savedSubscriber->getSubscriberStatus();
+        $newStatus = $unsavedSubscriber->getSubscriberStatus();
+
+        return
+            $originalStatus !== Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED &&
+            $newStatus === Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED;
+    }
     /**
      * @param Varien_Event_Observer $observer
      * @return $this

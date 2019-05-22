@@ -331,7 +331,6 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
      */
     public function runordersyncAction()
     {
-
         $result = Mage::getModel('ddg_automation/cron')->orderSync();
         if ($result['message'])
             Mage::getSingleton('adminhtml/session')->addSuccess($result['message']);
@@ -344,11 +343,10 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
      */
     public function runreviewsyncAction()
     {
-
         $result = Mage::getModel('ddg_automation/review')->sync();
-        if ($result['message'])
+        if ($result['message']) {
             Mage::getSingleton('adminhtml/session')->addSuccess($result['message']);
-
+        }
         $this->_redirectReferer();
     }
 
@@ -357,7 +355,6 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
      */
     public function runwishlistsyncAction()
     {
-
         $result = Mage::getModel('ddg_automation/wishlist')->sync();
         if ($result['message'])
             Mage::getSingleton('adminhtml/session')->addSuccess($result['message']);

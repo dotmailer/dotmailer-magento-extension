@@ -68,4 +68,65 @@ class Dotdigitalgroup_Email_Model_Resource_Review
             Mage::logException($e);
         }
     }
+
+    /**
+     * @param int $batchSize
+     * @return void
+     */
+    public function populateEmailReviewTable($batchSize)
+    {
+        if (!Mage::helper('ddg/modulechecker')->isReviewModuleAvailable()) {
+            return null;
+        }
+        $reviewCollection = Mage::getResourceModel('review/review_collection')
+            ->addFieldToSelect('review_id')
+            ->setPageSize(1);
+        $reviewCollection->getSelect()->order('review_id ASC');
+        $minId = $reviewCollection->getSize() ? $reviewCollection->getFirstItem()->getId() : 0;
+
+        if ($minId) {
+            $reviewCollection = Mage::getResourceModel('review/review_collection')
+                ->addFieldToSelect('review_id')
+                ->setPageSize(1);
+            $reviewCollection->getSelect()->order('review_id DESC');
+            $maxId = $reviewCollection->getFirstItem()->getId();
+
+            $batchMinId = $minId;
+            $batchMaxId = $minId + $batchSize;
+            $moreRecords = true;
+
+            while ($moreRecords) {
+                $inCond = $this->_getWriteAdapter()->prepareSqlCondition(
+                    'review_detail.customer_id', array('notnull' => true)
+                );
+                $select = $this->_getWriteAdapter()->select()
+                    ->from(
+                        array('review' => $this->getTable('review/review')),
+                        array(
+                            'review_id' => 'review.review_id',
+                            'created_at' => 'review.created_at'
+                        )
+                    )
+                    ->joinLeft(
+                        array('review_detail' => $this->getTable('review/review_detail')),
+                        "review_detail.review_id = review.review_id",
+                        array(
+                            'store_id' => 'review_detail.store_id',
+                            'customer_id' => 'review_detail.customer_id'
+                        )
+                    )
+                    ->where($inCond)
+                    ->where('review.review_id >= ?', $batchMinId)
+                    ->where('review.review_id < ?', $batchMaxId);
+
+                $insertArray = array('review_id', 'created_at', 'store_id', 'customer_id');
+                $sqlQuery = $select->insertFromSelect($this->getMainTable(), $insertArray, false);
+                $this->_getWriteAdapter()->query($sqlQuery);
+
+                $moreRecords = $maxId >= $batchMaxId;
+                $batchMinId = $batchMinId + $batchSize;
+                $batchMaxId = $batchMaxId + $batchSize;
+            }
+        }
+    }
 }

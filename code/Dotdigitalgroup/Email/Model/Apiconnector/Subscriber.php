@@ -13,16 +13,6 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Subscriber extends Dotdigitalgrou
     }
 
     /**
-     * Set key value data.
-     *
-     * @param $data
-     */
-    public function setData($data)
-    {
-        $this->objectData[] = $data;
-    }
-
-    /**
      * Set subscriber data with sales.
      *
      * @param Mage_Newsletter_Model_Subscriber $subscriber

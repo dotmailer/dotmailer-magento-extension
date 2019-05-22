@@ -337,6 +337,26 @@ class Dotdigitalgroup_Email_Model_Resource_Contact extends Mage_Core_Model_Resou
     }
 
     /**
+     * Process unsubscribes from EC, checking whether the user has resubscribed more recently in Magento
+     *
+     * @param array $unsubscribes
+     */
+    public function unsubscribeWithResubscriptionCheck(array $unsubscribes)
+    {
+        $contacts = Mage::getModel('ddg_automation/contact')
+            ->getCollection()
+            ->addFieldToSelect([
+                'email',
+                'last_subscribed_at',
+            ])
+            ->addFieldToFilter('email', ['in' => array_column($unsubscribes, 'email')])
+            ->getData();
+
+        // get emails which either have no last_subscribed_at date, or were more recently removed in EC
+        $this->unsubscribe($this->filterRecentlyResubscribedEmails($contacts, $unsubscribes));
+    }
+
+    /**
      * Insert multiple contacts to table.
      *
      * @param $guests
@@ -414,5 +434,181 @@ class Dotdigitalgroup_Email_Model_Resource_Contact extends Mage_Core_Model_Resou
             $data = array('is_guest' => 1);
             $write->update($this->getMainTable(), $data, $where);
         }
+    }
+
+    /**
+     * Process unsubscribes from EC, checking whether the user has resubscribed more recently in Magento
+     *
+     * @param array $localContacts
+     * @param array $unsubscribes
+     * @return array
+     */
+    private function filterRecentlyResubscribedEmails(array $localContacts, array $unsubscribes)
+    {
+        // get emails which either have no last_subscribed_at date, or were more recently removed in EC
+        return array_filter(array_map(function ($email) use ($localContacts) {
+            // get corresponding local contact
+            $contactKey = array_search($email['email'], array_column($localContacts, 'email'));
+
+            // if there is no local contact, or last subscribed value, continue with unsubscribe
+            if ($contactKey === false || is_null($localContacts[$contactKey]['last_subscribed_at'])) {
+                return $email['email'];
+            }
+
+            // convert both timestamps to DateTime
+            $lastSubscribedMagento = new \DateTime($localContacts[$contactKey]['last_subscribed_at'], new \DateTimeZone('UTC'));
+            $removedAtEc = new \DateTime($email['removed_at'], new \DateTimeZone('UTC'));
+
+            // user recently resubscribed in Magento, do not unsubscribe them
+            if ($lastSubscribedMagento > $removedAtEc) {
+                return null;
+            }
+            return $email['email'];
+        }, $unsubscribes));
+    }
+
+    /**
+     * @param int $batchSize
+     * @return $this
+     */
+    public function populateEmailContactTable($batchSize)
+    {
+        $customerCollection = Mage::getResourceModel('customer/customer_collection')
+            ->addAttributeToSelect('entity_id')
+            ->setPageSize(1);
+        $customerCollection->getSelect()->order('entity_id ASC');
+        $minId = $customerCollection->getSize() ? $customerCollection->getFirstItem()->getId() : 0;
+
+        if ($minId) {
+            $customerCollection = Mage::getResourceModel('customer/customer_collection')
+                ->addAttributeToSelect('entity_id')
+                ->setPageSize(1);
+            $customerCollection->getSelect()->order('entity_id DESC');
+            $maxId = $customerCollection->getFirstItem()->getId();
+
+            $batchMinId = $minId;
+            $batchMaxId = $minId + $batchSize;
+            $moreRecords = true;
+
+            while ($moreRecords) {
+                $select = $this->_getWriteAdapter()->select()
+                    ->from(
+                        array('customer' => Mage::getSingleton('core/resource')->getTableName('customer_entity')),
+                        array('customer_id' => 'entity_id', 'email', 'website_id', 'store_id')
+                    )
+                    ->where('customer.entity_id >= ?', $batchMinId)
+                    ->where('customer.entity_id < ?', $batchMaxId);
+
+                $insertArray = array('customer_id', 'email', 'website_id', 'store_id');
+                $sqlQuery = $select->insertFromSelect($this->getMainTable(), $insertArray, false);
+                $this->_getWriteAdapter()->query($sqlQuery);
+
+                $moreRecords = $maxId >= $batchMaxId;
+                $batchMinId = $batchMinId + $batchSize;
+                $batchMaxId = $batchMaxId + $batchSize;
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @param int $batchSize
+     * @return $this
+     */
+    public function populateSubscribersThatAreNotCustomers($batchSize)
+    {
+        $subscriberCollection = Mage::getResourceModel('newsletter/subscriber_collection')
+            ->addFieldToSelect('subscriber_id')
+            ->setPageSize(1);
+        $subscriberCollection->getSelect()->order('subscriber_id ASC');
+        $minId = $subscriberCollection->getSize() ? $subscriberCollection->getFirstItem()->getId() : 0;
+
+        if ($minId) {
+            $subscriberCollection = Mage::getResourceModel('newsletter/subscriber_collection')
+                ->addFieldToSelect('subscriber_id')
+                ->setPageSize(1);
+            $subscriberCollection->getSelect()->order('subscriber_id DESC');
+            $maxId = $subscriberCollection->getFirstItem()->getId();
+
+            $batchMinId = $minId;
+            $batchMaxId = $minId + $batchSize;
+            $moreRecords = true;
+
+            while ($moreRecords) {
+                $select = $this->_getWriteAdapter()->select()
+                    ->from(
+                        array('subscriber' => $this->getTable('newsletter/subscriber')),
+                        array(
+                            'email' => 'subscriber_email',
+                            'col2' => new Zend_Db_Expr('1'),
+                            'col3' => new Zend_Db_Expr('1'),
+                            'store_id'
+                        )
+                    )
+                    ->where('customer_id =?', 0)
+                    ->where('subscriber_status =?', 1)
+                    ->where('subscriber.subscriber_id >= ?', $batchMinId)
+                    ->where('subscriber.subscriber_id < ?', $batchMaxId);
+
+                $insertArray = array('email', 'is_subscriber', 'subscriber_status', 'store_id');
+                $sqlQuery = $select->insertFromSelect($this->getMainTable(), $insertArray, false);
+                $this->_getWriteAdapter()->query($sqlQuery);
+
+                $moreRecords = $maxId >= $batchMaxId;
+                $batchMinId = $batchMinId + $batchSize;
+                $batchMaxId = $batchMaxId + $batchSize;
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function updateCustomersThatAreSubscribers()
+    {
+        $customerIds = Mage::getResourceModel('newsletter/subscriber_collection')
+            ->addFieldToFilter('subscriber_status', 1)
+            ->addFieldToFilter('customer_id', array('gt' => 0))
+            ->getColumnValues('customer_id');
+
+        if (!empty($customerIds)) {
+            $customerIds = implode(', ', $customerIds);
+            $this->_getWriteAdapter()->update(
+                $this->getMainTable(),
+                array(
+                    'is_subscriber' => new Zend_Db_Expr('1'),
+                    'subscriber_status' => new Zend_Db_Expr('1')
+                ),
+                "customer_id in ($customerIds)"
+            );
+        }
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function updateContactsWithSegmentsIdsForEnterprise()
+    {
+        if (Mage::helper('ddg')->isEnterprise()) {
+            //customer segment table
+            $segmentTable = $this->getTable('enterprise_customersegment/customer');
+            //add additional column with segment ids
+            $this->_getWriteAdapter()->addColumn(
+                $this->getMainTable(),
+                'segment_ids',
+                'mediumtext'
+            );
+
+            //update contact table with customer segment ids
+            $this->_getWriteAdapter()->query(
+                "update`{$this->getMainTable()}` c,(select customer_id, website_id,
+                group_concat(`segment_id` separator ',') as segmentids from `{$segmentTable}` group by customer_id) 
+                as s set c.segment_ids = segmentids, c.email_imported = null WHERE s.customer_id= c.customer_id and 
+                s.website_id = c.website_id"
+            );
+        }
+        return $this;
     }
 }

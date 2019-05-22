@@ -29,10 +29,14 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
     public function sync()
     {
         $response = array('success' => true, 'message' => '');
-
         $this->start = microtime(true);
+
+        /** @var Dotdigitalgroup_Email_Helper_Data $helper */
         $helper = Mage::helper('ddg');
-        foreach (Mage::app()->getWebsites(false) as $website) {
+
+        /** @var Mage_Core_Model_Store $store */
+        foreach (Mage::app()->getStores(false) as $store) {
+            $website = $store->getWebsite();
             $countSubscribers     = 0;
             $isEnabled      = $helper->isEnabled($website);
             $isMapped       = $helper->getSubscriberAddressBook($website);
@@ -40,6 +44,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
 
             //enabled and mapped
             if ($isEnabled && $isMapped && $isSyncEnabled) {
+                /** @var Dotdigitalgroup_Email_Model_Contact $emailContactModel */
                 $emailContactModel = Mage::getModel('ddg_automation/contact');
                 $limit = $website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_LIMIT);
                 $subscriberGuestWithSalesEmails = array();
@@ -49,7 +54,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
                 );
 
                 //guest subscribers emails
-                $subscribersWithGuestEmails = $emailContactModel->getGuestSubscribersToImport($website, $limit)
+                $subscribersWithGuestEmails = $emailContactModel->getGuestSubscribersToImport($store->getId(), $limit)
                     ->getColumnValues('email');
 
                 //Only sync subscriber with sales data if enabled
@@ -68,7 +73,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
                          * Subscriber that are guest and also exist in sales order table.
                          */
                         $countSubscribers += $this->exportSubscribersWithSales(
-                            $website,
+                            $store,
                             $emailContactModel->getContactWithEmails($subscriberGuestWithSalesEmails)
                         );
 
@@ -81,7 +86,8 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
                  * Merge guest emails with no orders and customer subscribers.
                  * customer_id
                  */
-                $subscribersCustomerEmails = $emailContactModel->getSubscribersWithCustomerIdToImport($website, $limit)
+                $subscribersCustomerEmails = $emailContactModel
+                    ->getSubscribersWithCustomerIdToImport($store->getId(), $limit)
                     ->getColumnValues('email');
                 $subscribersGuestNoSalesData = array_diff($subscribersWithGuestEmails, $subscriberGuestWithSalesEmails);
                 $subscriberCustomers = array_merge($subscribersCustomerEmails, $subscribersGuestNoSalesData);
@@ -91,7 +97,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
                  */
                 if (! empty($subscriberCustomers)) {
                     $countSubscribers += $this->exportSubscribers(
-                        $website,
+                        $store,
                         $emailContactModel->getContactWithEmails($subscriberCustomers)
                     );
 
@@ -101,7 +107,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
 
                 // found subscribers - show message
                 if ($countSubscribers) {
-                    $response['message'] .= '</br>' . $website->getName() . ', updated subscribers = ' .
+                    $response['message'] .= '</br>' . $store->getName() . ', updated subscribers = ' .
                         $countSubscribers;
                 }
             }
@@ -143,12 +149,13 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
     /**
      * Export subscribers
      *
-     * @param Mage_Core_Model_Website $website
+     * @param Mage_Core_Model_Store $store
      * @param $emailContacts
      * @return int
      */
-    protected function exportSubscribers(Mage_Core_Model_Website $website, $emailContacts)
+    protected function exportSubscribers(Mage_Core_Model_Store $store, $emailContacts)
     {
+        $website = $store->getWebsite();
         $countSubscribers = 0;
         $websiteId = $website->getId();
         $fileHelper = Mage::helper('ddg/file');
@@ -170,12 +177,17 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
         }
 
         //@codingStandardsIgnoreStart
-        $subscribersFilename = strtolower($website->getCode() . '_subscribers_' . date('d_m_Y_Hi') . '.csv');
+        $subscribersFilename = strtolower($store->getCode() . '_subscribers_' . date('d_m_Y_Hi') . '.csv');
         //@codingStandardsIgnoreEnd
 
         //get mapped storename
         $subscriberStorename = Mage::helper('ddg')->getMappedStoreName($website);
-        $headers = array('Email', 'EmailType', $subscriberStorename, 'OptInType');
+        $optInType = Mage::helper('ddg/config')->isOptInTypeDouble($store);
+        $headers = array('Email', 'EmailType', $subscriberStorename);
+        if ($optInType) {
+            $headers[] = 'OptInType';
+        }
+
         //contentinsight is enabled include additional headers
         $isConsentSubscriberEnabled = Mage::helper('ddg/config')
             ->isConsentSubscriberEnabled($websiteId);
@@ -190,11 +202,12 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
         foreach ($emailContacts as $contact) {
             try {
                 $email = $contact->getEmail();
-                $storeId = $this->getStoreIdForSubscriber($email, $subscribersData['items']);
-                $store = Mage::app()->getStore($storeId);
                 $storeName = $store->getName();
-                $optInType = Mage::helper('ddg/config')->getOptInType($store);
-                $outputData = array($email, 'Html', $storeName, $optInType);
+
+                $outputData = array($email, 'Html', $storeName);
+                if ($optInType) {
+                    $outputData[] = 'Double';
+                }
                 if ($isConsentSubscriberEnabled) {
                     $consentModel = Mage::getModel('ddg_automation/consent');
                     $consentResource->load($consentModel, $contact->getId(), 'email_contact_id');
@@ -228,19 +241,22 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
     }
 
     /**
-     * @param Mage_Core_Model_Website $website
+     * @param Mage_Core_Model_Store $store
      * @param $subscribers
      * @return int
      */
-    public function exportSubscribersWithSales(Mage_Core_Model_Website $website, $subscribers)
+    public function exportSubscribersWithSales(Mage_Core_Model_Store $store, $subscribers)
     {
+        $website = $store->getWebsite();
         $websiteId = $website->getId();
         if (empty($subscribers)) {
             return 0;
         }
         $countSubscribers = 0;
         $subscriberIds = $headers = $emailContactIdEmail =array();
+        /** @var Dotdigitalgroup_Email_Helper_Data $helper */
         $helper = Mage::helper('ddg');
+        /** @var Dotdigitalgroup_Email_Helper_File $fileHelper */
         $fileHelper = Mage::helper('ddg/file');
 
         foreach ($subscribers as $emailContact) {
@@ -248,7 +264,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
         }
 
         //@codingStandardsIgnoreStart
-        $subscribersFile = strtolower($website->getCode() . '_subscribers_with_sales_' . date('d_m_Y_Hi') . '.csv');
+        $subscribersFile = strtolower($store->getCode() . '_subscribers_with_sales_' . date('d_m_Y_Hi') . '.csv');
         //@codingStandardsIgnoreEnd
         $helper->log('Subscriber file with sales : ' . $subscribersFile);
 
@@ -262,9 +278,13 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
             return 0;
         }
         $mappedHash = $fileHelper->getWebsiteSalesDataFields($website);
-        $headers = array('Email', 'EmailType', 'OptInType');
+        $optInType = Mage::helper('ddg/config')->isOptInTypeDouble($store);
+        $headers = array('Email', 'EmailType');
+        if ($optInType) {
+            $headers[] = 'OptInType';
+        }
         $headers = array_merge($headers, $mappedHash);
-        //contentinsight is enabled include additional headers
+        //content insight is enabled include additional headers
         $isConsentSubscriberEnabled = Mage::helper('ddg/config')
             ->isConsentSubscriberEnabled($websiteId);
         if ($isConsentSubscriberEnabled) {
@@ -276,9 +296,13 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
 
         //subscriber data
         foreach ($collection as $contact) {
-            $store = Mage::app()->getStore($contact->getStoreId());
             $email = $contact->getEmail();
             $connectorSubscriber = Mage::getModel('ddg_automation/apiconnector_subscriber', $mappedHash);
+            $connectorSubscriber->setData($email);
+            $connectorSubscriber->setData('Html');
+            if ($optInType) {
+                $connectorSubscriber->setData('Double');
+            }
             $connectorSubscriber->setSubscriberData($contact);
             //count number of customers
             $index = array_search(
@@ -286,13 +310,12 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
                 $emailContactIdEmail
             );
 
-            $optInType = Mage::helper('ddg/config')->getOptInType($store);
             if ($index) {
                 $subscriberIds[] = $index;
             }
 
             // save csv file data
-            $outputData = array_merge(array($email, 'Html', $optInType), $connectorSubscriber->toCSVArray());
+            $outputData = $connectorSubscriber->toCSVArray();
 
             if ($isConsentSubscriberEnabled) {
                 $consentModel = Mage::getModel('ddg_automation/consent');
@@ -541,14 +564,22 @@ class Dotdigitalgroup_Email_Model_Newsletter_Subscriber
             // Contacts to un-subscribe
             foreach ($contacts as $apiContact) {
                 if (isset($apiContact->suppressedContact)) {
-                    $suppressedContact = $apiContact->suppressedContact;
-                    $suppressedEmails[] = $suppressedContact->email;
+                    $suppressedContactEmail = $apiContact->suppressedContact->email;
+                    if (!array_key_exists($suppressedContactEmail, $suppressedEmails)) {
+                        $suppressedEmails[$suppressedContactEmail] = [
+                            'email' => $apiContact->suppressedContact->email,
+                            'removed_at' => $apiContact->dateRemoved,
+                            // users suppressed in EC can be re-added without confirmation
+                            'suppressed_in_ec' => $apiContact->reason == 'Suppressed',
+                        ];
+                    }
                 }
             }
         }
+
         //Mark suppressed contacts
         if (! empty($suppressedEmails)) {
-            Mage::getResourceModel('ddg_automation/contact')->unsubscribe($suppressedEmails);
+            Mage::getResourceModel('ddg_automation/contact')->unsubscribeWithResubscriptionCheck(array_values($suppressedEmails));
         }
         return $result;
     }

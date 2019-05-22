@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Dotdigitalgroup_Email>
-            <version>6.4.14</version>
+            <version>6.4.15</version>
         </Dotdigitalgroup_Email>
     </modules>
     <frontend>
@@ -276,14 +276,14 @@
                     </ddg_review_save_after>
                 </observers>
             </review_save_after>
-            <model_save_after>
+            <wishlist_save_after>
                 <observers>
                     <ddg_wishlist_save_after>
                         <class>ddg_automation/customer_observer</class>
                         <method>wishlistSaveAfter</method>
                     </ddg_wishlist_save_after>
                 </observers>
-            </model_save_after>
+            </wishlist_save_after>
             <wishlist_item_save_after>
                 <observers>
                     <ddg_wishlist_item_save_after>
@@ -392,15 +392,6 @@
                     </ddg_add_column_expiration_date>
                 </observers>
             </core_block_abstract_to_html_before>
-            <controller_action_predispatch>
-                <observers>
-                    <ddg_feed>
-                        <type>singleton</type>
-                        <class>ddg_automation/adminhtml_observer</class>
-                        <method>updateFeed</method>
-                    </ddg_feed>
-                </observers>
-            </controller_action_predispatch>
             <catalog_product_attribute_update_after>
                 <observers>
                     <ddg_catalog_product_save_after>
@@ -449,6 +440,12 @@
     </admin>
     <crontab>
         <jobs>
+            <ddg_automation_update_feed>
+                <run><model>ddg_automation/cron::checkForUpgrade</model></run>
+                <schedule>
+                    <cron_expr>* 2 * * *</cron_expr>
+                </schedule>
+            </ddg_automation_update_feed>
             <ddg_automation_customer_subscriber_guest_sync>
                 <run><model>ddg_automation/cron::contactSync</model></run>
                 <schedule>
@@ -816,6 +813,10 @@
             <dotmailer_consent_customer_text>Default text</dotmailer_consent_customer_text>
         </consent>
         <connector_developer_settings>
+            <install_settings>
+                <skip_data_install>0</skip_data_install>
+                <batch_size>25000</batch_size>
+            </install_settings>
             <import_settings>
                 <memory_limit>0</memory_limit>
                 <batch_size>500</batch_size>
