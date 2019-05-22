@@ -34,6 +34,24 @@ You are welcome to contribute to Engagement Cloud for Magento! You can either:
 - Fix a bug: please fork this repo and submit the Pull Request to our [Develop branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/develop)
 Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 
+# V6.4.15
+
+##### Improvements
+
+- We've improved the handling of double opt-in statuses in customer and subscriber syncs.
+- We've made the re-subscription process more robust, ensuring that as statuses change in Magento and Engagement Cloud, subscribers are not accidentally unsubscribed.
+- We've moved our announcement feed checking tool into a cron script for efficiency.
+- To improve on boarding for larger stores, we've decoupled our installation routine. Our SQL tables can now be populated via a configurable command line script, after the module has been activated.
+- We've removed any dependency on Magento's Mage_Review module if review syncing is not active.
+- We now automatically mark as sent any campaigns that Engagement Cloud indicates are still "Processing" after 2 hours, in order to ensure subsequent campaigns are sent.  
+- We've made various performance enhancements by refining our usage of some observers.
+
+##### Bug Fixes
+
+- We've fixed an issue with incorrect scope when saving the Engagement Cloud API endpoint URL. [External contribution](https://github.com/dotmailer/dotmailer-magento-extension/pull/312)
+- We've repaired automation enrollments for guest subscribers when double opt-in is enabled in Magento.
+- We've made the menu item for Abandoned Carts visible to all users with access to Engagement Cloud configuration.
+
 # V6.4.14   
 
 ##### Bug Fixes
