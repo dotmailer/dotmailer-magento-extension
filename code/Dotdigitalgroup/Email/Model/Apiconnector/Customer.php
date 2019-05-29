@@ -129,6 +129,10 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function setReviewCollection()
     {
+        if(!Mage::helper('ddg/moduleChecker')->isReviewModuleAvailable()) {
+            return;
+        }
+
         $customerId = $this->object->getId();
         $collection  = Mage::getModel('review/review')->getCollection()
             ->addCustomerFilter($customerId)
@@ -136,15 +140,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
 
         $this->reviewCollection = $collection;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getReviewCount()
-    {
-        return $this->reviewCollection->getSize();
-    }
-
+    
     /**
      * @return string
      */

@@ -75,7 +75,7 @@ class Dotdigitalgroup_Email_Model_Resource_Review
      */
     public function populateEmailReviewTable($batchSize)
     {
-        if (!Mage::helper('ddg/modulechecker')->isReviewModuleAvailable()) {
+        if (!Mage::helper('ddg/moduleChecker')->isReviewModuleAvailable()) {
             return null;
         }
         $reviewCollection = Mage::getResourceModel('review/review_collection')

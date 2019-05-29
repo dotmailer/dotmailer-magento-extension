@@ -52,7 +52,7 @@ class Dotdigitalgroup_Email_Model_Review extends Mage_Core_Model_Abstract
      */
     public function sync()
     {
-        if(!Mage::helper('ddg/modulechecker')->isReviewModuleAvailable()) {
+        if(!Mage::helper('ddg/moduleChecker')->isReviewModuleAvailable()) {
             return array('success' => false, 'message' => 'Review is disabled');
         }
 
