@@ -1,7 +1,7 @@
 Engagement Cloud for Magento
 ==========================================
 
-Full support documentation and setup guides available here - https://support.dotmailer.com/hc/en-gb/categories/202610368-Magento
+Full support documentation and setup guides available here - https://support.dotdigital.com/hc/en-gb/sections/360000722920-Engagement-Cloud-for-Magento
 
 This module uses modman
 
@@ -16,6 +16,14 @@ modman clone https://github.com/dotmailer/dotmailer-magento-extension.git
 
 Don't forget to enable symlinks in:
 `System->Configuration->Advanced->Developer->Template Settings`
+
+Note: Following patch SUPEE-9767 (https://magento.com/security/patches/supee-9767) enabling symlinks via the admin panel is no longer supported. This can be done by running the following SQL query:
+
+```
+INSERT INTO `core_config_data` (`scope`, `scope_id`, `path`, `value`)
+	VALUES ('default', '0', 'dev/template/allow_symlink', '1')
+	ON DUPLICATE KEY UPDATE `value` = '1'
+```
 
 Facts
 -----
