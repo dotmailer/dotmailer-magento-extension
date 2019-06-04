@@ -226,7 +226,6 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
                 $connectorProduct = Mage::getModel(
                     'ddg_automation/connector_product', $product
                 );
-
                 //register in queue with importer
                 $check = Mage::getModel('ddg_automation/importer')
                     ->registerQueue(

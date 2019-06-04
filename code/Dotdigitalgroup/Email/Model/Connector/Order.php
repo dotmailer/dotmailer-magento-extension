@@ -89,8 +89,11 @@ class Dotdigitalgroup_Email_Model_Connector_Order
      */
     public $order_status;
 
+    /**
+     * @var string
+     */
     protected $_attributeSet;
-
+    
     /**
      * set the order information
      *
@@ -104,13 +107,17 @@ class Dotdigitalgroup_Email_Model_Connector_Order
         $this->store_name = $orderData->getStoreName(2);
 
         $created_at = new Zend_Date(
-            $orderData->getCreatedAt(), Zend_Date::ISO_8601
+            $orderData->getCreatedAt(),
+            Zend_Date::ISO_8601
         );
 
         $this->purchase_date   = $created_at->toString(Zend_Date::ISO_8601);
         $this->delivery_method = $orderData->getShippingDescription();
         $this->delivery_total = (float)number_format(
-            $orderData->getShippingAmount(), 2, '.', ''
+            $orderData->getShippingAmount(),
+            2,
+            '.',
+            ''
         );
         $this->currency        = $orderData->getStoreCurrencyCode();
 
@@ -119,10 +126,10 @@ class Dotdigitalgroup_Email_Model_Connector_Order
          * and payment method instance exist in magento
          */
         $payment = $orderData->getPayment();
-        if($payment) {
-            if($payment->getMethod()) {
+        if ($payment) {
+            if ($payment->getMethod()) {
                 $instance = Mage::helper('payment')->getMethodInstance($payment->getMethod());
-                if($instance) {
+                if ($instance) {
                     $this->payment = $payment->getMethodInstance()->getTitle();
                 }
             }
@@ -140,10 +147,16 @@ class Dotdigitalgroup_Email_Model_Connector_Order
         $this->_setOrderItems($orderData);
         //sales data
         $this->order_subtotal   = (float)number_format(
-            $orderData->getData('subtotal'), 2, '.', ''
+            $orderData->getData('subtotal'),
+            2,
+            '.',
+            ''
         );
         $this->discount_ammount = (float)number_format(
-            $orderData->getData('discount_amount'), 2, '.', ''
+            $orderData->getData('discount_amount'),
+            2,
+            '.',
+            ''
         );
         $orderTotal             = abs(
             $orderData->getData('grand_total') - $orderData->getTotalRefunded()
@@ -157,16 +170,17 @@ class Dotdigitalgroup_Email_Model_Connector_Order
      */
     protected function _setShippingData($orderData)
     {
-
         if ($orderData->getShippingAddress()) {
             $shippingData = $orderData->getShippingAddress()->getData();
 
             $this->delivery_address = array(
                 'delivery_address_1' => $this->_getStreet(
-                    $shippingData['street'], 1
+                    $shippingData['street'],
+                    1
                 ),
                 'delivery_address_2' => $this->_getStreet(
-                    $shippingData['street'], 2
+                    $shippingData['street'],
+                    2
                 ),
                 'delivery_city'      => $shippingData['city'],
                 'delivery_region'    => $shippingData['region'],
@@ -185,10 +199,12 @@ class Dotdigitalgroup_Email_Model_Connector_Order
             $billingData           = $orderData->getBillingAddress()->getData();
             $this->billing_address = array(
                 'billing_address_1' => $this->_getStreet(
-                    $billingData['street'], 1
+                    $billingData['street'],
+                    1
                 ),
                 'billing_address_2' => $this->_getStreet(
-                    $billingData['street'], 2
+                    $billingData['street'],
+                    2
                 ),
                 'billing_city'      => $billingData['city'],
                 'billing_region'    => $billingData['region'],
@@ -203,7 +219,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
      */
     protected function _setOrderCustomAttributes($orderData)
     {
-    	$this->custom = array();
+        $this->custom = array();
 
         $helper           = Mage::helper('ddg');
         $website          = Mage::app()->getStore($orderData->getStore())
@@ -219,7 +235,8 @@ class Dotdigitalgroup_Email_Model_Connector_Order
                 if (isset($fields[$customAttribute])) {
                     $field = $fields[$customAttribute];
                     $value = $this->_getCustomAttributeValue(
-                        $field, $orderData
+                        $field,
+                        $orderData
                     );
                     if ($value) {
                         $this->_assignCustom($field, $value);
@@ -261,7 +278,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
         $propreties = array_diff_key(
             get_object_vars($this),
             array_flip(array(
-                '_attributeSet'
+                '_attributeSet',
             ))
         );
 
@@ -288,7 +305,10 @@ class Dotdigitalgroup_Email_Model_Connector_Order
 
                 case 'decimal':
                     $value = (float)number_format(
-                        $orderData->$function(), 2, '.', ''
+                        $orderData->$function(),
+                        2,
+                        '.',
+                        ''
                     );
                     break;
 
@@ -296,7 +316,8 @@ class Dotdigitalgroup_Email_Model_Connector_Order
                 case 'datetime':
                 case 'date':
                     $date  = new Zend_Date(
-                        $orderData->$function(), Zend_Date::ISO_8601
+                        $orderData->$function(),
+                        Zend_Date::ISO_8601
                     );
                     $value = $date->toString(Zend_Date::ISO_8601);
                     break;
@@ -320,43 +341,6 @@ class Dotdigitalgroup_Email_Model_Connector_Order
     protected function _assignCustom($field, $value)
     {
         $this->custom[$field['COLUMN_NAME']] = $value;
-    }
-
-    /**
-     * Get attributes from attribute set.
-     *
-     * @param $attributeSetId
-     *
-     * @return array
-     */
-    protected function _getAttributesArray($attributeSetId)
-    {
-        $result     = array();
-        $attributes = Mage::getResourceModel('catalog/product_attribute_collection')
-            ->setAttributeSetFilter($attributeSetId)
-            ->getItems();
-
-        foreach ($attributes as $attribute) {
-            $result[] = $attribute->getAttributeCode();
-        }
-
-        return $result;
-    }
-
-    /**
-     *  Check string length and limit to 250.
-     *
-     * @param $value
-     *
-     * @return string
-     */
-    protected function _limitLength($value)
-    {
-        if (strlen($value) > 250) {
-            $value = substr($value, 0, 250);
-        }
-
-        return $value;
     }
 
     /**
@@ -385,11 +369,14 @@ class Dotdigitalgroup_Email_Model_Connector_Order
         foreach ($orderItemOptions as $orderItemOption) {
             if (array_key_exists('value', $orderItemOption)
                 && array_key_exists(
-                    'label', $orderItemOption
+                    'label',
+                    $orderItemOption
                 )
             ) {
                 $label             = str_replace(
-                    ' ', '-', $orderItemOption['label']
+                    ' ',
+                    '-',
+                    $orderItemOption['label']
                 );
                 $options[][$label] = $orderItemOption['value'];
             }
@@ -470,6 +457,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
             }
 
             $product = $productItem->getProduct();
+            $product_attributes = null;
 
             if ($product) {
                 // category names
@@ -480,65 +468,19 @@ class Dotdigitalgroup_Email_Model_Connector_Order
                     $categories           = array();
                     $categories[]         = $cat->getName();
                     $productCat[]['Name'] = substr(
-                        implode(', ', $categories), 0, 244
+                        implode(', ', $categories),
+                        0,
+                        244
                     );
                 }
-
-                $attributes = array();
                 //selected attributes from config
                 $configAttributes = Mage::helper('ddg')->getWebsiteConfig(
                     Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_ORDER_PRODUCT_ATTRIBUTES,
                     $orderData->getStore()->getWebsite()
                 );
                 if ($configAttributes) {
-                    $configAttributes = explode(',', $configAttributes);
-                    //attributes from attribute set
-                    $attributesFromAttributeSet = $this->_getAttributesArray(
-                        $product->getAttributeSetId()
-                    );
-
-                    foreach ($configAttributes as $attributeCode) {
-                        //if config attribute is in attribute set
-                        if (in_array(
-                            $attributeCode, $attributesFromAttributeSet
-                        )) {
-                            //attribute input type
-                            $inputType = $product->getResource()
-                                ->getAttribute($attributeCode)
-                                ->getFrontend()
-                                ->getInputType();
-
-                            //fetch attribute value from product depending on input type
-                            switch ($inputType) {
-                                case 'multiselect':
-                                case 'select':
-                                case 'dropdown':
-                                    $value = $product->getAttributeText(
-                                        $attributeCode
-                                    );
-                                    break;
-                                case 'date':
-                                    $date = new Zend_Date(
-                                        $product->getData($attributeCode), Zend_Date::ISO_8601
-                                    );
-                                    $value = $date->toString(Zend_Date::ISO_8601);
-                                    break;
-                                default:
-                                    $value = $product->getData($attributeCode);
-                                    break;
-                            }
-
-                            // check limit on text and assign value to array
-                            if (is_string($value)) {
-                                $attributes[][$attributeCode]
-                                    = $this->_limitLength($value);
-                            } elseif (is_array($value)) {
-                                $value = implode(', ', $value);
-                                $attributes[][$attributeCode]
-                                    = $this->_limitLength($value);
-                            }
-                        }
-                    }
+                    $attributor = Mage::getModel('ddg_automation/connector_productattributes');
+                    $product_attributes = $attributor->initializeCustomAttributes($configAttributes, $product);
                 }
 
                 $attributeSetName = $this->_getAttributeSetName($product);
@@ -546,14 +488,18 @@ class Dotdigitalgroup_Email_Model_Connector_Order
                     'name'           => $productItem->getName(),
                     'sku'            => $productItem->getSku(),
                     'qty'            => (int)number_format(
-                        $productItem->getData('qty_ordered'), 2
+                        $productItem->getData('qty_ordered'),
+                        2
                     ),
                     'price'          => (float)number_format(
-                        $productItem->getPrice(), 2, '.', ''
+                        $productItem->getPrice(),
+                        2,
+                        '.',
+                        ''
                     ),
                     'attribute-set'  => $attributeSetName,
                     'categories'     => $productCat,
-                    'attributes'     => $attributes,
+                    'product_attributes'     => $product_attributes,
                     'custom-options' => $customOptions
                 );
             } else {
@@ -562,14 +508,18 @@ class Dotdigitalgroup_Email_Model_Connector_Order
                     'name'           => $productItem->getName(),
                     'sku'            => $productItem->getSku(),
                     'qty'            => (int)number_format(
-                        $productItem->getData('qty_ordered'), 2
+                        $productItem->getData('qty_ordered'),
+                        2
                     ),
                     'price'          => (float)number_format(
-                        $productItem->getPrice(), 2, '.', ''
+                        $productItem->getPrice(),
+                        2,
+                        '.',
+                        ''
                     ),
                     'attribute-set'  => '',
                     'categories'     => array(),
-                    'attributes'     => array(),
+                    'product_attributes'     => $product_attributes,
                     'custom-options' => $customOptions
                 );
             }
