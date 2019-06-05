@@ -42,6 +42,18 @@ You are welcome to contribute to Engagement Cloud for Magento! You can either:
 - Fix a bug: please fork this repo and submit the Pull Request to our [Develop branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/develop)
 Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 
+# V6.4.16
+
+##### Improvements
+- We've improved the coverage of catalog sync by allowing selected custom attributes to be included in the synced data.
+- In catalog sync, we are now syncing scoped (store and website) values for products, instead of only the default-level values.
+- We resolved some code duplication in the dynamic content blocks.
+
+##### Bug Fixes
+
+- We are now cleaning any custom transactional data keys prior to import, removing invalid (non-alphanumeric) characters, but not skipping records as before.
+- The Magento core review module is now decoupled from our contact sync.
+
 # V6.4.15
 
 ##### Improvements
