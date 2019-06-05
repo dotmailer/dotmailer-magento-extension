@@ -365,6 +365,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
         }
 
         $options = array();
+        $helper = Mage::helper('ddg/keyvalidator');
 
         foreach ($orderItemOptions as $orderItemOption) {
             if (array_key_exists('value', $orderItemOption)
@@ -373,11 +374,8 @@ class Dotdigitalgroup_Email_Model_Connector_Order
                     $orderItemOption
                 )
             ) {
-                $label             = str_replace(
-                    ' ',
-                    '-',
-                    $orderItemOption['label']
-                );
+                $label = $helper->cleanLabel($orderItemOption['label'],'-',$orderItemOption['option_id']);
+
                 $options[][$label] = $orderItemOption['value'];
             }
         }
