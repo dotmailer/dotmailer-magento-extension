@@ -199,7 +199,6 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
             );
 
             foreach ($productCollection as $product) {
-                $product->setStoreId($storeId);
                 $connectorProduct    = Mage::getModel('ddg_automation/connector_product', $product);
                 $connectorProducts[] = $connectorProduct;
             }
@@ -224,11 +223,9 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
         $products = $this->_getProductsToExport($storeId, true);
         if ($products) {
             foreach ($products as $product) {
-                $product->setStoreId($storeId);
                 $connectorProduct = Mage::getModel(
                     'ddg_automation/connector_product', $product
                 );
-
                 //register in queue with importer
                 $check = Mage::getModel('ddg_automation/importer')
                     ->registerQueue(
@@ -285,7 +282,8 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
                 ->addAttributeToFilter('entity_id', array('in' => $productIds))
                 ->addCategoryIds()
                 ->addOptionsToResult()
-                ->addUrlRewrite();
+                ->addUrlRewrite()
+                ->setStoreId($store);
 
             //visibility filter
             if ($visibility = Mage::getStoreConfig(
