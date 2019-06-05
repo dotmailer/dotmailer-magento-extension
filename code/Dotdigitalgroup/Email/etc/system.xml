@@ -2622,14 +2622,14 @@
                             <comment><![CDATA[Select custom quote attributes that you want to import with your quote data. Select multiple by pressing Ctrl button while selecting.]]></comment>
                         </quote_custom_attributes>
                         <order_product_attributes translate="label" module="ddg">
-                            <label>Include Product Attributes In Syncs</label>
+                            <label>Product Attributes</label>
                             <frontend_type>multiselect</frontend_type>
                             <source_model>ddg_automation/adminhtml_source_sync_catalog_attributes</source_model>
                             <sort_order>180</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
-                            <comment><![CDATA[Selected product attribute(s) will be exported]]></comment>
+                            <comment><![CDATA[Selected product attribute(s) will be imported in order and catalog syncs.]]></comment>
                         </order_product_attributes>
                         <order_product_custom_options translate="label" module="ddg">
                             <label>Include Product Custom Options In Order Sync</label>
