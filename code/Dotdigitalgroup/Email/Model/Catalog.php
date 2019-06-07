@@ -199,7 +199,8 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
             );
 
             foreach ($productCollection as $product) {
-                $connectorProduct    = Mage::getModel('ddg_automation/connector_product', $product);
+                $connectorProduct    = Mage::getModel('ddg_automation/connector_product')
+                    ->setProduct($product, $storeId);
                 $connectorProducts[] = $connectorProduct;
             }
 

@@ -78,10 +78,17 @@ class Dotdigitalgroup_Email_Model_Connector_Product
     public $attributes;
 
     /**
-     * Dotdigitalgroup_Email_Model_Connector_Product constructor.
+     * Set the product data
+     *
      * @param Mage_Catalog_Model_Product $product
+     * @param string|int|null $storeId
+     *
+     * @return $this
      */
-    public function __construct(Mage_Catalog_Model_Product $product)
+    public function setProduct(
+        Mage_Catalog_Model_Product $product,
+        $storeId
+    )
     {
         $this->id           = $product->getId();
         $this->sku          = $product->getSku();
@@ -138,9 +145,11 @@ class Dotdigitalgroup_Email_Model_Connector_Product
         }
 
         //Custom Attributes
-        $this->_setCustomAttributes($product);
+        $this->_setCustomAttributes($product, $storeId);
+
+        return $this;
     }
-    
+
     /**
      * Exposes the class as an array of objects.
      *
@@ -307,11 +316,11 @@ class Dotdigitalgroup_Email_Model_Connector_Product
      * Initializes Custom Product Attributes to be imported via Catalog Sync
      * @param $product
      */
-    private function _setCustomAttributes($product)
+    private function _setCustomAttributes($product, $storeId)
     {
         $configAttributes = Mage::helper('ddg')->getWebsiteConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_ORDER_PRODUCT_ATTRIBUTES,
-            $product->getStore()->getWebsite()
+            Mage::app()->getStore($storeId)->getWebsiteId()
         );
         if ($configAttributes) {
             $attributor = Mage::getModel('ddg_automation/connector_productattributes');
