@@ -73,10 +73,22 @@ class Dotdigitalgroup_Email_Model_Connector_Product
     public $websites = array();
 
     /**
-     * Dotdigitalgroup_Email_Model_Connector_Product constructor.
-     * @param Mage_Catalog_Model_Product $product
+     * @var
      */
-    public function __construct(Mage_Catalog_Model_Product $product)
+    public $attributes;
+
+    /**
+     * Set the product data
+     *
+     * @param Mage_Catalog_Model_Product $product
+     * @param string|int|null $storeId
+     *
+     * @return $this
+     */
+    public function setProduct(
+        Mage_Catalog_Model_Product $product,
+        $storeId
+    )
     {
         $this->id           = $product->getId();
         $this->sku          = $product->getSku();
@@ -132,71 +144,10 @@ class Dotdigitalgroup_Email_Model_Connector_Product
             $count++;
         }
 
-        //bundle product options
-        if ($product->getTypeId()
-            == Mage_Catalog_Model_Product_Type::TYPE_BUNDLE
-        ) {
-            $optionCollection    = $product->getTypeInstance()
-                ->getOptionsCollection();
-            $selectionCollection = $product->getTypeInstance()
-                ->getSelectionsCollection(
-                    $product->getTypeInstance()->getOptionsIds()
-                );
-            $options = $optionCollection->appendSelections($selectionCollection);
-            foreach ($options as $option) {
-                $count      = 0;
-                $title      = str_replace(' ', '', $option->getDefaultTitle());
-                if (!$this->textIsValidForInsightDataKey($title)) {
-                    continue;
-                }
-                $selections = $option->getSelections();
-                $sOptions   = array();
-                foreach ($selections as $selection) {
-                    $sOptions[$count]['name']  = $selection->getName();
-                    $sOptions[$count]['sku']   = $selection->getSku();
-                    $sOptions[$count]['id']    = $selection->getProductId();
-                    $sOptions[$count]['price'] = (float)number_format(
-                        $selection->getPrice(),
-                        2,
-                        '.',
-                        ''
-                    );
-                    $count++;
-                }
+        //Custom Attributes
+        $this->_setCustomAttributes($product, $storeId);
 
-                $this->$title = $sOptions;
-            }
-        }
-
-        //configurable product options
-        if ($product->getTypeId()
-            == Mage_Catalog_Model_Product_Type::TYPE_CONFIGURABLE
-        ) {
-            $productAttributeOptions = $product->getTypeInstance(true)
-                ->getConfigurableAttributesAsArray($product);
-            foreach ($productAttributeOptions as $productAttribute) {
-                $count   = 0;
-                $label   = strtolower(
-                    str_replace(' ', '', $productAttribute['label'])
-                );
-                if (!$this->textIsValidForInsightDataKey($label)) {
-                    continue;
-                }
-                $options = array();
-                foreach ($productAttribute['values'] as $attribute) {
-                    $options[$count]['option'] = $attribute['default_label'];
-                    $options[$count]['price']  = (float)number_format(
-                        $attribute['pricing_value'],
-                        2,
-                        '.',
-                        ''
-                    );
-                    $count++;
-                }
-
-                $this->$label = $options;
-            }
-        }
+        return $this;
     }
 
     /**
@@ -359,5 +310,21 @@ class Dotdigitalgroup_Email_Model_Connector_Product
     private function textIsValidForInsightDataKey($text)
     {
         return preg_match('/^[a-zA-Z_\\\\-][a-zA-Z0-9_\\\\-]*$/', $text);
+    }
+
+    /**
+     * Initializes Custom Product Attributes to be imported via Catalog Sync
+     * @param $product
+     */
+    private function _setCustomAttributes($product, $storeId)
+    {
+        $configAttributes = Mage::helper('ddg')->getWebsiteConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_ORDER_PRODUCT_ATTRIBUTES,
+            Mage::app()->getStore($storeId)->getWebsiteId()
+        );
+        if ($configAttributes) {
+            $attributor = Mage::getModel('ddg_automation/connector_productattributes');
+            $this->attributes = $attributor->initializeCustomAttributes($configAttributes,$product);
+        }
     }
 }
