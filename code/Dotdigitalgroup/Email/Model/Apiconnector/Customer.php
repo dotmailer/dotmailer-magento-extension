@@ -140,7 +140,16 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
 
         $this->reviewCollection = $collection;
     }
-    
+
+    /**
+     * @return int
+     */
+
+    public function getReviewCount()
+    {
+        return $this->reviewCollection->getSize();
+    }
+
     /**
      * @return string
      */
