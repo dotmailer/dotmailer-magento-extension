@@ -102,7 +102,12 @@ class Dotdigitalgroup_Email_Model_Connector_Product
 
         $this->getMinPrices($product);
 
-        $this->url          = $product->getProductUrl();
+        $this->url          = Mage::getSingleton('ddg_automation/catalog_urlfinder')
+            ->fetchFor(
+                $product,
+                $storeId
+            );
+
         $this->imagePath    = Mage::getModel('catalog/product_media_config')
             ->getMediaUrl($product->getSmallImage());
         $stock              = Mage::getModel('cataloginventory/stock_item')

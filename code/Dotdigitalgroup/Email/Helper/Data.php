@@ -1281,15 +1281,18 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * @param $website
-     * @param $item
+     * @param Mage_Core_Model_Website $website
+     * @param Mage_Catalog_Model_Product $item
      *
      * @return string
      */
     public function getReviewProductUrl($website, $item)
     {
         if ($this->useProductPage($website)) {
-            $url = $item->getProductUrl();
+            $url = Mage::getSingleton('ddg_automation/catalog_urlfinder')
+                ->fetchFor(
+                    $item
+                );
         } else {
             $url = Mage::getUrl('review/product/list', array('id'=> $item->getId()));
         }
