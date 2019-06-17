@@ -32,7 +32,12 @@ class Dotdigitalgroup_Email_Model_Email_Queue extends Mage_Core_Model_Email_Queu
                     $mailTransport = new Zend_Mail_Transport_Sendmail("-f" . $parameters->getReturnPathEmail());
                     Zend_Mail::setDefaultTransport($mailTransport);
                 }
-                $storeId = Mage::app()->getStore()->getId();
+                if ($message->getEntityType() === 'order') {
+                    $storeId = $this->getStoreIdFromOrder($message->getEntityId());
+                } else {
+                    $storeId = Mage::app()->getStore()->getId();
+                }
+
                 $transport = $helper->getTransport($storeId);
                 $mailer = new Zend_Mail('utf-8');
                 foreach ($message->getRecipients() as $recipient) {
@@ -79,4 +84,15 @@ class Dotdigitalgroup_Email_Model_Email_Queue extends Mage_Core_Model_Email_Queu
         return $this;
     }
 
+    /**
+     * Returns Store Id from Order
+     * @param $orderId
+     * @return mixed
+     */
+    private function getStoreIdFromOrder($orderId)
+    {
+        /** @var  $model Mage_Sales_Model_Order */
+        $model = Mage::getModel('sales/order')->load($orderId);
+        return $model->getStoreId();
+    }
 }
