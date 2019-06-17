@@ -129,7 +129,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function setReviewCollection()
     {
-        if(!Mage::helper('ddg/moduleChecker')->isReviewModuleAvailable()) {
+        if (!Mage::helper('ddg/moduleChecker')->isReviewModuleAvailable()) {
             return;
         }
 
@@ -147,7 +147,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
 
     public function getReviewCount()
     {
-        return $this->reviewCollection->getSize();
+        return (empty($this->reviewCollection)) ? 0 : $this->reviewCollection->getSize();
     }
 
     /**
@@ -186,7 +186,8 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         $lastTransfers = $tbtReward->getTransfers()
             ->selectOnlyActive()
             ->addOrder(
-                'updated_at', Varien_Data_Collection::SORT_ORDER_DESC
+                'updated_at',
+                Varien_Data_Collection::SORT_ORDER_DESC
             );
 
         $spent = $earn = null;
@@ -196,7 +197,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
             // keep checking until earn is not null
             if ($earn == null && $transfer->getQuantity() > 0) {
                 $earn = $transfer->getEffectiveStart();
-            } else if ($spent == null && $transfer->getQuantity() < 0) {
+            } elseif ($spent == null && $transfer->getQuantity() < 0) {
                 // id transfer quantity is less then 0 then this is last points spent date.
                 // keep checking until spent is not null
                 $spent = $transfer->getEffectiveStart();
@@ -505,9 +506,11 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     public function getAverageOrderValue()
     {
         return (float)number_format(
-            $this->object->getAverageOrderValue(), 2, '.', ''
+            $this->object->getAverageOrderValue(),
+            2,
+            '.',
+            ''
         );
-
     }
 
     /**
@@ -518,7 +521,10 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     public function getTotalSpend()
     {
         return (float)number_format(
-            $this->object->getTotalSpend(), 2, '.', ''
+            $this->object->getTotalSpend(),
+            2,
+            '.',
+            ''
         );
     }
 
@@ -588,7 +594,10 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         }
 
         return (float)number_format(
-            $totalRefunded, 2, '.', ''
+            $totalRefunded,
+            2,
+            '.',
+            ''
         );
     }
 
@@ -687,7 +696,6 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     protected function _getCustomerGroup()
     {
-
         $groupId = $this->object->getGroupId();
         $group   = Mage::getModel('customer/group')->load($groupId);
 
@@ -779,7 +787,8 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
         if ($this->rewardExpiry != "") {
             //@codingStandardsIgnoreStart
             return Mage::getModel('core/date')->date(
-                'Y/m/d', strtotime($this->rewardExpiry)
+                'Y/m/d',
+                strtotime($this->rewardExpiry)
             );
             //@codingStandardsIgnoreEnd
         }
@@ -883,7 +892,9 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
 
             if ($expiredAt) {
                 $date = Mage::helper('core')->formatDate(
-                    $expiredAt, 'short', true
+                    $expiredAt,
+                    'short',
+                    true
                 );
             } else {
                 $date = '';
@@ -968,7 +979,9 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
             //for any valid date
             if ($lastUsed) {
                 return $date = Mage::helper('core')->formatDate(
-                    $lastUsed, 'short', true
+                    $lastUsed,
+                    'short',
+                    true
                 );
             }
         }

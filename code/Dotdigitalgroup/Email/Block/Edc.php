@@ -1,10 +1,10 @@
 <?php
 
-use Dotdigitalgroup_Email_Block_ProductImageTrait as ProductImageTrait;
+use Dotdigitalgroup_Email_Block_ProductMetadataTrait as ProductMetadataTrait;
 
 class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
 {
-    use ProductImageTrait;
+    use ProductMetadataTrait;
 
     /**
      * @var

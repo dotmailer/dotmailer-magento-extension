@@ -117,12 +117,6 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
                     $this->countProducts += count($products);
                 }
 
-                //using single api
-                $this->_exportInSingle(
-                    Mage_Catalog_Model_Abstract::DEFAULT_STORE_ID,
-                    'Catalog_Default',
-                    Mage_Catalog_Model_Abstract::DEFAULT_STORE_ID
-                );
                 //if to pull store values. will be pulled for each store
             } elseif ($scope == 2) {
                 /** @var $store Mage_Core_Model_Store */
@@ -141,13 +135,6 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
                             $store->getWebsiteId()
                         );
                     }
-
-                    //using single api
-                    $this->_exportInSingle(
-                        $store->getId(),
-                        'Catalog_' . $websiteCode . '_' . $storeCode,
-                        $store->getWebsiteId()
-                    );
                 }
 
                 //set imported
@@ -211,67 +198,26 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
     }
 
     /**
-     * export in single
-     *
-     * @param $storeId
-     * @param $collectionName
-     * @param $websiteId
-     */
-    protected function _exportInSingle($storeId, $collectionName, $websiteId)
-    {
-        $productIds = array();
-
-        $products = $this->_getProductsToExport($storeId, true);
-        if ($products) {
-            foreach ($products as $product) {
-                $connectorProduct = Mage::getModel(
-                    'ddg_automation/connector_product', $product
-                );
-                //register in queue with importer
-                $check = Mage::getModel('ddg_automation/importer')
-                    ->registerQueue(
-                        $collectionName,
-                        $connectorProduct,
-                        Dotdigitalgroup_Email_Model_Importer::MODE_SINGLE,
-                        $websiteId
-                    );
-
-                if ($check) {
-                    $productIds[] = $product->getId();
-                }
-            }
-
-            if (! empty($productIds)) {
-                $this->getResource()->setImported($productIds, true);
-                $this->countProducts += count($productIds);
-            }
-        }
-    }
-
-    /**
      * Get product collection.
      *
      * @param $store
-     * @param $modified
      *
      * @return bool|Mage_Catalog_Model_Resource_Product_Collection
      */
-    protected function _getProductsToExport($store, $modified = false)
+    protected function _getProductsToExport($store)
     {
         $limit               = Mage::getStoreConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT
         );
+        /** @var Dotdigitalgroup_Email_Model_Resource_Catalog_Collection $connectorCollection */
         $connectorCollection = $this->getCollection();
-
-        if ($modified) {
-            $connectorCollection->addFieldToFilter(
-                'modified', array('eq' => '1')
-            );
-        } else {
-            $connectorCollection->addFieldToFilter(
-                'imported', array('null' => 'true')
-            );
-        }
+        $connectorCollection->addFieldToFilter(
+            array('imported', 'modified'),
+            array(
+                array('null' => 'true'),
+                array('eq' => '1')
+            )
+        );
         $connectorCollection->getSelect()->limit($limit);
 
         if ($connectorCollection->getSize()) {

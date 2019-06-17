@@ -34,7 +34,7 @@ $website = $this->getWebsite();
             text-decoration: underline;
         <?php endif; ?>
         }
-        .proudct-url{
+        .product-url{
             color: <?php echo $dynamicStyle['urlColor'];?>;
             font-size: <?php echo $dynamicStyle['urlFontSize'];?>;
         <?php if(in_array('bold', $dynamicStyle['linkStyle'])): ?>
@@ -111,7 +111,7 @@ $website = $this->getWebsite();
             </a>
             <div class="product-name" align="center"><b><?php echo substr($this->escapeHtml($item->getName()), 0, 40);?></b></div>
             <div align="center">
-                <a class="proudct-url" href="<?php echo $helper->getReviewProductUrl($website, $item) ?>"><?php echo $this->__('Leave a review'); ?>
+                <a class="product-url" href="<?php echo $helper->getReviewProductUrl($website, $item) ?>"><?php echo $this->__('Leave a review'); ?>
                 </a>
             </div>
         </td>

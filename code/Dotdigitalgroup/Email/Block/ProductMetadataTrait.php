@@ -1,11 +1,11 @@
 <?php
 
-trait Dotdigitalgroup_Email_Block_ProductImageTrait
+trait Dotdigitalgroup_Email_Block_ProductMetadataTrait
 {
     /**
      * Trait method for Block classes which fetches a product (or parent product) image
      *
-     * @param $product Mage_Catalog_Model_Product
+     * @param Mage_Catalog_Model_Product $product
      * @return Mage_Catalog_Helper_Image
      */
     public function getProductImage($product)
@@ -23,5 +23,19 @@ trait Dotdigitalgroup_Email_Block_ProductImageTrait
         }
 
         return $this->helper('catalog/image')->init($product, 'small_image')->resize(135);
+    }
+
+    /**
+     * Trait method for Block classes which fetches a product (or parent product) URL
+     *
+     * @param Mage_Catalog_Model_Product $product
+     * @return string
+     */
+    public function getProductUrl($product)
+    {
+        return Mage::getSingleton('ddg_automation/catalog_urlfinder')
+            ->fetchFor(
+                $product
+            );
     }
 }

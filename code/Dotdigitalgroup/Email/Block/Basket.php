@@ -1,10 +1,10 @@
 <?php
 
-use Dotdigitalgroup_Email_Block_ProductImageTrait as ProductImageTrait;
+use Dotdigitalgroup_Email_Block_ProductMetadataTrait as ProductMetadataTrait;
 
 class Dotdigitalgroup_Email_Block_Basket extends Mage_Core_Block_Template
 {
-    use ProductImageTrait;
+    use ProductMetadataTrait;
 
     /**
      * @var Mage_Sales_Model_Quote
@@ -12,7 +12,7 @@ class Dotdigitalgroup_Email_Block_Basket extends Mage_Core_Block_Template
     public $quoteModel;
 
     /**
-     * Basket itmes.
+     * Basket items.
      *
      * @return mixed
      * @throws Exception
@@ -63,7 +63,7 @@ class Dotdigitalgroup_Email_Block_Basket extends Mage_Core_Block_Template
             $total       = Mage::helper('core')->currency(
                 $quoteItem->getBaseRowTotalInclTax()
             );
-            $productUrl  = $_product->getProductUrl();
+            $productUrl  = $this->getProductUrl($_product);
             $grandTotal  = Mage::helper('core')->currency(
                 $this->getGrandTotal()
             );
