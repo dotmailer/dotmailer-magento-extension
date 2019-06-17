@@ -1576,4 +1576,29 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         $now = Mage::getSingleton('core/date')->gmtDate();
         return strtotime($now) - strtotime($created);
     }
+
+
+    /**
+     * Determines if Roi Tracking is Available
+     * @return bool
+     */
+    public function isRoiAvailable()
+    {
+        if ($this->isEnabled() && $this->getRoiTrackingEnabled()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Determines if Page Tracking is available or no
+     * @return bool
+     */
+    public function isPageTrackingAvailable()
+    {
+        if ($this->isEnabled() && $this->getPageTrackingEnabled()) {
+            return true;
+        }
+        return false;
+    }
 }

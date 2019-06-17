@@ -1,5 +1,5 @@
 <?php
-if(Mage::helper('ddg')->getPageTrackingEnabled()) :?>
+if(Mage::helper('ddg')->isPageTrackingAvailable()) :?>
     <script type="text/javascript">
         (function(){
             var regionPrefix = "<?php echo Mage::helper('ddg')->getRegionPrefix(); ?>";
