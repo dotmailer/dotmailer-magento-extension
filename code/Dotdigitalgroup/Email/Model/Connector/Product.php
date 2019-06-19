@@ -242,7 +242,7 @@ class Dotdigitalgroup_Email_Model_Connector_Product
                     }
                     return $s->price;
                 }, $selections));
-                $specialPriceSimpleProducts = min($specialPriceArrayFlag);
+                $specialPriceSimpleProducts = count($specialPriceArrayFlag) > 0 ? min($specialPriceArrayFlag) : 0;
 
                 if ($specialPriceSimpleProducts > 0) {
                     if ($product->getSpecialPrice() > 0) {
