@@ -55,27 +55,20 @@ class Dotdigitalgroup_Email_Model_Resource_Catalog
      * Set imported in bulk query. if modified true then set modified to null in bulk query.
      *
      * @param $ids
-     * @param $modified
      */
-    public function setImported($ids, $modified = false)
+    public function setImported($ids)
     {
         try {
             $write     = $this->_getWriteAdapter();
             $tableName = $this->getMainTable();
             $ids       = implode(', ', $ids);
             $now       = Mage::getSingleton('core/date')->gmtDate();
-            if ($modified) {
-                $write->update(
-                    $tableName, array('modified'   => new Zend_Db_Expr('null'),
-                                      'updated_at' => $now),
-                    "product_id IN ($ids)"
-                );
-            } else {
-                $write->update(
-                    $tableName, array('imported' => 1, 'updated_at' => $now),
-                    "product_id IN ($ids)"
-                );
-            }
+            $bind = array('imported' => 1, 'modified' => new Zend_Db_Expr('null'), 'updated_at' => $now);
+            $write->update(
+                $tableName,
+                $bind,
+                "product_id IN ($ids)"
+            );
         } catch (Exception $e) {
             Mage::logException($e);
         }
