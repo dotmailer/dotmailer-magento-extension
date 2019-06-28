@@ -33,7 +33,7 @@ class Dotdigitalgroup_Email_Model_Resource_Rule_Collection extends Mage_SalesRul
             $select = $this->getSelect();
 
             $connection = $this->getConnection();
-            if ($couponCode !== '') {
+            if (strlen($couponCode)) {
                 $select->joinLeft(
                     array('rule_coupons' => $this->getTable('salesrule/coupon')),
                     $connection->quoteInto(
