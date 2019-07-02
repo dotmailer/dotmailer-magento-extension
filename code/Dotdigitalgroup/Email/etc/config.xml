@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Dotdigitalgroup_Email>
-            <version>6.4.16</version>
+            <version>6.4.17</version>
         </Dotdigitalgroup_Email>
     </modules>
     <frontend>
@@ -688,8 +688,8 @@
                 <allow_non_subscribers>0</allow_non_subscribers>
             </abandoned_carts>
             <tracking>
-                <roi_enabled>0</roi_enabled>
-                <page_enabled>0</page_enabled>
+                <roi_enabled>1</roi_enabled>
+                <page_enabled>1</page_enabled>
             </tracking>
             <dynamic_content_style>
                 <dynamic_syling><![CDATA[table{font-family: Arial, Helvetica, sans-serif; font-size:12px;}]]></dynamic_syling>

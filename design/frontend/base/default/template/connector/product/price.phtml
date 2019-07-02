@@ -373,7 +373,7 @@ $_minimalPrice = $_taxHelper->getPrice($_product, $_minimalPriceValue, $_simpleP
         <?php endif; ?>
 
         <?php if ($this->getUseLinkForAsLowAs()):?>
-            <a href="<?php echo $_product->getProductUrl(); ?>" class="minimal-price-link">
+            <a href="<?php echo $this->getProductUrl($_product); ?>" class="minimal-price-link">
         <?php else:?>
             <span class="minimal-price-link">
         <?php endif?>

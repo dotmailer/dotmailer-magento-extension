@@ -38,7 +38,7 @@ $products = $this->getLoadedProductCollection();
 	        text-decoration: underline;
         <?php endif; ?>
         }
-        .proudct-url{
+        .product-url{
 	        color: <?php echo $dynamicStyle['urlColor'];?>;
 	        font-size: <?php echo $dynamicStyle['urlFontSize'];?>;
         <?php if(in_array('bold', $dynamicStyle['linkStyle'])): ?>
@@ -106,7 +106,7 @@ $products = $this->getLoadedProductCollection();
 <?php endif;?>
 
     <td style="vertical-align: text-top; padding-right: 2px;">
-        <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>"
+        <a href="<?php echo $this->getProductUrl($_product) ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>"
            class="product-image"><img src="<?php echo $this->getProductImage($_product) ?>"
                                       width="85" height="85"
                                       alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'),
@@ -115,7 +115,7 @@ $products = $this->getLoadedProductCollection();
         <div class="product-name" align="center"><b><?php echo $this->escapeHtml(substr($_product->getName(), 0, 40));?></b></div>
         <div class="product-price" align="center"><?php echo $this->getPriceHtml($_product, true) ?></div>
         <div align="center">
-            <a class="proudct-url" href="<?php echo $_product->getProductUrl();?>">
+            <a class="product-url" href="<?php echo $this->getProductUrl($_product); ?>">
                 <?php
                     if($urlText = $this->getTextForUrl($_product->getStoreId()))
                         echo $this->escapeHtml($urlText);

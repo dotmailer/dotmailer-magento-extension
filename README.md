@@ -42,6 +42,17 @@ You are welcome to contribute to Engagement Cloud for Magento! You can either:
 - Fix a bug: please fork this repo and submit the Pull Request to our [Develop branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/develop)
 Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 
+# V6.4.17
+
+##### Improvements
+- Simple products in catalog sync and external dynamic content will now link to their parent (configurable, grouped or bundled) product pages if they are not visible individually. 
+- Upon installing our module, both Page Tracking and ROI Tracking will be enabled by default.
+
+##### Bug Fixes
+- We’ve fixed a bug that prevented modified products being synced to all stores to which they belong.
+- We’ve fixed a bug relating to our removal of the dependency on the Magento core review module. 
+- Order confirmation emails will now be sent via the correct transactional email account, if configured to do so at website or store level.
+
 # V6.4.16
 
 ##### Improvements
@@ -50,14 +61,12 @@ Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 - We resolved some code duplication in the dynamic content blocks.
 
 ##### Bug Fixes
-
 - We are now cleaning any custom transactional data keys prior to import, removing invalid (non-alphanumeric) characters, but not skipping records as before.
 - The Magento core review module is now decoupled from our contact sync.
 
 # V6.4.15
 
 ##### Improvements
-
 - We've improved the handling of double opt-in statuses in customer and subscriber syncs.
 - We've made the re-subscription process more robust, ensuring that as statuses change in Magento and Engagement Cloud, subscribers are not accidentally unsubscribed.
 - We've moved our announcement feed checking tool into a cron script for efficiency.
@@ -67,7 +76,6 @@ Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 - We've made various performance enhancements by refining our usage of some observers.
 
 ##### Bug Fixes
-
 - We've fixed an issue with incorrect scope when saving the Engagement Cloud API endpoint URL. [External contribution](https://github.com/dotmailer/dotmailer-magento-extension/pull/312)
 - We've repaired automation enrollments for guest subscribers when double opt-in is enabled in Magento.
 - We've made the menu item for Abandoned Carts visible to all users with access to Engagement Cloud configuration.

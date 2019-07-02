@@ -42,9 +42,6 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
 
             //email change detection
             if ($emailBefore && $email != $emailBefore) {
-                //Reload contact model up update email
-                $contactModel = Mage::getModel('ddg_automation/contact')
-                    ->loadByCustomerEmail($emailBefore, $websiteId);
                 $contactModel->setEmail($email);
 
                 Mage::helper('ddg')->log(
