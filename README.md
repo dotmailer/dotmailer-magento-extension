@@ -42,6 +42,14 @@ You are welcome to contribute to Engagement Cloud for Magento! You can either:
 - Fix a bug: please fork this repo and submit the Pull Request to our [Develop branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/develop)
 Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 
+# V6.4.18
+
+##### Improvements
+- We've made some performance improvements to our Customer and Sales observers.
+
+##### Bug Fixes
+- We've updated our check for an active coupon code in the Rule collection, to prevent a false positive result which was causing additional queries to be run on every page view.
+
 # V6.4.17
 
 ##### Improvements
