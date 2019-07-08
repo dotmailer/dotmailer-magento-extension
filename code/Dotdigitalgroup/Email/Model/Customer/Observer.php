@@ -45,10 +45,10 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
                 $contactModel->setEmail($email);
 
                 Mage::helper('ddg')->log(
-                    'email change detected : ' . $email . ', after : '
-                    . $emailBefore . ', website id : ' . $websiteId
+                    'Email change detected : was : ' . $emailBefore . ', now : '
+                    . $email . ', website id : ' . $websiteId
                 );
-                
+
                 $data = array(
                     'emailBefore'  => $emailBefore,
                     'email'        => $email,
