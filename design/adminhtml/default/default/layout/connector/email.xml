@@ -174,11 +174,6 @@
                 <script>connector/confirm.js</script>
             </action>
         </reference>
-        <reference name="before_body_end">
-            <block type="ddg_automation/adminhtml_system_installation" name="ddg.adminhtml.installation"
-                   template="connector/beacon.phtml">
-            </block>
-        </reference>
     </adminhtml_system_config_edit>
     <default>
         <reference name="content">
