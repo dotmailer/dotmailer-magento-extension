@@ -14,7 +14,7 @@ class Dotdigitalgroup_Email_Block_Recommended_Products
     {
         $orderModel = Mage::registry('current_order');
         if (! $orderModel) {
-            Mage::log('no current_order found for EDC');
+            Mage::helper('ddg')->log('No current_order found for EDC');
 
             return array();
         }
