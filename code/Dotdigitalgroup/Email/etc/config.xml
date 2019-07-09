@@ -364,14 +364,6 @@
                     </ddg_newsletter_subscriber_save_before>
                 </observers>
             </newsletter_subscriber_delete_after>
-            <email_template_load_before>
-                <observers>
-                    <ddg_newsletter_subscriber_save_before>
-                        <class>ddg_automation/observer</class>
-                        <method>handleEmailTemplateLoad</method>
-                    </ddg_newsletter_subscriber_save_before>
-                </observers>
-            </email_template_load_before>
         </events>
     </global>
     <adminhtml>
