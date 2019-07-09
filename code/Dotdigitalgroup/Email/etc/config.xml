@@ -26,14 +26,14 @@
             </updates>
         </layout>
         <events>
-            <controller_action_postdispatch>
+            <controller_action_postdispatch_ddg_automation>
                 <observers>
                     <ddg_switcher>
                         <class>ddg_automation/controller_observer</class>
                         <method>controllerActionPostdispatch</method>
                     </ddg_switcher>
                 </observers>
-            </controller_action_postdispatch>
+            </controller_action_postdispatch_ddg_automation>
             <newsletter_subscriber_save_after>
                 <observers>
                     <dotmailer_newsletter_subscriber_save_before>
