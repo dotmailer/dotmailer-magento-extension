@@ -1,13 +1,20 @@
 <?php
 if(Mage::helper('ddg')->isPageTrackingAvailable()) :?>
     <script type="text/javascript">
-        (function(){
-            var regionPrefix = "<?php echo Mage::helper('ddg')->getRegionPrefix(); ?>";
+        var dmTracks = window.dmTracks || [];
+        (function() {
+            var regionPrefix = "<?= Mage::helper('ddg')->getRegionPrefix() ?>";
             var connector = document.createElement('script');
             connector.type = 'text/javascript';
-            connector.src = '//' + regionPrefix + 't.trackedlink.net/_dmpt.js';
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(connector, s);
+            connector.async = true;
+            connector.src = '//' + regionPrefix + 't.trackedlink.net/_dmmpt.js';
+            connector.addEventListener('load', function (e) {
+                for (var d = 0; d < dmTracks.length; d++) {
+                    _dmTrack(dmTracks[d].name, dmTracks[d].value);
+                }
+                _dmCallHandler();
+            });
+            document.body.appendChild(connector);
         })();
     </script>
 <?php endif;
