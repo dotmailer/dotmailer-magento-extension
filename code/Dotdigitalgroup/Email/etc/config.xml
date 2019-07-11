@@ -26,14 +26,14 @@
             </updates>
         </layout>
         <events>
-            <controller_action_postdispatch>
+            <controller_action_postdispatch_ddg_automation>
                 <observers>
                     <ddg_switcher>
                         <class>ddg_automation/controller_observer</class>
                         <method>controllerActionPostdispatch</method>
                     </ddg_switcher>
                 </observers>
-            </controller_action_postdispatch>
+            </controller_action_postdispatch_ddg_automation>
             <newsletter_subscriber_save_after>
                 <observers>
                     <dotmailer_newsletter_subscriber_save_before>
@@ -364,14 +364,6 @@
                     </ddg_newsletter_subscriber_save_before>
                 </observers>
             </newsletter_subscriber_delete_after>
-            <email_template_load_before>
-                <observers>
-                    <ddg_newsletter_subscriber_save_before>
-                        <class>ddg_automation/observer</class>
-                        <method>handleEmailTemplateLoad</method>
-                    </ddg_newsletter_subscriber_save_before>
-                </observers>
-            </email_template_load_before>
         </events>
     </global>
     <adminhtml>

@@ -314,7 +314,7 @@ class Dotdigitalgroup_Email_Model_Template extends Mage_Core_Model_Abstract
 
             $template->save();
         } catch (\Exception $e) {
-            Mage::helper('ddg')->log($e->getMessage());
+            Mage::logException($e);
         }
 
         return $template;

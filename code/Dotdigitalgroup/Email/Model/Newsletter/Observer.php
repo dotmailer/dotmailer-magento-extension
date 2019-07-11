@@ -273,7 +273,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
             $consentResource->save($consentModel);
 
         } catch (\Exception $e) {
-            Mage::helper('ddg')->log($e);
+            Mage::logException($e);
         }
     }
 

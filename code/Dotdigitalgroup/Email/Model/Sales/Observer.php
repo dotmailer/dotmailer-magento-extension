@@ -224,7 +224,7 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
             );
             if (!$emailOrder->getId()) {
                 Mage::helper('ddg')->log(
-                    'ERROR Creditmemmo Order not found :' . $orderId
+                    'ERROR Creditmemo Order not found :' . $orderId
                     . ', quote id : ' . $quoteId
                 );
 
