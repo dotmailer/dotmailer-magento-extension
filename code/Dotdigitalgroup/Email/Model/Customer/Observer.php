@@ -273,56 +273,57 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
     {
         try {
             $emailWishlist = Mage::getModel('ddg_automation/wishlist');
-            $customer      = Mage::getModel('customer/customer');
 
-            //if wishlist exist not to save again
-            if (!$emailWishlist->getWishlist($wishlist['wishlist_id'])) {
-                $customer->load($wishlist['customer_id']);
-                //customer not found
-                if (!$customer->getId()) {
-                    return $this;
-                }
+            // if wishlist exists, do not register it again
+            if ($emailWishlist->getWishlist($wishlist['wishlist_id'])) {
+                return $this;
+            }
 
-                $email      = $customer->getEmail();
-                $wishlistId = $wishlist['wishlist_id'];
-                $websiteId  = $customer->getWebsiteId();
-                $emailWishlist->setWishlistId($wishlistId)
-                    ->setCustomerId($wishlist['customer_id'])
-                    ->setStoreId($customer->getStoreId())
-                    ->save();
+            $customer = $this->loadCustomer($wishlist['customer_id']);
 
-                $store     = Mage::app()->getStore($customer->getStoreId());
-                $storeName = $store->getName();
-                $website   = Mage::app()->getStore($store)->getWebsite();
+            //customer not found
+            if (!$customer->getId()) {
+                return $this;
+            }
 
-                //if api is not enabled
-                if (!$website->getConfig(
-                    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED
-                )
-                ) {
-                    return $this;
-                }
+            $email      = $customer->getEmail();
+            $wishlistId = $wishlist['wishlist_id'];
+            $websiteId  = $customer->getWebsiteId();
+            $emailWishlist->setWishlistId($wishlistId)
+                ->setCustomerId($wishlist['customer_id'])
+                ->setStoreId($customer->getStoreId())
+                ->save();
 
-                $automationType
-                           = 'XML_PATH_CONNECTOR_AUTOMATION_STUDIO_WISHLIST';
-                $programId = Mage::helper('ddg')->getAutomationIdByType(
-                    $automationType, $websiteId
-                );
-                if ($programId) {
-                    $automation = Mage::getModel('ddg_automation/automation');
-                    $automation->setEmail($email)
-                        ->setAutomationType(
-                            Dotdigitalgroup_Email_Model_Automation::AUTOMATION_TYPE_NEW_WISHLIST
-                        )
-                        ->setEnrolmentStatus(
-                            Dotdigitalgroup_Email_Model_Automation::AUTOMATION_STATUS_PENDING
-                        )
-                        ->setTypeId($wishlistId)
-                        ->setWebsiteId($websiteId)
-                        ->setStoreName($storeName)
-                        ->setProgramId($programId);
-                    $automation->save();
-                }
+            $store     = Mage::app()->getStore($customer->getStoreId());
+            $storeName = $store->getName();
+            $website   = Mage::app()->getStore($store)->getWebsite();
+
+            //if api is not enabled
+            if (!$website->getConfig(
+                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED
+            )
+            ) {
+                return $this;
+            }
+
+            $automationType = 'XML_PATH_CONNECTOR_AUTOMATION_STUDIO_WISHLIST';
+            $programId = Mage::helper('ddg')->getAutomationIdByType(
+                $automationType, $websiteId
+            );
+            if ($programId) {
+                $automation = Mage::getModel('ddg_automation/automation');
+                $automation->setEmail($email)
+                    ->setAutomationType(
+                        Dotdigitalgroup_Email_Model_Automation::AUTOMATION_TYPE_NEW_WISHLIST
+                    )
+                    ->setEnrolmentStatus(
+                        Dotdigitalgroup_Email_Model_Automation::AUTOMATION_STATUS_PENDING
+                    )
+                    ->setTypeId($wishlistId)
+                    ->setWebsiteId($websiteId)
+                    ->setStoreName($storeName)
+                    ->setProgramId($programId);
+                $automation->save();
             }
         } catch (Exception $e) {
             Mage::logException($e);
@@ -376,9 +377,8 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
     public function wishlistDeleteAfter(Varien_Event_Observer $observer)
     {
         $object   = $observer->getEvent()->getDataObject();
-        $customer = Mage::getModel('customer/customer')->load(
-            $object->getCustomerId()
-        );
+        $customer = $this->loadCustomer($object->getCustomerId());
+
         $website = Mage::app()->getStore($customer->getStoreId())->getWebsite();
         $helper   = Mage::helper('ddg');
 
@@ -393,7 +393,7 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
                 $item = Mage::getModel('ddg_automation/wishlist')->getWishlist(
                     $object->getWishlistId()
                 );
-                if ($item->getId()) {
+                if ($item && $item->getId()) {
                     //register in queue with importer
                     $check = Mage::getModel('ddg_automation/importer')
                         ->registerQueue(
@@ -484,5 +484,21 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
         } catch (Exception $e) {
             Mage::logException($e);
         }
+    }
+
+    /**
+     * Load a customer object from the session, or from the database as a fallback.
+     *
+     * @param string|int $customerId
+     * @return Mage_Customer_Model_Customer
+     */
+    private function loadCustomer($customerId)
+    {
+        if (Mage::getSingleton('customer/session')->isLoggedIn()) {
+            return Mage::getSingleton('customer/session')->getCustomer();
+        }
+
+        return Mage::getModel('customer/customer')
+                ->load($customerId);
     }
 }
