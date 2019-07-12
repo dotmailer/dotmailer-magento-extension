@@ -142,6 +142,10 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
             $emailsToSend = $this->_getEmailCampaigns($website->getStoreIds());
             $campaignsToSend = array();
 
+            if ($this->hasOrderReviews($emailsToSend)) {
+                $salesRecords = $this->getOrderObjectsAsArray($emailsToSend);
+            }
+
             foreach ($emailsToSend as $campaign) {
                 $email = $campaign->getEmail();
                 $campaignId = $campaign->getCampaignId();
@@ -167,13 +171,20 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
                     $campaignsToSend[$campaignId]['client'] = $client;
                     try {
                         $contactId = Mage::helper('ddg')->getContactId(
-                            $campaign->getEmail(), $websiteId
+                            $campaign->getEmail(),
+                            $websiteId
                         );
                         if (is_numeric($contactId)) {
                             //update data fields
-                            if ($campaign->getEventName() == 'Order Review') {
-                                $order = Mage::getModel('sales/order')
-                                    ->loadByIncrementId($campaign->getOrderIncrementId());
+                            if ($campaign->getEventName() == self::CAMPAIGN_EVENT_ORDER_REVIEW && isset($salesRecords)) {
+
+                                $order = array_filter($salesRecords, function ($record) use ($campaign) {
+                                    if (in_array($campaign->getOrderIncrementId(), $record)) {
+                                        return $record;
+                                    }
+                                });
+
+                                $order = reset($order);
 
                                 if ($lastOrderId = $website->getConfig(
                                     Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_LAST_ORDER_ID
@@ -181,7 +192,7 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
                                 ) {
                                     $data[] = array(
                                         'Key' => $lastOrderId,
-                                        'Value' => $order->getId()
+                                        'Value' => $order['entity_id']
                                     );
                                 }
 
@@ -192,14 +203,15 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
                                 ) {
                                     $data[] = array(
                                         'Key' => $orderIncrementId,
-                                        'Value' => $order->getIncrementId()
+                                        'Value' => $order['increment_id']
                                     );
                                 }
 
                                 if (!empty($data)) {
                                     //update data fields
                                     $client->updateContactDatafieldsByEmail(
-                                        $email, $data
+                                        $email,
+                                        $data
                                     );
                                 }
                             } elseif (
@@ -211,7 +223,9 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
                                     continue;
                                 }
                                 Mage::helper('ddg')->updateLastQuoteId(
-                                    $campaign->getQuoteId(), $email, $websiteId
+                                    $campaign->getQuoteId(),
+                                    $email,
+                                    $websiteId
                                 );
                             }
 
@@ -234,7 +248,8 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
                     $contacts = $data['contacts'];
                     $client = $data['client'];
                     $response = $client->postCampaignsSend(
-                        $campaignId, $contacts
+                        $campaignId,
+                        $contacts
                     );
                     if (isset($response->message)) {
                         //update  the failed to send email message
@@ -277,10 +292,36 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
                 ->order('campaign_id');
         }
 
-
         $emailCollection->getSelect()->limit(self::SEND_EMAIL_CONTACT_LIMIT);
+
         //@codingStandardsIgnoreEnd
         return $emailCollection;
+    }
+
+    /**
+     * @param $collection
+     */
+    private function hasOrderReviews($collection)
+    {
+        return in_array(
+            self::CAMPAIGN_EVENT_ORDER_REVIEW,
+            $collection->getColumnValues('event_name')
+        );
+    }
+
+    /**
+     * @param $emailCollection
+     * @return mixed
+     */
+    private function getOrderObjectsAsArray($emailCollection)
+    {
+        $orderIncrementIds = $emailCollection->getColumnValues('order_increment_id');
+        $salesCollection = Mage::getModel('sales/order')
+            ->getCollection()
+            ->addFieldToFilter('increment_id', array('in' => $orderIncrementIds));
+
+        $salesCollection = $salesCollection->toArray();
+        return $salesCollection['items'];
     }
 
     /**
