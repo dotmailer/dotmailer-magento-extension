@@ -413,23 +413,6 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
     }
 
     /**
-     * Quote submit before observer.
-     *
-     * @param Varien_Event_Observer $observer
-     * @return $this
-     */
-    public function handleQuoteSubmitBefore(Varien_Event_Observer $observer)
-    {
-        $quote = $observer->getEvent()->getQuote();
-        //set flag if no customer id before save.
-        if (!$quote->getCustomerId()) {
-            $quote->setIfCustomerIsNew(1);
-        }
-
-        return $this;
-    }
-
-    /**
      * Quote submit success observer.
      *
      * @param Varien_Event_Observer $observer
@@ -438,8 +421,9 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
     public function handleQuoteSubmitSuccess(Varien_Event_Observer $observer)
     {
         $quote = $observer->getEvent()->getQuote();
-        //check flag and also if now customer has an id. This means new customer.
-        if ($quote->getCustomerId() && $quote->getIfCustomerIsNew()) {
+
+        //if customer has an id, but no 'original' data before the model was loaded, they are new
+        if ($quote->getCustomerId() && empty($quote->getCustomer()->getOrigData())) {
             //program id must be map
             $programId = Mage::helper('ddg')->getAutomationIdByType(
                 'XML_PATH_CONNECTOR_AUTOMATION_STUDIO_CUSTOMER', $quote->getCustomer()->getWebsiteId()
