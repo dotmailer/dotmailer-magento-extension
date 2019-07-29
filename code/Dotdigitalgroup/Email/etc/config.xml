@@ -821,6 +821,7 @@
             <debug>
                 <debug_enabled>1</debug_enabled>
                 <api_request_time_limit>60</api_request_time_limit>
+                <ssl_verification_disabled>0</ssl_verification_disabled>
             </debug>
             <feed_configuration>
                 <feed_enabled>1</feed_enabled>
