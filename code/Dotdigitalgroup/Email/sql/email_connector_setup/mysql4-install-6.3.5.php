@@ -1151,4 +1151,16 @@ $installer->getConnection()->addColumn(
     )
 );
 
+/**
+ * Enterprise customer segmentation.
+ */
+if (Mage::helper('ddg')->isEnterprise()) {
+    //add additional column with segment ids
+    $installer->getConnection()->addColumn(
+        $contactTable,
+        'segment_ids',
+        'mediumtext'
+    );
+}
+
 $installer->endSetup();
