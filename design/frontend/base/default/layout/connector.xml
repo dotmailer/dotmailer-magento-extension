@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <layout version="0.1.0">
     <default>
-        <reference name="head">
-            <block type="core/template" name="checkout.tag" as="connector.tag" template="connector/tracking_code.phtml"/>
+        <reference name="footer">
             <block type="core/template" name="easy.email.capture.head" as="easy.email.capture.head" template="connector/email_capture.phtml"/>
             <block type="core/template" name="easy.email.capture" as="easy.email.capture" template="connector/email_capture_init.phtml"/>
+            <block type="core/template" name="checkout.tag" as="connector.tag" template="connector/tracking_code.phtml"/>
         </reference>
     </default>
     <ddg_automation_email_basket>

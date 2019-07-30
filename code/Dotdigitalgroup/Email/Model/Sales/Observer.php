@@ -113,7 +113,7 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
         $order     = $observer->getEvent()->getOrder();
         $email     = $order->getCustomerEmail();
         $website   = Mage::app()->getWebsite($order->getWebsiteId());
-        $storeName = Mage::app()->getStore($order->getStoreId())->getName();
+        $storeName = $order->getStoreName(2);
 
         //if api is not enabled
         if (!$website->getConfig(Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_API_ENABLED)) {
@@ -211,7 +211,6 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
     public function handleSalesOrderRefund(Varien_Event_Observer $observer)
     {
         $creditmemo = $observer->getEvent()->getCreditmemo();
-        $storeId    = $creditmemo->getStoreId();
         $order      = $creditmemo->getOrder();
         $orderId    = $order->getEntityId();
         $quoteId    = $order->getQuoteId();
@@ -221,12 +220,12 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
              * Reimport transactional data.
              */
             $emailOrder = Mage::getModel('ddg_automation/order')->loadByOrderId(
-                $orderId, $quoteId, $storeId
+                $orderId, $quoteId
             );
             if (!$emailOrder->getId()) {
                 Mage::helper('ddg')->log(
-                    'ERROR Creditmemmo Order not found :' . $orderId
-                    . ', quote id : ' . $quoteId . ', store id ' . $storeId
+                    'ERROR Creditmemo Order not found :' . $orderId
+                    . ', quote id : ' . $quoteId
                 );
 
                 return $this;
@@ -339,11 +338,11 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
             if ($quote->getCustomerId()) {
                 $connectorQuote = Mage::getModel('ddg_automation/quote')
                     ->loadQuote($quote->getId());
-                $count          = count($quote->getAllItems());
+                $quoteHasItems = $quote->hasItems();
                 if ($connectorQuote) {
-                    if ($connectorQuote->getImported() && $count > 0) {
+                    if ($connectorQuote->getImported() && $quoteHasItems) {
                         $connectorQuote->setModified(1)->save();
-                    } elseif ($connectorQuote->getImported() && $count == 0) {
+                    } elseif ($connectorQuote->getImported() && !$quoteHasItems) {
                         //register in queue with importer for single delete
                         Mage::getModel('ddg_automation/importer')
                             ->registerQueue(
@@ -355,7 +354,7 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
                         //delete from table
                         $connectorQuote->delete();
                     }
-                } elseif ($count > 0) {
+                } elseif ($quoteHasItems) {
                     $this->_registerQuote($quote);
                 }
             }

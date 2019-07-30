@@ -19,7 +19,7 @@ class Dotdigitalgroup_Email_Model_Email_Template extends Mage_Core_Model_Email_T
 
         // As per parent class - except addition of before and after send events
         if (!$this->isValidForSend()) {
-            Mage::log(
+            Mage::helper('ddg')->log(
                 'Email is not valid for sending, this is a core error that often means there\'s a problem with your 
                 email templates.'
             );

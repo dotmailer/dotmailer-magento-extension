@@ -83,7 +83,7 @@ class Dotdigitalgroup_Email_Helper_Transactional extends Mage_Core_Helper_Abstra
         if ($this->isDebugEnabled($storeId)) {
             $configToLog = $config;
             unset($configToLog['password']);
-            Mage::log('Mail transport config : ' . implode(',', $configToLog));
+            Mage::helper('ddg')->log('Mail transport config : ' . implode(',', $configToLog));
         }
 
         $transport = new Zend_Mail_Transport_Smtp(

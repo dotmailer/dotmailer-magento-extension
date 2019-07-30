@@ -210,11 +210,15 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
 
         curl_setopt($ch, CURLOPT_TIMEOUT, 600);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt(
             $ch, CURLOPT_HTTPHEADER, array(
                 'Content-Type: multipart/form-data')
         );
+
+        if (Mage::helper('ddg/config')->isSslVerificationDisabled()) {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        }
 
         // send contacts to address book
         $result = curl_exec($ch);

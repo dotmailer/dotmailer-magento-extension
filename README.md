@@ -1,13 +1,21 @@
 Engagement Cloud for Magento
 ==========================================
 
-Full support documentation and setup guides available here - https://support.dotdigital.com/hc/en-gb/sections/360000722920-Engagement-Cloud-for-Magento
+## Description
 
-This module uses modman
+This extension integrates Engagement Cloud with Magento Open Source 1 (Community Edition) and Magento Commerce 1 (Enterprise Edition).
 
-First ensure you have modman installed (see here: https://github.com/colinmollenhour/modman#installation)
+- [Full support documentation and setup guides](https://support.dotdigital.com/hc/en-gb/sections/360000722920-Engagement-Cloud-for-Magento)
 
-and run the following in your magento root:
+## Compatibility
+
+- Magento >= 1.6.2
+
+## Installation
+
+This module should be installed using [modman](https://github.com/colinmollenhour/modman#installation). 
+
+Once `modman` is installed and available, run the following in your Magento root:
 
 ```
 modman init
@@ -25,48 +33,50 @@ INSERT INTO `core_config_data` (`scope`, `scope_id`, `path`, `value`)
 	ON DUPLICATE KEY UPDATE `value` = '1'
 ```
 
-Facts
------
-- community & enterprise version.
-- current version - [config.xml](https://github.com/dotmailer/dotmailer-magento-extension/blob/master/code/Dotdigitalgroup/Email/etc/config.xml)
-- also available on Magento Connect [link](http://www.magentocommerce.com/magento-connect/dotmailer-truly-integrated-email-marketing.html)
-
-Compatibility
--------------
-- Magento >= 1.6.2
-
-# Contribution
+## Contribution
 
 You are welcome to contribute to Engagement Cloud for Magento! You can either:
 - Report a bug: create a [GitHub issue](https://github.com/dotmailer/dotmailer-magento-extension/issues/new) including description, repro steps, Magento and extension version numbers
 - Fix a bug: please fork this repo and submit the Pull Request to our [Develop branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/develop)
 Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 
+# 6.4.18
+
+###### Improvements
+- We've audited the extension with a view to improving overall speed and efficiency. Particular attention has been paid to reducing database impact, pruning observer functions and cleaning up legacy code.
+- Columns for segment ID data (used by merchants running Magento Commerce 1), are now added via the regular schema install script, and populated in batches to minimise performance impact.
+- We've strengthened security by removing code that disabled SSL certificate verification. If this is required in some installations, it can be overridden by a config key.
+
+###### Bug Fixes
+- We've updated our check for an active coupon code in the Rule collection, to prevent a false positive result which was causing additional queries to be run on every page view.
+- All extension logging is now routed via our dedicated connector log file.
+- New customers, registering at checkout, will now be enrolled onto new customer automations, if configured.
+
 # V6.4.17
 
-##### Improvements
+###### Improvements
 - Simple products in catalog sync and external dynamic content will now link to their parent (configurable, grouped or bundled) product pages if they are not visible individually. 
 - Upon installing our module, both Page Tracking and ROI Tracking will be enabled by default.
 
-##### Bug Fixes
+###### Bug Fixes
 - We’ve fixed a bug that prevented modified products being synced to all stores to which they belong.
 - We’ve fixed a bug relating to our removal of the dependency on the Magento core review module. 
 - Order confirmation emails will now be sent via the correct transactional email account, if configured to do so at website or store level.
 
 # V6.4.16
 
-##### Improvements
+###### Improvements
 - We've improved the coverage of catalog sync by allowing selected custom attributes to be included in the synced data.
 - In catalog sync, we are now syncing scoped (store and website) values for products, instead of only the default-level values.
 - We resolved some code duplication in the dynamic content blocks.
 
-##### Bug Fixes
+###### Bug Fixes
 - We are now cleaning any custom transactional data keys prior to import, removing invalid (non-alphanumeric) characters, but not skipping records as before.
 - The Magento core review module is now decoupled from our contact sync.
 
 # V6.4.15
 
-##### Improvements
+###### Improvements
 - We've improved the handling of double opt-in statuses in customer and subscriber syncs.
 - We've made the re-subscription process more robust, ensuring that as statuses change in Magento and Engagement Cloud, subscribers are not accidentally unsubscribed.
 - We've moved our announcement feed checking tool into a cron script for efficiency.
@@ -75,40 +85,40 @@ Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 - We now automatically mark as sent any campaigns that Engagement Cloud indicates are still "Processing" after 2 hours, in order to ensure subsequent campaigns are sent.  
 - We've made various performance enhancements by refining our usage of some observers.
 
-##### Bug Fixes
+###### Bug Fixes
 - We've fixed an issue with incorrect scope when saving the Engagement Cloud API endpoint URL. [External contribution](https://github.com/dotmailer/dotmailer-magento-extension/pull/312)
 - We've repaired automation enrollments for guest subscribers when double opt-in is enabled in Magento.
 - We've made the menu item for Abandoned Carts visible to all users with access to Engagement Cloud configuration.
 
 # V6.4.14   
 
-##### Bug Fixes
+###### Bug Fixes
 - We've fixed a problem with scheduled campaign sends, arising from campaigns stuck in a "Processing" state on Engagement Cloud. In such cases, we will expire campaigns that have been "Processing" for longer than two hours.
 
 # V6.4.13
 
-##### Bug Fixes
+###### Bug Fixes
 - We've fixed a bug that caused the catalog sync to skip products if invalid data keys were supplied.
 - We've fixed a bug related to the use of `utf8_decode` in email templates (note this discontinues support for emojis in email subject lines).
 - We've fixed a minor error thrown during the Engagement Cloud template sync. 
 
 # V6.4.12
 
-##### Improvements
+###### Improvements
 - We've improved the performance of the product sync process by setting a limit when querying products before import
 - Resubscribed contacts weren't added back to the "subscriber" address book; they are now
 - Configurable, grouped, and bundled products are now correctly synced to Engagement Cloud with the lowest relevant price of their children
 
-##### Bug Fixes
+###### Bug Fixes
 - We've fixed incorrect syntax in the Order model (#309)
 - We've fixed an issue that caused errors within the Sweet Tooth (Smile.io) integration
 
 # V6.4.11
 
-##### Improvements
+###### Improvements
 - Users can now get SEO-friendly product URLs when syncing their catalog to Engagement Cloud
 
-##### Bug fixes
+###### Bug fixes
 - Cancelled email sends no longer prevent new sends from going out successfully
 - We've optimised database queries, meaning that users with massive databases no longer encounter slow best seller external dynamic content load times
 - An exception is no longer thrown when getting rating table name
@@ -127,7 +137,7 @@ Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 
 # V6.4.8
 
-##### Bug fixes
+###### Bug fixes
 - Transactional emails weren't being sent using Magento's queuing system (and Cronjob) introduced in Magento EE 1.14.1 and Magento CE 1.9.1; they are now.
 - Saving Engagement Cloud email template settings with no changes would reset any previously configured email to the default templates; this has now been fixed.
 - We've fixed an issue which caused products to have incorrect URLs when the catalog was synced at store level
@@ -136,7 +146,7 @@ Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 
 # V6.4.7
 
-##### Bug fixes
+###### Bug fixes
 - Import contacts api call now times out after 600 seconds
 - We only add items to the importer queue for enabled websites
 - Customers that were created by an admin user in a Magento Enterprise Edition account can now be synchronised to Engagement Cloud
@@ -151,7 +161,7 @@ Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 
 # V6.4.5
 
-##### Bug fixes
+###### Bug fixes
 - We now re-import product catalogs when products have been bulk updated using the 'update attribute' button
 - We've fixed a bug introduced in 6.4.4 that generated an importer error in the occurrence of an empty import fault report
 - We've refactored code that declared arrays with the short form, instead of the long form
@@ -369,7 +379,7 @@ Request a feature on our [roadmap](https://roadmap.dotdigital.com)
  - Support for Engagement Cloud regions
 ## Bug fixes
  - Bug fixed for fatal error on manual sync
-## Improvments
+## Improvements
  - Magento code audit changes x3
  - Email validation on ajax call
 

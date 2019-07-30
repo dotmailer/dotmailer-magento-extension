@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Dotdigitalgroup_Email>
-            <version>6.4.17</version>
+            <version>6.4.18</version>
         </Dotdigitalgroup_Email>
     </modules>
     <frontend>
@@ -26,14 +26,14 @@
             </updates>
         </layout>
         <events>
-            <controller_action_postdispatch>
+            <controller_action_postdispatch_ddg_automation>
                 <observers>
                     <ddg_switcher>
                         <class>ddg_automation/controller_observer</class>
                         <method>controllerActionPostdispatch</method>
                     </ddg_switcher>
                 </observers>
-            </controller_action_postdispatch>
+            </controller_action_postdispatch_ddg_automation>
             <newsletter_subscriber_save_after>
                 <observers>
                     <dotmailer_newsletter_subscriber_save_before>
@@ -193,15 +193,6 @@
                     </ddg_customer_register_success>
                 </observers>
             </customer_register_success>
-            <sales_model_service_quote_submit_before>
-                <observers>
-                    <ddg_sales_model_service_quote_submit_before>
-                        <type>singleton</type>
-                        <class>ddg_automation/customer_observer</class>
-                        <method>handleQuoteSubmitBefore</method>
-                    </ddg_sales_model_service_quote_submit_before>
-                </observers>
-            </sales_model_service_quote_submit_before>
             <sales_model_service_quote_submit_success>
                 <observers>
                     <ddg_sales_model_service_quote_submit_success>
@@ -364,14 +355,6 @@
                     </ddg_newsletter_subscriber_save_before>
                 </observers>
             </newsletter_subscriber_delete_after>
-            <email_template_load_before>
-                <observers>
-                    <ddg_newsletter_subscriber_save_before>
-                        <class>ddg_automation/observer</class>
-                        <method>handleEmailTemplateLoad</method>
-                    </ddg_newsletter_subscriber_save_before>
-                </observers>
-            </email_template_load_before>
         </events>
     </global>
     <adminhtml>
@@ -838,6 +821,7 @@
             <debug>
                 <debug_enabled>1</debug_enabled>
                 <api_request_time_limit>60</api_request_time_limit>
+                <ssl_verification_disabled>0</ssl_verification_disabled>
             </debug>
             <feed_configuration>
                 <feed_enabled>1</feed_enabled>

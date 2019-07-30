@@ -472,7 +472,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
         if (empty($quoteIds)){
             return;
         }
-        $quoteCollection = $this->getProccessedQuoteByIds($quoteIds, $storeId);
+        $quoteCollection = $this->getProcessedQuotesByIds($quoteIds, $storeId);
 
         //found abandoned carts
         if ($quoteCollection->getSize()) {
@@ -482,6 +482,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
             );
         }
 
+        /** @var Mage_Sales_Model_Quote $quote */
         foreach ($quoteCollection as $quote) {
             $quoteId = $quote->getId();
             $email = $quote->getCustomerEmail();
@@ -493,18 +494,20 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
                 );
             }
 
-            $abandonedModel = Mage::getModel('ddg_automation/abandoned')
-                ->loadByQuoteId($quoteId);
-
             $isActive = $quote->getIsActive();
-            $abandonedModel->setAbandonedCartNumber($number)
-                ->setIsActive($isActive)
-                ->setQuoteUpdatedAt($quote->getUpdatedAt())
-                ->save();
-            //send the email campaign if is still active
             if ($isActive) {
                 $this->sendEmailCampaign($email, $quote, $campaignId, $number, $websiteId);
             }
+
+            $abandonedCartUpdateData = [
+                'quote_id' => $quoteId,
+                'abandoned_cart_number' => $number,
+                'is_active' => $isActive,
+                'quote_updated_at' => $quote->getUpdatedAt()
+            ];
+
+            Mage::getResourceModel('ddg_automation/abandoned')
+                ->updateAbandonedCart($abandonedCartUpdateData);
         }
     }
 
@@ -624,7 +627,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
             'to'   => $to,
             'date' => true);
 
-        $abandoneCollection = Mage::getModel('ddg_automation/abandoned')
+        $abandonedCollection = Mage::getModel('ddg_automation/abandoned')
             ->getCollection()
             ->addFieldToFilter('is_active', 1)
             ->addFieldToFilter('abandoned_cart_number', --$number)
@@ -632,27 +635,27 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
             ->addFieldToFilter('quote_updated_at', $updated);
 
         if ($guest) {
-            $abandoneCollection->addFieldToFilter('main_table.customer_id', array('null' => true));
+            $abandonedCollection->addFieldToFilter('main_table.customer_id', array('null' => true));
         } else {
-            $abandoneCollection->addFieldToFilter('main_table.customer_id', array('notnull' => true));
+            $abandonedCollection->addFieldToFilter('main_table.customer_id', array('notnull' => true));
         }
 
         if (Mage::helper('ddg/config')->isOnlySubscribersForAC($storeId)) {
-            $abandoneCollection = Mage::getResourceModel('ddg_automation/order')
-                ->joinSubscribersOnCollection($abandoneCollection, "main_table.email");
+            $abandonedCollection = Mage::getResourceModel('ddg_automation/order')
+                ->joinSubscribersOnCollection($abandonedCollection, "main_table.email");
         }
 
-        return $abandoneCollection;
+        return $abandonedCollection;
     }
 
     /**
-     * Get quotes by ids and proccess through exclution rules.
+     * Get quotes by ids and process through exclusion rules.
      *
      * @param $quoteIds
      * @param $storeId int
      * @return mixed
      */
-    private function getProccessedQuoteByIds($quoteIds, $storeId)
+    private function getProcessedQuotesByIds($quoteIds, $storeId)
     {
         $quoteCollection = Mage::getModel('sales/quote')
             ->getCollection()
