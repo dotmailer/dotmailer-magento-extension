@@ -40,26 +40,17 @@ You are welcome to contribute to Engagement Cloud for Magento! You can either:
 - Fix a bug: please fork this repo and submit the Pull Request to our [Develop branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/develop)
 Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 
-#6.4.19
+# 6.4.18
 
 ###### Improvements
-
 - We've audited the extension with a view to improving overall speed and efficiency. Particular attention has been paid to reducing database impact, pruning observer functions and cleaning up legacy code.
 - Columns for segment ID data (used by merchants running Magento Commerce 1), are now added via the regular schema install script, and populated in batches to minimise performance impact.
 - We've strengthened security by removing code that disabled SSL certificate verification. If this is required in some installations, it can be overridden by a config key.
 
 ###### Bug Fixes
-
+- We've updated our check for an active coupon code in the Rule collection, to prevent a false positive result which was causing additional queries to be run on every page view.
 - All extension logging is now routed via our dedicated connector log file.
 - New customers, registering at checkout, will now be enrolled onto new customer automations, if configured.
-
-# V6.4.18
-
-###### Improvements
-- We've made some performance improvements to our Customer and Sales observers.
-
-###### Bug Fixes
-- We've updated our check for an active coupon code in the Rule collection, to prevent a false positive result which was causing additional queries to be run on every page view.
 
 # V6.4.17
 
