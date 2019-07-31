@@ -373,12 +373,14 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
         curl_setopt($ch, CURLOPT_TIMEOUT, 60);
         curl_setopt($ch, CURLOPT_URL, $this->url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt(
             $ch, CURLOPT_HTTPHEADER, array('Accept: ' . $this->acceptType,
                                            'Content-Type: application/json')
         );
+        if (Mage::helper('ddg/config')->isSslVerificationDisabled()) {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        }
         //@codingStandardsIgnoreEnd
     }
 

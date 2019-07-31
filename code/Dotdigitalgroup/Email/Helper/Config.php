@@ -340,6 +340,8 @@ class Dotdigitalgroup_Email_Helper_Config
         = 'connector_developer_settings/debug/debug_enabled';
     const XML_PATH_CONNECTOR_DEBUG_API_REQUEST_LIMIT
         = 'connector_developer_settings/debug/api_request_time_limit';
+    const XML_PATH_CONNECTOR_DEBUG_SSL_VERIFICATION_DISABLED
+        = 'connector_developer_settings/debug/ssl_verification_disabled';
     const XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT
         = 'connector_developer_settings/import_settings/orders';
     const XML_PATH_CONNECTOR_IP_RESTRICTION_ADDRESSES
@@ -572,5 +574,17 @@ class Dotdigitalgroup_Email_Helper_Config
         }
 
         return $value;
+    }
+
+    /**
+     * Check if SSL certificate verification is disabled in config.xml
+     * 
+     * @return bool
+     */
+    public function isSslVerificationDisabled()
+    {
+        return Mage::getStoreConfig(
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DEBUG_SSL_VERIFICATION_DISABLED
+        );
     }
 }

@@ -63,9 +63,9 @@ class Dotdigitalgroup_Email_Helper_Setup extends Mage_Core_Helper_Abstract
 
         $contactResource->populateEmailContactTable($batchSize)
             ->populateSubscribersThatAreNotCustomers($batchSize)
-            ->updateCustomersThatAreSubscribers()
-            ->updateContactsWithSegmentsIdsForEnterprise();
-
+            ->updateCustomersThatAreSubscribers($batchSize)
+            ->updateContactsWithSegmentsIdsForEnterprise($batchSize);
+        
         /** @var Dotdigitalgroup_Email_Model_Resource_Order $orderResource */
         $orderResource = Mage::getResourceModel('ddg_automation/order');
         $orderResource->populateEmailOrderTable($batchSize);

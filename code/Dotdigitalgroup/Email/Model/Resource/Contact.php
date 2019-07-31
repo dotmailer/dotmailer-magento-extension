@@ -563,51 +563,71 @@ class Dotdigitalgroup_Email_Model_Resource_Contact extends Mage_Core_Model_Resou
     }
 
     /**
+     * @param int $batchSize
      * @return $this
      */
-    public function updateCustomersThatAreSubscribers()
+    public function updateCustomersThatAreSubscribers($batchSize)
     {
         $customerIds = Mage::getResourceModel('newsletter/subscriber_collection')
             ->addFieldToFilter('subscriber_status', 1)
             ->addFieldToFilter('customer_id', array('gt' => 0))
             ->getColumnValues('customer_id');
 
-        if (!empty($customerIds)) {
-            $customerIds = implode(', ', $customerIds);
-            $this->_getWriteAdapter()->update(
-                $this->getMainTable(),
-                array(
-                    'is_subscriber' => new Zend_Db_Expr('1'),
-                    'subscriber_status' => new Zend_Db_Expr('1')
-                ),
-                "customer_id in ($customerIds)"
-            );
+        if (count($customerIds)) {
+            foreach (array_chunk($customerIds, $batchSize) as $chunk) {
+                $this->_getWriteAdapter()->update(
+                    $this->getMainTable(),
+                    array(
+                        'is_subscriber' => new Zend_Db_Expr('1'),
+                        'subscriber_status' => new Zend_Db_Expr('1')
+                    ),
+                    array(
+                        'customer_id IN (?)' => $chunk
+                    )
+                );
+            }
         }
         return $this;
     }
 
     /**
+     * @param int $batchSize
      * @return $this
      */
-    public function updateContactsWithSegmentsIdsForEnterprise()
+    public function updateContactsWithSegmentsIdsForEnterprise($batchSize)
     {
         if (Mage::helper('ddg')->isEnterprise()) {
-            //customer segment table
-            $segmentTable = $this->getTable('enterprise_customersegment/customer');
-            //add additional column with segment ids
-            $this->_getWriteAdapter()->addColumn(
-                $this->getMainTable(),
-                'segment_ids',
-                'mediumtext'
-            );
 
-            //update contact table with customer segment ids
-            $this->_getWriteAdapter()->query(
-                "update`{$this->getMainTable()}` c,(select customer_id, website_id,
-                group_concat(`segment_id` separator ',') as segmentids from `{$segmentTable}` group by customer_id) 
-                as s set c.segment_ids = segmentids, c.email_imported = null WHERE s.customer_id= c.customer_id and 
-                s.website_id = c.website_id"
-            );
+            $customerIds = Mage::getResourceModel('ddg_automation/contact_collection')
+                ->addFieldToFilter('customer_id', array('gt' => 0))
+                ->getColumnValues('customer_id');
+            $minId = count($customerIds) > 0 ? reset($customerIds) : 0;
+
+            if ($minId) {
+                $maxId = end($customerIds);
+                $batchMinId = $minId;
+                $batchMaxId = $minId + $batchSize;
+                $moreRecords = true;
+
+                $segmentTable = $this->getTable('enterprise_customersegment/customer');
+
+                while ($moreRecords) {
+                    //update contact table with customer segment ids
+                    $this->_getWriteAdapter()->query(
+                        "update `{$this->getMainTable()}` ec
+                        set ec.segment_ids = (
+                            select group_concat(segment_id separator ',') from `{$segmentTable}` as ecsc 
+                            where ec.customer_id = ecsc.customer_id and ec.website_id = ecsc.website_id
+                        ), ec.email_imported = null
+                        where ec.customer_id >= {$batchMinId}
+                        and ec.customer_id < {$batchMaxId}"
+                    );
+
+                    $moreRecords = $maxId >= $batchMaxId;
+                    $batchMinId = $batchMinId + $batchSize;
+                    $batchMaxId = $batchMaxId + $batchSize;
+                }
+            }
         }
         return $this;
     }

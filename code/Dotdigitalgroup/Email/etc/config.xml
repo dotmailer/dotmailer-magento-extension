@@ -193,15 +193,6 @@
                     </ddg_customer_register_success>
                 </observers>
             </customer_register_success>
-            <sales_model_service_quote_submit_before>
-                <observers>
-                    <ddg_sales_model_service_quote_submit_before>
-                        <type>singleton</type>
-                        <class>ddg_automation/customer_observer</class>
-                        <method>handleQuoteSubmitBefore</method>
-                    </ddg_sales_model_service_quote_submit_before>
-                </observers>
-            </sales_model_service_quote_submit_before>
             <sales_model_service_quote_submit_success>
                 <observers>
                     <ddg_sales_model_service_quote_submit_success>
@@ -830,6 +821,7 @@
             <debug>
                 <debug_enabled>1</debug_enabled>
                 <api_request_time_limit>60</api_request_time_limit>
+                <ssl_verification_disabled>0</ssl_verification_disabled>
             </debug>
             <feed_configuration>
                 <feed_enabled>1</feed_enabled>
