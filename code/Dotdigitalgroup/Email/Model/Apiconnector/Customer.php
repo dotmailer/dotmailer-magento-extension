@@ -2,39 +2,43 @@
 
 class Dotdigitalgroup_Email_Model_Apiconnector_Customer
 {
-
     /**
      * @var
      */
     public $object;
+
     /**
      * @var
      */
     public $objectData;
+
     /**
      * @var
      */
     public $reviewCollection;
 
     /**
-     * Enterprise reward.
+     * Enterprise reward data [enterprise_reward_history]
      *
      * @var
      */
-    public $reward;
+    public $rewardDataFromHistory;
 
     /**
      * @var
      */
     public $rewardCustomer;
+
     /**
      * @var string
      */
     public $rewardLastSpent = "";
+
     /**
      * @var string
      */
     public $rewardLastEarned = "";
+
     /**
      * @var string
      */
@@ -73,7 +77,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function __construct($mappingHash)
     {
-        $this->setMappigHash($mappingHash);
+        $this->setMappingHash($mappingHash);
     }
 
     /**
@@ -707,20 +711,6 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * Mapping hash value.
-     *
-     * @param $value
-     *
-     * @return $this
-     */
-    public function setMappigHash($value)
-    {
-        $this->mappingHash = $value;
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getRewardReferralUrl()
@@ -840,21 +830,23 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * Reward points balance.
+     * Get reward points balance from enterprise_reward table.
+     * enterprise_reward is a more reliable source of customer points balance than enterprise_reward_history.
+     * For example, history points balance is not updated after reward expiry.
      *
-     * @return int
+     * @return string
      */
     public function getRewardPoints()
     {
-        if (!$this->reward) {
-            $this->_setReward();
-        }
+        if (Mage::getModel('enterprise_reward/reward') && $this->websiteId > 0) {
+            $pointsBalance = Mage::getModel('enterprise_reward/reward')
+                ->setCustomer($this->object)
+                ->setWebsiteId($this->websiteId)
+                ->loadByCustomer()
+                ->getPointsBalance();
 
-        if ($this->reward !== true) {
-            return $this->reward->getPointsBalance();
+            return $pointsBalance;
         }
-
-        return '';
     }
 
     /**
@@ -864,12 +856,12 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      */
     public function getRewardAmount()
     {
-        if (!$this->reward) {
-            $this->_setReward();
+        if (!$this->rewardDataFromHistory) {
+            $this->_setRewardDataFromHistory();
         }
 
-        if ($this->reward !== true) {
-            return $this->reward->getCurrencyAmount();
+        if ($this->rewardDataFromHistory !== true) {
+            return $this->rewardDataFromHistory->getCurrencyAmount();
         }
 
         return '';
@@ -883,12 +875,12 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     public function getExpirationDate()
     {
         //set reward for later use
-        if (!$this->reward) {
-            $this->_setReward();
+        if (!$this->rewardDataFromHistory) {
+            $this->_setRewardDataFromHistory();
         }
 
-        if ($this->reward !== true) {
-            $expiredAt = $this->reward->getExpirationDate();
+        if ($this->rewardDataFromHistory !== true) {
+            $expiredAt = $this->rewardDataFromHistory->getExpirationDate();
 
             if ($expiredAt) {
                 $date = Mage::helper('core')->formatDate(
@@ -907,9 +899,9 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * Set customer reward.
+     * Retrieve the most recent row from the enterprise_reward_history table, by customer and website.
      */
-    protected function _setReward()
+    protected function _setRewardDataFromHistory()
     {
         if (Mage::getModel('enterprise_reward/reward_history') && $this->websiteId > 0) {
             $collection = Mage::getModel('enterprise_reward/reward_history')
@@ -925,9 +917,9 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
             $item = $collection->setPageSize(1)->setCurPage(1)->getFirstItem();
             //@codingStandardsIgnoreEnd
 
-            $this->reward = $item;
+            $this->rewardDataFromHistory = $item;
         } else {
-            $this->reward = true;
+            $this->rewardDataFromHistory = true;
         }
     }
 

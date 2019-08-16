@@ -20,7 +20,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
         if (!$apiModel) {
             Mage::getSingleton('adminhtml/session')->addNotice(Mage::helper('ddg')->__('Please enable api first.'));
         } else {
-            // get all possible datatifileds
+            // get all possible datafields
             $datafields = Mage::getModel('ddg_automation/connector_datafield')->getContactDatafields();
             foreach ($datafields as $key => $datafield) {
                 $response = $apiModel->postDataFields($datafield);
