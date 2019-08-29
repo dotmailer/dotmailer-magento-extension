@@ -40,6 +40,11 @@ You are welcome to contribute to Engagement Cloud for Magento! You can either:
 - Fix a bug: please fork this repo and submit the Pull Request to our [Develop branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/develop)
 Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 
+# 6.4.19
+
+###### Bug Fixes
+- We now pull the reward points balance from the correct table, so an accurate balance is shown in Engagement Cloud.
+
 # 6.4.18
 
 ###### Improvements

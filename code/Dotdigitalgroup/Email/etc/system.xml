@@ -587,7 +587,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </enterprise_title>
-                        <reward_points transalte="label" module="ddg">
+                        <reward_points translate="label" module="ddg">
                             <label>Points</label>
                             <frontend_type>select</frontend_type>
                             <source_model>ddg_automation/adminhtml_source_datafields</source_model>
