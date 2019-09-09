@@ -8,19 +8,21 @@ class Dotdigitalgroup_Email_Model_Review extends Mage_Core_Model_Abstract
      * @var mixed
      */
     public $start;
+
     /**
      * @var
      */
     public $countReviews;
+
     /**
      * @var
      */
     public $reviews;
+
     /**
      * @var array
      */
-    public $reviewIds;
-
+    public $emailReviewData;
 
     /**
      * Constructor.
@@ -91,7 +93,7 @@ class Dotdigitalgroup_Email_Model_Review extends Mage_Core_Model_Abstract
                     );
                 //if no error then set imported
                 if ($check) {
-                    $this->getResource()->setImported($this->reviewIds);
+                    $this->getResource()->setImported(array_keys($this->emailReviewData));
                 }
 
                 //@codingStandardsIgnoreStart
@@ -121,33 +123,41 @@ class Dotdigitalgroup_Email_Model_Review extends Mage_Core_Model_Abstract
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT,
             $website
         );
-        $emailReviews     = $this->_getReviewsToExport($website, $limit);
-        $this->reviewIds = $emailReviews->getColumnValues('review_id');
 
-        if (! empty($this->reviewIds)) {
+        $emailReviews     = $this->_getReviewsToExport($website, $limit);
+        foreach ($emailReviews->getItems() as $item) {
+            $this->emailReviewData[$item['review_id']] = [
+                'store_id' => $item['store_id']
+            ];
+        }
+
+        if (!empty($this->emailReviewData)) {
             $reviews = Mage::getModel('review/review')
                 ->getCollection()
                 ->addFieldToFilter(
-                    'main_table.review_id', array('in' => $this->reviewIds)
+                    'main_table.review_id', array('in' => array_keys($this->emailReviewData))
                 )
                 ->addFieldToFilter('customer_id', array('notnull' => 'true'));
 
             //@codingStandardsIgnoreStart
             $reviews->getSelect()
-                ->joinLeft(
+                ->join(
                     array('c' => Mage::getSingleton('core/resource')
                         ->getTableName('customer/entity')),
                     'c.entity_id = customer_id',
-                    array('email', 'store_id')
+                    array('email')
                 );
 
             if ($reviews->getSize()) {
                 foreach ($reviews as $mageReview) {
                     try {
+                        $storeId = $this->emailReviewData[$mageReview->getId()]['store_id'];
+                        $mageReview->setStoreId($storeId);
+
                         $product = Mage::getModel('catalog/product')
                             ->getCollection()
                             ->addIdFilter($mageReview->getEntityPkValue())
-                            ->setStoreId($mageReview->getStoreId())
+                            ->setStoreId($storeId)
                             ->addAttributeToSelect(
                                 array('product_url', 'name', 'store_id', 'small_image')
                             )
