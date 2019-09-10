@@ -31,19 +31,17 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Campaigns
         }
 
         $enabled = Mage::helper('ddg')->isEnabled($website);
-        $client = Mage::helper('ddg')->getWebsiteApiClient($website);
+
 
         //api enabled get campaigns
-        if ($enabled && $client instanceof Dotdigitalgroup_Email_Model_Apiconnector_Client) {
-            $savedCampaigns = Mage::registry('savedcampigns');
+        if ($enabled) {
+            $savedCampaigns = Mage::registry('savedcampaigns');
 
             //get campaigns from registry
             if ($savedCampaigns) {
                 $campaigns = $savedCampaigns;
             } else {
-                $campaigns = $client->getCampaigns();
-                Mage::unregister('savedcampigns');
-                Mage::register('savedcampigns', $campaigns);
+                $campaigns = $this->fetchCampaigns($website);
             }
 
             //@codingStandardsIgnoreStart
@@ -59,6 +57,35 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Campaigns
         }
 
         return $fields;
+    }
+
+    /**
+     * @param int $website
+     * @return array
+     * @throws \Exception
+     */
+    private function fetchCampaigns($website)
+    {
+        $client = Mage::helper('ddg')->getWebsiteApiClient($website);
+        if (!$client instanceof Dotdigitalgroup_Email_Model_Apiconnector_Client) {
+            return;
+        }
+
+        $campaigns = [];
+
+        do {
+            // due to the API limitation of 1000 campaign responses, loop while the campaigns returned === 1000,
+            // skipping by the count of the total received so far
+            if (!is_array($campaignResponse = $client->getCampaigns(count($campaigns)))) {
+                return (array) $campaignResponse;
+            }
+            $campaigns = array_merge($campaigns, $campaignResponse);
+        } while (count($campaignResponse) === 1000);
+
+        Mage::unregister('savedcampaigns');
+        Mage::register('savedcampaigns', $campaigns);
+
+        return $campaigns;
     }
 
 }
