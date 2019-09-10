@@ -124,6 +124,8 @@ class Dotdigitalgroup_Email_Model_Review extends Mage_Core_Model_Abstract
             $website
         );
 
+        $this->emailReviewData = [];
+
         $emailReviews     = $this->_getReviewsToExport($website, $limit);
         foreach ($emailReviews->getItems() as $item) {
             $this->emailReviewData[$item['review_id']] = [
