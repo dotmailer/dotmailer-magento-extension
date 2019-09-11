@@ -8,7 +8,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Config_Resetcontacts
     {
 
         $element->setData('onchange', "resetContacts();");
-        //url to reset the contacs
+        //url to reset the contacts
         $url = Mage::helper('adminhtml')->getUrl(
             '*/connector/resetcontactsajax'
         );

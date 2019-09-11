@@ -124,7 +124,7 @@ class Dotdigitalgroup_Email_Helper_Config
         'connector_data_mapping/enterprise_data/created_date';
     const XML_PATH_CONNECTOR_ENTERPRISE_EXPIRATION_DATE =
         'connector_data_mapping/enterprise_data/expiration_date';
-    const XML_PATH_CONNECTOR_ENTERPIRSE_LAST_USED_DATE =
+    const XML_PATH_CONNECTOR_ENTERPRISE_LAST_USED_DATE =
         'connector_data_mapping/enterprise_data/last_used_date';
     const XML_PATH_CONNECTOR_ENTERPRISE_CUSTOMER_SEGMENTS =
         'connector_data_mapping/enterprise_data/customer_segment';
@@ -134,7 +134,7 @@ class Dotdigitalgroup_Email_Helper_Config
      */
     const XML_PATH_CONNECTOR_DYNAMIC_CONTENT_PASSCODE
         = 'connector_dynamic_content/external_dynamic_content_urls/passcode';
-    const XML_PATH_CONNECTOR_DYNAMIC_CONTENT_WIHSLIST_DISPLAY
+    const XML_PATH_CONNECTOR_DYNAMIC_CONTENT_WISHLIST_DISPLAY
         = 'connector_dynamic_content/products/wishlist_display_type';
     const XML_PATH_CONNECTOR_DYNAMIC_CONTENT_REVIEW_DISPLAY_TYPE
         = 'connector_dynamic_content/products/review_display_type';
@@ -578,7 +578,7 @@ class Dotdigitalgroup_Email_Helper_Config
 
     /**
      * Check if SSL certificate verification is disabled in config.xml
-     * 
+     *
      * @return bool
      */
     public function isSslVerificationDisabled()

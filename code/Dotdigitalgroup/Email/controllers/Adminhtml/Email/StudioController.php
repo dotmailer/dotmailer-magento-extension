@@ -5,7 +5,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_StudioController
 {
 
     /**
-     * Main page for automation studio. Must be authinticated.
+     * Main page for automation studio. Must be authenticated.
      */
     public function indexAction()
     {

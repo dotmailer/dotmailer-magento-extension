@@ -3,7 +3,7 @@
 class Dotdigitalgroup_Email_Model_Newsletter_Observer
 {
     /**
-     * Change the subscribsion for an contact.
+     * Change the subscription for a contact.
      * Add new subscribers to an automation.
      *
      * @param Varien_Event_Observer $observer
@@ -252,7 +252,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
             $consentResource = Mage::getResourceModel('ddg_automation/consent');
             $consentResource->load($consentModel,$emailContactId, 'email_contact_id');
 
-            //don't update the consent data for guest subscribers or not confrimed
+            //don't update the consent data for guest subscribers or not confirmed
             if (! $consentModel->isObjectNew() ) {
                 return $this;
             }

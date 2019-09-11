@@ -86,7 +86,7 @@ class Dotdigitalgroup_Email_Block_Feefo extends Mage_Core_Block_Template
         $check     = true;
         $reviews   = array();
         $helper    = Mage::helper('ddg');
-        $feeforDir = Mage::getModel('core/config_options')
+        $feefoDir = Mage::getModel('core/config_options')
                 ->getLibDir() . DS . 'connector' . DS . 'feefo';
         $logon     = $helper->getFeefoLogon();
         $limit     = $helper->getFeefoReviewsPerProduct();
@@ -100,9 +100,9 @@ class Dotdigitalgroup_Email_Block_Feefo extends Mage_Core_Block_Template
             $xsl = new XSLTProcessor();
             //@codingStandardsIgnoreStart
             if ($check) {
-                $doc->load($feeforDir . DS . "feedback.xsl");
+                $doc->load($feefoDir . DS . "feedback.xsl");
             } else {
-                $doc->load($feeforDir . DS . "feedback-no-th.xsl");
+                $doc->load($feefoDir . DS . "feedback-no-th.xsl");
             }
 
             $xsl->importStyleSheet($doc);

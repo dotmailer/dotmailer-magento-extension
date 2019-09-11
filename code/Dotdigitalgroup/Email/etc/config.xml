@@ -189,7 +189,7 @@
                     <ddg_customer_register_success>
                         <type>singleton</type>
                         <class>ddg_automation/customer_observer</class>
-                        <method>handleCustomerRegiterSuccess</method>
+                        <method>handleCustomerRegisterSuccess</method>
                     </ddg_customer_register_success>
                 </observers>
             </customer_register_success>
@@ -247,7 +247,7 @@
                 <observers>
                     <ddg_sales_order_cancel>
                         <class>ddg_automation/sales_observer</class>
-                        <method>hangleSalesOrderCancel</method>
+                        <method>handleSalesOrderCancel</method>
                     </ddg_sales_order_cancel>
                 </observers>
             </order_cancel_after>

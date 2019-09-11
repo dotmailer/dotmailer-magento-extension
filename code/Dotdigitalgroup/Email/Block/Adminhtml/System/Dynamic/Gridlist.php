@@ -5,7 +5,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Gridlist
 {
 
     /**
-     * Dynamic contaent dysplay type.
+     * Dynamic content display type.
      *
      * @param Varien_Data_Form_Element_Abstract $element
      *

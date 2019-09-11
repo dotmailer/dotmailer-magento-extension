@@ -5,7 +5,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
     implements Mage_Adminhtml_Block_Widget_Tab_Interface
 {
     const CONNECTOR_DASHBOARD_PASSED = 'available';
-    const CONNECTOR_DASHBOARD_WARRNING = 'connector_warning';
+    const CONNECTOR_DASHBOARD_WARNING = 'connector_warning';
     const CONNECTOR_DASHBOARD_FAILED = 'error';
     const FAST_FIX_MESSAGE = 'Fast Fix Available, Click To Enable The Mapping And Redirect Back.';
 
@@ -112,25 +112,25 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
 
         $displayData = array();
         foreach ($this->getCheckpoints() as $key => $checkpoint) {
-            $method = $this->getFormatedMethodName($key);
+            $method = $this->getFormattedMethodName($key);
 
             if (is_callable(array($this, $method))) {
                 $data        = $this->$method();
                 $showHowTo   = '';
-                $collapsable = '1';
+                $collapsible = '1';
 
                 if ($data->getStyle() == 'connector_passed') {
                     $showHowTo   = 'no_display';
-                    $collapsable = '0';
+                    $collapsible = '0';
                 }
 
                 if ($this->_getCollapseState($key) !== false) {
-                    $collapsable = $this->_getCollapseState($key);
+                    $collapsible = $this->_getCollapseState($key);
                 }
 
                 $displayData[$key] = array(
                     'showHowTo'   => $showHowTo,
-                    'collapsable' => $collapsable,
+                    'collapsable' => $collapsible,
                     'data'        => $data
                 );
             }
@@ -352,7 +352,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
             $archiveDir
         );
 
-        //file persmission failed
+        //file permission failed
         if ($checkEmail != 755 && $checkEmail != 777
             || $checkArchive != 755
             && $checkArchive != 777
@@ -599,7 +599,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
 
             if ($countCustomers > $countCustomerContacts + $suppressed) {
                 $tableData['Status'] = 'Syncing..';
-                //all customers syned.
+                //all customers synced.
             } else {
                 $tableData['Status'] = 'Synced';
             }
@@ -790,22 +790,22 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
             );
 
             //programs
-            $cusProgram        = $this->_getWebisteProgram(
+            $cusProgram        = $this->_getWebsiteProgram(
                 $customerProgram, $website
             );
-            $subProgram        = $this->_getWebisteProgram(
+            $subProgram        = $this->_getWebsiteProgram(
                 $subscriberProgram, $website
             );
-            $orderProgram      = $this->_getWebisteProgram(
+            $orderProgram      = $this->_getWebsiteProgram(
                 $orderProgram, $website
             );
-            $guestOrderProgram = $this->_getWebisteProgram(
+            $guestOrderProgram = $this->_getWebsiteProgram(
                 $guestOrderProgram, $website
             );
-            $reviewsProgram    = $this->_getWebisteProgram(
+            $reviewsProgram    = $this->_getWebsiteProgram(
                 $reviewsProgram, $website
             );
-            $wishlistProgram   = $this->_getWebisteProgram(
+            $wishlistProgram   = $this->_getWebsiteProgram(
                 $wishlistProgram, $website
             );
 
@@ -1001,19 +1001,19 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
 
         foreach (Mage::app()->getWebsites() as $website) {
             $websiteName       = $website->getName();
-            $abandonedCusomerOne = ($website->getConfig(
+            $abandonedCustomerOne = ($website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CARTS_ENABLED_1
             ))
                 ? true
                 :
                 'Disabled!';
-            $abandonedCusomerTwo = ($website->getConfig(
+            $abandonedCustomerTwo = ($website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CARTS_ENABLED_2
             ))
                 ? true
                 :
                 'Disabled!';
-            $abandonedCusomerThree = ($website->getConfig(
+            $abandonedCustomerThree = ($website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOMER_ABANDONED_CARTS_ENABLED_3
             ))
                 ? true
@@ -1038,8 +1038,8 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                 :
                 'Disabled!';
 
-            if ($abandonedCusomerOne !== true || $abandonedCusomerTwo !== true
-                || $abandonedCusomerThree !== true
+            if ($abandonedCustomerOne !== true || $abandonedCustomerTwo !== true
+                || $abandonedCustomerThree !== true
                 || $abandonedGuestOne !== true
                 || $abandonedGuestTwo !== true
                 || $abandonedGuestThree !== true
@@ -1082,14 +1082,14 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                     ->setTable(
                         array(
                             'Website'              => $websiteName,
-                            'Customer Abandoned 1' => ($abandonedCusomerOne
-                                !== true) ? $abandonedCusomerOne . ' <a href="'
+                            'Customer Abandoned 1' => ($abandonedCustomerOne
+                                !== true) ? $abandonedCustomerOne . ' <a href="'
                                 . $customerOne . '">enable</a>' : 'Enabled',
-                            'Customer Abandoned 2' => ($abandonedCusomerTwo
-                                !== true) ? $abandonedCusomerTwo . ' <a href="'
+                            'Customer Abandoned 2' => ($abandonedCustomerTwo
+                                !== true) ? $abandonedCustomerTwo . ' <a href="'
                                 . $customerTwo . '">enable</a>' : 'Enabled',
-                            'Customer Abandoned 3' => ($abandonedCusomerThree
-                                !== true) ? $abandonedCusomerThree . ' <a href="'
+                            'Customer Abandoned 3' => ($abandonedCustomerThree
+                                !== true) ? $abandonedCustomerThree . ' <a href="'
                                 . $customerThree . '">enable</a>' : 'Enabled',
                             'Guest Abandoned 1' => ($abandonedGuestOne
                                 !== true) ? $abandonedGuestOne . ' <a href="'
@@ -1550,11 +1550,11 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
 
         foreach (Mage::app()->getWebsites() as $website) {
             $websiteName         = $website->getName();
-            $customOrderAttibute = ($website->getConfig(
+            $customOrderAttribute = ($website->getConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_CUSTOM_ORDER_ATTRIBUTES
             )) ? true : false;
 
-            if ($customOrderAttibute !== true) {
+            if ($customOrderAttribute !== true) {
                 $resultContent->setStyle(self::CONNECTOR_DASHBOARD_FAILED)
                     ->setTitle(
                         'Custom order attribute not selected 
@@ -1595,7 +1595,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
                 continue;
             }
 
-            //numbser of orders marked as imported
+            //number of orders marked as imported
             $numOrders = Mage::getModel('ddg_automation/order')->getCollection()
                 ->addFieldToFilter('email_imported', 1)
                 ->addFieldToFilter('store_id', array('in', $storeIds))->getSize(
@@ -1777,7 +1777,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
     }
 
     /**
-     * Get the last date for abandaned carts.
+     * Get the last date for abandoned carts.
      *
      * @return Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Content
      */
@@ -1989,9 +1989,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
     protected function _isInheritanceConflict($classes)
     {
         $classes   = array_reverse($classes);
-        $numClases = count($classes);
+        $numClasses = count($classes);
 
-        for ($i = 0; $i < $numClases - 1; $i++) {
+        for ($i = 0; $i < $numClasses - 1; $i++) {
             try {
                 if (class_exists($classes[$i])
                     && class_exists($classes[$i + 1])
@@ -2072,7 +2072,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
      * @param $website
      * @return bool|null
      */
-    protected function _getWebisteProgram($program, $website)
+    protected function _getWebsiteProgram($program, $website)
     {
         $client = Mage::helper('ddg')->getWebsiteApiClient($website);
 
@@ -2098,9 +2098,9 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
      *
      * @return bool|null
      */
-    protected function _getAddressBookContacts($addressBook, $webiste)
+    protected function _getAddressBookContacts($addressBook, $website)
     {
-        $client = Mage::helper('ddg')->getWebsiteApiClient($webiste);
+        $client = Mage::helper('ddg')->getWebsiteApiClient($website);
         //check the client enabled and addressbook mapped
         if (! $client || ! $addressBook) {
             return false;
@@ -2122,7 +2122,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Status
      *
      * @return string
      */
-    public function getFormatedMethodName($name)
+    public function getFormattedMethodName($name)
     {
         //version that not support the lcfirst method
         if (function_exists('lcfirst') === false) {

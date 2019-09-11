@@ -39,7 +39,7 @@ class Dotdigitalgroup_Email_Block_Order extends Dotdigitalgroup_Email_Block_Edc
     }
 
     /**
-     * Dysplay mode.
+     * Display mode.
      *
      * @return string
      */

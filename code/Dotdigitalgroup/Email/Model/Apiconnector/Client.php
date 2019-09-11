@@ -9,7 +9,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
     const REST_CONTACTS = '/v2/contacts/';
     const REST_CONTACTS_IMPORT = '/v2/contacts/import/';
     const REST_ADDRESS_BOOKS = '/v2/address-books/';
-    const REST_DATA_FILEDS = '/v2/data-fields';
+    const REST_DATA_FIELDS = '/v2/data-fields';
     const REST_TRANSACTIONAL_DATA_IMPORT = '/v2/contacts/transactional-data/import/';
     const REST_TRANSACTIONAL_DATA = '/v2/contacts/transactional-data/';
     const REST_CAMPAIGN_SEND = '/v2/campaigns/send';
@@ -22,7 +22,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
     const REST_PROGRAM_ENROLMENTS = '/v2/programs/enrolments';
     const REST_TEMPLATES = '/v2/templates';
     const REST_CAMPAIGNS_WITH_PREPARED_CONTENT = 'prepared-for-transactional-email';
-    //rest error responces
+    //rest error responses
     const API_ERROR_API_EXCEEDED = 'Your account has generated excess API activity and is being temporarily capped.
      Please contact support. ERROR_APIUSAGE_EXCEEDED';
     const API_ERROR_EMAIL_NOT_VALID = 'Email is not a valid email address. ERROR_PARAMETER_INVALID';
@@ -187,7 +187,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
             $this->getApiUsername() . ':' . $this->getApiPassword()
         );
 
-        //case the deprication of @filename for uploading
+        //case the deprecation of @filename for uploading
         if (function_exists('curl_file_create')) {
             if (defined('CURLOPT_SAFE_UPLOAD')){
                 curl_setopt($ch, CURLOPT_SAFE_UPLOAD, false);
@@ -198,7 +198,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
             curl_setopt($ch, CURLOPT_POSTFIELDS, $args);
 
         } else {
-            //standart use of curl file
+            //standard use of curl file
             curl_setopt(
                 $ch, CURLOPT_POSTFIELDS, array(
                     'file' => '@' . Mage::helper('ddg/file')->getFilePathWithFallback(
@@ -471,7 +471,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
      */
     public function postDataFields($data, $type = 'String', $visibility = 'public', $defaultValue = false)
     {
-        $url = $this->getApiEndpoint() . self::REST_DATA_FILEDS;
+        $url = $this->getApiEndpoint() . self::REST_DATA_FIELDS;
         //set default value for the numeric datatype
         if ($type == 'numeric' && ! $defaultValue) {
             $defaultValue = 0;
@@ -518,7 +518,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
      */
     public function deleteDataField($name)
     {
-        $url = $this->getApiEndpoint() . self::REST_DATA_FILEDS . '/' . $name;
+        $url = $this->getApiEndpoint() . self::REST_DATA_FIELDS . '/' . $name;
         $this->setUrl($url)
             ->setVerb('DELETE');
 
@@ -543,7 +543,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
      */
     public function getDataFields()
     {
-        $url = $this->getApiEndpoint() . self::REST_DATA_FILEDS;
+        $url = $this->getApiEndpoint() . self::REST_DATA_FIELDS;
         $this->setUrl($url)
             ->setVerb('GET');
 
@@ -765,7 +765,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Client extends Dotdigitalgroup_Em
                 $response->message, $this->excludeMessages
             )
         ) {
-            $message = 'GET CONTACTS SUPPRESSED SINSE : ' . $dateString
+            $message = 'GET CONTACTS SUPPRESSED SINCE : ' . $dateString
                 . ' select ' . $select . ' skip : ' . $skip . '   response : '
                 . $response->message;
             Mage::helper('ddg')->log($message);

@@ -40,7 +40,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Review_Grid
     }
 
     /**
-     * Prepare the grid collumns.
+     * Prepare the grid columns.
      *
      * @return $this
      * @throws Exception

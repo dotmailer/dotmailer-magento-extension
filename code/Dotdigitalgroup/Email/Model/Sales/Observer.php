@@ -248,7 +248,7 @@ class Dotdigitalgroup_Email_Model_Sales_Observer
      *
      * @return $this
      */
-    public function hangleSalesOrderCancel(Varien_Event_Observer $observer)
+    public function handleSalesOrderCancel(Varien_Event_Observer $observer)
     {
         $helper      = Mage::helper('ddg');
         $order       = $observer->getEvent()->getOrder();

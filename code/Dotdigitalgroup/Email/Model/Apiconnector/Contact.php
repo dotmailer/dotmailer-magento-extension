@@ -23,7 +23,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
         $result = array('success' => true, 'message' => '');
         $helper       = Mage::helper('ddg');
         $this->start = microtime(true);
-        //resourse allocation
+        //resource allocation
         $helper->allowResourceFullExecution();
 
         foreach (Mage::app()->getWebsites(true) as $website) {
@@ -45,7 +45,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Contact
             }
         }
 
-        //sync proccessed
+        //sync processed
         if ($this->countCustomers) {
             //@codingStandardsIgnoreStart
             $message = '----------- Customer sync ----------- : ' . gmdate("H:i:s", microtime(true) - $this->start) .

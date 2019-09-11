@@ -241,7 +241,7 @@ class Dotdigitalgroup_Email_Model_Contact extends Mage_Core_Model_Abstract
     /**
      * @return int
      */
-    public function getNumberOfImportedContacs()
+    public function getNumberOfImportedContacts()
     {
         $collection = $this->getCollection()
             ->addFieldToFilter('email_imported', array('notnull' => true));

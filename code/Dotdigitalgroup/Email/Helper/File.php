@@ -231,7 +231,7 @@ class Dotdigitalgroup_Email_Helper_File
      */
     public function getWebsiteSalesDataFields($website)
     {
-        $subscriberDataFileds = array(
+        $subscriberDataFields = array(
             'website_name' => '',
             'store_name' => '',
             'number_of_orders' => '',
@@ -253,7 +253,7 @@ class Dotdigitalgroup_Email_Helper_File
             'connector_data_mapping/customer_data', $store
         );
 
-        $mappedData = array_intersect_key($mappedData, $subscriberDataFileds);
+        $mappedData = array_intersect_key($mappedData, $subscriberDataFields);
 
         foreach ($mappedData as $key => $value) {
             if (!$value) {

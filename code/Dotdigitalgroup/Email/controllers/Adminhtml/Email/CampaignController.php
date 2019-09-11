@@ -76,7 +76,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_CampaignController
     }
 
     /**
-     * Mass mark for resend campaings.
+     * Mass mark for resend campaigns.
      */
     public function massResendAction()
     {
