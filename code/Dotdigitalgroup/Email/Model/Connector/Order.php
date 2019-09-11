@@ -50,7 +50,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
     /**
      * @var float
      */
-    public $discount_ammount;
+    public $discount_amount;
     /**
      * @var float
      */
@@ -93,7 +93,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
      * @var string
      */
     protected $_attributeSet;
-    
+
     /**
      * set the order information
      *
@@ -152,7 +152,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
             '.',
             ''
         );
-        $this->discount_ammount = (float)number_format(
+        $this->discount_amount = (float)number_format(
             $orderData->getData('discount_amount'),
             2,
             '.',
@@ -230,7 +230,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
         if ($customAttributes) {
             $fields = Mage::getResourceModel('ddg_automation/order')
                 ->getOrderTableDescription();
-            
+
             foreach ($customAttributes as $customAttribute) {
                 if (isset($fields[$customAttribute])) {
                     $field = $fields[$customAttribute];
@@ -275,14 +275,14 @@ class Dotdigitalgroup_Email_Model_Connector_Order
      */
     public function expose()
     {
-        $propreties = array_diff_key(
+        $properties = array_diff_key(
             get_object_vars($this),
             array_flip(array(
                 '_attributeSet',
             ))
         );
 
-        return array_filter($propreties);
+        return array_filter($properties);
     }
 
     protected function _getCustomAttributeValue($field, $orderData)

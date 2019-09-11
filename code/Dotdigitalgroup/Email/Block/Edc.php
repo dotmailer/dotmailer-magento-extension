@@ -90,7 +90,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
     }
 
     /**
-     * Diplay mode type.
+     * Display mode type.
      *
      * @return mixed|string
      */
@@ -101,7 +101,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
     }
 
     /**
-     * Number of the colums.
+     * Number of the columns.
      *
      * @return int|mixed
      * @throws Exception

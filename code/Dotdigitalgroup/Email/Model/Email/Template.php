@@ -143,7 +143,7 @@ class Dotdigitalgroup_Email_Model_Email_Template extends Mage_Core_Model_Email_T
         if (! $transactionalHelper->isStringCompressed($this->getTemplateText()) &&
             $transactionalHelper->isDotmailerTemplate($this->getTemplateCode())
         ) {
-            $this->setTemplateText($transactionalHelper->compresString($this->getTemplateText()));
+            $this->setTemplateText($transactionalHelper->compressString($this->getTemplateText()));
         }
 
         return parent::_beforeSave();
@@ -160,7 +160,7 @@ class Dotdigitalgroup_Email_Model_Email_Template extends Mage_Core_Model_Email_T
         $transactionalHelper = Mage::helper('ddg/transactional');
         //decompress the content body
         if ($transactionalHelper->isStringCompressed($templateText)) {
-            $this->setTemplateText($transactionalHelper->decompresString($this->getTemplateText()));
+            $this->setTemplateText($transactionalHelper->decompressString($this->getTemplateText()));
         }
 
         return parent::_afterLoad();

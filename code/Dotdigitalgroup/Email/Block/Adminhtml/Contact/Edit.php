@@ -31,7 +31,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Contact_Edit
     }
 
     /**
-     * HEader text.
+     * Header text.
      *
      * @return string
      */

@@ -54,7 +54,7 @@ class Dotdigitalgroup_Email_Model_Cron
      */
     public function abandonedCarts()
     {
-        Mage::getModel('ddg_automation/sales_quote')->proccessAbandonedCarts();
+        Mage::getModel('ddg_automation/sales_quote')->processAbandonedCarts();
     }
 
     /**
@@ -161,7 +161,7 @@ class Dotdigitalgroup_Email_Model_Cron
     }
 
     /**
-     * CLEAN ARHIVED FOLDERS
+     * CLEAN ARCHIVED FOLDERS
      */
     public function cleaning()
     {

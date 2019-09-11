@@ -323,7 +323,7 @@ abstract class Dotdigitalgroup_Email_Model_Abstract_Rest
     }
 
     /**
-     * Ececute delete.
+     * Execute delete.
      *
      * @param $ch
      */

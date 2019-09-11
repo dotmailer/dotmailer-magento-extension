@@ -319,7 +319,7 @@ Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 ###### Bug fixes
 - Subscribers with datafields fixes.
 - Email change detection to update the same contact.
-- Campaign bulk sync proccessing ids.
+- Campaign bulk sync processing ids.
 - Quote validation for billing/shipping address.
 - Increased cURL timeout for TD imports.
 - Improve install script running time for updating subscribers.
@@ -358,18 +358,18 @@ Request a feature on our [roadmap](https://roadmap.dotdigital.com)
  - Coupon EDC expiration date. You can set the expiration date for coupon included into the URL
  - Improve finding guests. Guest will be added in bulk to the table.
  - Add new automation for first customer order event.
- - EDC include all product types to have an image and inlcude the price range available for the product.   
+ - EDC include all product types to have an image and include the price range available for the product.   
 
 ###### Bug fixes
  - EDC fixed the prefix for table names.
  - Fix unsubscribeEmail register already exists.
  - New installation do not get the customers mark as subscribers.
  - Automation program enrollment without unserialized is failing.
- - Exclution Rules conditional mapping fix.   
+ - Exclusion Rules conditional mapping fix.   
 
 ###### Improvements
  - Appcues script will run in admin on connector pages only.
- - Improve the index for the email campaing table.
+ - Improve the index for the email campaign table.
  - Allow to include Order multiselect attributes. 
 
 # V6.0.0
@@ -397,12 +397,12 @@ Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 # V5.2.0
 ## Features
  - Run Importer Button.
- - Cron timings for diffrent settings to run cronjobs.
+ - Cron timings for different settings to run cronjobs.
 ## Bug fixes
  - Rule condition for abandoned carts.
-## Improvments
+## Improvements
  - Refactor EDC pages.
- - New "Suppressed by you" into suppresion list.
+ - New "Suppressed by you" into suppression list.
  - New suppressed contacts sync.
  - More Code Audit changes.
 
@@ -415,7 +415,7 @@ Request a feature on our [roadmap](https://roadmap.dotdigital.com)
  - Exclusion rules ajax call protocol fix
 ## Features
  - Abandoned Product Name
- - Importer API Enchased
+ - Importer API enhanced
  - Add indexes to tables
  - Transactional email merged to core
  - Order status option source changed
@@ -428,15 +428,15 @@ Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 
 # V5.0.3
 ## Bug fixes
- - Magento code audit. Brins a lot of performance and architectural imrovements.
+ - Magento code audit. Brings a lot of performance and architectural improvements.
  - Fixed fatal error on quote single sync
  - Fixed oAuth redirect
  - Fixed oAuth disconnect button
  - Order sync report column name typo fix
- - Removed hidden form fields connector_customer_id and connector_customer_email from customer accouunt additional newsletter management
+ - Removed hidden form fields connector_customer_id and connector_customer_email from customer account additional newsletter management
  - Fixed rewrite sendNewAccountEmail function to call parent function with actual params instead of default
  - Fixed EDC blocks to load order from registry that was saved in registry from controller. If not found will throws Exception from now.
- - Fixed emmail capture fails on one of the email fields if both newsletter and billing email are presented on the same page.
+ - Fixed email capture fails on one of the email fields if both newsletter and billing email are presented on the same page.
  - Fixed voucher styling bug where no style was being loaded from config.
  - Fixed contact fields data calculation not working because of status not being an array. Added check if it is an array before start working on it.
  - Fixed Page/ROI data Enable config path in xml.
@@ -468,7 +468,7 @@ Request a feature on our [roadmap](https://roadmap.dotdigital.com)
  -  Automation Queue Enrolment
  -  Easy Email capture on newsletter signup
  -  Campaign stats for customers in admin
- -  Seperate customer and guest syncs
+ -  Separate customer and guest syncs
  -  Add to cart button for abandoned carts
  -  Coupon code styling
  -  Editable "view now" text for EDC pages
@@ -483,8 +483,8 @@ Request a feature on our [roadmap](https://roadmap.dotdigital.com)
  -  Reduced default batch size and more frequent batching
  -  Custom order attributes not syncing
  -  Performance improvements to all data syncs
- -  Performance improvments to data analysis page
- -  Admin place an order, wrong enviroment
+ -  Performance improvements to data analysis page
+ -  Admin place an order, wrong environment
  -  Update RFM table
  -  Observers that are hit more then once
  -  Refactor of the quote sync
@@ -503,11 +503,11 @@ Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 ## Features
  - Transactional email.
  - Dashboard display conflict checker.
- - Namespace updated to Ddg Automaiton.
+ - Namespace updated to Ddg Automation.
  - Enterprise version combined.
  - Appcues onboarding.
  - Raygun control to disable and enable.
- - Sweetooth refferal link.
+ - Sweet Tooth referral link.
  - Custom OAUTH domain/redirect link options.
  - Use Engagement Cloud template for transactional emails.
  - Wishlist EDC with related, upsell and crosssell.
@@ -515,7 +515,7 @@ Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 
 ## Bug fixes
  - Sync limits lowered to 5000 contacts and 200 orders.
- - Review is submited before it's approved.
+ - Review is submitted before it's approved.
  - Abandoned Carts triggered from the "LAST_QUOTE_ID".
 
 # V3.3.0
@@ -540,7 +540,7 @@ Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 - System Status Dashboard
 ## Features
 - System Status Dashboard.
-- RFM Analisys.
+- RFM Analysis.
 - Api Status.
 - Raygun Integration.
 - Feed for new releases.
@@ -550,10 +550,10 @@ Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 - Alternative abandoned baskets.
 - Mailcheck integration
 ## Bug fixed
-- Magor Refactoring.
+- Major Refactoring.
 - Cover all the code with testing.
 - Automation when subscriber is not imported yet.
-- Security improvment for api credentials.
+- Security improvement for api credentials.
 - Campaigns for multi website.
 - Mailcheck frontend notice.
 - Improve reset subscribers.
@@ -564,7 +564,7 @@ Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 - Payment method for orders.
 - Check for feature active for disabled accounts.
 - Disable sync for not mapped addressbooks.
-- App emaulation to match the env the order.
+- App emulation to match the env the order.
 - Subdomain dynamic urls.
 - Buttons to run sync services.
 - Ajax reset of the contacts for an updated addressbooks.
@@ -616,8 +616,8 @@ Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 * Translations update
 * Default values update
 * Transactional emails enabled fix
-* Manully map the customer ID field
-* Emails Reports enchase with website id field
+* Manually map the customer ID field
+* Emails Reports enhanced with website id field
 
 # V3.0.0
 
@@ -648,7 +648,7 @@ Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 * Newsletter Contact.
 * Newsletter Orders.
 * Newsletter Campaigns.
-* Product Recomendations styling.
+* Product Recommendations styling.
 * TE styling.
 * Subscribers reset button.
 * Custom datafields.

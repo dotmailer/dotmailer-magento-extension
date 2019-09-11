@@ -9,9 +9,9 @@ class Dotdigitalgroup_Email_Model_Template extends Mage_Core_Model_Abstract
 
     const XML_PATH_WISHLIST_EMAIL_EMAIL_TEMPLATE = 'wishlist/email/email_template';
 
-    const XML_PATH_DDG_TEMPLATE_NEW_ACCCOUNT =
+    const XML_PATH_DDG_TEMPLATE_NEW_ACCOUNT =
         'dotmailer_email_templates/email_templates/customer_create_account_email_template';
-    const XML_PATH_DDG_TEMPLATE_NEW_ACCCOUNT_CONFIRMATION_KEY =
+    const XML_PATH_DDG_TEMPLATE_NEW_ACCOUNT_CONFIRMATION_KEY =
         'dotmailer_email_templates/email_templates/customer_create_account_email_confirmation_template';
     const XML_PATH_DDG_TEMPLATE_NEW_ACCOUNT_CONFIRMATION =
         'dotmailer_email_templates/email_templates/customer_create_account_email_confirmed_template';
@@ -136,9 +136,9 @@ class Dotdigitalgroup_Email_Model_Template extends Mage_Core_Model_Abstract
      * @var array
      */
     public $templateConfigIdToDotmailerConfigPath = [
-        'customer_create_account_email_template' => self::XML_PATH_DDG_TEMPLATE_NEW_ACCCOUNT,
+        'customer_create_account_email_template' => self::XML_PATH_DDG_TEMPLATE_NEW_ACCOUNT,
         'customer_create_account_email_confirmation_template' =>
-            self::XML_PATH_DDG_TEMPLATE_NEW_ACCCOUNT_CONFIRMATION_KEY,
+            self::XML_PATH_DDG_TEMPLATE_NEW_ACCOUNT_CONFIRMATION_KEY,
         'customer_create_account_email_confirmed_template' => self::XML_PATH_DDG_TEMPLATE_NEW_ACCOUNT_CONFIRMATION,
         'customer_password_forgot_email_template' => self::XML_PATH_DDG_TEMPLATE_FORGOT_PASSWORD,
         'customer_password_remind_email_template' => self::XML_PATH_DDG_TEMPLATE_REMIND_PASSWORD,

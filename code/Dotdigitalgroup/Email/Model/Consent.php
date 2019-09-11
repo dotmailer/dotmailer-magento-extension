@@ -60,10 +60,10 @@ class Dotdigitalgroup_Email_Model_Consent extends Mage_Core_Model_Abstract
             return array();
         }
         $consentText = $configHelper->getConsentSubscriberText($websiteId);
-        $customerConentText = $configHelper->getConsentCustomerText($websiteId);
+        $customerConsentText = $configHelper->getConsentCustomerText($websiteId);
         //customer checkout and registration if consent text not empty
-        if ($this->isLinkMatchCustomerRegistrationOrCheckout($this->getConsentUrl()) && strlen($customerConentText)) {
-            $consentText = $customerConentText;
+        if ($this->isLinkMatchCustomerRegistrationOrCheckout($this->getConsentUrl()) && strlen($customerConsentText)) {
+            $consentText = $customerConsentText;
         }
 
         $dateTimeConsent =  $this->getConsentDatetime();

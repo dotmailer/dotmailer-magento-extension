@@ -693,7 +693,7 @@ $table->addColumn(
     ->addColumn(
         'enrolment_status', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
         'nullable' => false,
-    ), 'Entrolment Status'
+    ), 'Enrolment Status'
     )
     ->addColumn(
         'email', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(

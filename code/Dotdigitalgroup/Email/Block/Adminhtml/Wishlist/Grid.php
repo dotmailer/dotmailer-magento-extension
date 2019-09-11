@@ -43,7 +43,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Wishlist_Grid
     }
 
     /**
-     * Prepare the grid collumns.
+     * Prepare the grid columns.
      *
      * @return Mage_Adminhtml_Block_Widget_Grid
      * @throws Exception

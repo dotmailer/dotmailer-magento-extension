@@ -40,7 +40,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
                         $scopeId = '0';
                     }
 
-                    //map the succesful created datafield
+                    //map the successfully created datafield
                     $config = Mage::getModel('core/config');
                     $config->saveConfig(
                         'connector_data_mapping/customer_data/' . $key, strtoupper($datafield['name']), $scope, $scopeId
@@ -186,7 +186,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
     }
 
     /**
-     * Ajax requets to reset susbcribers for reimport.
+     * Ajax request to reset subscribers for reimport.
      */
     public function ajaxresetsubscribersAction()
     {
@@ -196,7 +196,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
     }
 
     /**
-     * Ajax request to reset orders for reimoport.
+     * Ajax request to reset orders for reimport.
      */
     public function ajaxresetguestsAction()
     {
@@ -261,7 +261,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
     /**
      * Reimport subscriber contacts.
      */
-    public function reimoprtsubscribersAction()
+    public function reimportsubscribersAction()
     {
         $updated = Mage::getResourceModel('ddg_automation/contact')->resetSubscribers();
         if ($updated) {
@@ -351,7 +351,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
     }
 
     /**
-     * Trigger to run the reviw sync.
+     * Trigger to run the review sync.
      */
     public function runwishlistsyncAction()
     {

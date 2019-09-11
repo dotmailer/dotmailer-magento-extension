@@ -41,7 +41,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_DashboardController
     }
 
     /**
-     * Load Status Grid as ajax requst.
+     * Load Status Grid as ajax request.
      */
     public function statusGridAction()
     {
@@ -75,7 +75,7 @@ class Dotdigitalgroup_Email_Adminhtml_Email_DashboardController
 
 
     /**
-     * Ajax save the state of expandbles fieldsets.
+     * Ajax save the state of expandable fieldsets.
      */
     public function stateAction()
     {

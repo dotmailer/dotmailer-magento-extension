@@ -44,7 +44,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
     /**
      *
      */
-    public function proccessAbandonedCarts()
+    public function processAbandonedCarts()
     {
         $this->locale = Mage::app()->getLocale()->getLocale();
         foreach (Mage::app()->getStores() as $store) {
@@ -61,9 +61,9 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
                 $secondCustomerEnabled ||
                 $thirdCustomerEnabled
             ) {
-                $this->proccessFirstCustomerAC($storeId, $websiteId);
+                $this->processFirstCustomerAC($storeId, $websiteId);
             }
-            //second csutomer
+            //second customer
             if ($secondCustomerEnabled){
                 $this->processExistingAC(
                     $this->getLostBasketCustomerCampaignId(self::CUSTOMER_LOST_BASKET_TWO, $storeId),
@@ -161,7 +161,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
      * @param $storeId
      * @return null|string
      */
-    protected function getLostBasketGuestIterval($num, $storeId)
+    protected function getLostBasketGuestInterval($num, $storeId)
     {
         $store = Mage::app()->getStore($storeId);
 
@@ -282,7 +282,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
             'date' => true
         );
 
-        //number of campigns during this time
+        //number of campaigns during this time
         $campaignLimit = Mage::getModel('ddg_automation/campaign')
             ->getCollection()
             ->addFieldToFilter('email', $email)
@@ -303,7 +303,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
      * @param $storeId
      * @param $websiteId
      */
-    private function proccessFirstCustomerAC($storeId, $websiteId)
+    private function processFirstCustomerAC($storeId, $websiteId)
     {
         //campaign id for customers
         $campaignId = $this->getLostBasketCustomerCampaignId(self::CUSTOMER_LOST_BASKET_ONE, $storeId);
@@ -367,7 +367,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
     private function proccessFirstGuestAC($storeId, $websiteId)
     {
         $from = Zend_Date::now($this->locale)->subMinute(
-            $this->getLostBasketGuestIterval(self::GUEST_LOST_BASKET_ONE, $storeId)
+            $this->getLostBasketGuestInterval(self::GUEST_LOST_BASKET_ONE, $storeId)
         );
         $to = clone($from);
         $from->sub('5', Zend_Date::MINUTE);
@@ -448,7 +448,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
     private function processExistingAC($campaignId, $storeId, $websiteId, $number, $guest = false)
     {
         if ($guest) {
-            $from = Zend_Date::now($this->locale)->subHour($this->getLostBasketGuestIterval($number, $storeId));
+            $from = Zend_Date::now($this->locale)->subHour($this->getLostBasketGuestInterval($number, $storeId));
             $message = 'Guest';
         } else {
             $from = Zend_Date::now($this->locale)->subHour($this->getLostBasketCustomerInterval($number, $storeId));
@@ -575,9 +575,9 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
     {
         //limit interval if the email was already sent
         $storeId = $quote->getStoreId();
-        $campignFound = $this->checkCustomerCartLimit($email, $storeId);
-        //no campign found for interval pass
-        if (! $campignFound && $campaignId) {
+        $campaignFound = $this->checkCustomerCartLimit($email, $storeId);
+        //no campaign found for interval pass
+        if (! $campaignFound && $campaignId) {
             $customerId = $quote->getCustomerId();
             $message = ($customerId)? 'Abandoned Cart ' . $number : 'Guest Abandoned Cart ' . $number;
             Mage::getModel('ddg_automation/campaign')

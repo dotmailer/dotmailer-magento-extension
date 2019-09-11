@@ -86,7 +86,7 @@ class Dotdigitalgroup_Email_Model_Api2_Subscriber_Rest_Admin_V1
         //Update Subscriber
         $requestData = $this->getRequest()->getBodyParams();
 
-        //check for scubscriber email
+        //check for subscriber email
         if ($email = $requestData['subscriber_email']) {
             try {
                 $customerId = (isset($requestData['customer_id']))

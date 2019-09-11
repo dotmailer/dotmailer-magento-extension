@@ -145,7 +145,7 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
             //limit because of the each contact request to get the id
             $automationCollection->getSelect()->limit($this->limit);
             foreach ($automationCollection as $automation) {
-                //customerid, subscriberid, wishlistid..
+                //customer id, subscriber id, wishlist id
                 $email           = $automation->getEmail();
                 $this->typeId    = $automation->getTypeId();
                 $websiteId       = $automation->getWebsiteId();
@@ -183,7 +183,7 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
                     $contactsArray = $websiteContacts['contacts'];
                     //only for subscribed contacts
                     if (!empty($contactsArray)
-                        && $this->_checkCampignEnrolmentActive($this->programId, $websiteId)
+                        && $this->_checkCampaignEnrolmentActive($this->programId, $websiteId)
                     ) {
                         $result = $this->sendContactsToAutomation(
                             array_values($contactsArray),
@@ -347,7 +347,7 @@ class Dotdigitalgroup_Email_Model_Automation extends Mage_Core_Model_Abstract
      *
      * @return bool
      */
-    protected function _checkCampignEnrolmentActive($programId, $websiteId)
+    protected function _checkCampaignEnrolmentActive($programId, $websiteId)
     {
         //program is not set
         if (!$programId) {

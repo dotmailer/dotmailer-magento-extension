@@ -216,7 +216,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * Get the contact id for the custoemer based on website id.
+     * Get the contact id for the customer based on website id.
      *
      * @param $email
      * @param $websiteId
@@ -548,7 +548,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * Autorisation url for OAUTH.
+     * Authorisation url for OAUTH.
      *
      * @return string
      */
@@ -950,7 +950,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
             'Value' => $quoteId
         );
         if ($client instanceof Dotdigitalgroup_Email_Model_Apiconnector_Client) {
-            //update datafields for conctact
+            //update datafields for contact
             $client->updateContactDatafieldsByEmail($email, $data);
         }
     }
@@ -1548,7 +1548,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * Check if both frotnend and backend secure(HTTPS).
+     * Check if both frontend and backend secure (HTTPS).
      *
      * @return bool
      */
