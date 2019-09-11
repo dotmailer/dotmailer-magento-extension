@@ -40,6 +40,12 @@ You are welcome to contribute to Engagement Cloud for Magento! You can either:
 - Fix a bug: please fork this repo and submit the Pull Request to our [Develop branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/develop)
 Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 
+# 6.4.20
+
+###### Bug Fixes
+- Synced reviews will now indicate the correct store, if placed on a store other than the default. 
+- All Engagement Cloud campaigns will now be shown in dropdown lists, even if their total exceeds 1000.
+
 # 6.4.19
 
 ###### Bug Fixes
