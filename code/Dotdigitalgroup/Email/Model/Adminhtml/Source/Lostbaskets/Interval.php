@@ -11,7 +11,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Lostbaskets_Interval
     public $times = array(1, 2, 3, 4, 5, 6, 12, 24, 36, 48, 60, 72, 84, 96, 108, 120, 240);
 
     /**
-     * Send to campain options hours.
+     * Send to campaign options hours.
      *
      * @return array
      */

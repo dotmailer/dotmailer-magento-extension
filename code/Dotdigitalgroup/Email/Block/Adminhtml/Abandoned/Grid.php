@@ -146,7 +146,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Abandoned_Grid
     }
 
     /**
-     * Prepare the grid massaction.
+     * Prepare the grid mass action.
      *
      * @return $this|Mage_Adminhtml_Block_Widget_Grid
      */

@@ -304,7 +304,7 @@ $table->addColumn(
         'message', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
         'nullable' => false,
         'default'  => ''
-        ), 'Errror Message'
+        ), 'Error Message'
     )
     ->addColumn(
         'checkout_method', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(

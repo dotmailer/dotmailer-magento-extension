@@ -83,7 +83,7 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
      *
      * @return $this
      */
-    public function handleCustomerRegiterSuccess(Varien_Event_Observer $observer)
+    public function handleCustomerRegisterSuccess(Varien_Event_Observer $observer)
     {
         /** @var $customer Mage_Customer_Model_Customer */
         $customer  = $observer->getEvent()->getCustomer();

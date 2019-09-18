@@ -26,8 +26,6 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Rules_Edit_Tab_Conditions
     }
 
     /**
-     * Returns status flag about this tab can be showen or not
-     *
      * @return true
      */
     public function canShowTab()

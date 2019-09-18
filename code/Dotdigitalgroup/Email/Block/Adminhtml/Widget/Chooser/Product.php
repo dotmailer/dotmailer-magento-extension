@@ -89,7 +89,7 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Widget_Chooser_Product
     }
 
     /**
-     * Define Cooser Grid Columns and filters
+     * Define Chooser Grid Columns and filters
      *
      * @return Mage_Adminhtml_Block_Widget_Grid
      */

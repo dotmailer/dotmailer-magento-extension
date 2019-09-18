@@ -41,7 +41,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Dashboard_Content
     public $title;
 
     /**
-     * Message to be displayd in the body.
+     * Message to be displayed in the body.
      *
      * @var
      */

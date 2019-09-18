@@ -98,7 +98,7 @@ class Dotdigitalgroup_Email_Helper_Transactional extends Mage_Core_Helper_Abstra
      * @param $templateText
      * @return string
      */
-    public function decompresString($templateText)
+    public function decompressString($templateText)
     {
         return gzuncompress(base64_decode($templateText));
     }
@@ -107,7 +107,7 @@ class Dotdigitalgroup_Email_Helper_Transactional extends Mage_Core_Helper_Abstra
      * @param $templateText
      * @return string
      */
-    public function compresString($templateText)
+    public function compressString($templateText)
     {
         return base64_encode(gzcompress($templateText, 9));
     }

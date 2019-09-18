@@ -343,7 +343,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * Get cutomer group.
+     * Get customer group.
      *
      * @return string
      */
@@ -433,7 +433,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * Get delivery addrss line 2.
+     * Get delivery address line 2.
      *
      * @return string
      */
@@ -493,7 +493,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * Get numbser of orders.
+     * Get number of orders.
      *
      * @return mixed
      */
@@ -563,7 +563,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
     }
 
     /**
-     * Get cutomer id.
+     * Get customer id.
      *
      * @return mixed
      */

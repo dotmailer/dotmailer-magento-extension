@@ -15,7 +15,7 @@ class Dotdigitalgroup_Email_Model_Customer_Wishlist_Item
 
 
     /**
-     * construnctor.
+     * Constructor
      *
      * @param $product
      */

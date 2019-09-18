@@ -78,6 +78,11 @@ class Dotdigitalgroup_Email_Model_Connector_Product
     public $attributes;
 
     /**
+     * @var string
+     */
+    public $type = '';
+
+    /**
      * Set the product data
      *
      * @param Mage_Catalog_Model_Product $product
@@ -99,6 +104,7 @@ class Dotdigitalgroup_Email_Model_Connector_Product
         $options            = Mage::getModel('catalog/product_visibility')
             ->getOptionArray();
         $this->visibility   = $options[$product->getVisibility()];
+        $this->type         = ucfirst($product->getTypeId());
 
         $this->getMinPrices($product);
 

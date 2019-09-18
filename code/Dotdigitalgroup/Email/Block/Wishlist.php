@@ -48,7 +48,7 @@ class Dotdigitalgroup_Email_Block_Wishlist
     public function getMode()
     {
         return Mage::helper('ddg')->getWebsiteConfig(
-            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_CONTENT_WIHSLIST_DISPLAY
+            Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_DYNAMIC_CONTENT_WISHLIST_DISPLAY
         );
     }
 }

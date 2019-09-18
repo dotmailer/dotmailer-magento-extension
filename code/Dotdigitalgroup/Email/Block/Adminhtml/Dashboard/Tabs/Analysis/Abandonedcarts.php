@@ -31,22 +31,22 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Dashboard_Tabs_Analysis_Abandonedcar
      */
     protected function _prepareLayout()
     {
-        $lifetimeAbanodned = $this->getAbandonedCartInformationForTab();
+        $lifetimeAbandoned = $this->getAbandonedCartInformationForTab();
         $this->addTotal(
             $this->__('Total Abandoned Cart Lost Revenue'),
-            $lifetimeAbanodned->getLifetime()
+            $lifetimeAbandoned->getLifetime()
         );
         $this->addTotal(
             $this->__('Average Abandoned Cart Lost Revenue'),
-            $lifetimeAbanodned->getAverage()
+            $lifetimeAbandoned->getAverage()
         );
         $this->addTotal(
             $this->__('Total Number Of Abandoned Carts'),
-            $lifetimeAbanodned->getTotalCount(), true
+            $lifetimeAbandoned->getTotalCount(), true
         );
         $this->addTotal(
             $this->__('Average Abandoned Carts Created Per Day'),
-            $lifetimeAbanodned->getDayCount(), true
+            $lifetimeAbandoned->getDayCount(), true
         );
     }
 

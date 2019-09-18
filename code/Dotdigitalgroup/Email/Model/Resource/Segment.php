@@ -139,7 +139,7 @@ class Dotdigitalgroup_Email_Model_Resource_Segment
             }
         }
 
-        //update new segmets and mark for import
+        //update new segments and mark for import
         $contact->setSegmentIds($existing)
             ->setEmailImported()
             ->save();
