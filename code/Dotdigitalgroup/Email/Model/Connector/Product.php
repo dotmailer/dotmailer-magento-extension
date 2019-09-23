@@ -95,30 +95,30 @@ class Dotdigitalgroup_Email_Model_Connector_Product
         $storeId
     )
     {
-        $this->id           = $product->getId();
-        $this->sku          = $product->getSku();
-        $this->name         = $product->getName();
-        $statuses           = Mage::getModel('catalog/product_status')
+        $this->id = $product->getId();
+        $this->sku = $product->getSku();
+        $this->name = $product->getName();
+        $statuses = Mage::getModel('catalog/product_status')
             ->getOptionArray();
-        $this->status       = $statuses[$product->getStatus()];
-        $options            = Mage::getModel('catalog/product_visibility')
+        $this->status = $statuses[$product->getStatus()];
+        $options = Mage::getModel('catalog/product_visibility')
             ->getOptionArray();
-        $this->visibility   = $options[$product->getVisibility()];
-        $this->type         = ucfirst($product->getTypeId());
+        $this->visibility = $options[$product->getVisibility()];
+        $this->type = ucfirst($product->getTypeId());
 
         $this->getMinPrices($product);
 
-        $this->url          = Mage::getSingleton('ddg_automation/catalog_urlfinder')
+        $this->url = Mage::getSingleton('ddg_automation/catalog_urlfinder')
             ->fetchFor(
                 $product,
                 $storeId
             );
 
-        $this->imagePath    = Mage::getModel('catalog/product_media_config')
-            ->getMediaUrl($product->getSmallImage());
-        $stock              = Mage::getModel('cataloginventory/stock_item')
+        $this->imagePath = Mage::getSingleton('ddg_automation/catalog_urlfinder')->getProductImageUrl($product);
+
+        $stock = Mage::getModel('cataloginventory/stock_item')
             ->loadByProduct($product);
-        $this->stock        = (float)number_format(
+        $this->stock = (float)number_format(
             $stock->getQty(),
             2,
             '.',
