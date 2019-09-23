@@ -24,26 +24,21 @@ class Dotdigitalgroup_Email_Model_Resource_Catalog
         $conn = $this->_getWriteAdapter();
         try {
             if ($from && $to) {
-                $where = array(
-                    'created_at >= ?' => $from . ' 00:00:00',
-                    'created_at <= ?' => $to . ' 23:59:59',
-                    'imported is ?' => new Zend_Db_Expr('not null')
-                );
+                $where = [
+                    '(created_at >= ?' .$from. ' 00:00:00' .' AND created_at <= ?'. $to . ' 23:59:59)',
+                    'AND (last_imported_at IS NOT NULL OR processed = 1)'
+                ];
             } else {
-                $where = $conn->quoteInto(
-                    'imported is ?', new Zend_Db_Expr('not null')
-                );
+                $where[] = 'last_imported_at IS NOT NULL OR processed= 1';
             }
-
             $num = $conn->update(
                 $this->getMainTable(),
                 array(
-                    'imported' => new Zend_Db_Expr('null'),
-                    'modified' => new Zend_Db_Expr('null')
+                    'last_imported_at' => new Zend_Db_Expr('null'),
+                    'processed' => 0
                 ),
                 $where
             );
-
             return $num;
         } catch (Exception $e) {
             Mage::logException($e);
@@ -63,7 +58,7 @@ class Dotdigitalgroup_Email_Model_Resource_Catalog
             $tableName = $this->getMainTable();
             $ids       = implode(', ', $ids);
             $now       = Mage::getSingleton('core/date')->gmtDate();
-            $bind = array('imported' => 1, 'modified' => new Zend_Db_Expr('null'), 'updated_at' => $now);
+            $bind = array('last_imported_at' => $now, 'updated_at' => $now);
             $write->update(
                 $tableName,
                 $bind,
@@ -75,22 +70,66 @@ class Dotdigitalgroup_Email_Model_Resource_Catalog
     }
 
     /**
-     * Set modified if already imported
+     * Set processed in bulk query.
      *
      * @param $ids
      */
-    public function setModified($ids)
+    public function setProcessed($ids)
     {
         try {
-            $write     = $this->_getWriteAdapter();
+            $write = $this->_getWriteAdapter();
             $tableName = $this->getMainTable();
+            $ids = implode(', ', $ids);
+            $now       = Mage::getSingleton('core/date')->gmtDate();
+            $bind = array('processed' => 1, 'updated_at' => $now);
             $write->update(
                 $tableName,
-                array('modified' => 1),
-                array(
-                    $write->quoteInto("product_id IN (?)", $ids),
-                    $write->quoteInto("imported = ?", 1)
-                )
+                $bind,
+                "product_id IN ($ids)"
+            );
+        } catch (Exception $e) {
+            Mage::logException($e);
+        }
+    }
+
+    /**
+     * Set processed in bulk query.
+     *
+     * @param $ids
+     */
+    public function setUnProcessed($ids)
+    {
+        try {
+            $write = $this->_getWriteAdapter();
+            $tableName = $this->getMainTable();
+            $ids = implode(', ', $ids);
+            $now       = Mage::getSingleton('core/date')->gmtDate();
+            $bind = array('processed' => 0, 'updated_at' => $now);
+            $write->update(
+                $tableName,
+                $bind,
+                "product_id IN ($ids)"
+            );
+        } catch (Exception $e) {
+            Mage::logException($e);
+        }
+    }
+
+    /**
+     * Resets Last Imported At after the 6.4.21 Upgrade
+     * @param $ids
+     */
+    public function resetLastImportedAt($ids)
+    {
+        try {
+            $write = $this->_getWriteAdapter();
+            $tableName = $this->getMainTable();
+            $ids = implode(', ', $ids);
+            $bind = array('last_imported_at' => new Zend_Db_Expr('null'));
+            $write->update(
+                $tableName,
+                $bind,
+                "product_id IN ($ids)"
             );
         } catch (Exception $e) {
             Mage::logException($e);

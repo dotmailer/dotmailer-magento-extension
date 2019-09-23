@@ -57,13 +57,13 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Catalog_Grid
                 'escape' => true
             )
         )->addColumn(
-            'imported', array(
+            'processed', array(
                 'header'                    => Mage::helper('ddg')->__(
-                    'Imported'
+                    'Processed'
                 ),
                 'align'                     => 'center',
                 'width'                     => '50px',
-                'index'                     => 'imported',
+                'index'                     => 'processed',
                 'type'                      => 'options',
                 'escape'                    => true,
                 'renderer'                  => 'ddg_automation/adminhtml_column_renderer_imported',
@@ -74,21 +74,15 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Catalog_Grid
                                                      'filterCallbackContact')
             )
         )->addColumn(
-            'modified', array(
+            'last_imported_at', array(
                 'header'                    => Mage::helper('ddg')->__(
-                    'Modified'
+                    'Last Imported At'
                 ),
                 'align'                     => 'center',
                 'width'                     => '50px',
-                'index'                     => 'modified',
-                'type'                      => 'options',
-                'escape'                    => true,
-                'renderer'                  => 'ddg_automation/adminhtml_column_renderer_imported',
-                'options'                   => Mage::getModel(
-                    'ddg_automation/adminhtml_source_contact_modified'
-                )->getOptions(),
-                'filter_condition_callback' => array($this,
-                                                     'filterCallbackContact')
+                'index'                     => 'last_imported_at',
+                'type'                      => 'datetime',
+                'escape'                    => true
             )
         )->addColumn(
             'created_at', array(

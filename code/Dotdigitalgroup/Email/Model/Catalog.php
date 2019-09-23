@@ -17,6 +17,11 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
     public $productIds = array();
 
     /**
+     * @var array
+     */
+    private $productsToProcess = array();
+
+    /**
      * Constructor.
      */
     public function _construct()
@@ -101,20 +106,12 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
                 );
                 if ($products) {
                     //register in queue with importer
-                    $check = $importer->registerQueue(
+                    $importer->registerQueue(
                         'Catalog_Default',
                         $products,
                         Dotdigitalgroup_Email_Model_Importer::MODE_BULK,
                         Mage_Catalog_Model_Abstract::DEFAULT_STORE_ID
                     );
-
-                    //set imported
-                    if ($check) {
-                        $this->getResource()->setImported($this->productIds);
-                    }
-
-                    //set number of product imported
-                    $this->countProducts += count($products);
                 }
 
                 //if to pull store values. will be pulled for each store
@@ -136,30 +133,23 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
                         );
                     }
                 }
-
-                //set imported
-                if (! empty($this->productIds)) {
-                    $this->productIds = array_unique($this->productIds);
-                    $this->getResource()->setImported(
-                        $this->productIds
-                    );
-
-                    //@codingStandardsIgnoreStart
-                    //set number of product imported
-                    $this->countProducts += count($this->productIds);
-                    //@codingStandardsIgnoreEnd
-                }
             }
         }
 
-        if ($this->countProducts) {
-            //@codingStandardsIgnoreStart
-            $message = '----------- Catalog sync ----------- : ' . gmdate("H:i:s", microtime(true) - $this->start) .
-                ', Total synced = ' . $this->countProducts;
-            //@codingStandardsIgnoreEnd
-            $helper->log($message);
-            $response['message'] = $message;
+        if (!empty($this->productsToProcess)) {
+            $this->getResource()->setProcessed(array_unique($this->productsToProcess));
         }
+
+        if(!empty($this->productIds)) {
+            $this->getResource()->setImported(array_unique($this->productIds));
+        }
+            //@codingStandardsIgnoreStart
+        $message = '----------- Catalog sync ----------- : ' . gmdate("H:i:s", microtime(true) - $this->start) .
+            ', Total synced = ' . count(array_unique($this->productsToProcess)) . 'Total imported = '. count(array_unique($this->productIds));
+            //@codingStandardsIgnoreEnd
+        $helper->log($message);
+        $response['message'] = $message;
+
 
         return $response;
     }
@@ -211,17 +201,22 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
         );
         /** @var Dotdigitalgroup_Email_Model_Resource_Catalog_Collection $connectorCollection */
         $connectorCollection = $this->getCollection();
+
         $connectorCollection->addFieldToFilter(
-            array('imported', 'modified'),
-            array(
-                array('null' => 'true'),
-                array('eq' => '1')
+            'processed',array(
+                'eq' => 0
             )
         );
         $connectorCollection->getSelect()->limit($limit);
-
+        $this->importedProducts = array();
         if ($connectorCollection->getSize()) {
             $productIds       = $connectorCollection->getColumnValues('product_id');
+            //Sets this products to be processed processed
+            $this->productsToProcess = array_merge(
+                $this->productsToProcess,
+                $productIds
+            );
+
             /** @var Mage_Catalog_Model_Resource_Product_Collection $productCollection */
             $productCollection = Mage::getResourceModel('catalog/product_collection');
             $productCollection->addAttributeToSelect('*')
@@ -253,6 +248,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
             }
 
             $productCollection->addWebsiteNamesToResult();
+
             //limit the collection
             $productCollection->getSelect()->limit($limit);
 
@@ -273,8 +269,8 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
             $object    = $observer->getEvent()->getDataObject();
             $productId = $object->getId();
             if ($item = $this->_loadProduct($productId)) {
-                if ($item->getImported()) {
-                    $item->setModified(1)->save();
+                if ($item->getProcessed()) {
+                    $item->setProcessed(0)->save();
                 }
             }
         } catch (Exception $e) {
@@ -295,7 +291,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
             $productId = $object->getId();
             if ($item = $this->_loadProduct($productId)) {
                 //if imported delete from account
-                if ($item->getImported()) {
+                if ($item->getProcessed()) {
                     $this->_deleteFromAccount($productId);
                 }
 
