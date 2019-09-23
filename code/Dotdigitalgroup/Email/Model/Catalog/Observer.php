@@ -27,7 +27,7 @@ class Dotdigitalgroup_Email_Model_Catalog_Observer
         }
 
         if (! empty($productIds)) {
-            Mage::getResourceModel('ddg_automation/catalog')->setModified($productIds);
+            Mage::getResourceModel('ddg_automation/catalog')->setUnProcessed($productIds);
         }
     }
 }

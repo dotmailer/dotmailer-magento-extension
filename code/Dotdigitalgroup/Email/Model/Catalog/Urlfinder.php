@@ -27,6 +27,28 @@ class Dotdigitalgroup_Email_Model_Catalog_Urlfinder
     }
 
     /**
+     * @param $product
+     * @return mixed
+     * @throws Mage_Core_Exception
+     */
+    public function getProductImageUrl($product)
+    {
+        $product = $this->getScopedProduct($product);
+
+        if (
+            $product->getTypeId() === Mage_Catalog_Model_Product_Type::TYPE_SIMPLE
+            && ($product->getSmallImage() == 'no_selection' || empty($product->getSmallImage()))
+            && $parentProduct = $this->getParentProduct($product)
+        ) {
+            $product = $parentProduct;
+        }
+
+        return Mage::getModel('catalog/product_media_config')
+            ->getMediaUrl($product->getSmallImage());
+
+    }
+
+    /**
      * Set the correct store scope for a product, in cases where it is not already set.
      * Achieve this either by manually supplying a store ID, or by finding the default store ID when one is not supplied.
      *

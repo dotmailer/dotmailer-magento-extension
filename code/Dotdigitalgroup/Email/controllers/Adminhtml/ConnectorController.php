@@ -466,7 +466,6 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
             if (!$this->validateDateRange($params['from'], $params['to'])) {
                 return $this->_redirectReferer();
             }
-
             //@codingStandardsIgnoreStart
             $num = Mage::getResourceModel('ddg_automation/catalog')
                 ->reset($params['from'], $params['to']);
@@ -474,8 +473,7 @@ class Dotdigitalgroup_Email_Adminhtml_ConnectorController extends Mage_Adminhtml
             $num = Mage::getResourceModel('ddg_automation/catalog')->reset();
         }
         //@codingStandardsIgnoreEnd
-
-        Mage::helper('ddg')->log('-- Reset Catalog for reimport : ' . $num);
+        Mage::helper('ddg')->log('-- Reset Catalog for reimport : '. $num);
         Mage::getSingleton('adminhtml/session')->addSuccess('Done.');
         $this->_redirectReferer();
     }

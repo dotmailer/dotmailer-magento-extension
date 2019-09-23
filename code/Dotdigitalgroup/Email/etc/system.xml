@@ -3100,6 +3100,7 @@
                         <catalog_values translate="label" module="ddg">
                             <label>Catalog Values</label>
                             <frontend_type>select</frontend_type>
+                            <backend_model>ddg_automation/adminhtml_model_catalogsync_reset</backend_model>
                             <source_model>ddg_automation/adminhtml_source_sync_catalog_values</source_model>
                             <sort_order>150</sort_order>
                             <show_in_default>1</show_in_default>
@@ -3109,6 +3110,7 @@
                         <catalog_visibility translate="label" module="ddg">
                             <label>Include Products By Visibility</label>
                             <frontend_type>multiselect</frontend_type>
+                            <backend_model>ddg_automation/adminhtml_model_catalogsync_reset</backend_model>
                             <source_model>ddg_automation/adminhtml_source_sync_catalog_visibility</source_model>
                             <sort_order>160</sort_order>
                             <show_in_default>1</show_in_default>
@@ -3119,6 +3121,7 @@
                         <catalog_type translate="label" module="ddg">
                             <label>Include Products By Type</label>
                             <frontend_type>multiselect</frontend_type>
+                            <backend_model>ddg_automation/adminhtml_model_catalogsync_reset</backend_model>
                             <source_model>ddg_automation/adminhtml_source_sync_catalog_type</source_model>
                             <sort_order>170</sort_order>
                             <show_in_default>1</show_in_default>

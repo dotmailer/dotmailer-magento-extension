@@ -12,7 +12,7 @@ class Dotdigitalgroup_Email_Adminhtml_UrlrewriteController extends Mage_Adminhtm
     {
         $productId  = $this->getRequest()->getParam('product', 0);
         if ($productId) {
-            Mage::getResourceModel('ddg_automation/catalog')->setModified(array($productId));
+            Mage::getResourceModel('ddg_automation/catalog')->setUnProcessed(array($productId));
         }
         parent::saveAction();
     }
