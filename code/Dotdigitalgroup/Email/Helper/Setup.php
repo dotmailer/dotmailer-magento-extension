@@ -202,6 +202,30 @@ class Dotdigitalgroup_Email_Helper_Setup extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * Migrates Email Catalog Table
+     * @return void
+     */
+    public function migrateEmailCatalogTable()
+    {
+        $productIds = [];
+        try {
+            $emailCatalogCollection = Mage::getModel('ddg_automation/catalog')->getCollection();
+            foreach ($emailCatalogCollection as $catalog) {
+                if ($catalog->getLastImportedAt()) {
+                    $productIds[] = $catalog->getProductId();
+                }
+            }
+        } catch (Exception $e) {
+            Mage::logException($e);
+        }
+
+        if (!empty($productIds)) {
+            Mage::getResourceModel('ddg_automation/catalog')->setUnprocessed($productIds);
+            Mage::getResourceModel('ddg_automation/catalog')->resetLastImportedAt($productIds);
+        }
+    }
+
+    /**
      * Save product types and visibilities in config
      */
     private function saveProductTypesAndVisibilitiesInConfig()
