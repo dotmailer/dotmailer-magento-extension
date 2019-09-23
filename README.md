@@ -40,6 +40,15 @@ You are welcome to contribute to Engagement Cloud for Magento! You can either:
 - Fix a bug: please fork this repo and submit the Pull Request to our [Develop branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/develop)
 Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 
+#6.4.21
+
+###### Improvements
+- We’ve added a ‘type’ field to the schema for catalog insight data. 
+- In catalog sync, child products without an image will now try to use their parent’s image.
+
+###### Bug Fixes
+We’ve fixed a bug with catalog sync, where syncing stopped for merchants syncing a filtered subset of products. Now, products are now marked as ‘processed’ even if they are not imported.
+
 # 6.4.20
 
 ###### Bug Fixes
