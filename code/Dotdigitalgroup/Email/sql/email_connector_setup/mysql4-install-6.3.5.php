@@ -792,16 +792,19 @@ $table->addColumn(
     ), 'Product Id'
     )
     ->addColumn(
-        'imported', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
+        'processed', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned' => true,
-        'nullable' => true,
-    ), 'Product Imported'
+        'nullable' => false,
+        'default' => 0,
+    ), 'Product Processed'
     )
     ->addColumn(
-        'modified', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
-        'unsigned' => true,
+        'last_imported_at', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
+        'type' => Varien_Db_Ddl_Table::TYPE_TIMESTAMP,
         'nullable' => true,
-    ), 'Product Modified'
+        'default' => null,
+        'comment' => 'Last imported date',
+    ), 'Last imported date'
     )
     ->addColumn(
         'created_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(),
@@ -816,12 +819,12 @@ $table->addColumn(
         array('product_id')
     )
     ->addIndex(
-        $installer->getIdxName($catalogTable, array('imported')),
-        array('imported')
+        $installer->getIdxName($catalogTable, array('processed')),
+        array('processed')
     )
     ->addIndex(
-        $installer->getIdxName($catalogTable, array('modified')),
-        array('modified')
+        $installer->getIdxName($catalogTable, array('last_imported_at')),
+        array('last_imported_at')
     )
     ->addIndex(
         $installer->getIdxName($catalogTable, array('created_at')),
