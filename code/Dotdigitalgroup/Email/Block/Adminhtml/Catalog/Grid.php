@@ -50,78 +50,78 @@ class Dotdigitalgroup_Email_Block_Adminhtml_Catalog_Grid
         $this->addColumn(
             'product_id', array(
                 'header' => Mage::helper('ddg')->__('Product ID'),
-                'align'  => 'left',
-                'width'  => '50px',
-                'index'  => 'product_id',
-                'type'   => 'number',
+                'align' => 'left',
+                'width' => '50px',
+                'index' => 'product_id',
+                'type' => 'number',
                 'escape' => true
             )
         )->addColumn(
             'processed', array(
-                'header'                    => Mage::helper('ddg')->__(
+                'header' => Mage::helper('ddg')->__(
                     'Processed'
                 ),
-                'align'                     => 'center',
-                'width'                     => '50px',
-                'index'                     => 'processed',
-                'type'                      => 'options',
-                'escape'                    => true,
-                'renderer'                  => 'ddg_automation/adminhtml_column_renderer_imported',
-                'options'                   => Mage::getModel(
-                    'ddg_automation/adminhtml_source_contact_imported'
+                'align' => 'center',
+                'width' => '50px',
+                'index' => 'processed',
+                'type' => 'options',
+                'escape' => true,
+                'renderer' => 'ddg_automation/adminhtml_column_renderer_imported',
+                'options' => Mage::getModel(
+                    'ddg_automation/adminhtml_source_catalog_processed'
                 )->getOptions(),
                 'filter_condition_callback' => array($this,
-                                                     'filterCallbackContact')
+                    'filterCallbackBoolean')
             )
         )->addColumn(
             'last_imported_at', array(
-                'header'                    => Mage::helper('ddg')->__(
+                'header' => Mage::helper('ddg')->__(
                     'Last Imported At'
                 ),
-                'align'                     => 'center',
-                'width'                     => '50px',
-                'index'                     => 'last_imported_at',
-                'type'                      => 'datetime',
-                'escape'                    => true
+                'align' => 'center',
+                'width' => '50px',
+                'index' => 'last_imported_at',
+                'type' => 'datetime',
+                'escape' => true
             )
         )->addColumn(
             'created_at', array(
                 'header' => Mage::helper('ddg')->__('Created At'),
-                'width'  => '50px',
-                'align'  => 'center',
-                'index'  => 'created_at',
-                'type'   => 'datetime',
+                'width' => '50px',
+                'align' => 'center',
+                'index' => 'created_at',
+                'type' => 'datetime',
                 'escape' => true,
             )
         )->addColumn(
             'updated_at', array(
                 'header' => Mage::helper('ddg')->__('Updated At'),
-                'width'  => '50px',
-                'align'  => 'center',
-                'index'  => 'updated_at',
-                'type'   => 'datetime',
+                'width' => '50px',
+                'align' => 'center',
+                'index' => 'updated_at',
+                'type' => 'datetime',
                 'escape' => true,
             )
         );
 
         return parent::_prepareColumns();
     }
-
+    
     /**
-     * Callback action for the imported subscribers/contacts.
+     * Callback action for non-nullable boolean fields.
      *
      * @param $collection
      * @param $column
      */
-    public function filterCallbackContact($collection, $column)
+    public function filterCallbackBoolean($collection, $column)
     {
         $field = $column->getFilterIndex() ? $column->getFilterIndex()
             : $column->getIndex();
         $value = $column->getFilter()->getValue();
-        if ($value == 'null') {
-            $collection->addFieldToFilter($field, array('null' => true));
+        if ($value == 0) {
+            $collection->addFieldToFilter($field, 0);
         } else {
-            $collection->addFieldToFilter($field, array('notnull' => true));
+            $collection->addFieldToFilter($field, 1);
         }
     }
 }
