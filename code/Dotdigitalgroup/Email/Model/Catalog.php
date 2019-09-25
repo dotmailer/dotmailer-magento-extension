@@ -145,7 +145,7 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
         }
             //@codingStandardsIgnoreStart
         $message = '----------- Catalog sync ----------- : ' . gmdate("H:i:s", microtime(true) - $this->start) .
-            ', Total synced = ' . count(array_unique($this->productsToProcess)) . 'Total imported = '. count(array_unique($this->productIds));
+            ', Total processed = ' . count(array_unique($this->productsToProcess)) . ', Total synced = '. count(array_unique($this->productIds));
             //@codingStandardsIgnoreEnd
         $helper->log($message);
         $response['message'] = $message;
