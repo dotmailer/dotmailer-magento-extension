@@ -42,12 +42,12 @@ Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 
 #6.4.21
 
-###### Improvements
-- We’ve added a ‘type’ field to the schema for catalog insight data. 
+###### What’s new
+- We’ve added a _type_ field to the schema for catalog insight data. 
 - In catalog sync, child products without an image will now try to use their parent’s image.
 
-###### Bug Fixes
-We’ve fixed a bug with catalog sync, where syncing stopped for merchants syncing a filtered subset of products. Now, products are now marked as ‘processed’ even if they are not imported.
+###### Bug fixes
+- We’ve fixed a bug with catalog sync which prevented a complete sync for merchants syncing a filtered subset of products. Products are now marked as _processed_ even if they are not imported.
 
 # 6.4.20
 
