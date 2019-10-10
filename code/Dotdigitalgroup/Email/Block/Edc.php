@@ -40,6 +40,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
     protected function _prepareLayout()
     {
         if ($root = $this->getLayout()->getBlock('root')) {
+            $root->getChild('content')->unsetChild('product.tooltip');
             $root->setTemplate('page/blank.phtml');
         }
     }
