@@ -12,7 +12,7 @@ if ($installer->getConnection()->isTableExists($catalogTable)) {
     if ($installer->getConnection()->tableColumnExists($catalogTable, 'modified')) {
 
         $installer->getConnection()->dropIndex(
-            $installer->getTable($catalogTable),
+            $catalogTable,
             'IDX_EMAIL_CATALOG_MODIFIED'
         );
 
@@ -31,7 +31,7 @@ if ($installer->getConnection()->isTableExists($catalogTable)) {
 
     if ($installer->getConnection()->tableColumnExists($catalogTable, 'imported')) {
         $installer->getConnection()->dropIndex(
-            $installer->getTable($catalogTable),
+            $catalogTable,
             'IDX_EMAIL_CATALOG_IMPORTED'
         );
 
