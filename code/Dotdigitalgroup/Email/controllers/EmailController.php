@@ -222,10 +222,10 @@ class Dotdigitalgroup_Email_EmailController
             if ($configCartUrl) {
                 $url = $configCartUrl;
             } else {
-                $url = $this->_quote->getStore()->getUrl('checkout/cart');
+                $url = 'checkout/cart';
             }
 
-            $this->_redirectUrl($url);
+            $this->_redirectUrl($this->_quote->getStore()->getUrl($url));
         } else {
             // customer will be redirected to cart after successful login
             if ($configCartUrl) {
