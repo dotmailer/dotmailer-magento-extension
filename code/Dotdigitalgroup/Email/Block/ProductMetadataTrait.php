@@ -38,4 +38,23 @@ trait Dotdigitalgroup_Email_Block_ProductMetadataTrait
                 $product
             );
     }
+
+    /**
+     * Trait method for Block classes which fetches a product (or parent product) name
+     *
+     * @param Mage_Catalog_Model_Product $product
+     * @return Mage_Catalog_Helper_Image
+     */
+    public function getProductName($product)
+    {
+        if ($product->getTypeId() == "simple") {
+            $parentIds = Mage::getModel('catalog/product_type_configurable')->getParentIdsByChild($product->getId());
+            if (!empty($parentIds)) {
+                /** @var Mage_Catalog_Model_Product $parentProduct */
+                $parentProduct = Mage::getModel('catalog/product')->load($parentIds[0]);
+                return $parentProduct->getName();
+            }
+        }
+        return $product->getName();
+    }
 }
