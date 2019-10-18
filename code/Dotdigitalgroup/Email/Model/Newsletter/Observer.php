@@ -213,7 +213,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
      * @param Mage_Newsletter_Model_Subscriber $unsavedSubscriber
      * @return bool
      */
-    private function hasStatusChangedToSubscribed($unsavedSubscriber)
+    protected function hasStatusChangedToSubscribed($unsavedSubscriber)
     {
         $savedSubscriber = Mage::getModel('newsletter/subscriber')->load($unsavedSubscriber->getId());
         $originalStatus = $savedSubscriber->getSubscriberStatus();

@@ -476,7 +476,7 @@ class Dotdigitalgroup_Email_Model_Customer_Observer
      * @param string|int $customerId
      * @return Mage_Customer_Model_Customer
      */
-    private function loadCustomer($customerId)
+    protected function loadCustomer($customerId)
     {
         if (Mage::getSingleton('customer/session')->isLoggedIn()) {
             return Mage::getSingleton('customer/session')->getCustomer();

@@ -1104,7 +1104,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      * @param $categoryId
      * @return string
      */
-    private function getCategoryValue($categoryId)
+    protected function getCategoryValue($categoryId)
     {
         if ($categoryId) {
             $category = Mage::getModel('catalog/category')

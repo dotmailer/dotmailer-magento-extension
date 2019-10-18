@@ -566,7 +566,7 @@ class Dotdigitalgroup_Email_Helper_Config
      * @param $value
      * @return string
      */
-    private function limitLength($value)
+    protected function limitLength($value)
     {
         $stringHelper = Mage::helper('core/string');
         if ($stringHelper->strlen($value) > Dotdigitalgroup_Email_Model_Consent::CONSENT_TEXT_LIMIT) {

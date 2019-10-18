@@ -45,7 +45,7 @@ class Dotdigitalgroup_Email_Helper_Trial extends Mage_Core_Helper_Abstract {
 	/**
 	 * @return string
 	 */
-	private function getMagentoSignupUrl()
+    protected function getMagentoSignupUrl()
 	{
 		$urlFromDatabase = Mage::getStoreConfig(self::XML_PATH_CONNECTOR_API_TRIAL_URL);
 
@@ -58,7 +58,7 @@ class Dotdigitalgroup_Email_Helper_Trial extends Mage_Core_Helper_Abstract {
 	 * @return mixed
 	 * @throws Varien_Exception
 	 */
-	private function generateTrialPasscode()
+    protected function generateTrialPasscode()
 	{
 		$code = Mage::helper('core')->getRandomString(32);
 		Mage::getModel('core/config')->saveConfig(
@@ -120,7 +120,7 @@ class Dotdigitalgroup_Email_Helper_Trial extends Mage_Core_Helper_Abstract {
 	 * @return string
 	 * @throws Mage_Core_Exception
 	 */
-	private function getTimeZoneId()
+    protected function getTimeZoneId()
 	{
 		$timeZone = Mage::app()->getWebsite()->getConfig(Mage_Core_Model_Locale::XML_PATH_DEFAULT_TIMEZONE);
 		$result = '085';
@@ -574,7 +574,7 @@ class Dotdigitalgroup_Email_Helper_Trial extends Mage_Core_Helper_Abstract {
 	 *
 	 * @return mixed
 	 */
-	private function getCultureId()
+    protected function getCultureId()
 	{
 		$fallback = 'en_US';
 		$supportedCultures = array(

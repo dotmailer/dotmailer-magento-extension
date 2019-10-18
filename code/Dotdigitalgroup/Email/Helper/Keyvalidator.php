@@ -45,7 +45,7 @@ class Dotdigitalgroup_Email_Helper_Keyvalidator
      *
      * @return string
      */
-    private function stripInvalidCharactersAndIdentify($label, $replaceSpaceWith, $suffix)
+    protected function stripInvalidCharactersAndIdentify($label, $replaceSpaceWith, $suffix)
     {
         $safeLabel = preg_replace(self::ENGAGEMENT_CLOUD_PERMISSIBLE_KEY_PATTERN, '', $label);
         return $safeLabel.$replaceSpaceWith.$suffix;
