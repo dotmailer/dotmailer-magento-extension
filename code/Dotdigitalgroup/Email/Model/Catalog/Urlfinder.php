@@ -58,7 +58,7 @@ class Dotdigitalgroup_Email_Model_Catalog_Urlfinder
      * @return Mage_Catalog_Model_Product
      * @throws Mage_Core_Exception
      */
-    private function getScopedProduct($product, $storeId = null)
+    protected function getScopedProduct($product, $storeId = null)
     {
         if (empty($storeId) && in_array($product->getStoreId(), $product->getStoreIds())) {
             return $product;
@@ -81,7 +81,7 @@ class Dotdigitalgroup_Email_Model_Catalog_Urlfinder
      *
      * @return Mage_Catalog_Model_Product|null
      */
-    private function getParentProduct($product)
+    protected function getParentProduct($product)
     {
         if ($parentId = $this->getFirstParentId($product)) {
             return Mage::getModel('catalog/product')
@@ -98,7 +98,7 @@ class Dotdigitalgroup_Email_Model_Catalog_Urlfinder
      *
      * @return mixed
      */
-    private function getFirstParentId($product)
+    protected function getFirstParentId($product)
     {
         $configurableProducts = Mage::getModel('catalog/product_type_configurable')
             ->getParentIdsByChild($product->getId());

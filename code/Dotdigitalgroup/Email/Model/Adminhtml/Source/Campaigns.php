@@ -64,7 +64,7 @@ class Dotdigitalgroup_Email_Model_Adminhtml_Source_Campaigns
      * @return array
      * @throws \Exception
      */
-    private function fetchCampaigns($website)
+    protected function fetchCampaigns($website)
     {
         $client = Mage::helper('ddg')->getWebsiteApiClient($website);
         if (!$client instanceof Dotdigitalgroup_Email_Model_Apiconnector_Client) {

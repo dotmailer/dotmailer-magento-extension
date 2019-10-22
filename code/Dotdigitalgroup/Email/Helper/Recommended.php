@@ -213,11 +213,11 @@ class Dotdigitalgroup_Email_Helper_Recommended extends Mage_Core_Helper_Abstract
             );
         }
 
-        if ($period == 'week') {
+        if ($period == 'W') {
             $sub = Zend_Date::WEEK;
-        } elseif ($period == 'month' || $period == 'M') {
+        } elseif ($period == 'M') {
             $sub = Zend_Date::MONTH;
-        } elseif ($period == 'year') {
+        } elseif ($period == 'Y') {
             $sub = Zend_Date::YEAR;
         }
 

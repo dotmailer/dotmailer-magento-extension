@@ -40,7 +40,7 @@ class Dotdigitalgroup_Email_Model_Sync_Td_Bulk extends Dotdigitalgroup_Email_Mod
      * @param $importData
      * @return array
      */
-    private function getTransDataForCatalog($importData)
+    protected function getTransDataForCatalog($importData)
     {
         $data = array();
         foreach ($importData as $catalog) {

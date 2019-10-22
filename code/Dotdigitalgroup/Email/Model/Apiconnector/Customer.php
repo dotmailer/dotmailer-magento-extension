@@ -1104,7 +1104,7 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
      * @param $categoryId
      * @return string
      */
-    private function getCategoryValue($categoryId)
+    protected function getCategoryValue($categoryId)
     {
         if ($categoryId) {
             $category = Mage::getModel('catalog/category')
@@ -1194,11 +1194,14 @@ class Dotdigitalgroup_Email_Model_Apiconnector_Customer
                 ->setStoreId($this->storeId)
                 ->load($id);
 
-            $value = $product->getResource()
-                ->getAttribute($attributeCode)
-                ->setStoreId($this->storeId)
-                ->getSource()
-                ->getOptionText($product->getData($attributeCode));
+            $attribute = $product->getResource()->getAttribute($attributeCode);
+            $value = null;
+
+            if ($attribute instanceof Mage_Catalog_Model_Resource_Eav_Attribute) {
+                $value = $attribute->setStoreId($this->storeId)
+                    ->getSource()
+                    ->getOptionText($product->getData($attributeCode));
+            }
 
             if ($value) {
                 return $value;

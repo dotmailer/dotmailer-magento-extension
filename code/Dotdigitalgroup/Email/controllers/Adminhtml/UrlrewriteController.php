@@ -1,13 +1,29 @@
 <?php
 
-require_once 'Mage/Adminhtml/controllers/UrlrewriteController.php';
+/**
+ * Urlrewrite save actions
+ *
+ * Enterprise behaves slightly differently and needs to extend an Enterprise parent class.
+ *
+ */
 
-class Dotdigitalgroup_Email_Adminhtml_UrlrewriteController extends Mage_Adminhtml_UrlrewriteController
+if (Mage::helper('ddg')->isEnterprise()) {
+
+    require_once 'Enterprise/UrlRewrite/controllers/Adminhtml/UrlrewriteController.php';
+
+    class Dotdigitalgroup_Email_Adminhtml_UrlRewriteHandler extends Enterprise_UrlRewrite_Adminhtml_UrlrewriteController
+    {}
+
+} else {
+
+    require_once 'Mage/Adminhtml/controllers/UrlrewriteController.php';
+
+    class Dotdigitalgroup_Email_Adminhtml_UrlRewriteHandler extends Mage_Adminhtml_UrlrewriteController
+    {}
+}
+
+class Dotdigitalgroup_Email_Adminhtml_UrlrewriteController extends Dotdigitalgroup_Email_Adminhtml_UrlRewriteHandler
 {
-    /**
-     * Urlrewrite save action
-     *
-     */
     public function saveAction()
     {
         $productId  = $this->getRequest()->getParam('product', 0);

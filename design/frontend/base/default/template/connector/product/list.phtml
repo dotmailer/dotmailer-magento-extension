@@ -112,7 +112,7 @@ $products = $this->getLoadedProductCollection();
                                       alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'),
                                           null, true) ?>" align="middle"/></a>
 
-        <div class="product-name" align="center"><b><?php echo $this->escapeHtml(substr($_product->getName(), 0, 40));?></b></div>
+        <div class="product-name" align="center"><b><?php echo $this->escapeHtml(substr($this->getProductName($_product), 0, 40));?></b></div>
         <div class="product-price" align="center"><?php echo $this->getPriceHtml($_product, true) ?></div>
         <div align="center">
             <a class="product-url" href="<?php echo $this->getProductUrl($_product); ?>">

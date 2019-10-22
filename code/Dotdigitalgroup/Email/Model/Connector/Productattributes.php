@@ -42,7 +42,7 @@ class Dotdigitalgroup_Email_Model_Connector_Productattributes
      *
      * @return array
      */
-    private function _getAttributesArray($attributeSetId)
+    protected function _getAttributesArray($attributeSetId)
     {
         $result     = array();
         $attributes = Mage::getResourceModel('catalog/product_attribute_collection')
@@ -64,7 +64,7 @@ class Dotdigitalgroup_Email_Model_Connector_Productattributes
      * @return string
      * @throws Zend_Date_Exception
      */
-    private function getAttributeValue($inputType, $product, $attributeCode)
+    protected function getAttributeValue($inputType, $product, $attributeCode)
     {
         switch ($inputType) {
             case 'multiselect':
@@ -91,7 +91,7 @@ class Dotdigitalgroup_Email_Model_Connector_Productattributes
      * @param $value
      * @return string|null
      */
-    private function limitLength($value)
+    protected function limitLength($value)
     {
         // check limit on text and assign value to array
         if (is_string($value)) {
@@ -110,7 +110,7 @@ class Dotdigitalgroup_Email_Model_Connector_Productattributes
      *
      * @return string
      */
-    private function _limitLength($value)
+    protected function _limitLength($value)
     {
         if (strlen($value) > 250) {
             $value = substr($value, 0, 250);

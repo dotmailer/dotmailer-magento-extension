@@ -89,7 +89,7 @@ class Dotdigitalgroup_Email_Model_Email_Queue extends Mage_Core_Model_Email_Queu
      * @param $orderId
      * @return mixed
      */
-    private function getStoreIdFromOrder($orderId)
+    protected function getStoreIdFromOrder($orderId)
     {
         /** @var  $model Mage_Sales_Model_Order */
         $model = Mage::getModel('sales/order')->load($orderId);

@@ -443,7 +443,7 @@ class Dotdigitalgroup_Email_Model_Resource_Contact extends Mage_Core_Model_Resou
      * @param array $unsubscribes
      * @return array
      */
-    private function filterRecentlyResubscribedEmails(array $localContacts, array $unsubscribes)
+    protected function filterRecentlyResubscribedEmails(array $localContacts, array $unsubscribes)
     {
         // get emails which either have no last_subscribed_at date, or were more recently removed in EC
         return array_filter(array_map(function ($email) use ($localContacts) {

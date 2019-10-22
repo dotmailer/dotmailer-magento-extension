@@ -40,6 +40,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
     protected function _prepareLayout()
     {
         if ($root = $this->getLayout()->getBlock('root')) {
+            $root->getChild('content')->unsetChild('product.tooltip');
             $root->setTemplate('page/blank.phtml');
         }
     }
@@ -80,7 +81,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
      * @param $store
      * @return null|string
      */
-    public function getTextForUrl($store)
+    protected function getTextForUrl($store)
     {
         $store = Mage::app()->getStore($store);
 
@@ -94,7 +95,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
      *
      * @return mixed|string
      */
-    public function getMode()
+    protected function getMode()
     {
         return Mage::helper('ddg/recommended')->getDisplayType();
 
@@ -106,7 +107,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
      * @return int|mixed
      * @throws Exception
      */
-    public function getColumnCount()
+    protected function getColumnCount()
     {
         return Mage::helper('ddg/recommended')->getDisplayLimitByMode(
             $this->getRequest()->getActionName()
@@ -120,7 +121,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
      *
      * @return string
      */
-    public function getPriceHtml($product)
+    protected function getPriceHtml($product)
     {
         if ($product->getTypeId() == 'bundle') {
             $this->setTemplate('connector/product/bundle_price.phtml');
@@ -139,7 +140,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
      * @return array
      * @throws Exception
      */
-    public function getLoadedProductCollection()
+    protected function getLoadedProductCollection()
     {
         $mode  = $this->getRequest()->getActionName();
         $result = array();
@@ -251,10 +252,10 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
     }
 
     /**
-     * Get collection for best sellers.
+     * Get collection for bestsellers.
      *
-     * @param $mode
-     * @param $limit
+     * @param string $mode
+     * @param string $limit
      *
      * @return Varien_Data_Collection
      */
@@ -269,40 +270,21 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
         //@codingStandardsIgnoreEnd
 
         $productCollection = Mage::getResourceModel('reports/product_collection')
-            ->addAttributeToSelect(array('product_url', 'name', 'store_id', 'small_image', 'price'))
-            ->addOrderedQty($from, $to)
-            ->setOrder('ordered_qty', 'desc')
-            ->addWebsiteFilter(Mage::app()->getWebsite()->getId())
-            ->setPageSize($limit);
+            ->addWebsiteFilter(Mage::app()->getWebsite()->getId());
+
+        $productCollection = $this->addOrderedQty($productCollection, $from, $to);
+        $productCollection->setOrder('ordered_qty', 'desc');
 
         Mage::getSingleton('cataloginventory/stock')
             ->addInStockFilterToCollection($productCollection);
 
-        //check for params
-        if ($catId or $catName) {
-            $category = Mage::getModel('catalog/category');
-            //load by category id
-            if ($catId) {
-                $category->load($catId);
-            }
+        $productCollection = $this->filterByCategory($productCollection, $catId, $catName);
+        $productIds = $this->removeSharedParentsAndLimit($productCollection, $limit);
 
-            //load by the category name
-            if ($catName) {
-                $category->loadByAttribute('name', $catName);
-            }
-
-            $productCollection = $this->_joinCategoryOnCollection(
-                $productCollection, $category
-            );
-        }
-
-        $productIds = $productCollection->getColumnValues('entity_id');
-
-        //fix for catalog flat tables
+        // Prepare final catalog/product collection
         $productCollection = Mage::getModel('catalog/product')->getCollection()
             ->addPriceData()
-            ->addAttributeToSelect(array('product_url', 'name', 'store_id', 'small_image', 'price'))
-            ->addAttributeToFilter('visibility', $this->_visibility)
+            ->addAttributeToSelect(array('product_url', 'name', 'store_id', 'small_image', 'price', 'visibility'))
             ->addIdFilter($productIds);
 
         return $productCollection;
@@ -331,21 +313,7 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
             ->addViewsCount($from, $to)
             ->setPageSize($limit);
 
-        if ($catId or $catName) {
-            $category = Mage::getModel('catalog/category');
 
-            if ($catId) {
-                $category->load($catId);
-            }
-
-            if ($catName) {
-                $category->loadByAttribute('name', $catName);
-            }
-
-            $productCollection = $this->_joinCategoryOnCollection(
-                $productCollection, $category
-            );
-        }
 
         $productIds = $productCollection->getColumnValues('entity_id');
         $productCollection->clear();
@@ -526,5 +494,145 @@ class Dotdigitalgroup_Email_Block_Edc extends Mage_Core_Block_Template
         //@codingStandardsIgnoreEnd
 
         return $productsToDisplay;
+    }
+
+    /**
+     * A slightly modified version of addOrderedQty in Mage_Reports_Model_Resource_Product_Collection.
+     * That function has a line that effectively excludes simple child products from the collection,
+     * hence it doesn't work for our purposes when evaluating bestsellers.
+     *
+     * @param Mage_Reports_Model_Resource_Product_Collection $collection
+     * @param string $from
+     * @param string $to
+     * @return mixed
+     */
+    protected function addOrderedQty($collection, $from = '', $to = '')
+    {
+        $adapter              = $collection->getConnection();
+        $compositeTypeIds     = Mage::getSingleton('catalog/product_type')->getCompositeTypes();
+        $orderTableAliasName  = $adapter->quoteIdentifier('order');
+
+        $orderJoinCondition   = array(
+            $orderTableAliasName . '.entity_id = order_items.order_id',
+            $adapter->quoteInto("{$orderTableAliasName}.state <> ?", Mage_Sales_Model_Order::STATE_CANCELED),
+
+        );
+
+        $productJoinCondition = array(
+            $adapter->quoteInto('(e.type_id NOT IN (?))', $compositeTypeIds),
+            'e.entity_id = order_items.product_id',
+            $adapter->quoteInto('e.entity_type_id = ?', $collection->getProductEntityTypeId())
+        );
+
+        if ($from != '' && $to != '') {
+            $fieldName            = $orderTableAliasName . '.created_at';
+            $orderJoinCondition[] = $this->_prepareBetweenSql($collection, $fieldName, $from, $to);
+        }
+
+        $collection->getSelect()->reset()
+            ->from(
+                array('order_items' => $collection->getTable('sales/order_item')),
+                array(
+                    'ordered_qty' => 'SUM(order_items.qty_ordered)',
+                    'order_items_name' => 'order_items.name'
+                ))
+            ->joinInner(
+                array('order' => $collection->getTable('sales/order')),
+                implode(' AND ', $orderJoinCondition),
+                array())
+            ->joinLeft(
+                array('e' => $collection->getProductEntityTableName()),
+                implode(' AND ', $productJoinCondition),
+                array(
+                    'entity_id' => 'order_items.product_id',
+                    'entity_type_id' => 'e.entity_type_id',
+                    'attribute_set_id' => 'e.attribute_set_id',
+                    'type_id' => 'e.type_id',
+                    'sku' => 'e.sku',
+                    'has_options' => 'e.has_options',
+                    'required_options' => 'e.required_options',
+                    'created_at' => 'e.created_at',
+                    'updated_at' => 'e.updated_at'
+                ))
+            ->group('order_items.product_id')
+            ->having('SUM(order_items.qty_ordered) > ?', 0);
+        return $collection;
+    }
+
+    /**
+     * Prepare between sql
+     *
+     * @param Mage_Reports_Model_Resource_Product_Collection $collection
+     * @param  string $fieldName Field name with table suffix ('created_at' or 'main_table.created_at')
+     * @param  string $from
+     * @param  string $to
+     * @return string Formatted sql string
+     */
+    protected function _prepareBetweenSql($collection, $fieldName, $from, $to)
+    {
+        return sprintf('(%s BETWEEN %s AND %s)',
+            $fieldName,
+            $collection->getConnection()->quote($from),
+            $collection->getConnection()->quote($to)
+        );
+    }
+
+    /**
+     * Filter a collection by category
+     *
+     * @param Mage_Reports_Model_Resource_Product_Collection $collection
+     * @param string $catId
+     * @param string $catName
+     * @return mixed
+     */
+    protected function filterByCategory($collection, $catId, $catName)
+    {
+        if ($catId or $catName) {
+            $category = Mage::getModel('catalog/category');
+
+            if ($catId) {
+                $category->load($catId);
+            }
+
+            if ($catName) {
+                $category->loadByAttribute('name', $catName);
+            }
+
+            $collection = $this->_joinCategoryOnCollection(
+                $collection, $category
+            );
+        }
+        return $collection;
+    }
+
+    /**
+     * Reduce a collection to the supplied $limit count
+     * whilst filtering out products with the same parent.
+     *
+     * @param Mage_Reports_Model_Resource_Product_Collection $collection
+     * @param string $limit
+     * @return array
+     */
+    protected function removeSharedParentsAndLimit($collection, $limit)
+    {
+        $productIds = [];
+        $parentCheckArray = [];
+        $i = 0;
+
+        foreach ($collection as $product) {
+            if ($i == $limit) {
+                break;
+            }
+            $parentIds = Mage::getModel('catalog/product_type_configurable')->getParentIdsByChild($product->getId());
+            if (in_array($parentIds[0], $parentCheckArray)) {
+                continue;
+            }
+            if (!empty($parentIds)) {
+                $parentCheckArray = array_merge($parentIds, $parentCheckArray);
+            }
+            $productIds[] = $product->getId();
+            $i++;
+        }
+        return $productIds;
     }
 }
