@@ -98,13 +98,14 @@ class Dotdigitalgroup_Email_Model_Sales_Order
                         $error = true;
                     }
                 }
-
                 //if no error then set imported
                 if (!$error) {
                     $this->_setImported($orderIdsForSingleSync, true);
                 }
             }
-
+            
+            // Mark ordered products as unprocessed
+            $this->updateCatalog(array_merge($orders, $ordersForSingleSync));
             unset($this->accounts[$account->getApiUsername()]);
         }
 
@@ -178,6 +179,10 @@ class Dotdigitalgroup_Email_Model_Sales_Order
                     Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT,
                     $website
                 );
+                $orders = $this->getConnectorOrders($website, $limit);
+                $modifiedOrders = $this->getConnectorOrders($website, $limit, true);
+
+                //Set purchased products as unprocessed
                 if (!isset($this->accounts[$this->apiUsername])) {
                     $account = Mage::getModel(
                         'ddg_automation/connector_account'
@@ -187,9 +192,7 @@ class Dotdigitalgroup_Email_Model_Sales_Order
                     $this->accounts[$this->apiUsername] = $account;
                 }
 
-                $this->accounts[$this->apiUsername]->setOrders(
-                    $this->getConnectorOrders($website, $limit)
-                );
+                $this->accounts[$this->apiUsername]->setOrders($orders);
                 $orderIds = array_merge(
                     $this->accounts[$this->apiUsername]->getOrderIds(),
                     $this->orderIds
@@ -198,9 +201,7 @@ class Dotdigitalgroup_Email_Model_Sales_Order
                 $this->accounts[$this->apiUsername]->setWebsites(
                     $website->getId()
                 );
-                $this->accounts[$this->apiUsername]->setOrdersForSingleSync(
-                    $this->getConnectorOrders($website, $limit, true)
-                );
+                $this->accounts[$this->apiUsername]->setOrdersForSingleSync($modifiedOrders);
                 $orderIdsForSingleSync = array_merge(
                     $this->accounts[$this->apiUsername]->getOrderIdsForSingleSync(),
                     $this->orderIdsForSingleSync
@@ -529,5 +530,24 @@ class Dotdigitalgroup_Email_Model_Sales_Order
         } catch (Exception $e) {
             Mage::logException($e);
         }
+    }
+
+    /**
+     * Marks as Unprocessed the purchased products
+     * @param array $orders
+     */
+    private function updateCatalog($orders)
+    {
+        $skus = [];
+        foreach ($orders as $order) {
+            foreach ($order->products as $product) {
+                $skus[] = $product['sku'];
+            }
+        }
+
+        $productCollection = Mage::getResourceModel('catalog/product_collection')
+            ->addFieldToFilter('sku', array('in' => array_unique($skus)));
+
+        Mage::getResourceModel('ddg_automation/catalog')->setUnProcessed($productCollection->getAllIds());
     }
 }
