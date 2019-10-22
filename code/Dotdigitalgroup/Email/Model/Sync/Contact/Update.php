@@ -55,22 +55,7 @@ class Dotdigitalgroup_Email_Model_Sync_Contact_Update extends Dotdigitalgroup_Em
                             $this->client->postContactsResubscribe($this->client->getContactByEmail($email));
                     }
                 } elseif ($item->getImportMode() == Dotdigitalgroup_Email_Model_Importer::MODE_SUBSCRIBER_UPDATE) {
-                    $email = $importData['email'];
-                    $id = $importData['id'];
-                    $result = $this->client->postContacts($email);
-                    if (isset($result->id)) {
-                        $contactId = $result->id;
-                        $this->client->deleteAddressBookContact(
-                            Mage::helper('ddg')->getSubscriberAddressBook($websiteId), $contactId
-                        );
-                    } else {
-                        $contactEmail = Mage::getModel('ddg_automation/contact')->load($id);
-
-                        if ($contactEmail->getId()) {
-                            $contactEmail->setSuppressed('1')
-                                ->save();
-                        }
-                    }
+                    $result = $this->handleUnsubscribe($importData, $websiteId);
                 }
 
                 if ($result) {
@@ -78,5 +63,47 @@ class Dotdigitalgroup_Email_Model_Sync_Contact_Update extends Dotdigitalgroup_Em
                 }
             }
         }
+    }
+
+    /**
+     * Handle a contact unsubscribe:
+     * - set SUBSCRIBER_STATUS data field to 'Unsubscribed'
+     * - if EC contact exists and has been updated, delete contact from the subscribers address book
+     * - if not, mark as suppressed in our table
+     *
+     * @param array $importData
+     * @param string $websiteId
+     * @return mixed
+     */
+    protected function handleUnsubscribe($importData, $websiteId)
+    {
+        $email = $importData['email'];
+        $id = $importData['id'];
+
+        $subscriberStatuses = Mage::getModel('ddg_automation/apiconnector_customer')
+            ->subscriberStatus;
+        $unsubscribedValue = $subscriberStatuses[Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED];
+
+        $data[] = [
+            'Key' => 'SUBSCRIBER_STATUS',
+            'Value' => $unsubscribedValue
+        ];
+
+        $result = $this->client->updateContactDatafieldsByEmail($email, $data);
+        if (isset($result->id)) {
+            $contactId = $result->id;
+            $this->client->deleteAddressBookContact(
+                Mage::helper('ddg')->getSubscriberAddressBook($websiteId), $contactId
+            );
+        } else {
+            $contactEmail = Mage::getModel('ddg_automation/contact')->load($id);
+
+            if ($contactEmail->getId()) {
+                $contactEmail->setSuppressed('1')
+                    ->save();
+            }
+        }
+
+        return $result;
     }
 }

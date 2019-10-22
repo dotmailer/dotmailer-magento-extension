@@ -75,7 +75,7 @@ class Dotdigitalgroup_Email_Model_Newsletter_Observer
 
                 $contactEmail->setIsSubscriber(null)
                     ->setSubscriberStatus(Mage_Newsletter_Model_Subscriber::STATUS_UNSUBSCRIBED)
-                    ->setLastSubscribedAt(null);
+                    ->setLastSubscribedAt($contactEmail->getLastSubscribedAt());
                 //save contact
                 $contactEmail->save();
 
