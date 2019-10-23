@@ -103,9 +103,12 @@ class Dotdigitalgroup_Email_Model_Sales_Order
                     $this->_setImported($orderIdsForSingleSync, true);
                 }
             }
-            
-            // Mark ordered products as unprocessed
-            $this->updateCatalog(array_merge($orders, $ordersForSingleSync));
+
+            if ($this->countOrders > 0) {
+                // Mark ordered products as unprocessed
+                $this->updateCatalog(array_merge($orders, $ordersForSingleSync));
+            }
+
             unset($this->accounts[$account->getApiUsername()]);
         }
 
