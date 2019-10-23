@@ -44,9 +44,11 @@ Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 
 ###### What’s new
 - The external dynamic content bestsellers list has been improved to display the configurable parents of bestselling children.
+- All private methods in our code have been changed to protected, to make our connector's functionality completely extensible.
 
 ###### Bug fixes
 - Our v6.4.21 upgrade script had an error that affected merchants using prefixed Magento database tables. This has now been fixed.
+- We've fixed an error in our install script relating to the `last_imported_at` column type.
 - We’ve removed some legacy markup from the HTML served by external dynamic content URLs.
 - URL redirect management now displays and functions correctly in Enterprise Edition.
 - We’ve fixed a bug with custom cart URLs when used with logged-in customer baskets.
