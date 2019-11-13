@@ -245,7 +245,7 @@ class Dotdigitalgroup_Email_Model_Template extends Mage_Core_Model_Abstract
      * @param $store
      * @return mixed
      */
-    private function syncEmailTemplate($campaignId, $emailTemplateId, $store)
+    protected function syncEmailTemplate($campaignId, $emailTemplateId, $store)
     {
         $websiteId = $store->getWebsiteId();
         $helper = Mage::helper('ddg');
@@ -296,7 +296,7 @@ class Dotdigitalgroup_Email_Model_Template extends Mage_Core_Model_Abstract
      * @param string $origTemplateCode
      * @return Mage_Core_Model_Abstract
      */
-    private function updateTemplateById($dmCampaign, $campaignId, $templateId, $origTemplateCode = '')
+    protected function updateTemplateById($dmCampaign, $campaignId, $templateId, $origTemplateCode = '')
     {
         //Engagement Cloud template name (campaign name _ campaign id)
         $templateName = $dmCampaign->name . '_' . $campaignId;

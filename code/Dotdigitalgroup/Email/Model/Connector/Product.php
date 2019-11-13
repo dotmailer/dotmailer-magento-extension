@@ -178,7 +178,7 @@ class Dotdigitalgroup_Email_Model_Connector_Product
      *
      * @return null
      */
-    private function getMinPrices($product)
+    protected function getMinPrices($product)
     {
         switch ($product->getTypeId()) {
             case Mage_Catalog_Model_Product_Type::TYPE_CONFIGURABLE:
@@ -205,7 +205,7 @@ class Dotdigitalgroup_Email_Model_Connector_Product
      *
      * @return null
      */
-    private function getMinConfigurablePrices($product)
+    protected function getMinConfigurablePrices($product)
     {
         foreach ($product->getTypeInstance()->getChildrenIds($product->getId()) as $childProductIds) {
             foreach ($childProductIds as $id) {
@@ -227,7 +227,7 @@ class Dotdigitalgroup_Email_Model_Connector_Product
      *
      * @return null
      */
-    private function getMinBundlePrices($product)
+    protected function getMinBundlePrices($product)
     {
         $this->price = 0;
         $this->specialPrice = 0;
@@ -275,7 +275,7 @@ class Dotdigitalgroup_Email_Model_Connector_Product
      *
      * @return null
      */
-    private function getMinGroupedPrices($product)
+    protected function getMinGroupedPrices($product)
     {
         $childProducts = $product->getTypeInstance(true)->getAssociatedProducts($product);
         foreach ($childProducts as $childProduct) {
@@ -294,7 +294,7 @@ class Dotdigitalgroup_Email_Model_Connector_Product
      *
      * @return null
      */
-    private function formatPriceValues()
+    protected function formatPriceValues()
     {
         $this->price = (float)number_format(
             $this->price,
@@ -318,7 +318,7 @@ class Dotdigitalgroup_Email_Model_Connector_Product
      *
      * @return false|int
      */
-    private function textIsValidForInsightDataKey($text)
+    protected function textIsValidForInsightDataKey($text)
     {
         return preg_match('/^[a-zA-Z_\\\\-][a-zA-Z0-9_\\\\-]*$/', $text);
     }
@@ -327,7 +327,7 @@ class Dotdigitalgroup_Email_Model_Connector_Product
      * Initializes Custom Product Attributes to be imported via Catalog Sync
      * @param $product
      */
-    private function _setCustomAttributes($product, $storeId)
+    protected function _setCustomAttributes($product, $storeId)
     {
         $configAttributes = Mage::helper('ddg')->getWebsiteConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_ORDER_PRODUCT_ATTRIBUTES,

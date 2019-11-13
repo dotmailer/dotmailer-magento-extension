@@ -65,7 +65,7 @@ class Dotdigitalgroup_Email_Helper_Setup extends Mage_Core_Helper_Abstract
             ->populateSubscribersThatAreNotCustomers($batchSize)
             ->updateCustomersThatAreSubscribers($batchSize)
             ->updateContactsWithSegmentsIdsForEnterprise($batchSize);
-        
+
         /** @var Dotdigitalgroup_Email_Model_Resource_Order $orderResource */
         $orderResource = Mage::getResourceModel('ddg_automation/order');
         $orderResource->populateEmailOrderTable($batchSize);
@@ -228,7 +228,7 @@ class Dotdigitalgroup_Email_Helper_Setup extends Mage_Core_Helper_Abstract
     /**
      * Save product types and visibilities in config
      */
-    private function saveProductTypesAndVisibilitiesInConfig()
+    protected function saveProductTypesAndVisibilitiesInConfig()
     {
         //Type
         $configModel = Mage::getModel('core/config');
@@ -262,7 +262,7 @@ class Dotdigitalgroup_Email_Helper_Setup extends Mage_Core_Helper_Abstract
     /**
      * Save order statuses in config
      */
-    private function saveOrderStatusesAsStringInConfig()
+    protected function saveOrderStatusesAsStringInConfig()
     {
         $source = Mage::getModel('adminhtml/system_config_source_order_status');
         $statuses = $source->toOptionArray();
@@ -288,7 +288,7 @@ class Dotdigitalgroup_Email_Helper_Setup extends Mage_Core_Helper_Abstract
     /**
      * Set admin notification
      */
-    private function setAdminNotificationMessage()
+    protected function setAdminNotificationMessage()
     {
         $adminData = array();
         $adminData[] = array(
@@ -306,7 +306,7 @@ class Dotdigitalgroup_Email_Helper_Setup extends Mage_Core_Helper_Abstract
     /**
      *  Generate random string and save in config
      */
-    private function generateAndSaveCode()
+    protected function generateAndSaveCode()
     {
         $code = Mage::helper('core')->getRandomString(32);
         $configModel = Mage::getModel('core/config');

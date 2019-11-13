@@ -81,7 +81,7 @@ class Dotdigitalgroup_Email_Model_Consent extends Mage_Core_Model_Abstract
      * @param $consentUrl
      * @return bool
      */
-    private function isLinkMatchCustomerRegistrationOrCheckout($consentUrl)
+    protected function isLinkMatchCustomerRegistrationOrCheckout($consentUrl)
     {
         if (strpos($consentUrl, 'checkout/') !== false || strpos($consentUrl, 'customer/account/') !== false) {
             return true;

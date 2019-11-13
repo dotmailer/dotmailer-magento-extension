@@ -117,7 +117,7 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
     /**
      * @param array $storeIds
      */
-    private function expireExpiredCampaigns($storeIds)
+    protected function expireExpiredCampaigns($storeIds)
     {
         $expiredCampaigns = $this->getExpiredEmailCampaignsByStoreIds($storeIds);
         $ids = $expiredCampaigns->getColumnValues('id');
@@ -301,7 +301,7 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
     /**
      * @param $collection
      */
-    private function hasOrderReviews($collection)
+    protected function hasOrderReviews($collection)
     {
         return in_array(
             self::CAMPAIGN_EVENT_ORDER_REVIEW,
@@ -313,7 +313,7 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
      * @param $emailCollection
      * @return mixed
      */
-    private function getOrderObjectsAsArray($emailCollection)
+    protected function getOrderObjectsAsArray($emailCollection)
     {
         $orderIncrementIds = $emailCollection->getColumnValues('order_increment_id');
         $salesCollection = Mage::getModel('sales/order')
@@ -328,7 +328,7 @@ class Dotdigitalgroup_Email_Model_Campaign extends Mage_Core_Model_Abstract
      * @param array $storeIds
      * @return Dotdigitalgroup_Email_Model_Resource_Campaign_Collection
      */
-    private function getExpiredEmailCampaignsByStoreIds($storeIds)
+    protected function getExpiredEmailCampaignsByStoreIds($storeIds)
     {
         $time = Zend_Date::now(Mage::app()->getLocale()->getLocale())->subHour(2);
         $campaignCollection = $this->getCollection()

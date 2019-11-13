@@ -799,8 +799,7 @@ $table->addColumn(
     ), 'Product Processed'
     )
     ->addColumn(
-        'last_imported_at', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
-        'type' => Varien_Db_Ddl_Table::TYPE_TIMESTAMP,
+        'last_imported_at', Varien_Db_Ddl_Table::TYPE_TIMESTAMP, null, array(
         'nullable' => true,
         'default' => null,
         'comment' => 'Last imported date',

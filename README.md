@@ -40,7 +40,23 @@ You are welcome to contribute to Engagement Cloud for Magento! You can either:
 - Fix a bug: please fork this repo and submit the Pull Request to our [Develop branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/develop)
 Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 
-#6.4.21
+# 6.4.22
+
+###### What’s new
+- The external dynamic content bestsellers list has been improved to display the configurable parents of bestselling children.
+- All private methods in our code have been changed to protected, to make our connector's functionality completely extensible.
+
+###### Bug fixes
+- Our v6.4.21 upgrade script had an error that affected merchants using prefixed Magento database tables. This has now been fixed.
+- We've fixed an error in our install script relating to the `last_imported_at` column type.
+- We’ve removed some legacy markup from the HTML served by external dynamic content URLs.
+- URL redirect management now displays and functions correctly in Enterprise Edition.
+- We’ve fixed a bug with custom cart URLs when used with logged-in customer baskets.
+- Purchased products are now marked as modified. This means the stock level updates the next time the catalog syncs. 
+- Missing or invalid brand attributes will now not break the order sync.
+- Subscribers who unsubscribe will now be updated so that their _SUBSCRIBER_STATUS_ data field in Engagement Cloud is set to 'Unsubscribed'.
+
+# 6.4.21
 
 ###### What’s new
 - We’ve added a _type_ field to the schema for catalog insight data. 

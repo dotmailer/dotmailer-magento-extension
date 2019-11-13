@@ -119,7 +119,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
      * @param $storeId
      * @return null|string
      */
-    private function getLostBasketCustomerCampaignId($num, $storeId)
+    protected function getLostBasketCustomerCampaignId($num, $storeId)
     {
         $store = Mage::app()->getStore($storeId);
 
@@ -133,7 +133,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
      * @param $storeId
      * @return null|string
      */
-    private function getLostBasketGuestCampaignId($num, $storeId)
+    protected function getLostBasketGuestCampaignId($num, $storeId)
     {
         $store = Mage::app()->getStore($storeId);
 
@@ -191,7 +191,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
      * @param $storeId
      * @return null|string
      */
-    private function getLostBasketGuestEnabled($num, $storeId)
+    protected function getLostBasketGuestEnabled($num, $storeId)
     {
         $store = Mage::app()->getStore($storeId);
 
@@ -303,7 +303,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
      * @param $storeId
      * @param $websiteId
      */
-    private function processFirstCustomerAC($storeId, $websiteId)
+    protected function processFirstCustomerAC($storeId, $websiteId)
     {
         //campaign id for customers
         $campaignId = $this->getLostBasketCustomerCampaignId(self::CUSTOMER_LOST_BASKET_ONE, $storeId);
@@ -364,7 +364,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
      * @param $storeId
      * @param $websiteId
      */
-    private function proccessFirstGuestAC($storeId, $websiteId)
+    protected function proccessFirstGuestAC($storeId, $websiteId)
     {
         $from = Zend_Date::now($this->locale)->subMinute(
             $this->getLostBasketGuestInterval(self::GUEST_LOST_BASKET_ONE, $storeId)
@@ -422,7 +422,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
      * @param $items
      * @return array|bool
      */
-    private function getMostExpensiveItems($items)
+    protected function getMostExpensiveItems($items)
     {
         $mostExpensiveItem = false;
         foreach ($items as $item) {
@@ -445,7 +445,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
      * @param $number
      * @param bool $guest
      */
-    private function processExistingAC($campaignId, $storeId, $websiteId, $number, $guest = false)
+    protected function processExistingAC($campaignId, $storeId, $websiteId, $number, $guest = false)
     {
         if ($guest) {
             $from = Zend_Date::now($this->locale)->subHour($this->getLostBasketGuestInterval($number, $storeId));
@@ -518,7 +518,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
      * @param $abandonedModel
      * @return bool
      */
-    private function isItemsChanged($quote, $abandonedModel)
+    protected function isItemsChanged($quote, $abandonedModel)
     {
         if ($quote->getItemsCount() != $abandonedModel->getItemsCount()) {
             return true;
@@ -542,7 +542,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
      * @param $allItemsIds
      * @return array
      */
-    private function getQuoteItemIds($allItemsIds)
+    protected function getQuoteItemIds($allItemsIds)
     {
         $itemIds = array();
         foreach ($allItemsIds as $item) {
@@ -559,7 +559,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
      * @param $abandonedItemIds
      * @return bool
      */
-    private function isItemsIdsSame($quoteItemIds, $abandonedItemIds)
+    protected function isItemsIdsSame($quoteItemIds, $abandonedItemIds)
     {
         return $quoteItemIds == $abandonedItemIds;
     }
@@ -571,7 +571,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
      * @param $number
      * @param $websiteId
      */
-    private function sendEmailCampaign($email, $quote, $campaignId, $number, $websiteId)
+    protected function sendEmailCampaign($email, $quote, $campaignId, $number, $websiteId)
     {
         //limit interval if the email was already sent
         $storeId = $quote->getStoreId();
@@ -599,7 +599,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
      * @param $quote Mage_Sales_Model_Quote
      * @param $itemIds
      */
-    private function createAbandonedCart($abandonedModel, $quote, $itemIds)
+    protected function createAbandonedCart($abandonedModel, $quote, $itemIds)
     {
         $abandonedModel->setStoreId($quote->getStoreId())
             ->setCustomerId($quote->getCustomerId())
@@ -620,7 +620,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
      * @param $guest bool
      * @return mixed
      */
-    private function getAbandonedCartsForStore($number, $from, $to, $storeId, $guest = false)
+    protected function getAbandonedCartsForStore($number, $from, $to, $storeId, $guest = false)
     {
         $updated = array(
             'from' => $from,
@@ -655,7 +655,7 @@ class Dotdigitalgroup_Email_Model_Sales_Quote
      * @param $storeId int
      * @return mixed
      */
-    private function getProcessedQuotesByIds($quoteIds, $storeId)
+    protected function getProcessedQuotesByIds($quoteIds, $storeId)
     {
         $quoteCollection = Mage::getModel('sales/quote')
             ->getCollection()

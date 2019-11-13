@@ -493,7 +493,7 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
     /**
      * @param $file string full path to the csv file.
      */
-    private function cleanProcessedConsent($file)
+    protected function cleanProcessedConsent($file)
     {
         try {
             $consentResource = Mage::getResourceModel('ddg_automation/consent');
@@ -516,7 +516,7 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
     /**
      * @return array
      */
-    private function getEnabledWebsiteIds() {
+    protected function getEnabledWebsiteIds() {
         $enabledWebsiteIds = array();
         $websites        = Mage::app()->getWebsites( true );
         foreach ( $websites as $website ) {

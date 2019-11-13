@@ -1305,7 +1305,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
      *
      * @return boolean
      */
-    private function useProductPage($website)
+    protected function useProductPage($website)
     {
         return $this->getWebsiteConfig(
             Dotdigitalgroup_Email_Helper_Config::XML_PATH_AUTOMATION_USE_PRODUCT_PAGE,
