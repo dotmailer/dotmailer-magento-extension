@@ -6,11 +6,17 @@
  */
 class Dotdigitalgroup_Email_Model_Connector_Product
 {
+    const TYPE_VARIANT = 'Variant';
 
     /**
      * @var string
      */
     public $id;
+
+    /**
+     * @var string
+     */
+    public $parent_id = '';
 
     /**
      * @var string
@@ -96,6 +102,8 @@ class Dotdigitalgroup_Email_Model_Connector_Product
     )
     {
         $this->id = $product->getId();
+        $this->parent_id = Mage::getSingleton('ddg_automation/catalog_parentfinder')
+            ->getProductParentIdToSync($product);
         $this->sku = $product->getSku();
         $this->name = $product->getName();
         $statuses = Mage::getModel('catalog/product_status')
@@ -104,7 +112,7 @@ class Dotdigitalgroup_Email_Model_Connector_Product
         $options = Mage::getModel('catalog/product_visibility')
             ->getOptionArray();
         $this->visibility = $options[$product->getVisibility()];
-        $this->type = ucfirst($product->getTypeId());
+        $this->type = $this->getType($product);
 
         $this->getMinPrices($product);
 
@@ -337,5 +345,20 @@ class Dotdigitalgroup_Email_Model_Connector_Product
             $attributor = Mage::getModel('ddg_automation/connector_productattributes');
             $this->attributes = $attributor->initializeCustomAttributes($configAttributes,$product);
         }
+    }
+
+    /**
+     * @param $product
+     * @return string
+     */
+    protected function getType($product)
+    {
+        if ($product->getTypeId() !== Mage_Catalog_Model_Product_Type::TYPE_SIMPLE) {
+            return ucfirst($product->getTypeId());
+        }
+        return Mage::getSingleton('ddg_automation/catalog_parentfinder')
+            ->hasConfigurableParent($product)
+            ? self::TYPE_VARIANT
+            : ucfirst($product->getTypeId());
     }
 }
