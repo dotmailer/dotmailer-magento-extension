@@ -1794,8 +1794,9 @@
                             <comment><![CDATA[Recommended: Set a passcode so that basket contents and coupon codes can only be viewed if the following passcode is sent with the request.]]></comment>
                         </passcode>
                         <lost_basket_title translate="label" module="ddg">
-                            <label>Abandoned Carts</label>
-                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <label>Abandoned Carts (Deprecated)</label>
+                            <comment><![CDATA[Use the <a href="https://support.dotdigital.com/hc/en-gb/articles/360000419160-Creating-an-abandoned-cart-email">abandoned cart block</a> functionality from EasyEditor.]]></comment>
+                            <frontend_model>ddg_automation/adminhtml_system_dynamic_subheadingwithcomment</frontend_model>
                             <sort_order>20</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -1845,8 +1846,9 @@
                             <show_in_store>0</show_in_store>
                         </coupon_code_url>
                         <order_dynamic_content_url translate="label" module="ddg">
-                            <label>Order Recommendation</label>
-                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <label>Order Recommendation (Deprecated)</label>
+                            <comment><![CDATA[Use dotdigital Engagement Cloud's built-in product recommendation functionality. <a href="https://support.dotdigital.com/hc/en-gb/articles/360000110040-Product-recommendations-an-overview">Learn more</a>]]></comment>
+                            <frontend_model>ddg_automation/adminhtml_system_dynamic_subheadingwithcomment</frontend_model>
                             <sort_order>60</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -1880,8 +1882,9 @@
                             <show_in_store>0</show_in_store>
                         </crosssell_products_url>
                         <basket_dynamic_content_url translate="label" module="ddg">
-                            <label>Cart Recommendation</label>
-                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <label>Cart Recommendation (Deprecated)</label>
+                            <comment><![CDATA[Use dotdigital Engagement Cloud's built-in product recommendation functionality. <a href="https://support.dotdigital.com/hc/en-gb/articles/360000110040-Product-recommendations-an-overview">Learn more</a>]]></comment>
+                            <frontend_model>ddg_automation/adminhtml_system_dynamic_subheadingwithcomment</frontend_model>
                             <sort_order>91</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -1915,8 +1918,9 @@
                             <show_in_store>0</show_in_store>
                         </basket_crosssell_products_url>
                         <product_dynamic_content_url translate="label" module="ddg">
-                            <label>Product Recommendation</label>
-                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <label>Product Recommendation (Deprecated)</label>
+                            <comment><![CDATA[Use dotdigital Engagement Cloud's built-in product recommendation functionality. <a href="https://support.dotdigital.com/hc/en-gb/articles/360000110040-Product-recommendations-an-overview">Learn more</a>]]></comment>
+                            <frontend_model>ddg_automation/adminhtml_system_dynamic_subheadingwithcomment</frontend_model>
                             <sort_order>100</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
