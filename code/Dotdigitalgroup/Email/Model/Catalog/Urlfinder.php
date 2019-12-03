@@ -37,7 +37,7 @@ class Dotdigitalgroup_Email_Model_Catalog_Urlfinder
 
         if (
             $product->getTypeId() === Mage_Catalog_Model_Product_Type::TYPE_SIMPLE
-            && ($product->getSmallImage() == 'no_selection' || empty($product->getSmallImage()))
+            && ($product->getSmallImage() == 'no_selection' || !$product->getSmallImage())
             && $parentProduct = $this->getParentProduct($product)
         ) {
             $product = $parentProduct;

@@ -10,6 +10,7 @@ This extension integrates Engagement Cloud with Magento Open Source 1 (Community
 ## Compatibility
 
 - Magento >= 1.6.2
+- PHP >= 5.4
 
 ## Installation
 
