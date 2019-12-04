@@ -41,9 +41,20 @@ You are welcome to contribute to Engagement Cloud for Magento! You can either:
 - Fix a bug: please fork this repo and submit the Pull Request to our [Develop branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/develop)
 Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 
+# 6.4.23
+
+###### What's new
+- The insight data schema for orders has changed. Configurable and bundle products no longer output as separate line items; instead, parent data is used to augment child products.
+- Simple products in order sync were commonly showing price 0 - we're now looking up parent prices for these where possible.  
+- We've added _parent_id_ to catalog insight data schema. 
+- We have deprecated some of our External Dynamic Content URLs. We've added notes on how to replace these in your campaigns.
+
+###### Bug fixes
+- We've fixed an error with updating products following an order sync - an exception was thrown once all available orders had been synced.
+
 # 6.4.22
 
-###### What’s new
+###### What's new
 - The external dynamic content bestsellers list has been improved to display the configurable parents of bestselling children.
 - All private methods in our code have been changed to protected, to make our connector's functionality completely extensible.
 
@@ -59,7 +70,7 @@ Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 
 # 6.4.21
 
-###### What’s new
+###### What's new
 - We’ve added a _type_ field to the schema for catalog insight data. 
 - In catalog sync, child products without an image will now try to use their parent’s image.
 
