@@ -5,7 +5,7 @@
  *
  * @author      Magento Core Team <core@magentocommerce.com>
  */
-class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_SubheadingWithComment
+class Dotdigitalgroup_Email_Block_Adminhtml_System_Dynamic_Subheadingwithcomment
     extends Mage_Adminhtml_Block_Abstract implements Varien_Data_Form_Element_Renderer_Interface
 {
     /**
