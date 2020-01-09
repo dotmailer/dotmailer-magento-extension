@@ -51,6 +51,7 @@ Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 
 ###### Bug fixes
 - We've fixed an error with updating products following an order sync - an exception was thrown once all available orders had been synced.
+- We changed a line in our `UrlFinder` class that was causing a fatal error in PHP 5.4.
 
 # 6.4.22
 
