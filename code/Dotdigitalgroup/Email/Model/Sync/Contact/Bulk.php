@@ -76,8 +76,15 @@ class Dotdigitalgroup_Email_Model_Sync_Contact_Bulk
                     ->save();
             } else {
                 $message = (isset($result->message)) ? $result->message : 'Error unknown';
-                $item->setImportStatus(Dotdigitalgroup_Email_Model_Importer::FAILED)
-                    ->setMessage($message);
+
+                // Requeue imports if import limit has been exceeded
+                if (strpos($message, 'ERROR_IMPORT_TOOMANYACTIVEIMPORTS') !== false) {
+                    $item->setImportStatus(Dotdigitalgroup_Email_Model_Importer::NOT_IMPORTED);
+                } else {
+                    $item->setImportStatus(Dotdigitalgroup_Email_Model_Importer::FAILED);
+                }
+
+                $item->setMessage($message);
 
                 //If result id
                 if (isset($result->id)) {
