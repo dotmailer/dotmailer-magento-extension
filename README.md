@@ -41,6 +41,14 @@ You are welcome to contribute to Engagement Cloud for Magento! You can either:
 - Fix a bug: please fork this repo and submit the Pull Request to our [Develop branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/develop)
 Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 
+# 6.4.24
+
+###### What's new
+- We've increased the sync limits for bulk imports into Engagement Cloud. The importer sync will now import up to 100 bulk items on each execution (25 of which can be for contacts), plus up to 100 single items.
+
+###### Bug fixes
+- We fixed a filename casing error that broke the page at Configuration > Engagement Cloud > Dynamic Content. 
+
 # 6.4.23
 
 ###### What's new
