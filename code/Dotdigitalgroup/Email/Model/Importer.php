@@ -30,7 +30,8 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
     const IMPORT_TYPE_SUBSCRIBER_RESUBSCRIBED = 'Subscriber';
 
     //sync limits
-    const SYNC_SINGLE_LIMIT_NUMBER = 100;
+    const TOTAL_IMPORT_SYNC_LIMIT = 100;
+    const CONTACT_IMPORT_SYNC_LIMIT = 25;
 
     /**
      * @var array
@@ -59,7 +60,6 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
     public $bulkPriority;
     public $singlePriority;
     public $totalItems;
-    public $bulkSyncLimit;
 
     /**
      * Constructor.
@@ -127,7 +127,7 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
     {
         $helper = Mage::helper('ddg');
         $helper->allowResourceFullExecution();
-        if ($items = $this->_getImportingItems($this->bulkSyncLimit)) {
+        if ($items = $this->_getImportingItems(self::TOTAL_IMPORT_SYNC_LIMIT)) {
             foreach ($items as $item) {
                 $websiteId = $item->getWebsiteId();
                 $client = Mage::helper('ddg')->getWebsiteApiClient($websiteId);
@@ -238,9 +238,6 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
         //Set items to 0
         $this->totalItems = 0;
 
-        //Set bulk sync limit
-        $this->bulkSyncLimit = 5;
-
         //Set priority
         $this->_setPriority();
 
@@ -249,37 +246,39 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
 
         $enabledWebsiteIds = $this->getEnabledWebsiteIds();
 
-        //Bulk priority. Process group 1 first
+        //Bulk priority. Process Contact Bulk first
         foreach ($this->bulkPriority as $bulk) {
-            if ($this->totalItems < $bulk['limit']) {
+            if ($this->totalItems < self::TOTAL_IMPORT_SYNC_LIMIT) {
+                // only Contact imports have a bulk limit
+                $bulkLimit = isset($bulk['limit']) ? $bulk['limit'] - $this->totalItems : self::TOTAL_IMPORT_SYNC_LIMIT - $this->totalItems;
                 $collection = $this->_getQueue(
                     $bulk['type'],
                     $bulk['mode'],
-                    $bulk['limit'] - $this->totalItems,
+                    $bulkLimit,
                     $enabledWebsiteIds
                 );
                 if ($collection->getSize()) {
-                    $this->totalItems += $collection->getSize();
+                    $this->totalItems += count($collection);
                     $bulkModel = Mage::getModel($bulk['model']);
                     $bulkModel->processCollection($collection);
                 }
             }
         }
 
-        //reset total items to 0
+        //reset total items
         $this->totalItems = 0;
 
         //Single/Update priority
         foreach ($this->singlePriority as $single) {
-            if ($this->totalItems < $single['limit']) {
+            if ($this->totalItems < self::TOTAL_IMPORT_SYNC_LIMIT) {
                 $collection = $this->_getQueue(
                     $single['type'],
                     $single['mode'],
-                    $single['limit'] - $this->totalItems,
+                    self::TOTAL_IMPORT_SYNC_LIMIT - $this->totalItems,
                     $enabledWebsiteIds
                 );
                 if ($collection->getSize()) {
-                    $this->totalItems += $collection->getSize();
+                    $this->totalItems += count($collection);
                     $singleModel = Mage::getModel($single['model']);
                     $singleModel->processCollection($collection);
                 }
@@ -301,7 +300,6 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
             'model' => '',
             'mode'  => self::MODE_BULK,
             'type'  => '',
-            'limit' => $this->bulkSyncLimit
         );
 
         //Contact Bulk
@@ -312,6 +310,7 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
             self::IMPORT_TYPE_GUEST,
             self::IMPORT_TYPE_SUBSCRIBERS
         );
+        $contact['limit'] = self::CONTACT_IMPORT_SYNC_LIMIT;
 
         //Bulk Order
         $order = $defaultBulk;
@@ -339,7 +338,6 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
             'model' => 'ddg_automation/sync_contact_update',
             'mode'  => '',
             'type'  => '',
-            'limit' => self::SYNC_SINGLE_LIMIT_NUMBER
         );
 
         //Subscriber resubscribe
@@ -385,7 +383,6 @@ class Dotdigitalgroup_Email_Model_Importer extends Mage_Core_Model_Abstract
             'model' => '',
             'mode'  => '',
             'type'  => '',
-            'limit' => self::SYNC_SINGLE_LIMIT_NUMBER
         );
 
         //Contact Delete
