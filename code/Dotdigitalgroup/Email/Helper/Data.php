@@ -227,15 +227,8 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
     {
         $contact = Mage::getModel('ddg_automation/contact')
             ->loadByCustomerEmail($email, $websiteId);
-        if ($contactId = $contact->getContactId()) {
-            return $contactId;
-        }
 
         $client = $this->getWebsiteApiClient($websiteId);
-        if ($client === false) {
-            return false;
-        }
-
         $response = $client->postContacts($email);
 
         if (isset($response->message)) {
