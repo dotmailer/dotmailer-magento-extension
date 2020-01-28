@@ -41,6 +41,11 @@ You are welcome to contribute to Engagement Cloud for Magento! You can either:
 - Fix a bug: please fork this repo and submit the Pull Request to our [Develop branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/develop)
 Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 
+# 6.4.25
+
+###### What's new
+- All contacts queued for email campaign sends are now checked against Engagement Cloud for their current suppression status. This reduces the likelihood of all emails in a batch being marked as failed, if a single suppressed contact is found.
+
 # 6.4.24
 
 ###### What's new
