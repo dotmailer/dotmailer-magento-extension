@@ -10,6 +10,7 @@ This extension integrates Engagement Cloud with Magento Open Source 1 (Community
 ## Compatibility
 
 - Magento >= 1.6.2
+- PHP >= 5.4
 
 ## Installation
 
@@ -40,9 +41,34 @@ You are welcome to contribute to Engagement Cloud for Magento! You can either:
 - Fix a bug: please fork this repo and submit the Pull Request to our [Develop branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/develop)
 Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 
+# 6.4.25
+
+###### What's new
+- All contacts queued for email campaign sends are now checked against Engagement Cloud for their current suppression status. This reduces the likelihood of all emails in a batch being marked as failed, if a single suppressed contact is found.
+
+# 6.4.24
+
+###### What's new
+- We've increased the sync limits for bulk imports into Engagement Cloud. The importer sync will now import up to 100 bulk items on each execution (25 of which can be for contacts), plus up to 100 single items.
+
+###### Bug fixes
+- We fixed a filename casing error that broke the page at Configuration > Engagement Cloud > Dynamic Content. 
+
+# 6.4.23
+
+###### What's new
+- The insight data schema for orders has changed. Configurable and bundle products no longer output as separate line items; instead, parent data is used to augment child products.
+- Simple products in order sync were commonly showing price 0 - we're now looking up parent prices for these where possible.  
+- We've added _parent_id_ to catalog insight data schema. 
+- We have deprecated some of our External Dynamic Content URLs. We've added notes on how to replace these in your campaigns.
+
+###### Bug fixes
+- We've fixed an error with updating products following an order sync - an exception was thrown once all available orders had been synced.
+- We changed a line in our `UrlFinder` class that was causing a fatal error in PHP 5.4.
+
 # 6.4.22
 
-###### What’s new
+###### What's new
 - The external dynamic content bestsellers list has been improved to display the configurable parents of bestselling children.
 - All private methods in our code have been changed to protected, to make our connector's functionality completely extensible.
 
@@ -58,7 +84,7 @@ Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 
 # 6.4.21
 
-###### What’s new
+###### What's new
 - We’ve added a _type_ field to the schema for catalog insight data. 
 - In catalog sync, child products without an image will now try to use their parent’s image.
 

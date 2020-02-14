@@ -37,7 +37,7 @@ class Dotdigitalgroup_Email_Model_Catalog_Urlfinder
 
         if (
             $product->getTypeId() === Mage_Catalog_Model_Product_Type::TYPE_SIMPLE
-            && ($product->getSmallImage() == 'no_selection' || empty($product->getSmallImage()))
+            && ($product->getSmallImage() == 'no_selection' || !$product->getSmallImage())
             && $parentProduct = $this->getParentProduct($product)
         ) {
             $product = $parentProduct;
@@ -83,41 +83,7 @@ class Dotdigitalgroup_Email_Model_Catalog_Urlfinder
      */
     protected function getParentProduct($product)
     {
-        if ($parentId = $this->getFirstParentId($product)) {
-            return Mage::getModel('catalog/product')
-                ->load($parentId)
-                ->setStoreId($product->getStoreId());
-        }
-        return null;
-    }
-
-    /**
-     * Return parent ID for configurable, grouped or bundled products (in that order of priority)
-     *
-     * @param Mage_Catalog_Model_Product $product
-     *
-     * @return mixed
-     */
-    protected function getFirstParentId($product)
-    {
-        $configurableProducts = Mage::getModel('catalog/product_type_configurable')
-            ->getParentIdsByChild($product->getId());
-        if (isset($configurableProducts[0])) {
-            return $configurableProducts[0];
-        }
-
-        $groupedProducts = Mage::getModel('catalog/product_type_grouped')
-            ->getParentIdsByChild($product->getId());
-        if (isset($groupedProducts[0])) {
-            return $groupedProducts[0];
-        }
-
-        $bundleProducts = Mage::getResourceSingleton('bundle/selection')
-            ->getParentIdsByChild($product->getId());
-        if (isset($bundleProducts[0])) {
-            return $bundleProducts[0];
-        }
-
-        return null;
+        return Mage::getSingleton('ddg_automation/catalog_parentfinder')
+            ->getParentProduct($product);
     }
 }

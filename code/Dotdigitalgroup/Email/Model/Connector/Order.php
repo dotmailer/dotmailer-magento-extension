@@ -101,9 +101,9 @@ class Dotdigitalgroup_Email_Model_Connector_Order
      */
     public function setOrderData(Mage_Sales_Model_Order $orderData)
     {
-        $this->id         = $orderData->getIncrementId();
-        $this->quote_id   = $orderData->getQuoteId();
-        $this->email      = $orderData->getCustomerEmail();
+        $this->id = $orderData->getIncrementId();
+        $this->quote_id = $orderData->getQuoteId();
+        $this->email = $orderData->getCustomerEmail();
         $this->store_name = $orderData->getStoreName(2);
 
         $created_at = new Zend_Date(
@@ -111,7 +111,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
             Zend_Date::ISO_8601
         );
 
-        $this->purchase_date   = $created_at->toString(Zend_Date::ISO_8601);
+        $this->purchase_date = $created_at->toString(Zend_Date::ISO_8601);
         $this->delivery_method = $orderData->getShippingDescription();
         $this->delivery_total = (float)number_format(
             $orderData->getShippingAmount(),
@@ -119,7 +119,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
             '.',
             ''
         );
-        $this->currency        = $orderData->getStoreCurrencyCode();
+        $this->currency = $orderData->getStoreCurrencyCode();
 
         /**
          * This will check if payment record is not removed from db
@@ -146,7 +146,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
         //order items
         $this->_setOrderItems($orderData);
         //sales data
-        $this->order_subtotal   = (float)number_format(
+        $this->order_subtotal = (float)number_format(
             $orderData->getData('subtotal'),
             2,
             '.',
@@ -158,11 +158,11 @@ class Dotdigitalgroup_Email_Model_Connector_Order
             '.',
             ''
         );
-        $orderTotal             = abs(
+        $orderTotal = abs(
             $orderData->getData('grand_total') - $orderData->getTotalRefunded()
         );
-        $this->order_total      = (float)number_format($orderTotal, 2, '.', '');
-        $this->order_status     = $orderData->getStatus();
+        $this->order_total = (float)number_format($orderTotal, 2, '.', '');
+        $this->order_status = $orderData->getStatus();
     }
 
     /**
@@ -182,10 +182,10 @@ class Dotdigitalgroup_Email_Model_Connector_Order
                     $shippingData['street'],
                     2
                 ),
-                'delivery_city'      => $shippingData['city'],
-                'delivery_region'    => $shippingData['region'],
-                'delivery_country'   => $shippingData['country_id'],
-                'delivery_postcode'  => $shippingData['postcode']
+                'delivery_city' => $shippingData['city'],
+                'delivery_region' => $shippingData['region'],
+                'delivery_country' => $shippingData['country_id'],
+                'delivery_postcode' => $shippingData['postcode']
             );
         }
     }
@@ -196,7 +196,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
     protected function _setBillingData($orderData)
     {
         if ($orderData->getBillingAddress()) {
-            $billingData           = $orderData->getBillingAddress()->getData();
+            $billingData = $orderData->getBillingAddress()->getData();
             $this->billing_address = array(
                 'billing_address_1' => $this->_getStreet(
                     $billingData['street'],
@@ -206,10 +206,10 @@ class Dotdigitalgroup_Email_Model_Connector_Order
                     $billingData['street'],
                     2
                 ),
-                'billing_city'      => $billingData['city'],
-                'billing_region'    => $billingData['region'],
-                'billing_country'   => $billingData['country_id'],
-                'billing_postcode'  => $billingData['postcode'],
+                'billing_city' => $billingData['city'],
+                'billing_region' => $billingData['region'],
+                'billing_country' => $billingData['country_id'],
+                'billing_postcode' => $billingData['postcode'],
             );
         }
     }
@@ -221,8 +221,8 @@ class Dotdigitalgroup_Email_Model_Connector_Order
     {
         $this->custom = array();
 
-        $helper           = Mage::helper('ddg');
-        $website          = Mage::app()->getStore($orderData->getStore())
+        $helper = Mage::helper('ddg');
+        $website = Mage::app()->getStore($orderData->getStore())
             ->getWebsite();
         $customAttributes = $helper->getConfigSelectedCustomOrderAttributes(
             $website
@@ -315,7 +315,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
                 case 'timestamp':
                 case 'datetime':
                 case 'date':
-                    $date  = new Zend_Date(
+                    $date = new Zend_Date(
                         $orderData->$function(),
                         Zend_Date::ISO_8601
                     );
@@ -374,7 +374,7 @@ class Dotdigitalgroup_Email_Model_Connector_Order
                     $orderItemOption
                 )
             ) {
-                $label = $helper->cleanLabel($orderItemOption['label'],'-',$orderItemOption['option_id']);
+                $label = $helper->cleanLabel($orderItemOption['label'], '-', $orderItemOption['option_id']);
 
                 $options[][$label] = $orderItemOption['value'];
             }
@@ -442,6 +442,8 @@ class Dotdigitalgroup_Email_Model_Connector_Order
             $website
         );
 
+        $customOptionsToSync = array();
+
         /**
          * Order items.
          *
@@ -449,78 +451,138 @@ class Dotdigitalgroup_Email_Model_Connector_Order
          */
         foreach ($orderData->getAllItems() as $productItem) {
             //product custom options
-            $customOptions = array();
             if ($syncCustomOption) {
-                $customOptions = $this->_getOrderItemOptions($productItem);
+                if ($customOptions = $this->_getOrderItemOptions($productItem)) {
+                    $customOptionsToSync = $customOptions;
+                }
+            }
+
+            if ($productItem->getProductType() === 'configurable' || $productItem->getProductType() === 'bundle') {
+                continue;
+            }
+
+            /**
+             * Select Attributes for child products, and child products with zero price
+             */
+            if ($productItem->getParentItem()) {
+                $parentProduct = $productItem->getParentItem()->getProduct();
+                $parentName = $productItem->getParentItem()->getName();
+
+                //To be sure that will not skip ordered items with price ∊ (0,1]
+                if ((int)$productItem->getPrice() === 0 && !(double)($productItem->getPrice() / 10) > 0) {
+                    $parentPrice = $productItem->getParentItem()->getPrice();
+                }
             }
 
             $product = $productItem->getProduct();
             $product_attributes = null;
+            $child_attributes = null;
+
+            //selected attributes from config
+            $configAttributes = Mage::helper('ddg')->getWebsiteConfig(
+                Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_ORDER_PRODUCT_ATTRIBUTES,
+                $orderData->getStore()->getWebsite()
+            );
 
             if ($product) {
+                $product_attributes = $configAttributes
+                    ? $this->getProductAttributes($configAttributes, $product)
+                    : null;
+
+                if (isset($parentProduct)) {
+                    $child_attributes = $product_attributes;
+                    $product_attributes = $configAttributes
+                        ? $this->getProductAttributes($configAttributes, $parentProduct)
+                        : null;
+                }
+
                 // category names
                 $categoryCollection = $product->getCategoryCollection()
                     ->addAttributeToSelect('name');
-                $productCat         = array();
+                $productCat = array();
                 foreach ($categoryCollection as $cat) {
-                    $categories           = array();
-                    $categories[]         = $cat->getName();
+                    $categories = array();
+                    $categories[] = $cat->getName();
                     $productCat[]['Name'] = substr(
                         implode(', ', $categories),
                         0,
                         244
                     );
                 }
-                //selected attributes from config
-                $configAttributes = Mage::helper('ddg')->getWebsiteConfig(
-                    Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_ORDER_PRODUCT_ATTRIBUTES,
-                    $orderData->getStore()->getWebsite()
-                );
-                if ($configAttributes) {
-                    $attributor = Mage::getModel('ddg_automation/connector_productattributes');
-                    $product_attributes = $attributor->initializeCustomAttributes($configAttributes, $product);
-                }
 
                 $attributeSetName = $this->_getAttributeSetName($product);
-                $this->products[] = array(
-                    'name'           => $productItem->getName(),
-                    'sku'            => $productItem->getSku(),
-                    'qty'            => (int)number_format(
+
+                $productData = array(
+                    'name' => $productItem->getName(),
+                    'parent_name' => isset($parentName) ? $parentName : null,
+                    'sku' => $productItem->getSku(),
+                    'qty' => (int)number_format(
                         $productItem->getData('qty_ordered'),
                         2
                     ),
-                    'price'          => (float)number_format(
-                        $productItem->getPrice(),
+                    'price' => (float)number_format(
+                        isset($parentPrice) ? $parentPrice : $productItem->getPrice(),
                         2,
                         '.',
                         ''
                     ),
-                    'attribute-set'  => $attributeSetName,
-                    'categories'     => $productCat,
-                    'product_attributes'     => $product_attributes,
-                    'custom-options' => $customOptions
-                );
+                    'attribute-set' => $attributeSetName,
+                    'categories' => $productCat);
+                if ($product_attributes) {
+                    $productData['product_attributes'] = $product_attributes;
+                }
+
+                if ($child_attributes) {
+                    $productData['child_product_attributes'] = $child_attributes;
+                }
+
+                if ($customOptionsToSync) {
+                    $productData['custom-options'] = $customOptionsToSync;
+                }
+
+                $this->products[] = $productData;
             } else {
                 // when no product information is available limit to this data
-                $this->products[] = array(
-                    'name'           => $productItem->getName(),
-                    'sku'            => $productItem->getSku(),
-                    'qty'            => (int)number_format(
+                $productData = array(
+                    'name' => $productItem->getName(),
+                    'sku' => $productItem->getSku(),
+                    'qty' => (int)number_format(
                         $productItem->getData('qty_ordered'),
                         2
                     ),
-                    'price'          => (float)number_format(
-                        $productItem->getPrice(),
+                    'price' => (float)number_format(
+                        isset($parentPrice) ? $parentPrice : $productItem->getPrice(),
                         2,
                         '.',
                         ''
                     ),
-                    'attribute-set'  => '',
-                    'categories'     => array(),
-                    'product_attributes'     => $product_attributes,
-                    'custom-options' => $customOptions
+                    'attribute-set' => '',
+                    'categories' => array()
                 );
+                if ($product_attributes) {
+                    $productData['product_attributes'] = $product_attributes;
+                }
+
+                if ($customOptionsToSync) {
+                    $productData['custom-options'] = $customOptionsToSync;
+                }
+
+                $this->products[] = $productData;
             }
+
+            unset($customOptions, $parentProduct, $parentName, $parentPrice);
+            $customOptionsToSync = array();
         }
+    }
+
+    /**
+     * @param $configAttributes
+     * @param $product
+     * @return mixed
+     */
+    protected function getProductAttributes($configAttributes, $product)
+    {
+        $attributor = Mage::getModel('ddg_automation/connector_productattributes');
+        return $attributor->initializeCustomAttributes($configAttributes, $product);
     }
 }
