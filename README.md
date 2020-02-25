@@ -37,9 +37,17 @@ INSERT INTO `core_config_data` (`scope`, `scope_id`, `path`, `value`)
 ## Contribution
 
 You are welcome to contribute to Engagement Cloud for Magento! You can either:
-- Report a bug: create a [GitHub issue](https://github.com/dotmailer/dotmailer-magento-extension/issues/new) including description, repro steps, Magento and extension version numbers
+- Report a bug: create a [GitHub issue](https://github.com/dotmailer/dotmailer-magento-extension/issues/new) including description, steps to reproduce, Magento and extension version numbers
 - Fix a bug: please fork this repo and submit the Pull Request to our [Develop branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/develop)
 Request a feature on our [roadmap](https://roadmap.dotdigital.com)
+
+# 6.4.26
+
+###### What’s new
+- Codes for campaign tracking and ROI tracking applied to the **Get basket** link in the abandoned cart EDC are now preserved and applied at their destination.
+
+###### Fixes
+- Exclusion rules can now have conditions relating to product attribute sets.
 
 # 6.4.25
 
