@@ -399,7 +399,7 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
                     Mage_Catalog_Model_Product::ENTITY,
                     $product
                 );
-
+                $attributes[] = 'attribute_set_id';
                 foreach ($this->productAttribute as $productAttribute) {
                     $attribute = $productAttribute['attribute'];
                     $cond = $productAttribute['conditions'];
@@ -436,6 +436,11 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
                             }
 
                             $attributeValue = call_user_func(array($product, $getter));
+
+                            if ($getter === 'getAttributeSetId') {
+                                $attributeValue = $this->getAttributeCode($attributeValue);
+                            }
+
                             //if retrieved value is an array then loop through all array values. Ex. categories
                             if (is_array($attributeValue)) {
                                 foreach ($attributeValue as $attrValue) {
@@ -498,5 +503,14 @@ class Dotdigitalgroup_Email_Model_Rules extends Mage_Core_Model_Abstract
         }
 
         return false;
+    }
+
+    /**
+     * @param $attributeId
+     * @return string
+     */
+    protected function getAttributeCode($attributeId)
+    {
+        return Mage::getModel('eav/entity_attribute_set')->load($attributeId)->getAttributeSetName();
     }
 }
