@@ -12,6 +12,11 @@ class Dotdigitalgroup_Email_EmailController
     protected $_quote;
 
     /**
+     * @var string
+     */
+    protected $redirectParams;
+
+    /**
      * wishlist
      */
     public function wishlistAction()
@@ -182,14 +187,18 @@ class Dotdigitalgroup_Email_EmailController
         $quoteId = $this->getRequest()->getParam('quote_id');
         //no quote id redirect to base url
         if (!$quoteId) {
-            $this->_redirectUrl(Mage::getBaseUrl());
+            $this->_redirectUrl(
+                $this->getRedirectWithParams(Mage::getBaseUrl())
+            );
         }
 
         $quoteModel = Mage::getModel('sales/quote')->load($quoteId);
 
         //no quote id redirect to base url
         if (!$quoteModel->getId()) {
-            $this->_redirectUrl(Mage::getBaseUrl());
+            $this->_redirectUrl(
+                $this->getRedirectWithParams(Mage::getBaseUrl())
+            );
         }
 
         //set quoteModel to _quote property for later use
@@ -225,7 +234,9 @@ class Dotdigitalgroup_Email_EmailController
                 $url = 'checkout/cart';
             }
 
-            $this->_redirectUrl($this->_quote->getStore()->getUrl($url));
+            $this->_redirectUrl(
+                $this->getRedirectWithParams($this->_quote->getStore()->getUrl($url))
+            );
         } else {
             // customer will be redirected to cart after successful login
             if ($configCartUrl) {
@@ -235,7 +246,7 @@ class Dotdigitalgroup_Email_EmailController
             }
 
             $customerSession->setAfterAuthUrl(
-                $this->_quote->getStore()->getUrl($cartUrl)
+                $this->getRedirectWithParams($this->_quote->getStore()->getUrl($cartUrl))
             );
 
             //send customer to login page
@@ -249,7 +260,9 @@ class Dotdigitalgroup_Email_EmailController
                 $loginUrl = 'customer/account/login';
             }
 
-            $this->_redirectUrl($this->_quote->getStore()->getUrl($loginUrl));
+            $this->_redirectUrl(
+                $this->getRedirectWithParams($this->_quote->getStore()->getUrl($loginUrl))
+            );
         }
     }
 
@@ -268,7 +281,52 @@ class Dotdigitalgroup_Email_EmailController
             $url = 'checkout/cart';
         }
 
-        $this->_redirectUrl($this->_quote->getStore()->getUrl($url));
+        $this->_redirectUrl(
+            $this->getRedirectWithParams($this->_quote->getStore()->getUrl($url))
+        );
+    }
+
+    /**
+     * Get the URL to redirect, maintaining any query string parameters passed
+     *
+     * @param string $path
+     * @return string
+     */
+    protected function getRedirectWithParams($path)
+    {
+        if (!empty($this->redirectParams)) {
+            return $this->redirectParams;
+        }
+
+        // get any params without quote_id
+        $params = array_diff_key($this->getRequest()->getParams(), ['quote_id' => null]);
+        if (empty($params)) {
+            return $path;
+        }
+
+        $this->redirectParams = $params;
+
+        // dm_i params are exceptional because they cannot be altered in the process of encoding
+        $dm_i = null;
+        if (isset($params['dm_i'])) {
+            $dm_i = $params['dm_i'];
+            unset($params['dm_i']);
+        }
+
+        $redirectWithParams = sprintf(
+            '%s%s%s',
+            $path,
+            strpos($path, '?') !== false ? '&' : '?',
+            http_build_query($params, null, "&", PHP_QUERY_RFC3986)
+        );
+
+        if ($dm_i) {
+            return $redirectWithParams .
+                ($params ? '&' : '') .
+                'dm_i=' . $dm_i;
+        }
+        
+        return $redirectWithParams;
     }
 
     /**
