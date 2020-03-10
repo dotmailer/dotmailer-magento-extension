@@ -7,7 +7,7 @@
  *
  */
 
-if (Mage::helper('ddg')->isEnterprise()) {
+if (Mage::helper('ddg')->isEnterprise() && version_compare(Mage::getVersion(), '1.12.0.13', '>=')) {
 
     require_once 'Enterprise/UrlRewrite/controllers/Adminhtml/UrlrewriteController.php';
 
