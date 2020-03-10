@@ -3,24 +3,21 @@
     <?php
         $style = $this->getStyle();
     ?>
-    <style>
-        .edc-coupon{
-            color: <?php echo $this->getCouponColor();?>;
-            font-size: <?php echo $this->getFontSize();?>;
-            <?php if(in_array('bold', $style)): ?>
-                font-weight: bold;
-            <?php endif; ?>
-            <?php if(in_array('italic', $style)): ?>
-                font-style: italic;
-            <?php endif; ?>
-            <?php if(in_array('underline', $style)): ?>
-                text-decoration: underline;
-            <?php endif; ?>
-            font-family: <?php echo $this->getFont();?>;
-            background-color: <?php echo $this->getBackgroundColor();?>;
-        }
-    </style>
-    <div class="edc-coupon">
+    <div class="edc-coupon"
+         style="color: <?php echo $this->getCouponColor();?>;
+                 font-size: <?php echo $this->getFontSize();?>;
+         <?php if(in_array('bold', $style)): ?>
+                 font-weight: bold;
+         <?php endif; ?>
+         <?php if(in_array('italic', $style)): ?>
+                 font-style: italic;
+         <?php endif; ?>
+         <?php if(in_array('underline', $style)): ?>
+                 text-decoration: underline;
+         <?php endif; ?>
+                 font-family: <?php echo $this->getFont();?>;
+                 background-color: <?php echo $this->getBackgroundColor();?>;
+                 ">
         <?php echo $coupon; ?>
     </div>
 <?php endif;
