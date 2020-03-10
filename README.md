@@ -41,12 +41,18 @@ You are welcome to contribute to Engagement Cloud for Magento! You can either:
 - Fix a bug: please fork this repo and submit the Pull Request to our [Develop branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/develop)
 Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 
+# 6.4.27
+
+###### Bug fixes
+- We added a condition to check the exact version of Magento Enterprise, before using the newer Enterprise URL rewrite controller.
+- We now apply CSS styles to our coupon EDC inline, to ensure they are correctly added in Gmail.
+
 # 6.4.26
 
 ###### What’s new
 - Codes for campaign tracking and ROI tracking applied to the **Get basket** link in the abandoned cart EDC are now preserved and applied at their destination.
 
-###### Fixes
+###### Bug fixes
 - Exclusion rules can now have conditions relating to product attribute sets.
 
 # 6.4.25
