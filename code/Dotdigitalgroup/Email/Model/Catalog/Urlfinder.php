@@ -43,9 +43,8 @@ class Dotdigitalgroup_Email_Model_Catalog_Urlfinder
             $product = $parentProduct;
         }
 
-        return Mage::getModel('catalog/product_media_config')
-            ->getMediaUrl($product->getSmallImage());
-
+        return Mage::helper('catalog/product')
+            ->getSmallImageUrl($product);
     }
 
     /**
