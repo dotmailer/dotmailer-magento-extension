@@ -69,31 +69,8 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
         );
 
         if ($enabled && $sync) {
-            //remove product with product id set and no product
-            $coreResource = Mage::getSingleton('core/resource');
-            $write        = $coreResource->getConnection('core_write');
-            $catalogTable = $coreResource->getTableName(
-                'ddg_automation/catalog'
-            );
-            //@codingStandardsIgnoreStart
-            $select       = $write->select();
-            $select->reset()
-                ->from(
-                    array('c' => $catalogTable),
-                    array('c.product_id')
-                )
-                ->joinLeft(
-                    array('e' => $coreResource->getTableName(
-                        'catalog/product'
-                    )),
-                    "c.product_id = e.entity_id"
-                )
-                ->where('e.entity_id is NULL');
-            //delete sql statement
-            $deleteSql = $select->deleteFromSelect('c');
-            //run query
-            $write->query($deleteSql);
-            //@codingStandardsIgnoreEnd
+
+            $this->removeOrphanedProducts();
 
             $scope = Mage::getStoreConfig(
                 Dotdigitalgroup_Email_Helper_Config::XML_PATH_CONNECTOR_SYNC_CATALOG_VALUES
@@ -468,5 +445,50 @@ class Dotdigitalgroup_Email_Model_Catalog extends Mage_Core_Model_Abstract
         }
 
         return $this;
+    }
+
+    /**
+     * Remove orphaned records from email_catalog table.
+     * These are rows in email_catalog for which there is no longer a matching product in catalog_product_entity.
+     */
+    protected function removeOrphanedProducts()
+    {
+        $coreResource = Mage::getSingleton('core/resource');
+        $write        = $coreResource->getConnection('core_write');
+        $catalogTable = $coreResource->getTableName(
+            'ddg_automation/catalog'
+        );
+
+        $batchSize = 500;
+        $startPoint = 0;
+        $endPoint = $startPoint + $batchSize;
+
+        do {
+            $select = $write->select();
+            $batching = $select->reset()
+                ->from(
+                    array('c' => $catalogTable),
+                    array('c.id', 'c.product_id')
+                )
+                ->joinLeft(
+                    array('e' => $coreResource->getTableName(
+                        'catalog/product'
+                    )),
+                    "c.product_id = e.entity_id"
+                )
+                ->where('c.id >= ?', $startPoint)
+                ->where('c.id < ?', $endPoint);
+
+            $rowCount = $write->query($batching)->rowCount();
+
+            $select = $batching->where('e.entity_id is NULL');
+
+            $deleteSql = $select->deleteFromSelect('c');
+            $write->query($deleteSql);
+            
+            $startPoint += $batchSize;
+            $endPoint += $batchSize;
+
+        } while ($rowCount > 0);
     }
 }
