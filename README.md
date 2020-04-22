@@ -41,6 +41,12 @@ You are welcome to contribute to Engagement Cloud for Magento! You can either:
 - Fix a bug: please fork this repo and submit the Pull Request to our [Develop branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/develop)
 Request a feature on our [roadmap](https://roadmap.dotdigital.com)
 
+# 6.4.28
+
+###### Bug fixes
+- We fixed a problem with product image paths in catalog sync. The default level base media URL was always used, instead of the value set at website or store level. [8f6fd296a4111f5272c4183959b3b11fcaf3345f]
+- We've added batching when removing orphaned products at the start of catalog sync. This should prevent occasional SQL locking issues. [a383793c85e4f68db7dd6c84112671ed6c71c830]
+
 # 6.4.27
 
 ###### Bug fixes
