@@ -104,7 +104,7 @@ class Dotdigitalgroup_Email_Model_Sales_Order
                 }
             }
 
-            if ($this->countOrders > 0) {
+            if (($numOrders + $numOrdersForSingleSync) > 0 ) {
                 // Mark ordered products as unprocessed
                 $this->updateCatalog(array_merge($orders, $ordersForSingleSync));
             }
@@ -551,6 +551,12 @@ class Dotdigitalgroup_Email_Model_Sales_Order
         $productCollection = Mage::getResourceModel('catalog/product_collection')
             ->addFieldToFilter('sku', array('in' => array_unique($skus)));
 
-        Mage::getResourceModel('ddg_automation/catalog')->setUnProcessed($productCollection->getAllIds());
+        $productIds = $productCollection->getAllIds();
+
+        if (!empty($productIds)) {
+            Mage::getResourceModel('ddg_automation/catalog')->setUnProcessed($productIds);
+        } else {
+            Mage::helper('ddg')->log('Product skus not found: ' . implode(', ', array_unique($skus)));
+        }
     }
 }
