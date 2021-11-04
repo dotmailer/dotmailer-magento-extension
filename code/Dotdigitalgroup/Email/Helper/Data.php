@@ -476,7 +476,7 @@ class Dotdigitalgroup_Email_Helper_Data extends Mage_Core_Helper_Abstract
         }
 
         $apiEndpoint = $this->getApiEndpoint($websiteId, $client);
-        preg_match("/https:\/\/(.*)api.dotmailer.com/", $apiEndpoint, $matches);
+        preg_match("/https:\/\/(.*)api.(dotmailer|dotdigital).com/", $apiEndpoint, $matches);
         return $matches[1];
     }
     /**
