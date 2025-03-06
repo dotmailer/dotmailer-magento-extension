@@ -282,7 +282,10 @@ class Dotdigitalgroup_Email_Model_Connector_Order
             ))
         );
 
-        return array_filter($properties);
+		// do not expose null or empty arrays (0 or 0.00 are OK)
+		return array_filter($properties, function ($value) {
+			return !is_null($value) && !(is_array($value) && empty($value));
+		});
     }
 
     protected function _getCustomAttributeValue($field, $orderData)
