@@ -1,6 +1,10 @@
 Engagement Cloud for Magento
 ==========================================
 
+## Dotdigital Support Notice
+
+As of April 2025, this module will receive no further changes except for security-related bug fixes. We will continue to provide support to existing merchants on Magento 1 but will no longer onboard new accounts. Please contact our [support team](https://support.dotdigital.com/en/) if you have any questions.
+
 ## Description
 
 This extension integrates Engagement Cloud with Magento Open Source 1 (Community Edition) and Magento Commerce 1 (Enterprise Edition).
@@ -39,7 +43,12 @@ INSERT INTO `core_config_data` (`scope`, `scope_id`, `path`, `value`)
 You are welcome to contribute to Engagement Cloud for Magento! You can either:
 - Report a bug: create a [GitHub issue](https://github.com/dotmailer/dotmailer-magento-extension/issues/new) including description, steps to reproduce, Magento and extension version numbers
 - Fix a bug: please fork this repo and submit the Pull Request to our [Develop branch](https://github.com/dotmailer/dotmailer-magento-extension/tree/develop)
-Request a feature on our [roadmap](https://roadmap.dotdigital.com)
+
+# 6.4.30
+
+###### Bug fixes
+- We updated the regex pattern for the API endpoint to allow dotdigital.com and dotmailer.com domains.
+- We adjusted synced order insight data to allow price-related values set to 0.00.
 
 # 6.4.29
 
